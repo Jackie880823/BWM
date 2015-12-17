@@ -73,6 +73,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     private ImageButton ibMiss;
     private RelativeLayout llViewProfile;
     private NetworkImageView networkImageView;
+    private NetworkImageView netQrImageView;
 
     private RelativeLayout rlPathRelationship;
     private RelativeLayout rlAlbumGallery;
@@ -133,6 +134,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlWallPosting = getViewById(R.id.rl_wall_posting);
         btnSendMessage = getViewById(R.id.btn_message);
         networkImageView = getViewById(R.id.iv_profile_images);
+        netQrImageView = getViewById(R.id.iv_profile_qr);
         rvToQR = getViewById(R.id.rl_to_qr);
 
         array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
@@ -141,6 +143,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         if(memberId != null){
             VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
             VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
+            VolleyUtil.initNetworkImageView(getActivity(), netQrImageView, String.format(Constant.API_GET_PROFILE_QR, memberId), R.drawable.qrcode_button, R.drawable.qrcode_button);
         }
 
 //        tvName1.setText(groupName);
@@ -162,6 +165,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             tvId1.setText(userEntity.getDis_bondwithme_id());
             VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
             VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
+            VolleyUtil.initNetworkImageView(getActivity(), netQrImageView, String.format(Constant.API_GET_PROFILE_QR, memberId), R.drawable.qrcode_button, R.drawable.qrcode_button);
             if (!TextUtils.isEmpty(getDofeelCode)) {
                 try {
                     String filePath = "";
