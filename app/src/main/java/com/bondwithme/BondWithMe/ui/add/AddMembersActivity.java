@@ -270,7 +270,6 @@ public class AddMembersActivity extends BaseActivity{
                     @Override
                     public void onAddIconClick(RecommendEntity recommendEntity) {
                         Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
-                        intent.putExtra("userEntity", userEntity);
                         intent.putExtra("member_id", recommendEntity.getUser_id());
                         startActivityForResult(intent, ADD_MEMBER);
                     }
