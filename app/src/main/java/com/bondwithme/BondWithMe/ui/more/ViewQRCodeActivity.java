@@ -59,7 +59,6 @@ public class ViewQRCodeActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
         ivQRCode = getViewById(R.id.iv_qr);
         tvScanHint = getViewById(R.id.tv_scan_hint);
         btnScanQRCode = getViewById(R.id.btn_scan_qr);
@@ -75,7 +74,7 @@ public class ViewQRCodeActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent scanIntent = new Intent(ViewQRCodeActivity.this, CaptureActivity.class);
-                startActivityForResult(scanIntent, 1);
+                startActivity(scanIntent);
             }
         });
     }
@@ -84,6 +83,7 @@ public class ViewQRCodeActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        LogUtil.d("ViewQRCodeActivity_onResume()","=============");
 
         if (userEntity != null){
             userId = userEntity.getUser_id();
@@ -101,19 +101,18 @@ public class ViewQRCodeActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        LogUtil.d("ViewQRCodeActivity_onActivityResult()","ppppp");
-        switch (resultCode){
-            case 1:
-                viewMyQR = (String)data.getExtras().get("from_scan");
-                LogUtil.d("ViewQRCodeActivity_onActivityResult()", "=====from_scan=====" + viewMyQR);
-                if ("view_my_qr".equals(viewMyQR)){
-                    if (userEntity != null){
-                        userEntity = null;
-                    }
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle bundle = intent.getExtras();
+        LogUtil.d("ViewQRCodeActivity_onNewIntent", "=====");
+        if (bundle != null){
+            viewMyQR = (String)bundle.get("from_scan");
+            LogUtil.d("ViewQRCodeActivity_onNewIntent()", "=====from_scan=====" + viewMyQR);
+            if ("view_my_qr".equals(viewMyQR)){
+                if (userEntity != null){
+                    userEntity = null;
                 }
-                break;
+            }
         }
     }
 
