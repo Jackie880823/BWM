@@ -541,7 +541,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             // 不是当前用户：没有图片也没有视频都不需要显更多功能按钮
             btnOption.setVisibility(View.GONE);
         } else {
-                btnOption.setVisibility(View.VISIBLE);
+            btnOption.setVisibility(View.VISIBLE);
         }
 
         String feelCode = wallEntity.getDofeel_code();
@@ -853,7 +853,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         File cacheFile = new File(targetParent);
         boolean canWrite = cacheFile.exists() || cacheFile.mkdir();
         String saveVideoPath;
-        saveVideoPath = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(context, false) + String.format("/%s", fileName);
+        saveVideoPath = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(context.getApplicationContext(), false) + String.format("/%s", fileName);
 
         callBack.setLinkType(CallBack.LINK_TYPE_SAVE_VIDEO);
         new HttpTools(context).download(context, url, saveVideoPath, true, callBack);
@@ -1083,14 +1083,29 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     if (!TextUtils.isEmpty(response) && response.contains("/data/data/")) {
                         try {
 
-                            Files.copy(new File(response),  FileUtil.saveVideoFile(context, true));
+                            File saveFile = FileUtil.saveVideoFile(context, true);
+                            Files.copy(new File(response), saveFile);
                             mViewClickListener.saved(wallEntity, true);
+
+                            // 通知媒体库更新文件
+                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                            intent.setData(Uri.fromFile(saveFile));
+                            context.sendBroadcast(intent);
+
+                            MessageUtil.showMessage(context, context.getString(R.string.saved_to_path) + saveFile.getPath());
                         } catch (IOException e) {
                             mViewClickListener.saved(wallEntity, false);
                             e.printStackTrace();
                         }
                     } else {
                         mViewClickListener.saved(wallEntity, true);
+
+                        // 通知媒体库更新文件
+                        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                        intent.setData(Uri.fromFile(new File(response)));
+                        context.sendBroadcast(intent);
+
+                        MessageUtil.showMessage(context, context.getString(R.string.saved_to_path) + response);
                     }
                     break;
 
