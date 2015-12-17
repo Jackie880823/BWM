@@ -235,7 +235,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
                 @Override
                 public void onStart() {
                     progressDialog.setVisibility(View.VISIBLE);
-                    rlScanQR.setVisibility(View.INVISIBLE);
+//                    rlScanQR.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
@@ -259,12 +259,12 @@ public class CaptureActivity extends BaseActivity implements Callback {
                         LogUtil.d(TAG,"============member_flag:"+memberFlag+"========bwmId: "+bwmId);
                         if ("0".equals(memberFlag)){
                             Intent resultIntent = new Intent(CaptureActivity.this, FamilyViewProfileActivity.class);
-//                        resultIntent.putExtra("userEntity", userEntity);
+                        resultIntent.putExtra("userEntity", userEntity);
                             resultIntent.putExtra(SCAN_RESULT,bwmId);
                             startActivity(resultIntent);
                         }else if("1".equals(memberFlag)){
                             Intent resultIntent = new Intent(CaptureActivity.this, FamilyProfileActivity.class);
-//                        resultIntent.putExtra("userEntity", userEntity);
+                        resultIntent.putExtra("userEntity", userEntity);
                             resultIntent.putExtra(SCAN_RESULT,bwmId);
                             startActivity(resultIntent);
                         }
