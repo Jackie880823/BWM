@@ -12,24 +12,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.android.volley.db.table.TableUtils;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.AddMembersAdapter;
 import com.bondwithme.BondWithMe.entity.RecommendEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.FamilyProfileActivity;
 import com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.RelationshipActivity;
-import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.ui.MeActivity;
 import com.bondwithme.BondWithMe.zxing.activity.CaptureActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -39,7 +38,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class AddMembersActivity extends BaseActivity{
 
@@ -124,13 +122,19 @@ public class AddMembersActivity extends BaseActivity{
 
                         @Override
                         public void onResult(String string) {
-                            Log.d(TAG,"---------" + string);
+                            Log.d(TAG, "---------" + string);
                             try {
                                 JSONObject jsonObject = new JSONObject(string);
                                 if (Constant.SUCCESS.equals(jsonObject.get("response_status"))) {
-                                    Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
-                                    intent.putExtra("member_id", jsonObject.getString("member_id"));
-                                    startActivity(intent);
+                                    String id = jsonObject.getString("member_id");
+                                    if (!TextUtils.isEmpty(id)) {
+                                        if (id.equals(MainActivity.getUser().getUser_id())) {
+                                            startActivity(new Intent(AddMembersActivity.this, MeActivity.class));
+                                        } else {
+                                            vProgress.setVisibility(View.VISIBLE);
+                                            checkMember(id);
+                                        }
+                                    }
                                 } else {
                                     AlertDialog.Builder dialog = new AlertDialog.Builder(AddMembersActivity.this);
                                     dialog.setMessage(R.string.text_search_bwm_user_no_found);
@@ -141,8 +145,7 @@ public class AddMembersActivity extends BaseActivity{
                                             dialog.dismiss();
                                         }
                                     });
-                                    if (!isFinishing())
-                                    {
+                                    if (!isFinishing()) {
                                         dialog.show();
                                     }
                                 }
@@ -173,6 +176,73 @@ public class AddMembersActivity extends BaseActivity{
 
     }
 
+    UserEntity userEntity = new UserEntity();
+
+    private void checkMember(final String memberId) {
+
+        HashMap<String, String> jsonParams = new HashMap<>();
+        jsonParams.put("user_id", MainActivity.getUser().getUser_id());
+        jsonParams.put("member_id", memberId);
+        String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("condition", jsonParamsString);
+        String url = UrlUtil.generateUrl(Constant.API_MEMBER_PROFILE_DETAIL, params);
+
+        new HttpTools(this).get(url, params, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                List<UserEntity> data = gson.fromJson(string, new TypeToken<ArrayList<UserEntity>>() {
+                }.getType());
+                if ((data != null) && (data.size() > 0)) {
+                    userEntity = data.get(0);
+
+                    if("0".equals(userEntity.getMember_flag())){
+                        //如果不是好友
+                        Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
+                        intent.putExtra("userEntity", userEntity);
+                        intent.putExtra("member_id", memberId);
+                        startActivity(intent);
+                    }else if("1".equals(userEntity.getMember_flag())){
+                        //如果是好友
+                        Intent intent = new Intent(AddMembersActivity.this, FamilyProfileActivity.class);
+                        intent.putExtra("userEntity", userEntity);
+                        intent.putExtra("member_id", memberId);
+                        startActivity(intent);
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
     @Override
     public void requestData() {
         new HttpTools(this).get(String.format(Constant.API_BONDALERT_RECOMMEND, MainActivity.getUser().getUser_id()), null, TAG, new HttpCallback() {
@@ -200,6 +270,7 @@ public class AddMembersActivity extends BaseActivity{
                     @Override
                     public void onAddIconClick(RecommendEntity recommendEntity) {
                         Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
+                        intent.putExtra("userEntity", userEntity);
                         intent.putExtra("member_id", recommendEntity.getUser_id());
                         startActivityForResult(intent, ADD_MEMBER);
                     }

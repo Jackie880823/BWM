@@ -73,6 +73,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     private ImageButton ibMiss;
     private RelativeLayout llViewProfile;
     private NetworkImageView networkImageView;
+    private NetworkImageView netQrImageView;
 
     private RelativeLayout rlPathRelationship;
     private RelativeLayout rlAlbumGallery;
@@ -105,16 +106,22 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
         Intent intent = getActivity().getIntent();
         useId = MainActivity.getUser().getUser_id();//MainActivity.
+        userEntity = (UserEntity) getParentActivity().getIntent().getExtras().getSerializable("userEntity");
         memberId = intent.getStringExtra("member_id");
         groupId = intent.getStringExtra("groupId");
         groupName = intent.getStringExtra("groupName");
-        vProgress = getViewById(R.id.rl_progress);
-        if(TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)){
-            //如果上个页面没传进groupId或者groupName，显示进度条
-            vProgress.setVisibility(View.VISIBLE);
-        }
         getDofeelCode = intent.getStringExtra("getDofeel_code");
 
+//        if(groupId == null && userEntity != null){
+//            groupId = userEntity.getGroup_id();
+//            groupName = userEntity.getUser_given_name();
+//            getDofeelCode = userEntity.getDofeel_code();
+//        }
+        vProgress = getViewById(R.id.rl_progress);
+//        if((TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)) || userEntity != null){
+//            //如果上个页面没传进groupId或者groupName，显示进度条
+//            vProgress.setVisibility(View.VISIBLE);
+//        }
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
         ivBottomRight = getViewById(R.id.civ_right);
@@ -127,34 +134,53 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlWallPosting = getViewById(R.id.rl_wall_posting);
         btnSendMessage = getViewById(R.id.btn_message);
         networkImageView = getViewById(R.id.iv_profile_images);
+        netQrImageView = getViewById(R.id.iv_profile_qr);
         rvToQR = getViewById(R.id.rl_to_qr);
 
         array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
                 R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
         profileBackgroundId = randomImageId(array);
+        if(memberId != null){
+            VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
+            VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
+            VolleyUtil.initNetworkImageView(getActivity(), netQrImageView, String.format(Constant.API_GET_PROFILE_QR, memberId), R.drawable.qrcode_button, R.drawable.qrcode_button);
+        }
 
 //        tvName1.setText(groupName);
-        getParentActivity().tvTitle.setText(groupName);
-        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
-        VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
+        if(userEntity == null){
+            vProgress.setVisibility(View.VISIBLE);
+        }else {
+            memberId = userEntity.getUser_id();
+            groupId = userEntity.getGroup_id();
+            groupName = userEntity.getUser_given_name();
+            getDofeelCode = userEntity.getDofeel_code();
+            getParentActivity().tvTitle.setText(groupName);
 //        BitmapTools.getInstance(getActivity()).display(networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), 0, 0);
 
-        networkImageView.setVisibility(View.VISIBLE);
+            networkImageView.setVisibility(View.VISIBLE);
 //        BitmapTools.getInstance(mContext).display(holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
-        if (!TextUtils.isEmpty(getDofeelCode)) {
-            try {
-                String filePath = "";
-                if (getDofeelCode.contains("_")) {
-                    filePath = getDofeelCode.replaceAll("_", File.separator);
+            tvName1.setText(userEntity.getUser_login_id());
+            getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
+            tvId1.setText(userEntity.getDis_bondwithme_id());
+            VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
+            VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
+            VolleyUtil.initNetworkImageView(getActivity(), netQrImageView, String.format(Constant.API_GET_PROFILE_QR, memberId), R.drawable.qrcode_button, R.drawable.qrcode_button);
+            if (!TextUtils.isEmpty(getDofeelCode)) {
+                try {
+                    String filePath = "";
+                    if (getDofeelCode.contains("_")) {
+                        filePath = getDofeelCode.replaceAll("_", File.separator);
+                    }
+                    InputStream is = App.getContextInstance().getAssets().open(filePath);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    ivBottomLeft.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                InputStream is = App.getContextInstance().getAssets().open(filePath);
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                ivBottomLeft.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
+
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -290,6 +316,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         });
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -340,6 +367,8 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     };
 
 
+
+
     private void getHasMiss() {
         HashMap<String, String> params = new HashMap<>();
         params.put("from_user_id", MainActivity.getUser().getUser_id());
@@ -386,6 +415,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
             }
         });
+
     }
 
     @Override
@@ -407,6 +437,8 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     @Override
     public void requestData() {
+        if(userEntity != null)return;
+
         HashMap<String, String> jsonParams = new HashMap<>();
         jsonParams.put("user_id", useId);
         jsonParams.put("member_id", memberId);
