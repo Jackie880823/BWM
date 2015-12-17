@@ -88,7 +88,7 @@
             android:drawablePadding="@dimen/new_diary_bottom_icon_and_text"
             android:drawableTop="@drawable/privacy_lock"
             android:gravity="center"
-            android:text="@string/text_private"
+            android:text="@string/text_only_me"
             android:textColor="@color/btn_bg_color_gray_normal"
             android:textSize="@dimen/text_mirco_size" />
     </LinearLayout>
