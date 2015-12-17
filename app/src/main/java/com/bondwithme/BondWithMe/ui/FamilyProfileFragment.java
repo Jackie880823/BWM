@@ -111,16 +111,16 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         groupName = intent.getStringExtra("groupName");
         getDofeelCode = intent.getStringExtra("getDofeel_code");
 
-        if(groupId == null && userEntity != null){
-            groupId = userEntity.getGroup_id();
-            groupName = userEntity.getUser_given_name();
-            getDofeelCode = userEntity.getDofeel_code();
-        }
+//        if(groupId == null && userEntity != null){
+//            groupId = userEntity.getGroup_id();
+//            groupName = userEntity.getUser_given_name();
+//            getDofeelCode = userEntity.getDofeel_code();
+//        }
         vProgress = getViewById(R.id.rl_progress);
-        if((TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)) || userEntity != null){
-            //如果上个页面没传进groupId或者groupName，显示进度条
-            vProgress.setVisibility(View.VISIBLE);
-        }
+//        if((TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)) || userEntity != null){
+//            //如果上个页面没传进groupId或者groupName，显示进度条
+//            vProgress.setVisibility(View.VISIBLE);
+//        }
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
         ivBottomRight = getViewById(R.id.civ_right);
@@ -138,29 +138,45 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
                 R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
         profileBackgroundId = randomImageId(array);
+        if(memberId != null){
+            VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
+            VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
+        }
 
 //        tvName1.setText(groupName);
-        getParentActivity().tvTitle.setText(groupName);
-        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
-        VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
+        if(userEntity == null){
+            vProgress.setVisibility(View.VISIBLE);
+        }else {
+            memberId = userEntity.getUser_id();
+            groupId = userEntity.getGroup_id();
+            groupName = userEntity.getUser_given_name();
+            getDofeelCode = userEntity.getDofeel_code();
+            getParentActivity().tvTitle.setText(groupName);
 //        BitmapTools.getInstance(getActivity()).display(networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), 0, 0);
 
-        networkImageView.setVisibility(View.VISIBLE);
+            networkImageView.setVisibility(View.VISIBLE);
 //        BitmapTools.getInstance(mContext).display(holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
-        if (!TextUtils.isEmpty(getDofeelCode)) {
-            try {
-                String filePath = "";
-                if (getDofeelCode.contains("_")) {
-                    filePath = getDofeelCode.replaceAll("_", File.separator);
+            tvName1.setText(userEntity.getUser_login_id());
+            getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
+            tvId1.setText(userEntity.getDis_bondwithme_id());
+            VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
+            VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
+            if (!TextUtils.isEmpty(getDofeelCode)) {
+                try {
+                    String filePath = "";
+                    if (getDofeelCode.contains("_")) {
+                        filePath = getDofeelCode.replaceAll("_", File.separator);
+                    }
+                    InputStream is = App.getContextInstance().getAssets().open(filePath);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    ivBottomLeft.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                InputStream is = App.getContextInstance().getAssets().open(filePath);
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                ivBottomLeft.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
+
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -347,54 +363,54 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     };
 
 
+
+
     private void getHasMiss() {
-        if(userEntity == null){
-            HashMap<String, String> params = new HashMap<>();
-            params.put("from_user_id", MainActivity.getUser().getUser_id());
-            params.put("to_user_id", memberId);
-            params.put("to_user_fullname", userEntity.getUser_given_name());
-            new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params, Tag, new HttpCallback() {
-                @Override
-                public void onStart() {
-                }
+        HashMap<String, String> params = new HashMap<>();
+        params.put("from_user_id", MainActivity.getUser().getUser_id());
+        params.put("to_user_id", memberId);
+        params.put("to_user_fullname", userEntity.getUser_given_name());
+        new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params, Tag, new HttpCallback() {
+            @Override
+            public void onStart() {
+            }
 
-                @Override
-                public void onFinish() {
-                }
+            @Override
+            public void onFinish() {
+            }
 
-                @Override
-                public void onResult(String response) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        if (-1 != jsonObject.getString("message").indexOf("already")) {
-                            MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
-                        } else {
-                            MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (-1 != jsonObject.getString("message").indexOf("already")) {
+                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
+                    } else {
+                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
 
-                        }
-
-                    } catch (JSONException e) {
-                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
-                        e.printStackTrace();
                     }
-                }
 
-                @Override
-                public void onError(Exception e) {
+                } catch (JSONException e) {
                     MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
+                    e.printStackTrace();
                 }
+            }
 
-                @Override
-                public void onCancelled() {
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
+            }
 
-                }
+            @Override
+            public void onCancelled() {
 
-                @Override
-                public void onLoading(long count, long current) {
+            }
 
-                }
-            });
-        }
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
 
     }
 
@@ -417,6 +433,8 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     @Override
     public void requestData() {
+        if(userEntity != null)return;
+
         HashMap<String, String> jsonParams = new HashMap<>();
         jsonParams.put("user_id", useId);
         jsonParams.put("member_id", memberId);

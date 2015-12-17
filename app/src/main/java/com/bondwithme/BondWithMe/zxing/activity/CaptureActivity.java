@@ -24,18 +24,31 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.FamilyProfileActivity;
 import com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity;
+import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.MeActivity;
 import com.bondwithme.BondWithMe.ui.more.ViewQRCodeActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.zxing.camera.CameraManager;
 import com.bondwithme.BondWithMe.zxing.decoding.CaptureActivityHandler;
 import com.bondwithme.BondWithMe.zxing.decoding.InactivityTimer;
 import com.bondwithme.BondWithMe.zxing.decoding.RGBLuminanceSource;
 import com.bondwithme.BondWithMe.zxing.view.ViewfinderView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
@@ -47,7 +60,10 @@ import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -56,6 +72,7 @@ import java.util.Vector;
  */
 public class CaptureActivity extends BaseActivity implements Callback {
 
+    private final String TAG = "CaptureActivity";
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
 	private boolean hasSurface;
@@ -67,6 +84,9 @@ public class CaptureActivity extends BaseActivity implements Callback {
 	private static final float BEEP_VOLUME = 0.10f;
 	private boolean vibrate;
 	private Button cancelScanButton;
+    private View progressDialog;
+    private UserEntity userEntity;
+    private RelativeLayout rlScanQR;
 
 	int ifOpenLight = 0; // 判断是否开启闪光灯
     public static String SCAN_RESULT = "bwm_id";
@@ -103,8 +123,10 @@ public class CaptureActivity extends BaseActivity implements Callback {
         // ViewUtil.addTopView(getApplicationContext(), this,
         // R.string.scan_card);
         CameraManager.init(getApplication());
+        progressDialog = getViewById(R.id.rl_progress);
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
         cancelScanButton = (Button) this.findViewById(R.id.btn_my_qr);
+        rlScanQR = getViewById(R.id.rl_scan_qr);
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
 
@@ -139,9 +161,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
             public void onClick(View view) {
                 Intent intentQRCode = new Intent(CaptureActivity.this, ViewQRCodeActivity.class);
                 intentQRCode.putExtra("from_scan", "view_my_qr");
-//                startActivity(intentQRCode);
-                CaptureActivity.this.setResult(1,intentQRCode);
-                CaptureActivity.this.finish();
+                startActivity(intentQRCode);
             }
         });
 	}
@@ -173,15 +193,11 @@ public class CaptureActivity extends BaseActivity implements Callback {
 		inactivityTimer.onActivity();
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
-        LogUtil.d("CaptureActivity","handleDecode()====resultString==="+resultString);
+        LogUtil.d("CaptureActivity", "handleDecode()====resultString===" + resultString);
         if (resultString.contains("bondwith.me")){
             resultString=resultString.substring(resultString.length()-10);
-            LogUtil.d("CaptureActivity","resultString==="+resultString);
-            Intent resultIntent = new Intent(this, FamilyViewProfileActivity.class);
-//			Bundle bundle = new Bundle();
-            resultIntent.putExtra(SCAN_RESULT, resultString);
-            startActivity(resultIntent);
-//            this.setResult(RESULT_OK, resultIntent);
+            LogUtil.d("CaptureActivity", "resultString===" + resultString);
+            checkId(resultString);
         }else {
             Toast.makeText(CaptureActivity.this, getString(R.string.text_invalid_qr), Toast.LENGTH_SHORT)
                     .show();
@@ -191,9 +207,92 @@ public class CaptureActivity extends BaseActivity implements Callback {
 //		CaptureActivity.this.finish();
 	}
 
-	/*
-	 * 获取带二维码的相片进行扫描
-	 */
+    private void checkId(final String bwmId) {
+        LogUtil.d(TAG,"checkId()======");
+        UserEntity me  = MainActivity.getUser();
+        LogUtil.d(TAG,"checkId()======Bondwithme_id():"+me.getBondwithme_id());
+        if (bwmId.equals(me.getDis_bondwithme_id())) {
+            LogUtil.d(TAG,"checkId()"+"bemId:"+me.getDis_bondwithme_id());
+            Intent resultIntent = new Intent(CaptureActivity.this, MeActivity.class);
+            startActivity(resultIntent);
+            return;
+        } else {
+            HashMap<String, String> jsonParams = new HashMap<>();
+            jsonParams.put("user_id", me.getUser_id());
+//        if(memberId != null){
+//            jsonParams.put("member_id", memberId);
+//        }else {
+            jsonParams.put("bwm_id", bwmId);
+//        }
+
+            String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("condition", jsonParamsString);
+//            vProgress.setVisibility(View.VISIBLE);
+            String url = UrlUtil.generateUrl(Constant.API_MEMBER_PROFILE_DETAIL, params);
+
+            new HttpTools(this).get(url, params, TAG, new HttpCallback() {
+                @Override
+                public void onStart() {
+                    progressDialog.setVisibility(View.VISIBLE);
+//                    rlScanQR.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onFinish() {
+                    progressDialog.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onResult(String response) {
+                    GsonBuilder gsonb = new GsonBuilder();
+                    Gson gson = gsonb.create();
+                    List<UserEntity> data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                    }.getType());
+                    if ((data != null) && (data.size() > 0)) {
+                        userEntity = data.get(0);
+//                    Message.obtain(handler, GET_USER_ENTITY, userEntity).sendToTarget();
+                        if (progressDialog.getVisibility() == View.VISIBLE) {
+                            progressDialog.setVisibility(View.GONE);
+                        }
+                        String memberFlag = userEntity.getMember_flag();
+                        LogUtil.d(TAG,"============member_flag:"+memberFlag+"========bwmId: "+bwmId);
+                        if ("0".equals(memberFlag)){
+                            Intent resultIntent = new Intent(CaptureActivity.this, FamilyViewProfileActivity.class);
+                        resultIntent.putExtra("userEntity", userEntity);
+                            resultIntent.putExtra(SCAN_RESULT,bwmId);
+                            startActivity(resultIntent);
+                        }else if("1".equals(memberFlag)){
+                            Intent resultIntent = new Intent(CaptureActivity.this, FamilyProfileActivity.class);
+                        resultIntent.putExtra("userEntity", userEntity);
+                            resultIntent.putExtra(SCAN_RESULT,bwmId);
+                            startActivity(resultIntent);
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    MessageUtil.showMessage(CaptureActivity.this, getResources().getString(R.string.text_error));
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+
+        }
+    }
+
+    /*
+     * 获取带二维码的相片进行扫描
+     */
 	public void pickPictureFromAblum(View v) {
 		// 打开手机中的相册
 		Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT); // "android.intent.action.GET_CONTENT"
