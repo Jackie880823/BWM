@@ -2,16 +2,19 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.ContactDetailEntity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.util.List;
@@ -48,8 +51,26 @@ public class AddContactMemberAdapter extends RecyclerView.Adapter<AddContactMemb
 
     @Override
     public void onBindViewHolder(ContactMemberViewHolder holder, int position) {
-        /**wing modified 头像乱*/
-        BitmapTools.getInstance(mContext).display(holder.cniv, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+        if (!TextUtils.isEmpty(mData.get(position).getUser_id()))
+        {
+            BitmapTools.getInstance(mContext).display(holder.cniv, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+        }
+        else
+        {
+            holder.cniv.setImageUrl(null, null);
+            holder.cniv.setDefaultImageResId(R.drawable.default_head_icon);
+            holder.cniv.setErrorImageResId(R.drawable.default_group_head_icon);
+        }
+
+//        if (!TextUtils.isEmpty(mData.get(position).getUser_id()))
+//        {
+//            BitmapTools.getInstance(mContext).display(holder.cniv, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+//        }
+//        else
+//        {
+//            holder.cniv.setDefaultImageResId();
+//        }
+
         holder.tvName.setText(mData.get(position).getDisplayName());
         holder.tvId.setText(mData.get(position).getUser_login_id());
         switch (mData.get(position).getMemberType()) {
