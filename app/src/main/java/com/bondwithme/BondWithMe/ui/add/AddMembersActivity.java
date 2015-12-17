@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe.ui.add;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -212,11 +211,13 @@ public class AddMembersActivity extends BaseActivity{
                     if("0".equals(userEntity.getMember_flag())){
                         //如果不是好友
                         Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
+                        intent.putExtra("userEntity", userEntity);
                         intent.putExtra("member_id", memberId);
                         startActivity(intent);
                     }else if("1".equals(userEntity.getMember_flag())){
                         //如果是好友
                         Intent intent = new Intent(AddMembersActivity.this, FamilyProfileActivity.class);
+                        intent.putExtra("userEntity", userEntity);
                         intent.putExtra("member_id", memberId);
                         startActivity(intent);
                     }
@@ -269,6 +270,7 @@ public class AddMembersActivity extends BaseActivity{
                     @Override
                     public void onAddIconClick(RecommendEntity recommendEntity) {
                         Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
+                        intent.putExtra("userEntity", userEntity);
                         intent.putExtra("member_id", recommendEntity.getUser_id());
                         startActivityForResult(intent, ADD_MEMBER);
                     }
