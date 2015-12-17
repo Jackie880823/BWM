@@ -537,13 +537,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {
                 llWallsImage.setVisibility(View.GONE);
             }
-        } else if ((!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())))) {
-            // 不是当前用户：没有图片或者有视频都不需要显更多功能按钮
+        } else if ((!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 && TextUtils.isEmpty(wallEntity.getVideo_filename())))) {
+            // 不是当前用户：没有图片也没有视频都不需要显更多功能按钮
             btnOption.setVisibility(View.GONE);
         } else {
-            if (!isDetailed) {
                 btnOption.setVisibility(View.VISIBLE);
-            }
         }
 
          /*is owner wall*/
