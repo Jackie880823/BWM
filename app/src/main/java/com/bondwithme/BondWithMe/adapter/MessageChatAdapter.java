@@ -48,11 +48,13 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
+import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.HorizontalProgressBarWithNumber;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.material.widget.CircularProgress;
 import com.material.widget.Dialog;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -372,11 +374,11 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             holder.progressBar.setVisibility(View.GONE);
             if (msgEntity.getUri() != null)//直接显示在ListView,相册和相机
             {
-                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                bitmapOptions.inSampleSize = 4;
-                Bitmap bitmap = LocalImageLoader.rotaingImageView(LocalImageLoader.readPictureDegree(msgEntity.getUri().getPath()), ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(context, msgEntity.getUri())), 200, 200));
-                holder.pngImageView.setImageBitmap(bitmap);//直接把图片显示出来
-
+//                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+//                bitmapOptions.inSampleSize = 4;
+//                Bitmap bitmap = LocalImageLoader.rotaingImageView(LocalImageLoader.readPictureDegree(msgEntity.getUri().getPath()), ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(context, msgEntity.getUri())), 200, 200));
+//                holder.pngImageView.setImageBitmap(bitmap);//直接把图片显示出来
+                ImageLoader.getInstance().displayImage(msgEntity.getUri().toString(), holder.pngImageView, UniversalImageLoaderUtil.options);
             } else {
                 String stickerGroupPath = msgEntity.getSticker_group_path();
                 if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
