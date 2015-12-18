@@ -173,12 +173,12 @@ public class GroupPrivacyActivity extends BaseActivity {
             rbPublic.setChecked(true);
         }
 
+        intLevel = Integer.parseInt(strLevel);
         changePrivacyDialog.setCanceledOnTouchOutside(false);
         changePrivacyDialog.setButtonCancel(R.string.text_confirm, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changePrivacyDialog.dismiss();
-                intLevel = Integer.parseInt(strLevel);
                 String str = Integer.toString(intLevel);
                 switch (tv.getId()){
                     case R.id.tv_birthday_privacy:
