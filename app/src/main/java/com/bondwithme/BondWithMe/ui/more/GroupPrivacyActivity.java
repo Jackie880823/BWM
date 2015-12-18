@@ -152,7 +152,7 @@ public class GroupPrivacyActivity extends BaseActivity {
     RadioButton rbOnlyMe;
     RadioButton rbAllMember;
     RadioButton rbPublic;
-    private void setProfilePrivacy(String dialogTitle,String strLevel, final TextView tv) {
+    private void setProfilePrivacy(String dialogTitle, final String strLevel, final TextView tv) {
 
         LogUtil.d("setProfilePrivacy"+strLevel,"GroupPrivacyActivity"+dialogTitle);
         LayoutInflater factory = LayoutInflater.from(this);
@@ -178,6 +178,7 @@ public class GroupPrivacyActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 changePrivacyDialog.dismiss();
+                intLevel = Integer.parseInt(strLevel);
                 String str = Integer.toString(intLevel);
                 switch (tv.getId()){
                     case R.id.tv_birthday_privacy:

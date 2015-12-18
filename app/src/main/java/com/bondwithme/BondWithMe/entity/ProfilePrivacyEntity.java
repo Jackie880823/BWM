@@ -68,4 +68,16 @@ public class ProfilePrivacyEntity {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "ProfilePrivacyEntity{" +
+                "dob_date='" + dob_date + '\'' +
+                ", dob_year='" + dob_year + '\'' +
+                ", gender='" + gender + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", location='" + location + '\'' +
+                '}';
+    }
 }
