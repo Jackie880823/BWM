@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.bondwithme.BondWithMe.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_transparent"
-    android:padding="@dimen/default_content_padding">
+    android:paddingTop="@dimen/default_content_padding"
+    android:background="@drawable/background_transparent">
 
     <ImageView
         android:id="@+id/iv_pic_normal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_view_margin"
+        android:layout_marginRight="@dimen/default_view_margin"
         android:scaleType="centerCrop"
         android:visibility="visible" />
 
@@ -18,12 +20,13 @@
         android:id="@+id/tv_photo_caption"
         style="@style/text_dark_default"
         android:layout_width="match_parent"
-        android:layout_alignBottom="@+id/iv_pic_normal"
+        android:layout_below="@+id/iv_pic_normal"
         android:autoLink="web"
-        android:background="@color/dialog_bg_color"
         android:linksClickable="true"
         android:maxLines="3"
-        android:textColor="@android:color/white"
+        android:layout_marginLeft="@dimen/default_view_margin"
+        android:layout_marginRight="@dimen/default_view_margin"
+        android:textColor="@android:color/black"
         android:textIsSelectable="true" />
 
-</com.bondwithme.BondWithMe.widget.SquareRelativeLayout>
+</RelativeLayout>
