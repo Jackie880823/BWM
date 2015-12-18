@@ -152,7 +152,7 @@ public class GroupPrivacyActivity extends BaseActivity {
     RadioButton rbOnlyMe;
     RadioButton rbAllMember;
     RadioButton rbPublic;
-    private void setProfilePrivacy(String dialogTitle,String strLevel, final TextView tv) {
+    private void setProfilePrivacy(String dialogTitle, final String strLevel, final TextView tv) {
 
         LogUtil.d("setProfilePrivacy"+strLevel,"GroupPrivacyActivity"+dialogTitle);
         LayoutInflater factory = LayoutInflater.from(this);
@@ -173,6 +173,7 @@ public class GroupPrivacyActivity extends BaseActivity {
             rbPublic.setChecked(true);
         }
 
+        intLevel = Integer.parseInt(strLevel);
         changePrivacyDialog.setCanceledOnTouchOutside(false);
         changePrivacyDialog.setButtonCancel(R.string.text_confirm, new View.OnClickListener() {
             @Override
