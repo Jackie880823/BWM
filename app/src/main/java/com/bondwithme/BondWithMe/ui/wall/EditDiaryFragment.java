@@ -846,7 +846,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             tvPrivacy.setText(R.string.text_all_member);
         } else {
             drawable = resources.getDrawable(R.drawable.privacy_lock);
-            tvPrivacy.setText(R.string.text_private);
+            tvPrivacy.setText(R.string.text_only_me);
         }
         Drawable[] drawables = tvPrivacy.getCompoundDrawables();
         if (drawable != null) {
