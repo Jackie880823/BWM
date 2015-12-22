@@ -1,8 +1,6 @@
 package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -274,19 +272,19 @@ public class StickerItemAdapter extends BaseAdapter {
         StickerItemEntity stickerItemEntity = data.get(position);
         String picPath = FileUtil.getBigStickerPath(mContext, stickerGroupEntity.getPath(), stickerItemEntity.getSticker_name(), stickerGroupEntity.getType());
         File file = new File(picPath);
-        if(file.exists()){
-            if (isGif){
-                try{
-                    item.setImageDrawable(new GifDrawable(file));
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }else {
-                Bitmap bmp = BitmapFactory.decodeFile(picPath);
-                item.setImageBitmap(bmp);
-            }
-            LogUtil.d(TAG, "file.exists()");
-        }else{
+//        if(file.exists()){
+//            if (isGif){
+//                try{
+//                    item.setImageDrawable(new GifDrawable(file));
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }else {
+//                Bitmap bmp = BitmapFactory.decodeFile(picPath);
+//                item.setImageBitmap(bmp);
+//            }
+//            LogUtil.d(TAG, "file.exists()");
+//        }else{
             if (isGif){
                 downloadAsyncTask((GifImageView) item, String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(), stickerGroupEntity.getVersion()));
             }else {
@@ -294,6 +292,6 @@ public class StickerItemAdapter extends BaseAdapter {
                         String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(), stickerGroupEntity.getVersion()),
                         R.drawable.network_image_default, R.drawable.network_image_default);
             }
-        }
+//        }
     }
 }

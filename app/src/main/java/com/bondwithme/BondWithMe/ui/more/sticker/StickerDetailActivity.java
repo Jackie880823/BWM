@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -153,15 +152,15 @@ public class StickerDetailActivity extends BaseActivity {
 
     private void setFirstBigSticker() {
 //        StickerItemEntity stickerItemEntity = data.get(position);
-        String picPath = FileUtil.getBigStickerPath(this, stickerGroupEntity.getPath(), "1", stickerGroupEntity.getType());
-        File file = new File(picPath);
-        if (file.exists()){
-            insideSticker.setImageBitmap(BitmapFactory.decodeFile(picPath));
-        }else {
+//        String picPath = FileUtil.getBigStickerPath(this, stickerGroupEntity.getPath(), "1", stickerGroupEntity.getType());
+//        File file = new File(picPath);
+//        if (file.exists()){
+//            insideSticker.setImageBitmap(BitmapFactory.decodeFile(picPath));
+//        }else {
             VolleyUtil.initNetworkImageView(this, insideSticker,
                     String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_1" + stickerGroupEntity.getType(), stickerGroupEntity.getVersion()),
                     R.drawable.network_image_default, R.drawable.network_image_default);
-        }
+//        }
     }
 
     private LocalStickerInfoDao dao;
