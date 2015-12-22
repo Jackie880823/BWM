@@ -46,15 +46,16 @@ public class ContactUtil {
                     null,
                     ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "="
                             + contactId, null, null);
-            if (phone != null && phone.moveToFirst()) {
-                do {
-                    int index = phone
-                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                    int typeindex = phone
-                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
-                    int phone_type = phone.getInt(typeindex);
-                    String phoneNumber = phone.getString(index).replaceAll("\\s*", "");
-                    phoneNumbers.add(phoneNumber);
+            try {
+                if (phone != null && phone.moveToFirst()) {
+                    do {
+                        int index = phone
+                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                        int typeindex = phone
+                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
+                        int phone_type = phone.getInt(typeindex);
+                        String phoneNumber = phone.getString(index).replaceAll("\\s*", "");
+                        phoneNumbers.add(phoneNumber);
 //                  switch (phone_type) {//此处请看下方注释
 //                  case 2:
 //                      result = phoneNumber;
@@ -63,10 +64,13 @@ public class ContactUtil {
 //                  default:
 //                      break;
 //                  }
-                } while (phone.moveToNext());
-            }
-            if (!phone.isClosed()) {
-                phone.close();
+                    } while (phone.moveToNext());
+                }
+            } finally {
+
+                if (!phone.isClosed()) {
+                    phone.close();
+                }
             }
         }
         return phoneNumbers;
@@ -86,10 +90,14 @@ public class ContactUtil {
                 null);
 
         List<String> emails = new ArrayList<>();
-        if (emailCursor != null && emailCursor.moveToFirst()) {
-            do {
-                emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
-            } while (emailCursor.moveToNext());
+        try {
+            if (emailCursor != null && emailCursor.moveToFirst()) {
+                do {
+                    emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
+                } while (emailCursor.moveToNext());
+            }
+        } finally {
+
             if (!emailCursor.isClosed()) {
                 emailCursor.close();
             }
@@ -112,10 +120,14 @@ public class ContactUtil {
                 null);
 
         List<String> emails = new ArrayList<>();
-        if (emailCursor != null && emailCursor.moveToFirst()) {
-            do {
-                emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
-            } while (emailCursor.moveToNext());
+        try {
+            if (emailCursor != null && emailCursor.moveToFirst()) {
+                do {
+                    emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
+                } while (emailCursor.moveToNext());
+
+            }
+        } finally {
             if (!emailCursor.isClosed()) {
                 emailCursor.close();
             }
@@ -133,19 +145,23 @@ public class ContactUtil {
      */
     public static List<ContactDetailEntity> getContactDetailEntities(Context context, Cursor cursor) {
         List<ContactDetailEntity> contactDetailEntities = new ArrayList<>();
-        ContactDetailEntity contactDetailEntity;
-        if (cursor != null) {
-            cursor.moveToFirst();
-            do {
-                if (cursor.getCount() > 0) {
-                    contactDetailEntity = new ContactDetailEntity();
-                    contactDetailEntity.setDisplayName(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
-                    contactDetailEntity.setPhoneNumbers(ContactUtil.getContactPhones(context, cursor));
-                    contactDetailEntity.setEmails(ContactUtil.getContactEmails(context, cursor));
-                    contactDetailEntities.add(contactDetailEntity);
+        try {
+            ContactDetailEntity contactDetailEntity;
+            if (cursor != null) {
+                cursor.moveToFirst();
+                do {
+                    if (cursor.getCount() > 0) {
+                        contactDetailEntity = new ContactDetailEntity();
+                        contactDetailEntity.setDisplayName(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+                        contactDetailEntity.setPhoneNumbers(ContactUtil.getContactPhones(context, cursor));
+                        contactDetailEntity.setEmails(ContactUtil.getContactEmails(context, cursor));
+                        contactDetailEntities.add(contactDetailEntity);
+                    }
                 }
+                while (cursor.moveToNext());
+
             }
-            while (cursor.moveToNext());
+        } finally {
             if (!cursor.isClosed()) {
                 cursor.close();
             }
