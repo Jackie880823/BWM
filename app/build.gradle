@@ -19,7 +19,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 61   //TODO
-        versionName "2.2.0.0" //TODO
+        versionName "2.2.0" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -58,7 +58,7 @@ android {
         }
 
         release {
-            minifyEnabled false //TODO
+            minifyEnabled true //TODO
             // 不显示Log
             buildConfigField "boolean", "LOG_DEBUG", "false"
             zipAlignEnabled true //TODO
