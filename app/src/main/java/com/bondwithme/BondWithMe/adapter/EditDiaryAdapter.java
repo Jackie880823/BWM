@@ -111,7 +111,7 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
                 return headHolder;
             case VIEW_TYPE_VIDEO:
                 if (videoHolder == null) {
-                    view = LayoutInflater.from(context).inflate(R.layout.tab_picture_voide_view, null);
+                    view = LayoutInflater.from(context).inflate(R.layout.video_item, null);
                     videoHolder = new VideoHolder(view);
                 }
                 listener.loadVideoView(videoHolder);
