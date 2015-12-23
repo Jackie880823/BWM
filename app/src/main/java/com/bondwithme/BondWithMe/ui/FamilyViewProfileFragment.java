@@ -224,10 +224,6 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             profileBackgroundId = randomImageId(array);
         }
 
-        if(userEntity != null){
-            showMessageButton();
-
-        }
         btAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -277,6 +273,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE,  userEntity.getUser_id()), profileBackgroundId, profileBackgroundId);
             memberFlag = userEntity.getMember_flag();
 
+            showMessageButton();
             rlFirstName.setVisibility(View.VISIBLE);
             rlListName.setVisibility(View.VISIBLE);
             setDatePrivacy(userEntity.getDob_date_flag(),rlBirthday);
