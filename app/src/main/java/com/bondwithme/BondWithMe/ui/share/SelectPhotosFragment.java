@@ -548,6 +548,25 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         }
     }
 
+    public void insertMedia(String bucket, MediaData mediaData) {
+        ArrayList<MediaData> allMedias = mMediaUris.get(getParentActivity().getString(R.string.text_all));
+        allMedias.add(0, mediaData);
+
+        if (mMediaUris.containsKey(bucket)) {
+            mMediaUris.get(bucket).add(0, mediaData);
+        } else {
+            LogUtil.i(TAG, "addToMediaMap: add map to:" + bucket + ";");
+            ArrayList<MediaData> al = new ArrayList<>();
+            al.add(mediaData);
+            mMediaUris.put(bucket, al);
+            buckets.add(bucket);
+
+            updateBucketsAdapter();
+        }
+
+        loadLocalMediaOrder(curLoaderPosition);
+    }
+
     private ArrayAdapter<String> bucketsAdapter;
 
     /**
