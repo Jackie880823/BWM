@@ -384,7 +384,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     tipViews.add(getViewById(R.id.tv_location));
                     tipViews.add(getParentActivity().rightButton);
 
-                    cutPopInteractive(tipTexts,tipViews,0);
+                    cutPopInteractive(tipTexts, tipViews, 0);
                     break;
             }
         }
@@ -392,30 +392,30 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     private void cutPopInteractive(final ArrayList<String> strings, final ArrayList<View> views, int j) {
 
-        if (TextUtils.isEmpty(strings.get(j)))return;
+        if (TextUtils.isEmpty(strings.get(j))) return;
 
-            if(j < strings.size() - 1 ){
-                interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j),1);
-                final int finalJ = j + 1;
-                interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                    @Override
-                    public void popDismiss() {
-                        //存储本地
-                        cutPopInteractive(strings, views, finalJ);
-                    }
-                });
-                interactivePopupWindow.showPopupWindowUp();
-            }else {
-                interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j),strings.get(j),0);
-                interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                    @Override
-                    public void popDismiss() {
-                        //存储本地
-                        PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, true);
-                    }
-                });
-                interactivePopupWindow.showPopupWindow(true);
-            }
+        if (j < strings.size() - 1) {
+            interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j), 1);
+            final int finalJ = j + 1;
+            interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                @Override
+                public void popDismiss() {
+                    //存储本地
+                    cutPopInteractive(strings, views, finalJ);
+                }
+            });
+            interactivePopupWindow.showPopupWindowUp();
+        } else {
+            interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j), 0);
+            interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                @Override
+                public void popDismiss() {
+                    //存储本地
+                    PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, true);
+                }
+            });
+            interactivePopupWindow.showPopupWindow(true);
+        }
     }
 
     /**
@@ -1570,27 +1570,26 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             }
 
             // 提示是否将内容保存到草稿
-            if (myDialog == null) {
-                myDialog = new MyDialog(getActivity(), "", getActivity().getString(R.string.text_dialog_save_draft));
-                myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myDialog.dismiss();
-                        saveDraft();
-                        getActivity().finish();
-                    }
-                });
-                myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myDialog.dismiss();
-                        getActivity().finish();
-                    }
-                });
-            }
+            myDialog = new MyDialog(getActivity(), "", getActivity().getString(R.string.text_dialog_save_draft));
+            myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myDialog.dismiss();
+                    saveDraft();
+                    getActivity().finish();
+                }
+            });
+            myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myDialog.dismiss();
+                    getActivity().finish();
+                }
+            });
             if (!myDialog.isShowing()) {
                 myDialog.show();
             }
+
             return true;
         }
     }
