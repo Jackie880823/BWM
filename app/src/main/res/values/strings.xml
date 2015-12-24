@@ -16,8 +16,8 @@
     <string name="title_diary_new">Write a Post</string>
     <string name="title_map_choose_location">Location</string>
     <string name="title_invited_status">Invited Members</string>
-    <string name="title_birthday_title">%1$s%2$s birthday is coming !</string>
-    <string name="title_birthday_title_prefix1">and xxx others</string>
+    <string name="title_birthday_title">%s birthday is coming !</string>
+    <string name="title_birthday_title_prefix1">&#160;and %s others&#160;</string>
     <string name="title_birthday_title_prefix2">\'s</string>
     <string name="title_birthday_left_day_desc"> days left</string>
     <string name="text_hint_event_title">Name</string>
