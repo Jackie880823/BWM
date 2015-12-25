@@ -60,7 +60,11 @@ public class AddContactMembersActivity extends BaseActivity {
     private ImageView ivSearch;
     private List<ContactDetailEntity> contactDetailEntities;
     private List<ContactDetailEntity> serverContactDetailEntities;
+
     private List<ContactDetailEntity> searchContactDetailEntities = new ArrayList<>();
+
+    //成功完成请求，本地自己更新数据
+    private List<ContactDetailEntity> localContactDetailEntities;
 
     private AddContactMemberAdapter adapter;
 
@@ -177,7 +181,7 @@ public class AddContactMembersActivity extends BaseActivity {
             @Override
             public void onResult(String string) {
                 LogUtil.d(TAG, "doPendingDelete======" + string);
-                requestData();
+                getData();
             }
 
             @Override
@@ -210,6 +214,7 @@ public class AddContactMembersActivity extends BaseActivity {
         if (!TextUtils.isEmpty(contactDetailEntity.getUser_id()))
         {
             intent.putExtra("member_id", contactDetailEntity.getUser_id());
+
             startActivityForResult(intent, ADD_MEMBER);
         }
     }
@@ -232,7 +237,7 @@ public class AddContactMembersActivity extends BaseActivity {
             case ADD_MEMBER:
                 if (resultCode == RESULT_OK)
                 {
-                    requestData();
+                    getData();
                 }
                 break;
 
@@ -240,7 +245,7 @@ public class AddContactMembersActivity extends BaseActivity {
                 vProgress.setVisibility(View.GONE);
                 if (resultCode == RESULT_OK)
                 {
-                    requestData();
+                    getData();
                     MessageUtil.showMessage(this, R.string.text_success_resend);
                 }
                 break;
