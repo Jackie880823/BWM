@@ -527,21 +527,25 @@ public class SelectPhotosActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (Activity.RESULT_OK == resultCode) {
             switch (requestCode) {
-                case REQUEST_HEAD_VIDEO:
+                case REQUEST_HEAD_VIDEO: {
                     Uri uri = data.getData();
                     MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
                     metadataRetriever.setDataSource(this, uri);
                     String duration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                    ;
                     metadataRetriever.release();
                     MediaData video = new MediaData(data.getData(), videoPath, MediaData.TYPE_VIDEO, Long.valueOf(duration));
                     listener.addUri(video);
                     break;
-                case REQUEST_HEAD_IMAGE:
+                }
+
+                case REQUEST_HEAD_IMAGE: {
                     Uri imageUri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(imagePath));
                     MediaData image = new MediaData(imageUri, imagePath, MediaData.TYPE_IMAGE, 0);
                     listener.addUri(image);
+                    String[] names = imagePath.split(File.separator);
+                    fragment.insertMedia(names[names.length - 2], image);
                     break;
+                }
             }
         }
     }

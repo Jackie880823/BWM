@@ -41,6 +41,8 @@ public class FamilyTreeActivity extends BaseActivity {
 
     private NumberProgressBar progressBar;
 
+    FamilyTreeFragment mFragment;
+
     /**
      * 初始底部栏，没有可以不操作
      */
@@ -83,7 +85,8 @@ public class FamilyTreeActivity extends BaseActivity {
 
     @Override
     protected Fragment getFragment() {
-        return FamilyTreeFragment.newInstance();
+        mFragment = FamilyTreeFragment.newInstance();
+        return mFragment;
     }
 
     @Override
@@ -105,7 +108,7 @@ public class FamilyTreeActivity extends BaseActivity {
      */
     private void getTreeUrl() {
 
-        String url = String.format(Constant.API_FAMILY_TREE, ((FamilyTreeFragment)getFragment()).getSelectUseId());
+        String url = String.format(Constant.API_FAMILY_TREE, mFragment.getSelectUseId());
         new HttpTools(this).get(url, null, true, new HttpCallback() {
             @Override
             public void onStart() {

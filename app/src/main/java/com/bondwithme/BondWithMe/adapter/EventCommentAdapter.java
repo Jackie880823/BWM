@@ -419,7 +419,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         /**
          *  event内容
          */
-        private TextView tvContent;
+        private FreedomSelectionTextView tvContent;
         /**
          * 日历
          */
@@ -457,7 +457,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ownerHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
             eventTitle = (TextView) itemView.findViewById(R.id.event_title);
             eventMapCation = (NetworkImageView) itemView.findViewById(R.id.event_picture_4_location);
-            tvContent = (TextView) itemView.findViewById(R.id.event_desc);
+            tvContent = (FreedomSelectionTextView) itemView.findViewById(R.id.event_desc);
             tvDate = (TextView) itemView.findViewById(R.id.event_date);
             TvLocation = (TextView) itemView.findViewById(R.id.location_desc);
             intentAll = (RelativeLayout) itemView.findViewById(R.id.btn_intent_all);
