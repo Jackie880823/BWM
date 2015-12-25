@@ -49,6 +49,7 @@ public class AddContactMembersActivity extends BaseActivity {
 
     private final int REQUEST_CONTACT_DETAIL_SUCCESSFUL = 0;
     private final int GET_CONTACT = 1;
+    private final int REQUEST_CONTACT_DETAIL_SUCCESSFUL_AGAIN = 2;
 
     private final int ADD_MEMBER = 1;
     private final int PENDING_MEMBER = 2;
@@ -105,6 +106,13 @@ public class AddContactMembersActivity extends BaseActivity {
 
                 case GET_CONTACT:
                     getData();
+                    break;
+
+                case REQUEST_CONTACT_DETAIL_SUCCESSFUL_AGAIN:
+                    adapter.changeData(serverContactDetailEntities);
+                    break;
+
+                default:
                     break;
             }
         }
@@ -354,6 +362,8 @@ public class AddContactMembersActivity extends BaseActivity {
 
     }
 
+    boolean blnFst = true;
+
     private void getData()
     {
         Map<String, String> params = new HashMap<>();
@@ -400,7 +410,15 @@ public class AddContactMembersActivity extends BaseActivity {
                     serverContactDetailEntities = gson.fromJson(jsonObject.getString("contactDetails"), new TypeToken<List<ContactDetailEntity>>() {
                     }.getType());
 
-                    handler.sendEmptyMessage(REQUEST_CONTACT_DETAIL_SUCCESSFUL);
+                    if (blnFst)
+                    {
+                        handler.sendEmptyMessage(REQUEST_CONTACT_DETAIL_SUCCESSFUL);
+                        blnFst = false;
+                    }
+                    else
+                    {
+                        handler.sendEmptyMessage(REQUEST_CONTACT_DETAIL_SUCCESSFUL_AGAIN);
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
