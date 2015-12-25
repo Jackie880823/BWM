@@ -692,5 +692,5 @@
     <string name="text_profile_change_prompt">点击更换背景或者头像照片。</string>
 
     <string name="text_invalid_qr">二维码无效!</string>
-    <string name="save_all_video">Save Video</string>
+    <string name="save_all_video">保存视频</string>
 </resources>
