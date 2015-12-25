@@ -390,6 +390,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
     };
 
+    public EditDiaryFragment() {
+        super();
+    }
+
     private void cutPopInteractive(final ArrayList<String> strings, final ArrayList<View> views, int j) {
 
         if (TextUtils.isEmpty(strings.get(j))) return;

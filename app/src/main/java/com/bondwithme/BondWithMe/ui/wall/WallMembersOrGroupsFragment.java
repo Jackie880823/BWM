@@ -59,6 +59,10 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
 
     private View vProgress;
 
+    public WallMembersOrGroupsFragment() {
+        super();
+    }
+
     public static WallMembersOrGroupsFragment newInstance(String... params) {
         LogUtil.i(TAG, "createInstance");
         return createInstance(new WallMembersOrGroupsFragment(), params);

@@ -101,6 +101,10 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
         return createInstance(new FamilyTreeFragment(), params);
     }
 
+    public FamilyTreeFragment(){
+        super();
+    }
+
     @Override
     public void setLayoutId() {
         this.layoutId = R.layout.relationship_fragment;
