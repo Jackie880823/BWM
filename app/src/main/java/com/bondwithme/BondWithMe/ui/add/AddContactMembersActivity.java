@@ -109,7 +109,7 @@ public class AddContactMembersActivity extends BaseActivity {
                     break;
 
                 case REQUEST_CONTACT_DETAIL_SUCCESSFUL_AGAIN:
-                    adapter.changeData(serverContactDetailEntities);
+                    notifyDataAgain();
                     break;
 
                 default:
@@ -117,6 +117,24 @@ public class AddContactMembersActivity extends BaseActivity {
             }
         }
     };
+
+    private void notifyDataAgain() {
+        if (TextUtils.isEmpty(etSearch.getText().toString())) {
+            if (adapter != null) {
+                adapter.changeData(serverContactDetailEntities);
+            }
+        } else {
+            if (adapter != null) {
+                searchContactDetailEntities.clear();
+                for (int i = 0; i < serverContactDetailEntities.size(); i++) {
+                    if (serverContactDetailEntities.get(i).getDisplayName().toLowerCase().startsWith((etSearch.getText().toString().toLowerCase()))) {
+                        searchContactDetailEntities.add(serverContactDetailEntities.get(i));
+                    }
+                }
+                adapter.changeData(searchContactDetailEntities);
+            }
+        }
+    }
 
     private void doInvite(int position, ContactDetailEntity contactDetailEntity) {
         Intent intent = new Intent(this, AddInviteMembersActivity.class);
@@ -332,21 +350,7 @@ public class AddContactMembersActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(etSearch.getText().toString())) {
-                    if (adapter != null) {
-                        adapter.changeData(serverContactDetailEntities);
-                    }
-                } else {
-                    if (adapter != null) {
-                        searchContactDetailEntities.clear();
-                        for (int i = 0; i < serverContactDetailEntities.size(); i++) {
-                            if (serverContactDetailEntities.get(i).getDisplayName().toLowerCase().startsWith((etSearch.getText().toString().toLowerCase()))) {
-                                searchContactDetailEntities.add(serverContactDetailEntities.get(i));
-                            }
-                        }
-                        adapter.changeData(searchContactDetailEntities);
-                    }
-                }
+                notifyDataAgain();
             }
         });
 
