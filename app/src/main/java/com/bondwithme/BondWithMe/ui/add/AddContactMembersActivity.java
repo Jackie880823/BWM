@@ -49,6 +49,7 @@ public class AddContactMembersActivity extends BaseActivity {
 
     private final int REQUEST_CONTACT_DETAIL_SUCCESSFUL = 0;
     private final int GET_CONTACT = 1;
+    private final int REQUEST_CONTACT_DETAIL_SUCCESSFUL_AGAIN = 2;
 
     private final int ADD_MEMBER = 1;
     private final int PENDING_MEMBER = 2;
@@ -106,9 +107,34 @@ public class AddContactMembersActivity extends BaseActivity {
                 case GET_CONTACT:
                     getData();
                     break;
+
+                case REQUEST_CONTACT_DETAIL_SUCCESSFUL_AGAIN:
+                    notifyDataAgain();
+                    break;
+
+                default:
+                    break;
             }
         }
     };
+
+    private void notifyDataAgain() {
+        if (TextUtils.isEmpty(etSearch.getText().toString())) {
+            if (adapter != null) {
+                adapter.changeData(serverContactDetailEntities);
+            }
+        } else {
+            if (adapter != null) {
+                searchContactDetailEntities.clear();
+                for (int i = 0; i < serverContactDetailEntities.size(); i++) {
+                    if (serverContactDetailEntities.get(i).getDisplayName().toLowerCase().startsWith((etSearch.getText().toString().toLowerCase()))) {
+                        searchContactDetailEntities.add(serverContactDetailEntities.get(i));
+                    }
+                }
+                adapter.changeData(searchContactDetailEntities);
+            }
+        }
+    }
 
     private void doInvite(int position, ContactDetailEntity contactDetailEntity) {
         Intent intent = new Intent(this, AddInviteMembersActivity.class);
@@ -324,21 +350,7 @@ public class AddContactMembersActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(etSearch.getText().toString())) {
-                    if (adapter != null) {
-                        adapter.changeData(serverContactDetailEntities);
-                    }
-                } else {
-                    if (adapter != null) {
-                        searchContactDetailEntities.clear();
-                        for (int i = 0; i < serverContactDetailEntities.size(); i++) {
-                            if (serverContactDetailEntities.get(i).getDisplayName().toLowerCase().startsWith((etSearch.getText().toString().toLowerCase()))) {
-                                searchContactDetailEntities.add(serverContactDetailEntities.get(i));
-                            }
-                        }
-                        adapter.changeData(searchContactDetailEntities);
-                    }
-                }
+                notifyDataAgain();
             }
         });
 
@@ -353,6 +365,8 @@ public class AddContactMembersActivity extends BaseActivity {
     public void requestData() {
 
     }
+
+    boolean blnFst = true;
 
     private void getData()
     {
@@ -400,7 +414,15 @@ public class AddContactMembersActivity extends BaseActivity {
                     serverContactDetailEntities = gson.fromJson(jsonObject.getString("contactDetails"), new TypeToken<List<ContactDetailEntity>>() {
                     }.getType());
 
-                    handler.sendEmptyMessage(REQUEST_CONTACT_DETAIL_SUCCESSFUL);
+                    if (blnFst)
+                    {
+                        handler.sendEmptyMessage(REQUEST_CONTACT_DETAIL_SUCCESSFUL);
+                        blnFst = false;
+                    }
+                    else
+                    {
+                        handler.sendEmptyMessage(REQUEST_CONTACT_DETAIL_SUCCESSFUL_AGAIN);
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
