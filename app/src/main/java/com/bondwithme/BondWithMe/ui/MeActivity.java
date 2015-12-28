@@ -9,8 +9,9 @@ import android.view.View;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
+import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 
-public class MeActivity extends BaseActivity implements MeFragment.MeFragmentListener{
+public class MeActivity extends BaseActivity implements MeFragment.MeFragmentListener {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
@@ -29,7 +30,10 @@ public class MeActivity extends BaseActivity implements MeFragment.MeFragmentLis
 
     @Override
     protected void titleRightEvent() {
-        startActivityForResult(new Intent(this, NewDiaryActivity.class), Constant.INTENT_REQUEST_CREATE_WALL);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        if (fragment instanceof WallFragment) {
+            fragment.startActivityForResult(new Intent(this, NewDiaryActivity.class), Constant.INTENT_REQUEST_CREATE_WALL);
+        }
     }
 
     @Override
