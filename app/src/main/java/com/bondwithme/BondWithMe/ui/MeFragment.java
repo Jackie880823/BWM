@@ -120,6 +120,10 @@ public class MeFragment extends BaseFragment<MeActivity> {
 
                 Intent intentQRCode = new Intent(getActivity(), ViewQRCodeActivity.class);
                 startActivity(intentQRCode);
+
+                if (listener != null) {
+                    listener.clickedOther(v.getId());
+                }
             }
         });
 
@@ -129,6 +133,10 @@ public class MeFragment extends BaseFragment<MeActivity> {
                 Intent intent = new Intent(getActivity(), MyViewProfileActivity.class);
                 intent.putExtra("profile_image_id",profileBackgroundId);
                 startActivityForResult(intent, UPDATE_PROFILE);
+
+                if (listener != null) {
+                    listener.clickedOther(v.getId());
+                }
             }
         });
 
@@ -138,6 +146,10 @@ public class MeFragment extends BaseFragment<MeActivity> {
                 Intent intent = new Intent(getActivity(), AlbumActivity.class);
                 intent.putExtra("member_id", MainActivity.getUser().getUser_id());
                 startActivity(intent);
+
+                if (listener != null) {
+                    listener.clickedOther(v.getId());
+                }
             }
         });
 
@@ -150,6 +162,9 @@ public class MeFragment extends BaseFragment<MeActivity> {
                 ft.replace(R.id.container, f);
                 ft.addToBackStack(null);
                 ft.commit();
+                if (listener != null) {
+                    listener.clickedDiary();
+                }
 
             }
         });
@@ -167,6 +182,10 @@ public class MeFragment extends BaseFragment<MeActivity> {
                 intent.putExtra("is_data", true);
                 intent.putExtra("datas", datas);
                 startActivity(intent);
+
+                if (listener != null) {
+                    listener.clickedOther(v.getId());
+                }
             }
         });
     }
@@ -208,4 +227,25 @@ public class MeFragment extends BaseFragment<MeActivity> {
         return array[result];
     }
 
+    /**
+     * 当前Fragment变化监听
+     */
+    public interface MeFragmentListener{
+        /**
+         * 点击了日记
+         */
+        void clickedDiary();
+
+        /**
+         * 点击了除日记以外的控件
+         * @param resID 控件ID
+         */
+        void clickedOther(int resID);
+    }
+
+    private MeFragmentListener listener;
+
+    public void setListener(MeFragmentListener listener) {
+        this.listener = listener;
+    }
 }

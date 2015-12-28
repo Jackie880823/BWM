@@ -1,13 +1,16 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
 
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 
-public class MeActivity extends BaseActivity {
+public class MeActivity extends BaseActivity implements MeFragment.MeFragmentListener{
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
@@ -26,12 +29,14 @@ public class MeActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-
+        startActivityForResult(new Intent(this, NewDiaryActivity.class), Constant.INTENT_REQUEST_CREATE_WALL);
     }
 
     @Override
     protected Fragment getFragment() {
-        return MeFragment.newInstance();
+        MeFragment fragment = MeFragment.newInstance();
+        fragment.setListener(this);
+        return fragment;
     }
 
     @Override
@@ -53,6 +58,7 @@ public class MeActivity extends BaseActivity {
     protected void titleLeftEvent() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
+            rightButton.setVisibility(View.GONE);
         } else {
             super.titleLeftEvent();
         }
@@ -69,5 +75,23 @@ public class MeActivity extends BaseActivity {
         } else {
             return super.dispatchKeyEvent(event);
         }
+    }
+
+    /**
+     * 点击了日记
+     */
+    @Override
+    public void clickedDiary() {
+        rightButton.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 点击了除日记以外的控件
+     *
+     * @param resID 控件ID
+     */
+    @Override
+    public void clickedOther(int resID) {
+
     }
 }
