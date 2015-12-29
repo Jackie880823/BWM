@@ -34,7 +34,7 @@
                 android:layout_height="@dimen/_20dp"
                 android:visibility="gone"
                 android:src="@drawable/miss"
-                android:layout_gravity="right|bottom" />
+                android:layout_gravity="right|top" />
 
             <ImageView
                 android:id="@+id/myfamily_image_top"
