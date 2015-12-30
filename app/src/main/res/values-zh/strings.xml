@@ -14,7 +14,7 @@
     <string name="title_diary_new">发一个帖子</string>
     <string name="title_map_choose_location">地点</string>
     <string name="title_invited_status">已邀请成员</string>
-    <string name="title_birthday_title">%s生日快到了！</string>
+    <string name="title_birthday_title">%1$s%2$s生日快到了！</string>
     <string name="title_birthday_title_prefix1">和%s名成员</string>
     <string name="title_birthday_title_prefix2">的</string>
     <string name="title_birthday_left_day_desc"> 天后</string>
@@ -693,4 +693,6 @@
 
     <string name="text_invalid_qr">二维码无效!</string>
     <string name="save_all_video">保存视频</string>
+
+    <string name="title_birthday_today_title">%1$s%2$s今天生日!</string>
 </resources>
