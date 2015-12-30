@@ -119,9 +119,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private Dialog showSelectDialog;
     private String MemeberSearch;
     private String GroupSearch;
-    private boolean isup;
     private boolean isopen;
-    private boolean firstOpPop;
     public InteractivePopupWindow popupWindow,popupWindowAddPhoto;
     private String popTestSt;
 
@@ -261,7 +259,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     @Override
     public void initView() {
-        isup = true;
         mContext = getActivity();
         FAMILY_MORE_MEMBER = mContext.getString(R.string.text_new_everyone);
         FAMILY_HIDE_MEMBER = mContext.getString(R.string.text_new_family);
@@ -519,9 +516,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
        if(isVisibleToUser){
-           if(MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)){
+           if((MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)) || MainActivity.getUser().isShow_tip()){
                //相当于Fragment的onResume
-               if(MainActivity.IS_INTERACTIVE_USE && InteractivePopupWindow.firstOpPop){
+               if(InteractivePopupWindow.firstOpPop){
                    popupWindow = new InteractivePopupWindow(getParentActivity(),getParentActivity().rightButton,popTestSt,0);
                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                        @Override
@@ -536,9 +533,18 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                    handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,1000);
                    InteractivePopupWindow.firstOpPop = true;
                }
-
            }
-
+           if(MainActivity.getUser().isShow_tip()){
+               MainActivity.getUser().setShow_tip(false);
+               new Thread(){
+                       @Override
+                       public void run() {
+                           for (int i = 0; i < InteractivePopupWindow.dirayStrings.length; i++){
+                               PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.dirayStrings[i], false);
+                           }
+                       }
+                   }.start();
+           }
        }
     }
 
@@ -658,7 +664,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onRefresh() {
                 isMemberRefresh = true;
-                isup = false;
                 opendate.clear();
 //                requestData();
                 getData();

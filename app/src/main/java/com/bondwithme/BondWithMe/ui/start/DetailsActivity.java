@@ -101,6 +101,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
             switch (msg.what)
             {
                 case HANDLER_COMPLETE_PROFILE_SUCCESS:
+                    userEntity.setShow_tip(true);//从登陆流程进入的必须显示tip，此值作为判断依据。
                     App.userLoginSuccessed(DetailsActivity.this,userEntity, tokenEntity);
 //                    MyPiwik.piwikNewUser();//统计成功注册人数
                     break;
