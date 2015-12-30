@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,6 +133,27 @@ public class MyViewProfileActivity extends BaseActivity {
         tvTitle.setText(getResources().getString(R.string.title_my_profile));
     }
 
+    private boolean banBack;
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                banBack =  backCheck();
+            }
+            return banBack ? banBack : super.dispatchKeyEvent(event);
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    public boolean backCheck() {
+        if (isProfileChanged()) {
+            showNoFriendDialog();
+            return true;
+        } else {
+            super.titleLeftEvent();
+            return false;
+        }
+    }
     @Override
     protected void titleRightEvent() {
         if(!isEit){
