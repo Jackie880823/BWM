@@ -107,6 +107,7 @@
                         android:layout_height="@dimen/_24dp"
                         android:background="@null"
                         android:scaleType="fitXY"
+                        android:visibility="gone"
                         android:src="@drawable/invite_member_icon"
                         />
         </FrameLayout>
