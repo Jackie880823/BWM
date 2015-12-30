@@ -99,7 +99,7 @@ public class UserEntity implements Serializable {
     private String phone_flag;
     private String location_flag;
     private String member_flag;
-    private boolean show_tip;
+    private static boolean show_tip = false;
 
     public boolean isShow_tip() {
         return show_tip;
