@@ -595,7 +595,7 @@
     <string name="notification_action_diary_add_photo">%1$s added new photos to diary</string>
     <string name="notification_action_diary_add_video">%1$s uploaded new video to diary</string>
 
-    <string name="notification_action_miss_missyou">%1$s miss you</string>
+    <string name="notification_action_miss_missyou">%1$s %2$s sent you %3$s Miss</string>
     <string name="text_audio_release">Release to Send</string>
     <string name="text_audio_loosen_audition">Release to Replay</string>
     <string name="text_audio_cancle_send">Release to Cancel</string>
@@ -697,6 +697,7 @@
     <string name="text_profile_change_prompt">Tap to change cover and profile photo.</string>
 
     <string name="text_invalid_qr">Invalid QR code!</string>
+    <string name="text_member_unit">merber</string>
 
     <string name="title_birthday_today_title">%1$s%2$s birthday is today !</string>
     <string name="text_edit">Edit</string>

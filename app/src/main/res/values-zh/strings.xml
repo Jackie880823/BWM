@@ -592,7 +592,7 @@
     <string name="notification_action_diary_add_photo">%1$s在日记里添加了图片</string>
     <string name="notification_action_diary_add_video">%1$s在日记里发了视频</string>
 
-    <string name="notification_action_miss_missyou">%1$s想你了</string>
+    <string name="notification_action_miss_missyou">%1$s %2$s sent you %3$s Miss</string>
     <string name="text_audio_release">松手发送</string>
     <string name="text_audio_loosen_audition">松手重播</string>
     <string name="text_audio_cancle_send">松手取消发送</string>
@@ -693,6 +693,7 @@
 
     <string name="text_invalid_qr">二维码无效!</string>
     <string name="save_all_video">保存视频</string>
+    <string name="text_member_unit">成员</string>
 
     <string name="title_birthday_today_title">%1$s%2$s今天生日!</string>
     <string name="text_edit">编辑</string>

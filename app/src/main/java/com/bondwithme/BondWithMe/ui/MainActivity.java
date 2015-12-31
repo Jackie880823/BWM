@@ -764,6 +764,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         int action = cancel ? View.GONE : View.VISIBLE;
         switch (tab) {
             case family:
+                red_point_1.setVisibility(action);
                 break;
             case chat:
                 red_point_2.setVisibility(action);

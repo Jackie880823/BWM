@@ -32,6 +32,8 @@ import com.bondwithme.BondWithMe.ui.wall.DiaryInformationActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
@@ -317,16 +319,32 @@ public class NotificationUtil {
             case BONDALERT_MISS:
                 smallIcon = R.drawable.bondalert_miss_icon;
 
-                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_MISS);
-                if (msgs.size() == 0) {
+                HashMap<String,String> missInfos = App.getContextInstance().getMissNotificationInfos();
+                if (missInfos.size() == 0) {
                     intent = new Intent(context, MissListActivity.class);
                 } else {
                     //TODO
                     intent = new Intent(context, MissListActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MISS);
-                newMsg = NotificationMessageGenerateUtil.getMissMessage(context, action, action_owner);
+                String memberMissCount = missInfos.get(action_owner);
+                int msgCount = 0;
+                int memberCount;
+                if(memberMissCount!=null){
+                    //已经有该用户的通知+1
+                    missInfos.put(action_owner,String.valueOf(Integer.valueOf(memberMissCount)+1));
+                }else{
+                    missInfos.put(action_owner,"1");
+                }
+                memberCount = missInfos.size();
+                Iterator<String> members = missInfos.keySet().iterator();
+                while (members.hasNext()){
+                    msgCount+=Integer.valueOf(missInfos.get(members.next()));
+                }
+
+                newMsg = NotificationMessageGenerateUtil.getMissMessage(context, action, action_owner,memberCount,msgCount);
                 doNotificationHandle(MainActivity.TabEnum.more);
+                doNotificationHandle(MainActivity.TabEnum.family);
                 break;
             case BONDALERT_BIGDAY:
                 smallIcon = R.drawable.bondalert_bigday_icon;
