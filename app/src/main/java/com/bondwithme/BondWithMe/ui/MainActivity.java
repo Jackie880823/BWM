@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -39,6 +41,9 @@ import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.material.widget.SnackBar;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -116,6 +121,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     public static Map<String,InteractivePopupWindow> interactivePopupWindowMap;
     private static final int GET_DELAY = 0x28;
 
+    public static final String ACTION_REFRESH_RED_POINT_4_FIMILY = "action_refresh_red_point";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,12 +147,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    protected void initTitleBar() {
-        super.initTitleBar();
-
-
-        //for default
+    private void init4DefaultPage() {
         setDrawable();
         changeTitleColor(R.color.tab_color_press5);
         changeTitle(R.string.title_tab_my_family);
@@ -154,8 +156,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         tabIv0.setImageResource(R.drawable.tab_family_select);
         ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press5));
         tabTv0.setTextColor(Color.BLACK);
-        //for last tab
-        mViewPager.setCurrentItem(leavePagerIndex);
     }
 
     @Override
@@ -176,7 +176,16 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             finish();
             startActivity(reintent);
         }
+
+        if (leavePagerIndex!=0){
+            //for last tab
+            mViewPager.setCurrentItem(leavePagerIndex);
+        }else{
+            init4DefaultPage();
+        }
+
         super.onResume();
+
         if (fragments != null) {
             for (Fragment f : fragments) {
                 f.getRetainInstance();
@@ -185,9 +194,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //        if(currentTabEnum!=null){
 //            changeTitleColor();
 //        }
-
-
-        //初始小红点
 
 
         //提示异常反馈
@@ -333,7 +339,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                     break;
                 case SHOW_RED_POINT:
                     if (msg.obj != null) {
-                        setRedPoint((TabEnum) msg.obj, false);
+                        disableRedPoint((TabEnum) msg.obj, false);
                     }
                     break;
                 case GET_DELAY:
@@ -353,6 +359,62 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             return false;
         }
     });
+
+    private void bondDatas(JSONObject jsonObject) throws JSONException {
+        checkDataAndBond2View(TabEnum.wall, jsonObject.getString("wall"));
+        checkDataAndBond2View(TabEnum.event, jsonObject.getString("event"));
+        checkDataAndBond2View(TabEnum.family,jsonObject.getString("miss"));
+
+        checkDataAndBond2View(TabEnum.more,jsonObject.getString("miss"));
+        checkDataAndBond2View(TabEnum.more, jsonObject.getString("bigDay"));
+        checkDataAndBond2View(TabEnum.more,jsonObject.getString("group"));
+        checkDataAndBond2View(TabEnum.more, jsonObject.getString("member"));
+    }
+
+    private void checkDataAndBond2View(TabEnum tab, String countString){
+        int count = Integer.valueOf(countString);
+
+        if (count > 0&&tab!=currentTabEnum) {
+            disableRedPoint(tab, false);
+        }
+    }
+
+    public void checkPoint()
+    {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_MODULES_COUNT, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    bondDatas(jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
 
     @Override
     protected void titleRightEvent() {
@@ -488,6 +550,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         //注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        filter.addAction(this.ACTION_REFRESH_RED_POINT_4_FIMILY);
 //        filter.addAction("refresh");
         registerReceiver(mReceiver, filter);
 
@@ -568,7 +631,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     public void requestData() {
-
+        checkPoint();
     }
 
 
@@ -617,7 +680,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 tabIv1.setImageResource(R.drawable.tab_wall_select);
                 ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
                 tabTv1.setTextColor(Color.BLACK);
-                setRedPoint(TabEnum.wall, true);
                 break;
             case event:
                 setDrawable();
@@ -633,7 +695,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 tabIv2.setImageResource(R.drawable.tab_event_select);
                 ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_press2));
                 tabTv2.setTextColor(Color.BLACK);
-                setRedPoint(TabEnum.event, true);
                 break;
             case chat:
                 setDrawable();
@@ -650,7 +711,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 tabIv3.setImageResource(R.drawable.tab_message_select);
                 ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_press3));
                 tabTv3.setTextColor(Color.BLACK);
-                setRedPoint(TabEnum.chat, true);
                 break;
             case more:
                 setDrawable();
@@ -666,27 +726,16 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 tabIv4.setImageResource(R.drawable.tab_more_select);
                 ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
                 tabTv4.setTextColor(Color.BLACK);
-                setRedPoint(TabEnum.more, true);
                 break;
             case family:
-                setDrawable();
-                //ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
-                changeTitleColor(R.color.tab_color_press5);
-                changeTitle(R.string.title_tab_my_family);
-//                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-//                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-//                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-//                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                leftButton.setVisibility(View.INVISIBLE);
-                rightButton.setVisibility(View.VISIBLE);
-                tabIv0.setImageResource(R.drawable.tab_family_select);
-                ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press5));
-                tabTv0.setTextColor(Color.BLACK);
+                init4DefaultPage();
                 break;
         }
         tvTitle.setSelected(true);
         tvTitle.requestFocus();//让title获取焦点以便文字可以滚动
         currentTabEnum = tabEnum;
+        /**当前tab不显示红点*/
+        disableRedPoint(currentTabEnum, true);
     }
 
     @Override
@@ -760,7 +809,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         return super.dispatchKeyEvent(event);
     }
 
-    public void setRedPoint(TabEnum tab, boolean cancel) {
+    public void disableRedPoint(TabEnum tab, boolean cancel) {
         int action = cancel ? View.GONE : View.VISIBLE;
         switch (tab) {
             case family:
@@ -821,6 +870,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 if (App.isBackground()) {
                     refersh = true;
                 }
+            }
+            if (intent.getAction().equals(ACTION_REFRESH_RED_POINT_4_FIMILY)) {
+                disableRedPoint(TabEnum.family, true);
             }
         }
     };
