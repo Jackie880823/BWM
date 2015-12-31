@@ -516,24 +516,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-       if(isVisibleToUser){
+       if(getUserVisibleHint()){
            if((MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)) || MainActivity.getUser().isShow_tip()){
 //               相当于Fragment的onResume
-               if(InteractivePopupWindow.firstOpPop){
-                   popupWindow = new InteractivePopupWindow(getParentActivity(),getParentActivity().rightButton,popTestSt,0);
-                   popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                       @Override
-                       public void popDismiss() {
-                           PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_MEMBER, true);
-                           newPopAddPhoto();
-                       }
-                   });
-                   popupWindow.showPopupWindow(true);
 
-               } else {
                    handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,1000);
-                   InteractivePopupWindow.firstOpPop = true;
-               }
+
            }
            if(MainActivity.getUser().isShow_tip()){
                UserEntity userEntity = MainActivity.getUser();
