@@ -248,7 +248,22 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (Activity.RESULT_OK == resultCode) {
-            sendCommentView.onActivityResult(requestCode, resultCode, data);
+            switch (requestCode) {
+                case Constant.EDIT_COMMENT_REQUEST_CODE:
+                    WallCommentEntity entity = (WallCommentEntity) data.getSerializableExtra(EditCommentActivity.WALL_COMMENT_ENTITY);
+                    int index = data.getIntExtra(EditCommentActivity.DATA_INDEX, -1);
+                    if (entity != null && index >= 0) {
+                        this.data.remove(index);
+                        this.data.add(index, entity);
+                        adapter.notifyItemChanged(index);
+                    } else {
+                        requestData();
+                    }
+                    break;
+                default:
+                    sendCommentView.onActivityResult(requestCode, resultCode, data);
+                    break;
+            }
         }
     }
 
@@ -341,7 +356,7 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
 
     private void initAdapter() {
         if (adapter == null) {
-            adapter = new DiaryCommentAdapter(getParentActivity(), data);
+            adapter = new DiaryCommentAdapter(this, data);
             adapter.setCommentActionListener(new DiaryCommentAdapter.CommentActionListener() {
                 @Override
                 public void doLove(WallCommentEntity commentEntity, boolean love) {

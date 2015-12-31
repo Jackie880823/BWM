@@ -547,7 +547,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         String feelCode = wallEntity.getDofeel_code();
         LogUtil.i(TAG, "setContent& feelCode: " + feelCode);
         try {
-            if (!TextUtils.isEmpty(feelCode)) {
+            if (!TextUtils.isEmpty(feelCode) && !feelCode.toLowerCase().equals("null")) {
                 iv_mood.setVisibility(View.VISIBLE);
                 StringBuilder b = new StringBuilder(feelCode);
                 int charIndex = this.wallEntity.getDofeel_code().lastIndexOf("_");

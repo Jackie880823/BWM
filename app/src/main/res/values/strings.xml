@@ -697,4 +697,7 @@
     <string name="text_profile_change_prompt">Tap to change cover and profile photo.</string>
 
     <string name="text_invalid_qr">Invalid QR code!</string>
+    <string name="text_edit">Edit</string>
+    <!-- &#160; 为空格 -->
+    <string name="comment_date_edited">Edited &#160;</string>
 </resources>
