@@ -519,9 +519,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
        if(getUserVisibleHint()){
            if((MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)) || MainActivity.getUser().isShow_tip()){
 //               相当于Fragment的onResume
-
-                   handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,1000);
-
+               handler.sendEmptyMessage(GET_DELAY_RIGHT);
            }
            if(MainActivity.getUser().isShow_tip()){
                UserEntity userEntity = MainActivity.getUser();

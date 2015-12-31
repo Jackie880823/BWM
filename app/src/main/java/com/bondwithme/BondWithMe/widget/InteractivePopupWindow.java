@@ -60,10 +60,7 @@ public class InteractivePopupWindow extends PopupWindow {
     private String mTest;
     private int[] screen_pos;
     private boolean isConnection;
-    public static boolean firstOpPop;
     private WindowManager.LayoutParams lp;
-
-
 
 
     public InteractivePopupWindow(final Activity context, View parent, String text, int model){
