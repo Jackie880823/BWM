@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.FamilyGroupAdapter;
@@ -517,7 +518,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         super.setUserVisibleHint(isVisibleToUser);
        if(isVisibleToUser){
            if((MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)) || MainActivity.getUser().isShow_tip()){
-               //相当于Fragment的onResume
+//               相当于Fragment的onResume
                if(InteractivePopupWindow.firstOpPop){
                    popupWindow = new InteractivePopupWindow(getParentActivity(),getParentActivity().rightButton,popTestSt,0);
                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
@@ -536,6 +537,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
            }
            if(MainActivity.getUser().isShow_tip()){
                MainActivity.getUser().setShow_tip(false);
+               UserEntity userEntity = MainActivity.getUser();
+               App.changeLoginedUser(userEntity);
+            userEntity.setShow_tip(false);
+            App.changeLoginedUser(userEntity);
                new Thread(){
                        @Override
                        public void run() {
