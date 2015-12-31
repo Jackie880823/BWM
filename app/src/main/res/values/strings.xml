@@ -699,4 +699,7 @@
     <string name="text_invalid_qr">Invalid QR code!</string>
 
     <string name="title_birthday_today_title">%1$s%2$s birthday is today !</string>
+    <string name="text_edit">Edit</string>
+    <!-- &#160; 为空格 -->
+    <string name="comment_date_edited">Edited &#160;</string>
 </resources>
