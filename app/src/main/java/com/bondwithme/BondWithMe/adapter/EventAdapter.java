@@ -35,6 +35,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private int otherItemCount;
     //生日item显示的文字
     private String defaultTitle;
+    private String todayTitle;
 
     private int position;
 
@@ -46,6 +47,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             hasTop = true;
             otherItemCount = 1;
             defaultTitle = context.getString(R.string.title_birthday_title);
+            todayTitle = context.getString(R.string.title_birthday_today_title);
         } else {
             hasTop = false;
             otherItemCount = 0;
@@ -122,12 +124,19 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else if(holder instanceof VHHeader) {
             VHHeader item = (VHHeader) holder;
             BirthdayEntity be = birthdayEvents.get(0);
+            if("0".equals(be.getDay_count())) {
+                defaultTitle = todayTitle;
+                item.left_daty_count.setText(mContext.getString(R.string.text_today));
+                item.tv_date_desc.setVisibility(View.GONE);
+            } else {
+                item.left_daty_count.setText(be.getDay_count() + "");
+                item.tv_date_desc.setVisibility(View.VISIBLE);
+            }
             if(birthdayEvents.size() == 1) {
                 item.tv_top_event_title.setText(String.format(defaultTitle, be.getUser_given_name(), mContext.getString(R.string.title_birthday_title_prefix2)));
             } else {
                 String stBirthday =  String.format(mContext.getString(R.string.title_birthday_title_prefix1,birthdayEvents.size() - 1));
-                item.tv_top_event_title.setText(String.format(defaultTitle, be.getUser_given_name() + stBirthday));
-
+                item.tv_top_event_title.setText(String.format(defaultTitle, be.getUser_given_name() + stBirthday,""));
             }
 
             // add start by Jackie
@@ -142,15 +151,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.date.setText(be.getUser_dob());
             }
             // add end by Jackie
-
-            if("0".equals(be.getDay_count())) {
-                item.left_daty_count.setText(mContext.getString(R.string.text_today));
-                item.tv_date_desc.setVisibility(View.GONE);
-            } else {
-                item.left_daty_count.setText(be.getDay_count() + "");
-                item.tv_date_desc.setVisibility(View.VISIBLE);
-            }
-
 
         }
     }

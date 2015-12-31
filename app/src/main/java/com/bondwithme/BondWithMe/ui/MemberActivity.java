@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -46,6 +47,7 @@ public class MemberActivity extends BaseActivity {
     private LinearLayoutManager llm;
     private String TAG;
     private TextView tvNoDate;
+    private LinearLayout llNoData;
 
     public int getLayout() {
         return R.layout.activity_news;
@@ -84,6 +86,7 @@ public class MemberActivity extends BaseActivity {
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
         tvNoDate = getViewById(R.id.tv_no_data_display);
+        llNoData = getViewById(R.id.ll_no_data_display);
 
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
@@ -160,8 +163,9 @@ public class MemberActivity extends BaseActivity {
 
                 //no data!
                 if (!data.isEmpty()){
-                    tvNoDate.setVisibility(View.GONE);
+                    llNoData.setVisibility(View.GONE);
                 }else if (data.isEmpty() && !MemberActivity.this.isFinishing()){
+                    llNoData.setVisibility(View.VISIBLE);
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_members));
                 }
 

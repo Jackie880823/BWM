@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -8,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -42,6 +42,7 @@ public class AlertWallActivity extends BaseActivity {
     private RecyclerView rvList;
     private LinearLayoutManager llm;
     private TextView tvNoDate;
+    private LinearLayout llNoData;
 
 
     public int getLayout() {
@@ -80,6 +81,7 @@ public class AlertWallActivity extends BaseActivity {
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
         tvNoDate = getViewById(R.id.tv_no_data_display);
+        llNoData = getViewById(R.id.ll_no_data_display);
 
 
         rvList = getViewById(R.id.rvList);
@@ -168,8 +170,9 @@ public class AlertWallActivity extends BaseActivity {
                 loading = false;
 
                 if (!data.isEmpty()){
-                    tvNoDate.setVisibility(View.GONE);
+                    llNoData.setVisibility(View.GONE);
                 }else if (data.isEmpty() && !AlertWallActivity.this.isFinishing()){
+                    llNoData.setVisibility(View.VISIBLE);
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_diary));
                 }
             }
