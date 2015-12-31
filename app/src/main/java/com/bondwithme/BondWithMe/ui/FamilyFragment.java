@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.FamilyGroupAdapter;
@@ -119,9 +120,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private Dialog showSelectDialog;
     private String MemeberSearch;
     private String GroupSearch;
-    private boolean isup;
     private boolean isopen;
-    private boolean firstOpPop;
     public InteractivePopupWindow popupWindow,popupWindowAddPhoto;
     private String popTestSt;
 
@@ -261,7 +260,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     @Override
     public void initView() {
-        isup = true;
         mContext = getActivity();
         FAMILY_MORE_MEMBER = mContext.getString(R.string.text_new_everyone);
         FAMILY_HIDE_MEMBER = mContext.getString(R.string.text_new_family);
@@ -518,27 +516,26 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-       if(isVisibleToUser){
-           if(MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)){
-               //相当于Fragment的onResume
-               if(MainActivity.IS_INTERACTIVE_USE && InteractivePopupWindow.firstOpPop){
-                   popupWindow = new InteractivePopupWindow(getParentActivity(),getParentActivity().rightButton,popTestSt,0);
-                   popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                       @Override
-                       public void popDismiss() {
-                           PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_MEMBER, true);
-                           newPopAddPhoto();
-                       }
-                   });
-                   popupWindow.showPopupWindow(true);
+       if(getUserVisibleHint()){
+           if((MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)) || MainActivity.getUser().isShow_tip()){
+//               相当于Fragment的onResume
 
-               } else {
                    handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,1000);
-                   InteractivePopupWindow.firstOpPop = true;
-               }
 
            }
-
+           if(MainActivity.getUser().isShow_tip()){
+               UserEntity userEntity = MainActivity.getUser();
+               userEntity.setShow_tip(false);
+               App.changeLoginedUser(userEntity);
+               new Thread(){
+                       @Override
+                       public void run() {
+                           for (int i = 0; i < InteractivePopupWindow.dirayStrings.length; i++){
+                               PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.dirayStrings[i], false);
+                           }
+                       }
+                   }.start();
+           }
        }
     }
 
@@ -658,7 +655,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onRefresh() {
                 isMemberRefresh = true;
-                isup = false;
                 opendate.clear();
 //                requestData();
                 getData();

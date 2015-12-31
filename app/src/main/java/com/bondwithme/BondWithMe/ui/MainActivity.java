@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     public static String STICKER_VERSION = "3";
 
-    public static  Boolean IS_INTERACTIVE_USE;
+    public static Boolean IS_INTERACTIVE_USE;
     public static Map<String,InteractivePopupWindow> interactivePopupWindowMap;
     private static final int GET_DELAY = 0x28;
 
@@ -375,13 +375,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
-        if(MainActivity.IS_INTERACTIVE_USE){
-//            handler.sendEmptyMessageDelayed(GET_DELAY, 500);
-        }
-//            firstOpPop = true;
-//        }
-
-
     }
 
     public interface TitleEventListenner {
@@ -415,6 +408,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + STICKER_VERSION + App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
         IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START,true);
+        if(getUser().isShow_tip()){
+            IS_INTERACTIVE_USE = true;
+        }
         LogUtil.d(TAG,"isFirstLogin========="+isFirstLogin+"======IS_FIRST_LOGIN======"+IS_FIRST_LOGIN);
         if (isFirstLogin) {
             new Thread() {

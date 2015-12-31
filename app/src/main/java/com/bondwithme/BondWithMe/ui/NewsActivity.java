@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -41,6 +42,7 @@ public class NewsActivity extends BaseActivity {
     private RecyclerView rvList;
     private LinearLayoutManager llm;
     private TextView tvNoData;
+    private LinearLayout llNoData;
 
 
 
@@ -80,6 +82,7 @@ public class NewsActivity extends BaseActivity {
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
         tvNoData = getViewById(R.id.tv_no_data_display);
+        llNoData = getViewById(R.id.ll_no_data_display);
 
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
@@ -168,8 +171,9 @@ public class NewsActivity extends BaseActivity {
 
                 //no data!!!
                 if (!data.isEmpty()) {
-                    tvNoData.setVisibility(View.GONE);
+                    llNoData.setVisibility(View.GONE);
                 } else if (data.isEmpty() && !NewsActivity.this.isFinishing()) {
+                    llNoData.setVisibility(View.VISIBLE);
                     tvNoData.setText(getResources().getString(R.string.text_no_date_news));
                 }
             }
