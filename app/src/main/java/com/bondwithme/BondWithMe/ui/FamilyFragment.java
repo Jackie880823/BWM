@@ -536,10 +536,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                }
            }
            if(MainActivity.getUser().isShow_tip()){
-               MainActivity.getUser().setShow_tip(false);
                UserEntity userEntity = MainActivity.getUser();
+               userEntity.setShow_tip(false);
                App.changeLoginedUser(userEntity);
-            userEntity.setShow_tip(false);
             App.changeLoginedUser(userEntity);
                new Thread(){
                        @Override

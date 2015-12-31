@@ -168,7 +168,8 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void titleLeftEvent() {
-        if (isProfileChanged()) {
+        boolean isChanged = isProfileChanged();
+        if (isChanged) {
             showNoFriendDialog();
         } else {
             super.titleLeftEvent();
