@@ -73,7 +73,8 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     private static List<String> notificationEventList = new ArrayList<>();
     private static List<String> notificationMemberList = new ArrayList<>();
     private static List<String> notificationMessageList = new ArrayList<>();
-    private static List<String> notificationMissList = new ArrayList<>();
+    /**特殊的miss通知*/
+    private static HashMap<String,String> notificationMissList = new HashMap<>();
     private static List<String> notificationBigDayList = new ArrayList<>();
     private static List<String> notificationNewsList = new ArrayList<>();
     private static List<String> notificationGroupList = new ArrayList<>();
@@ -485,8 +486,8 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 return notificationMemberList;
             case BONDALERT_MESSAGE:
                 return notificationMessageList;
-            case BONDALERT_MISS:
-                return notificationMissList;
+//            case BONDALERT_MISS:
+//                return notificationMissList;
             case BONDALERT_BIGDAY:
                 return notificationBigDayList;
             case BONDALERT_NEWS:
@@ -496,6 +497,11 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             default:
                 return new ArrayList<>();
         }
+    }
+
+    /**蛋疼的搞特殊*/
+    public static HashMap<String,String> getMissNotificationInfos() {
+        return notificationMissList;
     }
 
     /**

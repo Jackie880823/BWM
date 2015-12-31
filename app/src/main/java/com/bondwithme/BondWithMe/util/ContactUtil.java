@@ -68,7 +68,7 @@ public class ContactUtil {
                 }
             } finally {
 
-                if (!phone.isClosed()) {
+                if (phone != null&&!phone.isClosed()) {
                     phone.close();
                 }
             }
@@ -98,7 +98,7 @@ public class ContactUtil {
             }
         } finally {
 
-            if (!emailCursor.isClosed()) {
+            if (emailCursor != null &&!emailCursor.isClosed()) {
                 emailCursor.close();
             }
         }
@@ -128,7 +128,7 @@ public class ContactUtil {
 
             }
         } finally {
-            if (!emailCursor.isClosed()) {
+            if (emailCursor != null &&!emailCursor.isClosed()) {
                 emailCursor.close();
             }
         }
@@ -162,7 +162,7 @@ public class ContactUtil {
 
             }
         } finally {
-            if (!cursor.isClosed()) {
+            if (cursor != null&&!cursor.isClosed()) {
                 cursor.close();
             }
         }

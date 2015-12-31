@@ -4,6 +4,7 @@ package com.bondwithme.BondWithMe;
 import android.content.Context;
 import android.os.Looper;
 
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -129,6 +130,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
     private void saveCrashInfo2File(Throwable ex) {
         //收集设备参数信息
         infos = SystemUtil.collectDeviceInfo(App.getContextInstance());
+        //添加用户相关信息
+        infos.put("bondwithme_id", MainActivity.getUser().getBondwithme_id());
+        infos.put("user_name", MainActivity.getUser().getUser_given_name());
 
         StringBuffer sb = new StringBuffer();
         for (Map.Entry<String, String> entry : infos.entrySet()) {

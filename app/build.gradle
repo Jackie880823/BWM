@@ -19,7 +19,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 61   //TODO
-        versionName "2.2.0" //TODO
+        versionName "2.2.0.1" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
