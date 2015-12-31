@@ -136,7 +136,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.tv_top_event_title.setText(String.format(defaultTitle, be.getUser_given_name(), mContext.getString(R.string.title_birthday_title_prefix2)));
             } else {
                 String stBirthday =  String.format(mContext.getString(R.string.title_birthday_title_prefix1,birthdayEvents.size() - 1));
-                item.tv_top_event_title.setText(String.format(defaultTitle, be.getUser_given_name() + stBirthday));
+                item.tv_top_event_title.setText(String.format(defaultTitle, be.getUser_given_name() + stBirthday,""));
             }
 
             // add start by Jackie
