@@ -735,9 +735,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void onResume() {
         super.onResume();
         if (MainActivity.IS_INTERACTIVE_USE &&
-                !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
-            getParentActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN |
-                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
+                !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
             mHandler.sendEmptyMessage(GET_DELAY);
         }
     }
