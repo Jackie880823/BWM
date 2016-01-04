@@ -60,15 +60,14 @@ public class InteractivePopupWindow extends PopupWindow {
     private String mTest;
     private int[] screen_pos;
     private boolean isConnection;
-    public static boolean firstOpPop;
     private WindowManager.LayoutParams lp;
-
-
 
 
     public InteractivePopupWindow(final Activity context, View parent, String text, int model){
         LogUtil.i(TAG,"INTERACTIVE_TIP_START"+PreferencesUtil.getValue(context,INTERACTIVE_TIP_START,false));
-
+        mContext = context;
+        mParent = parent;
+        mTest = text;
 //        WindowManager windowManager = context.getWindowManager();
 //        Display display =  windowManager.getDefaultDisplay();
         lp = context.getWindow().getAttributes();
@@ -82,9 +81,6 @@ public class InteractivePopupWindow extends PopupWindow {
         }else {
             conentView = LayoutInflater.from(context).inflate(R.layout.interactive_pop_up_dialog,null);
         }
-        mContext = context;
-        mParent = parent;
-        mTest = text;
         // 设置SelectPicPopupWindow的View
         this.setContentView(conentView);
         // 设置SelectPicPopupWindow弹出窗体的宽
@@ -123,7 +119,9 @@ public class InteractivePopupWindow extends PopupWindow {
             position_x = anchor_rect.centerX() - (contentViewWidth / 2);
             position_y = anchor_rect.bottom - (anchor_rect.height() / 2);
 
-            addPopupText(mTest);
+            if(mTest != null){
+                addPopupText(mTest);
+            }
         } else {
             this.dismiss();
         }

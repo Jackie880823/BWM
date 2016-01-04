@@ -519,24 +519,30 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
        if(getUserVisibleHint()){
            if((MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)) || MainActivity.getUser().isShow_tip()){
 //               相当于Fragment的onResume
-
-                   handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,1000);
-
+               handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,500);
            }
            if(MainActivity.getUser().isShow_tip()){
-               UserEntity userEntity = MainActivity.getUser();
-               userEntity.setShow_tip(false);
-               App.changeLoginedUser(userEntity);
-               new Thread(){
-                       @Override
-                       public void run() {
-                           for (int i = 0; i < InteractivePopupWindow.dirayStrings.length; i++){
-                               PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.dirayStrings[i], false);
-                           }
-                       }
-                   }.start();
+               setPopupWindowPopupState(false);
+           }else {
+               if(PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)){
+                   setPopupWindowPopupState(true);
+               }
            }
        }
+    }
+
+    private void setPopupWindowPopupState(final Boolean mState){
+        UserEntity userEntity = MainActivity.getUser();
+        userEntity.setShow_tip(false);
+        App.changeLoginedUser(userEntity);
+        new Thread(){
+            @Override
+            public void run() {
+                for (int i = 0; i < InteractivePopupWindow.dirayStrings.length; i++){
+                    PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.dirayStrings[i], mState);
+                }
+            }
+        }.start();
     }
 
     private void showMemberEmptyView() {
