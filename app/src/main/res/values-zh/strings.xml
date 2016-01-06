@@ -699,4 +699,5 @@
     <string name="text_edit">编辑</string>
     <!-- &#160; 为空格 -->
     <string name="comment_date_edited">已编辑 &#160;</string>
+    <string name="title_edit_comment">编辑评论</string>
 </resources>
