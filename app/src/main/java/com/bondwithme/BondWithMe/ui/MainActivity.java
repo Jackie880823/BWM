@@ -28,6 +28,7 @@ import com.bondwithme.BondWithMe.adapter.MyFragmentPagerAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.receiver_service.ReportIntentService;
+import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.util.FileUtil;
@@ -119,11 +120,19 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (App.getLoginedUser() == null) {
+        if (App.getLoginedUser() == null) {//防止出现迷之不存在用户数据进入到主页
             App.getContextInstance().logout(this);
             return;
         }
+
+        if (getUser().isShow_add_member())//新用户注册先进入添加好友。
+        {
+            Intent intent = new Intent(this, AddMembersActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        super.onCreate(savedInstanceState);
 
         //表示这个用户已经登陆过。提供给登录界面判断显示sign up 还是 log in
         if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN,"")))

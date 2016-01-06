@@ -100,6 +100,15 @@ public class UserEntity implements Serializable {
     private String location_flag;
     private String member_flag;
     private boolean show_tip;
+    private boolean show_add_member;
+
+    public boolean isShow_add_member() {
+        return show_add_member;
+    }
+
+    public void setShow_add_member(boolean show_add_member) {
+        this.show_add_member = show_add_member;
+    }
 
     public boolean isShow_tip() {
         return show_tip;
