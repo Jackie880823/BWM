@@ -33,7 +33,7 @@ public class EditCommentActivity extends BaseActivity {
      */
     @Override
     protected void setTitle() {
-
+        tvTitle.setText(R.string.title_edit_comment);
     }
 
     /**
