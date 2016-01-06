@@ -9,12 +9,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.AddMembersAdapter;
@@ -90,6 +92,44 @@ public class AddMembersActivity extends BaseActivity{
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setImageResource(R.drawable.qrcode_button_icon);
+        if(App.getLoginedUser().isShow_add_member())
+        {
+            leftButton.setImageResource(R.drawable.x_button);
+        }
+    }
+
+    @Override
+    protected void titleLeftEvent() {
+        if(App.getLoginedUser().isShow_add_member())
+        {
+            goBackToMain();
+        }
+
+        super.titleLeftEvent();
+    }
+
+    /**
+     * 新注册用户关闭此界面后重新返回到主页，并修改用户数据保存。左上角按钮和物理返回键需要处理。
+     */
+    private void goBackToMain() {
+        UserEntity userEntity;
+        userEntity = App.getLoginedUser();
+        userEntity.setShow_add_member(false);
+        App.changeLoginedUser(userEntity);
+        App.goMain(this);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if(App.getLoginedUser().isShow_add_member())
+        {
+            if(event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                goBackToMain();
+                return true;
+            }
+        }
+
+        return super.dispatchKeyEvent(event);
     }
 
     @Override
@@ -319,4 +359,6 @@ public class AddMembersActivity extends BaseActivity{
                 break;
         }
     }
+
+
 }

@@ -226,7 +226,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             updateDialog.show();
     }
 
-    private static void goMain(Activity context) {
+    public static void goMain(Activity context) {
         Intent intent = new Intent(context, MainActivity.class);
 //        ComponentName cn = intent.getComponent();
 //        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
