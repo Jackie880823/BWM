@@ -699,4 +699,8 @@
     <string name="text_edit">编辑</string>
     <!-- &#160; 为空格 -->
     <string name="comment_date_edited">已编辑 &#160;</string>
+    <string name="local_notification_text_for_5_minute">您可以设置个人资料分享为私有，所有或公众。</string>
+    <string name="local_notification_text_for_2_day">通过照片或文字在日记里更贴切的表达自己！</string>
+    <string name="local_notification_text_for_3_day">免费酷酷的Papa Panda家庭系列表情超萌！大爱！</string>
+    <string name="local_notification_text_for_5_day">想念家人吗？现在就发个想您了给他们呗！</string>
 </resources>

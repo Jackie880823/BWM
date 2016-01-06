@@ -703,4 +703,8 @@
     <string name="text_edit">Edit</string>
     <!-- &#160; 为空格 -->
     <string name="comment_date_edited">Edited &#160;</string>
+    <string name="local_notification_text_for_5_minute">You can set your profile’s privacy to share with Only Me, All Members or Public.</string>
+    <string name="local_notification_text_for_2_day">Express yourself in Diary with photos or words.</string>
+    <string name="local_notification_text_for_3_day">Fall in love with free stickies featuring Papa Panda’s family!</string>
+    <string name="local_notification_text_for_5_day">Do you miss your family? Send them a Miss now.</string>
 </resources>

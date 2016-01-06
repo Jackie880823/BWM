@@ -29,12 +29,14 @@ import com.bondwithme.BondWithMe.Tranck.MyPiwik;
 import com.bondwithme.BondWithMe.adapter.MyFragmentPagerAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.receiver_service.AlarmControler;
 import com.bondwithme.BondWithMe.receiver_service.ReportIntentService;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
@@ -46,6 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -122,6 +125,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private static final int GET_DELAY = 0x28;
 
     public static final String ACTION_REFRESH_RED_POINT_4_FIMILY = "action_refresh_red_point";
+    public static final String JUMP_INDEX = "jumpIndex";
 
 
     @Override
@@ -139,6 +143,14 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         }
 
         App.checkVerSion(this);
+        try {
+            /**少于7天*/
+            if(MyDateUtils.getDayDistanceBetweenDateStrings(getUser().getUser_creation_date(),getUser().getUser_active_date())<7){
+                AlarmControler.getInstance().createAllTasks(this);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -169,6 +181,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
     protected void onResume() {
         if (refersh) {
             refersh = false;
@@ -177,14 +195,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             startActivity(reintent);
         }
 
-        if (leavePagerIndex!=0){
-            //for last tab
-            mViewPager.setCurrentItem(leavePagerIndex);
-        }else{
-            init4DefaultPage();
-        }
-
         super.onResume();
+        int newJumpIndex = getIntent().getIntExtra(JUMP_INDEX, -1);
+        /**新的跳转，以区分旧的，避免第一次启动重复set tab*/
+        if(newJumpIndex!=-1&&newJumpIndex!=jumpIndex&&currentTabEnum.ordinal()!=newJumpIndex){
+            mViewPager.setCurrentItem(newJumpIndex,false);
+        }
 
         if (fragments != null) {
             for (Fragment f : fragments) {
@@ -534,7 +550,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         LAST_LEAVE_INDEX += getUser().getUser_id();
         leavePagerIndex = PreferencesUtil.getValue(this, LAST_LEAVE_INDEX, 0);
-        jumpIndex = getIntent().getIntExtra("jumpIndex", -1);
+        jumpIndex = getIntent().getIntExtra(JUMP_INDEX, -1);
         if (jumpIndex != -1) {
             leavePagerIndex = jumpIndex;
         }
@@ -558,16 +574,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         checkAndShowRedPoit();
 
         //TODO test mush delete
-//        Intent intent = new Intent(this, CrashActivity.class);
-//        startActivity(intent);
-//        try {
-//            MediaUtil.encodeFile2Mp4(this, FileUtil.getSaveRootPath(this, true).toString() + "/VID_20150827_111334.3gp", FileUtil.getSaveRootPath(this, true).toString() + "/" + System.currentTimeMillis() + ".mp4");
-////            MediaUtil.encodeFile2Mp4(this, FileUtil.getSaveRootPath(this, true).toString() + "/VID_20150827_181646.mp4", FileUtil.getSaveRootPath(this, true).toString() + "/" + System.currentTimeMillis() + ".mp4");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
     }
+
+
 
     /**
      * 清除所有tab小红点
@@ -627,6 +637,17 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //            }
 //        });
         return iseventdate;
+    }
+
+    @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+        if (leavePagerIndex!=0){
+            //for last tab
+            mViewPager.setCurrentItem(leavePagerIndex);
+        }else{
+            init4DefaultPage();
+        }
     }
 
     @Override
