@@ -83,6 +83,11 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
         mContext = getActivity();
         TAG = mContext.getClass().getSimpleName();

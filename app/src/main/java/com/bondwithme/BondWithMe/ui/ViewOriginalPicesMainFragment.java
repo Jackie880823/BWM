@@ -97,6 +97,11 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
         rvList = (RecyclerView) getViewById(R.id.small_image_view_container);
         tvIndexOfList = (TextView) getViewById(R.id.tv_index_count);

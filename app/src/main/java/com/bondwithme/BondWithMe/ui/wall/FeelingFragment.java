@@ -44,6 +44,11 @@ public class FeelingFragment extends BaseFragment<FeelingActivity> implements Fe
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
         RecyclerView feeling_icons = getViewById(R.id.feeling_icons);
         LinearLayoutManager llmFeeling = new LinearLayoutManager(getParentActivity());

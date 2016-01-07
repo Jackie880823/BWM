@@ -2,7 +2,6 @@ package com.bondwithme.BondWithMe.ui;
 
 //import android.app.ProgressDialog;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +49,11 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
     @Override
     public void setLayoutId() {
         this.layoutId = R.layout.fragment_invited_tab;
+    }
+
+    @Override
+    protected void setParentTitle() {
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -58,6 +59,18 @@ public abstract class BaseFragment<P extends Activity> extends Fragment implemen
         return rootView;
     }
 
+    /**强制定义title,请在重写时直接调用setTitle方法,如果不想设置title比如Activity只有一个fragment时重写不做任何事就OK*/
+    protected abstract void setParentTitle();
+
+    /**设置父窗title,如果父窗为 BaseActivity*/
+    protected void setTitle(String title){
+        if(mActivity!=null&&mActivity instanceof BaseActivity){
+            ((BaseActivity)mActivity).tvTitle.setText(title);
+            mTitle = title;
+        }
+    }
+
+    protected String mTitle;
 
     protected P getParentActivity(){
         return mActivity;
@@ -87,17 +100,27 @@ public abstract class BaseFragment<P extends Activity> extends Fragment implemen
         }
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        setParentTitle();
+    }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.mActivity = (P) activity;
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity a = null;
+        if (context instanceof Activity){
+            a=(Activity) context;
+        }
+        if(a!=null) {
+            this.mActivity = (P) a;
+            try {
+                mListener = (OnFragmentInteractionListener) a;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(a.toString()
+                        + " must implement OnFragmentInteractionListener");
+            }
         }
     }
 

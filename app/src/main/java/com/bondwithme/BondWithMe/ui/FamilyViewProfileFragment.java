@@ -112,6 +112,11 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         this.layoutId = R.layout.activity_family_view_profile;
     }
 
+    @Override
+    protected void setParentTitle() {
+
+    }
+
 
     Handler handler = new Handler() {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

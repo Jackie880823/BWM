@@ -90,6 +90,11 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
         this.layoutId = R.layout.fragment_diary_information;
     }
 
+    @Override
+    protected void setParentTitle() {
+
+    }
+
 
     @Override
     public void initView() {

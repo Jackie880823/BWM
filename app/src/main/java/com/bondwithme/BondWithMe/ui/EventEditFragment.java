@@ -74,6 +74,11 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         this.layoutId = R.layout.fragment_event_edit;
     }
 
+    @Override
+    protected void setParentTitle() {
+
+    }
+
     private MyGridViewForScroolView gvFriends;
     private TextView event_title;
     private EditText event_desc;
