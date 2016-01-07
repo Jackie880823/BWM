@@ -69,6 +69,11 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
         mContext = getActivity();
         TAG = mContext.getClass().getSimpleName();

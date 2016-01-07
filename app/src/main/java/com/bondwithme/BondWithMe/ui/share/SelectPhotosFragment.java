@@ -164,6 +164,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         layoutId = R.layout.activity_select_photo;
     }
 
+    @Override
+    protected void setParentTitle() {
+
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void initView() {

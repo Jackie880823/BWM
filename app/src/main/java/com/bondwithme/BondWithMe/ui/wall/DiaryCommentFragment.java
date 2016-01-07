@@ -112,6 +112,11 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
         this.layoutId = R.layout.fragment_diary_comment;
     }
 
+    @Override
+    protected void setParentTitle() {
+
+    }
+
 
     @Override
     public void initView() {

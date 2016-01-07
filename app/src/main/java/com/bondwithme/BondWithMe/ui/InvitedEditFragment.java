@@ -70,6 +70,11 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         this.layoutId = R.layout.fragment_invited_edit;
     }
 
+    @Override
+    protected void setParentTitle() {
+
+    }
+
 
     @Override
     public void initView() {

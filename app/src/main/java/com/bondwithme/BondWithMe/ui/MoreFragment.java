@@ -88,6 +88,11 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void setLayoutId() {
         this.layoutId = R.layout.fragment_more;
     }

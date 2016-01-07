@@ -105,6 +105,11 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
         layoutId = R.layout.activity_new_sticker;
     }
 
+    @Override
+    protected void setParentTitle() {
+
+    }
+
     Thread myThread = new Thread() {
         @Override
         public void run() {

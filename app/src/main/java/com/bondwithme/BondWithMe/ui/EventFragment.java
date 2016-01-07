@@ -75,6 +75,11 @@ public class EventFragment extends BaseFragment<MainActivity> {
         this.layoutId = R.layout.fragment_event;
     }
 
+    @Override
+    protected void setParentTitle() {
+        setTitle(getString(R.string.title_tab_event));
+    }
+
 
     private RecyclerView rvList;
     private EventAdapter adapter;

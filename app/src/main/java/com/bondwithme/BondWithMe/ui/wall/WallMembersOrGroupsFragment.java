@@ -74,6 +74,11 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
 
         try {

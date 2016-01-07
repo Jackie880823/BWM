@@ -61,6 +61,11 @@ public class MeFragment extends BaseFragment<MeActivity> {
         this.layoutId = R.layout.me_fragment;
     }
 
+    @Override
+    protected void setParentTitle() {
+        setTitle(getString(R.string.title_me));
+    }
+
     String headUrl;
 
     @Override

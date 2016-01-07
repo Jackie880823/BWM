@@ -509,6 +509,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
         try {
             contentGroupId = getArguments().getString(ARG_PARAM_PREFIX + "0");

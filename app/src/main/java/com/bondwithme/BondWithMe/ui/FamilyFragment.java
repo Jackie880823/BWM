@@ -135,6 +135,11 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         this.layoutId = R.layout.activity_my_family;
     }
 
+    @Override
+    protected void setParentTitle() {
+
+    }
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

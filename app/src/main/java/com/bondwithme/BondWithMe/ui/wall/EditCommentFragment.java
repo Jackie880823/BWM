@@ -43,6 +43,11 @@ public class EditCommentFragment extends BaseFragment<EditCommentActivity> {
         this.layoutId = R.layout.fragment_edit_comment;
     }
 
+    @Override
+    protected void setParentTitle() {
+
+    }
+
     private WallCommentEntity entity;
 
     @Override
