@@ -153,7 +153,7 @@ public class NotificationMessageGenerateUtil {
             } else {
                 msg = context.getString(R.string.notification_action_bigday_birthday_other, action_owner);
             }
-        } else if ("prebirthday ".equals(action)) {
+        } else if ("prebirthday".equals(action)) {
             if ("1day".equals(item_type)) {
                 msg = context.getString(R.string.notification_action_bigday_birthday_prebirthday_1, action_owner);
             } else if ("3day".equals(item_type)) {
