@@ -22,6 +22,7 @@ import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
+import com.bondwithme.BondWithMe.receiver_service.AlarmControler;
 import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.start.StartActivity;
@@ -330,6 +331,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             if (FacebookSdk.isInitialized()) {
                 LoginManager.getInstance().logOut();//清除Facebook授权缓存
             }
+            AlarmControler.getInstance().cancleAllTasks(context);
             context.finish();
         }
         MainActivity.clearAllRedPoint();
@@ -519,6 +521,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public void clearNotificationMsgsByType(NotificationUtil.MessageType messageType) {
+        if(messageType==null){
+            return;
+        }
         switch (messageType) {
             case BONDALERT_WALL:
                 notificationWallList.clear();
