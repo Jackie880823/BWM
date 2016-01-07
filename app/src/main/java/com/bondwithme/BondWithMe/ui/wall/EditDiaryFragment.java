@@ -171,8 +171,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 存放图片Uri列表
      */
     private List<Uri> imageUris = new ArrayList<>();
-    private ArrayList<PushedPhotoEntity> photoEntities = new ArrayList<>();
-    private ArrayList<DiaryPhotoEntity> localEntities = new ArrayList<>();
+    private List<PushedPhotoEntity> photoEntities = new ArrayList<>();
+    private List<DiaryPhotoEntity> localEntities = new ArrayList<>();
     private List<String> deletePhoto = new ArrayList<>();
     private List<String> deleteVideo = new ArrayList<>();
 
@@ -474,6 +474,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
     }
 
+    /**
+     * 上传本地图片
+     * @param contentId
+     */
     private void submitLocalPhotos(String contentId) {
         LogUtil.d(TAG, "submitLocalPhotos& contentId: " + contentId);
         if (localEntities.isEmpty()) {
@@ -483,6 +487,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             int pushedCount = count - localEntities.size();
             boolean multiple = (pushedCount < count - 1);
             tasks = new ArrayList<>();
+
             for (int index = pushedCount; index < count; index++) {
                 DiaryPhotoEntity photoEntity = (DiaryPhotoEntity) photoEntities.get(index);
                 photoEntity.setPhoto_caption(getPhotoCaptionByPosition(index + 1));
@@ -510,7 +515,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         mHttpTools = new HttpTools(getContext());
+
         isEdit = !TextUtils.isEmpty(contentGroupId);
         if (!isEdit) {
             recoverList();
@@ -640,11 +647,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 }
             }
         });
+
         if (!Uri.EMPTY.equals(videoUri)) {
             clearPhotos();
         } else if (!photoEntities.isEmpty()) {
             clearVideo();
         }
+
         rvImages.setAdapter(mAdapter);
 
         tvPrivacy = getViewById(R.id.tv_privacy);
@@ -954,17 +963,19 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i(TAG, "onActivityResult");
 
-        // 没有退出编辑不用保存蓝草稿
-        if (draftPreferences != null) {
-            draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).apply();
-        }
 
-        if (isEdit) {
-            // 进入编辑确定Wall是更新了
-            isUpate = true;
-        }
 
         if (resultCode == Activity.RESULT_OK) {
+            if (isEdit) {
+                // 进入编辑确定Wall是更新了
+                isUpate = true;
+            } else {
+                // 没有退出编辑不用保存蓝草稿
+                if (draftPreferences != null) {
+                    draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).apply();
+                }
+            }
+
             switch (requestCode) {
                 case Constant.INTENT_REQUEST_GET_LOCATION:
                     if (data != null) {
