@@ -31,7 +31,6 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,7 +52,7 @@ public class LocalMediaAdapter extends BaseAdapter {
     /**
      * 已经选中的图片
      */
-    private ArrayList<MediaData> mSelectMedias;
+    private List<MediaData> mSelectMedias;
 
     private SelectImageUirChangeListener mListener;
 
@@ -112,7 +111,7 @@ public class LocalMediaAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
-    public void setData(ArrayList<MediaData> datas) {
+    public void setData(List<MediaData> datas) {
         mDatas = datas;
     }
 
@@ -121,7 +120,7 @@ public class LocalMediaAdapter extends BaseAdapter {
      *
      * @param selectedMedias
      */
-    public void setSelectedImages(ArrayList<MediaData> selectedMedias) {
+    public void setSelectedImages(List<MediaData> selectedMedias) {
         mSelectMedias = selectedMedias;
     }
 
