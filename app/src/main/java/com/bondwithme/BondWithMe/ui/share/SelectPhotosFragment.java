@@ -66,11 +66,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     private DrawerArrowDrawable drawerArrowDrawable;
     private float offset;
     private boolean flipped;
-    private HashMap<String, ArrayList<MediaData>> mMediaUris = new HashMap<>();
+    private HashMap<String, List<MediaData>> mMediaUris = new HashMap<>();
     /**
      * 当前显示的图片的Ur列表
      */
-    private ArrayList<MediaData> mImageUriList = new ArrayList<>();
+    private List<MediaData> mImageUriList = new ArrayList<>();
 
     /**
      * <p>是否可以选择多张图片的标识</p>
@@ -82,7 +82,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     /**
      * 已经选择的图Ur列表
      */
-    ArrayList<MediaData> mSelectedImageUris;
+    List<MediaData> mSelectedImageUris;
     /**
      * 目录列表
      */
@@ -135,6 +135,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
             loading.stop();
             loading.setVisibility(View.GONE);
+
+            selectImageUirListener.onLoadedMedia(mMediaUris.get(getContext().getString(R.string.text_all)), localMediaAdapter);
         }
     };
 
@@ -148,12 +150,12 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private HandlerThread mLoadVideoThread = new HandlerThread(LOADER_VIDEO);
 
-    public SelectPhotosFragment(ArrayList<MediaData> selectUris) {
+    public SelectPhotosFragment(List<MediaData> selectUris) {
         super();
         mSelectedImageUris = selectUris;
     }
 
-    public static SelectPhotosFragment newInstance(ArrayList<MediaData> selectUris, String... params) {
+    public static SelectPhotosFragment newInstance(List<MediaData> selectUris, String... params) {
         return createInstance(new SelectPhotosFragment(selectUris), params);
     }
 
@@ -177,12 +179,12 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         loading = getViewById(R.id.ncl_loading);
         loading.start();
 
-        multi = getParentActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+        multi = getActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
 
         /*
       请求数据是否可以包含视频
      */
-        boolean useVideo = getParentActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
+        boolean useVideo = getActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
 
         // 获取数据库中的图片资源游标
 //        String[] imageColumns = {MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails._ID};
@@ -210,7 +212,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         if (videoCursor != null) {
             dataCount += videoCursor.getCount();
         }
-        String bucketsFirst = getParentActivity().getString(R.string.text_all);
+        String bucketsFirst = getActivity().getString(R.string.text_all);
         ArrayList<MediaData> allMedias;
         allMedias = new ArrayList<>(dataCount);
         mMediaUris.put(bucketsFirst, allMedias);
@@ -402,11 +404,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     private void refreshAdapter() {
         if ((videoCursor == null || videoCursor.isClosed()) && (imageCursor == null || imageCursor.isClosed())) {
 
-            ArrayList<MediaData> allMedias = mMediaUris.get(getParentActivity().getString(R.string.text_all));
+            List<MediaData> allMedias = mMediaUris.get(getContext().getString(R.string.text_all));
             SortMediaComparator comparator = new SortMediaComparator();
             Collections.sort(allMedias, comparator);
 
-            getParentActivity().runOnUiThread(adapterRefresh);
+            getActivity().runOnUiThread(adapterRefresh);
         }
     }
 
@@ -418,7 +420,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             if (videoCursor != null && !videoCursor.isClosed() && videoCursor.getCount() > 0) {
 
                 String bucket;
-                bucket = getParentActivity().getString(R.string.text_video);
+                bucket = getContext().getString(R.string.text_video);
                 buckets.add(1, bucket);
                 mMediaUris.put(bucket, new ArrayList<MediaData>(videoCursor.getCount()));
 
@@ -534,7 +536,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      * @param mediaData data about of url
      */
     private synchronized void addToMediaMap(String bucket, MediaData mediaData) {
-        ArrayList<MediaData> allMedias = mMediaUris.get(getParentActivity().getString(R.string.text_all));
+        List<MediaData> allMedias = mMediaUris.get(getContext().getString(R.string.text_all));
         allMedias.add(mediaData);
         if (allMedias.size() == 50) {
             SortMediaComparator comparator = new SortMediaComparator();
@@ -549,19 +551,19 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             al.add(mediaData);
             mMediaUris.put(bucket, al);
             buckets.add(bucket);
-            getParentActivity().runOnUiThread(uiRunnable);
+            getActivity().runOnUiThread(uiRunnable);
         }
     }
 
     public void insertMedia(String bucket, MediaData mediaData) {
-        ArrayList<MediaData> allMedias = mMediaUris.get(getParentActivity().getString(R.string.text_all));
+        List<MediaData> allMedias = mMediaUris.get(getContext().getString(R.string.text_all));
         allMedias.add(0, mediaData);
 
         if (mMediaUris.containsKey(bucket)) {
             mMediaUris.get(bucket).add(0, mediaData);
         } else {
             LogUtil.i(TAG, "addToMediaMap: add map to:" + bucket + ";");
-            ArrayList<MediaData> al = new ArrayList<>();
+            List<MediaData> al = new ArrayList<>();
             al.add(mediaData);
             mMediaUris.put(bucket, al);
             buckets.add(bucket);
@@ -581,7 +583,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         if (bucketsAdapter == null) {
             ArrayList<String> data = new ArrayList<>();
             data.addAll(buckets);
-            bucketsAdapter = new ArrayAdapter<>(getParentActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, data);
+            bucketsAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, data);
             mDrawerList.setAdapter(bucketsAdapter);
         } else {
             int count = bucketsAdapter.getCount();
