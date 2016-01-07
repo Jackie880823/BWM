@@ -40,7 +40,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected TextView yearButton;
     //    protected TextView rightTextButton;
 
-    static Fragment fragment;
     protected View msg_bar;
     protected TextView tvMsg;
     protected Bundle mSavedInstanceState;
@@ -60,7 +59,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     }
 
     protected Fragment getFragmentInstance() {
-        return fragment;
+        return getSupportFragmentManager().findFragmentById(R.id.container);
     }
 
     @Override
@@ -74,7 +73,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         NetWorkStateReceiver.registerNetStateObserver(this);
 
         if (savedInstanceState == null) {
-            fragment = getFragment();
+            Fragment fragment = getFragment();
             if (fragment != null) {
                 getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
             }
