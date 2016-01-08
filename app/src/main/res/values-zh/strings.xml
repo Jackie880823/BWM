@@ -15,7 +15,7 @@
     <string name="title_map_choose_location">地点</string>
     <string name="title_invited_status">已邀请成员</string>
     <string name="title_birthday_title">%1$s%2$s生日快到了！</string>
-    <string name="title_birthday_title_prefix1">和%s名成员</string>
+    <string name="title_birthday_title_prefix1">%s名成员</string>
     <string name="title_birthday_title_prefix2">的</string>
     <string name="title_birthday_left_day_desc"> 天后</string>
     <string name="text_hint_event_title">名称</string>
@@ -695,7 +695,7 @@
     <string name="save_all_video">保存视频</string>
     <string name="text_member_unit">成员</string>
 
-    <string name="title_birthday_today_title">%1$s%2$s今天生日!</string>
+    <string name="title_birthday_today_title">%1$s%2$s的生日在今天!</string>
     <string name="text_edit">编辑</string>
     <!-- &#160; 为空格 -->
     <string name="comment_date_edited">已编辑 &#160;</string>
