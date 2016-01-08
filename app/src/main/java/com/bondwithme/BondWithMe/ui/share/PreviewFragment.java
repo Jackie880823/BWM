@@ -57,6 +57,11 @@ public class PreviewFragment extends BaseFragment<SelectPhotosActivity> {
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
         Log.i(TAG, "initView");
         imageView = getViewById(R.id.preview_image_view);

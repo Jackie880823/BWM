@@ -102,6 +102,11 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     }
 
     @Override
+    protected void setParentTitle() {
+        setTitle(getString(R.string.title_family_profile));
+    }
+
+    @Override
     public void initView() {
 
         Intent intent = getActivity().getIntent();

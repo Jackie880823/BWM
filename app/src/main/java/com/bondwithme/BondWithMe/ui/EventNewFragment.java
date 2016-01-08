@@ -148,6 +148,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
         progressBar = getViewById(R.id.rl_progress);
 

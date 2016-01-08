@@ -162,6 +162,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
         mHttpTools = new HttpTools(getActivity());
         isComment = true;

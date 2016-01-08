@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v7.internal.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -34,7 +33,6 @@ import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -331,14 +329,14 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             popupMenu = new PopupMenu(mContext, v);
             popupMenu.inflate(R.menu.comment_menu);
             //使用反射，强制显示菜单图标
-            try {
-                Field field = popupMenu.getClass().getDeclaredField("mPopup");
-                field.setAccessible(true);
-                MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
-                mHelper.setForceShowIcon(true);
-            } catch (IllegalAccessException | NoSuchFieldException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Field field = popupMenu.getClass().getDeclaredField("mPopup");
+//                field.setAccessible(true);
+//                MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+//                mHelper.setForceShowIcon(true);
+//            } catch (IllegalAccessException | NoSuchFieldException e) {
+//                e.printStackTrace();
+//            }
 
             v.setTag(popupMenu);
         } else {
