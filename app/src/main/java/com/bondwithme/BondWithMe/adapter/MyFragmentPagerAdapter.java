@@ -57,7 +57,7 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter implements View
 			pager.setCurrentItem(nextItem);
 	}
 
-	Fragment currentFragment;
+	Fragment mCurrentFragment;
 
 	@Override
 	public void setPrimaryItem(ViewGroup container, int position, Object object) {

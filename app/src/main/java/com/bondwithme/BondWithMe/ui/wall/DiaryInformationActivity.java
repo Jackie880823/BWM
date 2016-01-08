@@ -26,16 +26,17 @@ public class DiaryInformationActivity extends BaseActivity implements DiaryInfor
     }
 
     @Override
+    protected void setTitle() {
+
+    }
+
+    @Override
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setVisibility(View.VISIBLE);
         rightButton.setImageResource(R.drawable.option_dots);
     }
 
-    @Override
-    protected void setTitle() {
-        tvTitle.setText("");
-    }
 
     @Override
     protected void titleRightEvent() {

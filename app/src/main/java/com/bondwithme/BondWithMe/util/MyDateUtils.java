@@ -24,6 +24,11 @@ public class MyDateUtils extends android.text.format.DateUtils {
     private static Logger log = Logger.getLogger(DateUtils.class.toString());
     private static SimpleDateFormat defaultDateFormat = null;
 
+    /**
+     * 根据传入的时间截，获取一个时间描述
+     * @param when 时间截
+     * @param fullFormat 是否显示全格式
+     */
     public static String formatTimeStampString(Context context, long when, boolean fullFormat) {
         Time then = new Time();
         then.set(when);
@@ -140,6 +145,11 @@ public class MyDateUtils extends android.text.format.DateUtils {
         return defaultDateFormat;
     }
 
+    /**
+     * 将日期转默认格式的本地时区的时间字符
+     * @param date
+     * @return
+     */
     public static String formatDate2Default(Date date) {
         getDefaultDateFormat().setTimeZone(TimeZone.getDefault());
         return defaultDateFormat.format(date);
@@ -227,7 +237,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
     }
 
     public static String getUTCDateStringFromUTC(Context context, long timestamp) {
-        return formatTimeStampString(context, formatTimestamp2Local(timestamp), true);
+        return formatTimeStampString(context, formatTimestamp2Local(new Timestamp(timestamp)), true);
     }
 
     public static Timestamp dateString2Timestamp(String date) {
@@ -239,8 +249,11 @@ public class MyDateUtils extends android.text.format.DateUtils {
         return timestamp - getZoneTime();
     }
 
-    public static long formatTimestamp2Local(long timestamp) {
-        return timestamp + getZoneTime();
+    public static long formatDateString2LocalTimestamp(String dateString) {
+        return formatTimestamp2Local(dateString2Timestamp(dateString));
+    }
+    public static long formatTimestamp2Local(Timestamp timestamp) {
+        return timestamp.getTime() + getZoneTime();
     }
 
     public static boolean isBeforeDate(long timestamp) {
@@ -295,7 +308,11 @@ public class MyDateUtils extends android.text.format.DateUtils {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date begin = df.parse(dateString1);
         Date end = df.parse(dateString2);
-        long between = (end.getTime() - begin.getTime()) / 1000;//除以1000是为了转换成秒
+        return getDayDistanceBetweenTimestmaps(begin.getTime(),end.getTime());
+    }
+
+    public static int getDayDistanceBetweenTimestmaps(long timestamp1, long timestamp2) throws ParseException {
+        long between = (timestamp2 - timestamp1) / 1000;//除以1000是为了转换成秒
         int day = (int) (between / (24 * 3600));
 //        int   hour=between%(24*3600)/3600;
 //        int   minute=between%3600/60;

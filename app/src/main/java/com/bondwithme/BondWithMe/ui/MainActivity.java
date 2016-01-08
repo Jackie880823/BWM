@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         App.checkVerSion(this);
         try {
             /**少于7天*/
-            if(MyDateUtils.getDayDistanceBetweenDateStrings(getUser().getUser_creation_date(),getUser().getUser_active_date())<7){
+            if(MyDateUtils.getDayDistanceBetweenTimestmaps(MyDateUtils.formatDateString2LocalTimestamp(getUser().getUser_creation_date()), System.currentTimeMillis())<7){
                 AlarmControler.getInstance().createAllTasks(this);
             }
         } catch (ParseException e) {
