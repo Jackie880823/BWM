@@ -15,6 +15,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.NewsAdapter;
 import com.bondwithme.BondWithMe.entity.NewsEntity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -169,10 +170,12 @@ public class NewsActivity extends BaseActivity {
                 }
                 loading = false;
 
+
+                LogUtil.d("NewsActivity","item count"+adapter.getItemCount());
                 //no data!!!
                 if (!data.isEmpty()) {
                     llNoData.setVisibility(View.GONE);
-                } else if (data.isEmpty() && !NewsActivity.this.isFinishing()) {
+                } else if (adapter.getItemCount()<=0 && data.isEmpty() && !NewsActivity.this.isFinishing()) {
                     llNoData.setVisibility(View.VISIBLE);
                     tvNoData.setText(getResources().getString(R.string.text_no_date_news));
                 }

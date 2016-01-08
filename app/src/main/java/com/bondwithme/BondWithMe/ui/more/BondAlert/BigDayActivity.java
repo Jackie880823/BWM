@@ -103,7 +103,7 @@ public class BigDayActivity extends BaseActivity {
 
                 if (!data.isEmpty()){
                     llNoData.setVisibility(View.GONE);
-                }else if (data.isEmpty() && !BigDayActivity.this.isFinishing()){
+                }else if (bondAlertBigDayAdapter.getItemCount()<=0 && data.isEmpty() && !BigDayActivity.this.isFinishing()){
                     llNoData.setVisibility(View.VISIBLE);
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_bigday));
                 }

@@ -176,7 +176,7 @@ public class AlertEventActivity extends BaseActivity {
 
                 if (!data.isEmpty()){
                     llNoData.setVisibility(View.GONE);
-                }else if (data.isEmpty() && !AlertEventActivity.this.isFinishing()){
+                }else if (adapter.getItemCount()<=0 && data.isEmpty() && !AlertEventActivity.this.isFinishing()){
                     llNoData.setVisibility(View.VISIBLE);
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_event));
                 }
