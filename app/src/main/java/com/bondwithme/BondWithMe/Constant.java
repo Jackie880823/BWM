@@ -100,12 +100,12 @@ public class Constant {
     /**
      * for api
      */
-//    public static final String API_SERVER = "http://dev.bondwith.me";
-//    public static final int TRACKER_SITE_ID = 3;//dev
+    public static final String API_SERVER = "http://dev.bondwith.me";
+    public static final int TRACKER_SITE_ID = 3;//dev
 
 
-    public static final String API_SERVER = "http://pt.bondwith.me";
-    public static final int TRACKER_SITE_ID = 4;//pt
+//    public static final String API_SERVER = "http://pt.bondwith.me";
+//    public static final int TRACKER_SITE_ID = 4;//pt
 
 
 //    public static final int TRACKER_SITE_ID = 5;//m

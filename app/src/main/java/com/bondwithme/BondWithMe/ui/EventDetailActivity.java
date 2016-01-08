@@ -114,7 +114,7 @@ public class EventDetailActivity extends BaseActivity {
 //        event = (EventEntity) getIntent().getSerializableExtra("event");
         group_id = getIntent().getStringExtra("group_id");
         Content_group_id = getIntent().getStringExtra("Content_group_id");
-        return EventDetailFragment.newInstance(group_id,Content_group_id);
+        return EventDetailFragment.newInstance(group_id, Content_group_id);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class EventDetailActivity extends BaseActivity {
                     if (isCurrentUser()) {
                         rightButton.setImageResource(R.drawable.btn_edit);
                         rightButton.setVisibility(View.VISIBLE);
-                        if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date()).getTime()))) {
+                        if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date())))) {
                             rightButton.setImageResource(R.drawable.icon_edit_press);
                             rightButton.setEnabled(false);
                         }

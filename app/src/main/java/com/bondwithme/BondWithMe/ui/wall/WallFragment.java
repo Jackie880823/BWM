@@ -78,6 +78,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
     @Override
     protected void setParentTitle() {
+
         setTitle(getString(R.string.title_tab_diary));
     }
 
