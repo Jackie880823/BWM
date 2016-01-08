@@ -17,7 +17,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
 import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
@@ -41,7 +40,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected TextView yearButton;
     //    protected TextView rightTextButton;
 
-    Fragment fragment;
     protected View msg_bar;
     protected TextView tvMsg;
     protected Bundle mSavedInstanceState;
@@ -61,7 +59,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     }
 
     protected Fragment getFragmentInstance() {
-        return fragment;
+        return getSupportFragmentManager().findFragmentById(R.id.container);
     }
 
     @Override
@@ -74,12 +72,13 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         //注册网络观察者
         NetWorkStateReceiver.registerNetStateObserver(this);
 
-        fragment = getFragment();
-        if(fragment != null) {
-            if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
+            Fragment fragment = getFragment();
+            if (fragment != null) {
                 getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
             }
         }
+
         msg_bar = getViewById(R.id.msg_bar);
         tvMsg = getViewById(R.id.msg);
         if(NetworkUtil.isNetworkConnected(this)) {
@@ -123,12 +122,12 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     private void doFinish(){
         if(getIntent().getBooleanExtra(IS_OUTSIDE_INTENT,false)){
-//            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
 //            ComponentName cn = intent.getComponent();
 //            Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
 //            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            startActivity(mainIntent);
-//            startActivity(intent);
+            startActivity(intent);
         }else {
             if(!isFinishing()) {
                 UIUtil.hideKeyboard(this, getCurrentFocus());
@@ -141,7 +140,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onStop() {
         /**重置通知数量*/
         if(getIntent().getBooleanExtra(IS_OUTSIDE_INTENT,false)) {
-            LogUtil.d("","getSerializableExtra======"+getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
             App.getContextInstance().clearNotificationMsgsByType((NotificationUtil.MessageType) getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
         }
         super.onStop();

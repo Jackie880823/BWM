@@ -15,7 +15,7 @@
     <string name="title_map_choose_location">地点</string>
     <string name="title_invited_status">已邀请成员</string>
     <string name="title_birthday_title">%1$s%2$s生日快到了！</string>
-    <string name="title_birthday_title_prefix1">和%s名成员</string>
+    <string name="title_birthday_title_prefix1">%s名成员</string>
     <string name="title_birthday_title_prefix2">的</string>
     <string name="title_birthday_left_day_desc"> 天后</string>
     <string name="text_hint_event_title">名称</string>
@@ -626,7 +626,7 @@
     <string name="text_close_update_sticker">关闭</string>
     <string name="text_sticker_update_now">立即更新</string>
     <string name="text_sticker_update_detail">已推出新版本表情商店</string>
-    <string name="title_edit_post">修改帖子</string>
+    <string name="title_edit_post">编辑帖子</string>
 
     <string name="add_photo_to_this_post">添加照片到帖子</string>
     <string name="save_all_photos">保存所有照片</string>
@@ -695,8 +695,13 @@
     <string name="save_all_video">保存视频</string>
     <string name="text_member_unit">成员</string>
 
-    <string name="title_birthday_today_title">%1$s%2$s今天生日!</string>
+    <string name="title_birthday_today_title">%1$s%2$s的生日在今天!</string>
     <string name="text_edit">编辑</string>
     <!-- &#160; 为空格 -->
     <string name="comment_date_edited">已编辑 &#160;</string>
+    <string name="local_notification_text_for_5_minute">您可以设置个人资料分享为私有，所有或公众。</string>
+    <string name="local_notification_text_for_2_day">通过照片或文字在日记里更贴切的表达自己！</string>
+    <string name="local_notification_text_for_3_day">免费酷酷的Papa Panda家庭系列表情超萌！大爱！</string>
+    <string name="local_notification_text_for_5_day">想念家人吗？现在就发个想您了给他们呗！</string>
+    <string name="title_edit_comment">编辑评论</string>
 </resources>

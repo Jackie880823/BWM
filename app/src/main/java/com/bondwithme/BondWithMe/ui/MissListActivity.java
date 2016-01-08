@@ -124,6 +124,10 @@ public class MissListActivity extends BaseActivity {
                 }
             }
         });
+
+        Intent intent=new Intent();
+        intent.setAction(MainActivity.ACTION_REFRESH_RED_POINT_4_FIMILY);
+        sendBroadcast(intent);
     }
 
     @Override

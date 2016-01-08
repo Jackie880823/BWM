@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.adapter.LocalMediaAdapter;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
@@ -31,6 +32,7 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -68,7 +70,7 @@ public class SelectPhotosActivity extends BaseActivity {
 
     private int residue = MAX_SELECT;
     private SelectPhotosFragment fragment;
-    private ArrayList<MediaData> mSelectedImages = new ArrayList<>();
+    private List<MediaData> mSelectedImages = new ArrayList<>();
     private boolean hadPhotos = false;
 
     /**
@@ -189,6 +191,16 @@ public class SelectPhotosActivity extends BaseActivity {
         @Override
         public void onDrawerClose(Drawable drawable) {
             leftButton.setImageDrawable(drawable);
+        }
+
+        @Override
+        public void onLoadedMedia(List<MediaData> data, LocalMediaAdapter adapter) {
+            for (MediaData mediaData : mSelectedImages) {
+                if (!data.contains(mediaData)) {
+                    data.add(0, mediaData);
+                }
+            }
+            adapter.notifyDataSetChanged();
         }
 
         @Override

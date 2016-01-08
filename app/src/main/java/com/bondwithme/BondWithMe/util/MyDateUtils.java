@@ -8,6 +8,7 @@ import android.text.format.Time;
 import com.bondwithme.BondWithMe.R;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -71,6 +72,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
 
     /**
      * 获取1-12月的当前语言name array
+     *
      * @param isFullName true显示全名,false显示缩写
      * @return String[]
      */
@@ -79,11 +81,11 @@ public class MyDateUtils extends android.text.format.DateUtils {
 
         for (int i = 0; i < months.length; i++) {
             Calendar cal = Calendar.getInstance();
-            SimpleDateFormat month_date = new SimpleDateFormat(isFullName?"MMMM":"MMM");
+            SimpleDateFormat month_date = new SimpleDateFormat(isFullName ? "MMMM" : "MMM");
             cal.set(Calendar.MONTH, months[i]);
             String month_name = month_date.format(cal.getTime());
 
-            xVals[i]=month_name;
+            xVals[i] = month_name;
         }
         return xVals;
     }
@@ -273,6 +275,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
         return formatRecordTime(time);
     }
 
+
     public static String formatDuration(String durationStr) {
         String result;
         if (TextUtils.isEmpty(durationStr) || durationStr.contains(":")) {
@@ -288,8 +291,17 @@ public class MyDateUtils extends android.text.format.DateUtils {
         return DateUtils.formatElapsedTime(duration / 1000);
     }
 
-//    public static String getUTCDateFromNowTime(Context context) {
-//        long timestamp = System.currentTimeMillis();
-//        return getUTCDateString4DefaultFromLocal(timestamp);
-//    }
+    public static int getDayDistanceBetweenDateStrings(String dateString1, String dateString2) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date begin = df.parse(dateString1);
+        Date end = df.parse(dateString2);
+        long between = (end.getTime() - begin.getTime()) / 1000;//除以1000是为了转换成秒
+        int day = (int) (between / (24 * 3600));
+//        int   hour=between%(24*3600)/3600;
+//        int   minute=between%3600/60;
+//        int   second=between%60;
+        return day;
+    }
+
+
 }

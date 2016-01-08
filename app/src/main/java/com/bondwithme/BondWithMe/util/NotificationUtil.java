@@ -27,7 +27,10 @@ import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 import com.bondwithme.BondWithMe.ui.MissListActivity;
 import com.bondwithme.BondWithMe.ui.NewsActivity;
 import com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity;
+import com.bondwithme.BondWithMe.ui.more.GroupPrivacyActivity;
+import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.ui.wall.DiaryInformationActivity;
+import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +53,10 @@ public class NotificationUtil {
      * 通知类型
      */
     public enum MessageType {
-        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_NEWS("news"), BONDALERT_MEMBER("member"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group"), BONDALERT_INACTIVE("inactive");
+        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_NEWS("news"),
+        BONDALERT_MEMBER("member"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group"), BONDALERT_INACTIVE("inactive"),
+        LOCAL_PRIVACY_SETTINGS("privacy_settings"), LOCAL_NEW_DIARY("new_diary"), LOCAL_STICKIES_STORE("stickies_store"),
+        LOCAL_FAMILY_PAGE("family_page");
         private String typeName;
 
         MessageType(String typeName) {
@@ -107,6 +113,12 @@ public class NotificationUtil {
         getNotivficationManager(context).notify(GCM_MESSAGE, mBuilder.build());
 
     }
+    public static void sendLocalNotification(Context context, MessageType messageType) throws JSONException {
+        Notification notification = getLocalNotification(context, messageType);
+        if (notification != null) {
+            getNotivficationManager(context).notify(messageType.ordinal(), notification);
+        }
+    }
 
     /**
      * @param msg
@@ -117,68 +129,8 @@ public class NotificationUtil {
 //            return;
 //        }
 
-//        PendingIntent contentIntent = getFowwordIntent(context, msg, isGCM);
-
-//        String title = null;
-//        String message = null;
-//        if (isGCM) {
-//            title = msg.getString("title");
-//            message = msg.getString("message");
-//        } else {
-//            title = msg.getString(JPushInterface.EXTRA_TITLE);
-//            message = msg.getString(JPushInterface.EXTRA_MESSAGE);
-//        }
-//
-//        NotificationCompat.Builder mBuilder =
-//                new NotificationCompat.Builder(context)
-//                        .setContentTitle(title)
-//                        .setContentText(message);
-//        if (smallIcon != -1) {
-//            mBuilder.setSmallIcon(smallIcon);
-//        }
-//        mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
-//        //暂时不启用
-////        if(msgCount>1) {
-////            mBuilder.setNumber(msgCount);
-////        }
-//        mBuilder.setTicker(msg.getString(JPushInterface.EXTRA_TITLE));
-//        mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
-//
-//        if (contentIntent != null) {
-//            mBuilder.setContentIntent(contentIntent);
-//        }
-//        mBuilder.setAutoCancel(true);
-//        Notification notification = mBuilder.build();
-//        notification.priority = Notification.PRIORITY_HIGH;
-//        notification.defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS;
-////        notification.defaults=Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS;
-//
-////        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-////        String[] events = new String[5];
-////        // Sets a title for the Inbox style big view
-////        inboxStyle.setBigContentTitle("大视图内容:");
-////        // Moves events into the big view
-////        for (int i=0; i < events.length; i++) {
-////            inboxStyle.addLine(events[i]);
-////        }
-////        mBuilder.setContentTitle("测试标题")
-////                .setContentText("测试内容")
-//////				.setNumber(number)//显示数量
-////                .setStyle(inboxStyle)//设置风格
-////                .setTicker("测试通知来啦");
-////
-////        //自定义RemoteViews
-////        RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
-////        notification.contentView = contentView;
-//        getNotivficationManager(context).notify(msgType.ordinal(), notification);
-
         Notification notification = getNotification(context, isGCM, msg);
         if (notification != null) {
-
-//            Intent dismissedIntent = new Intent(
-//                    "com.xxxx.android.notify.dismissed");
-//            notification.deleteIntent = PendingIntent.getBroadcast(context, 0,
-//                    dismissedIntent, 0);
 
             getNotivficationManager(context).notify(msgType.ordinal(), notification);
         }
@@ -201,6 +153,7 @@ public class NotificationUtil {
 
 
     static String newMsg = null;
+
     private static Intent getFowwordIntent(Context context, Bundle bundle, boolean isGCM) throws JSONException {
 
         List<String> msgs = null;
@@ -319,7 +272,7 @@ public class NotificationUtil {
             case BONDALERT_MISS:
                 smallIcon = R.drawable.bondalert_miss_icon;
 
-                HashMap<String,String> missInfos = App.getContextInstance().getMissNotificationInfos();
+                HashMap<String, String> missInfos = App.getContextInstance().getMissNotificationInfos();
                 if (missInfos.size() == 0) {
                     intent = new Intent(context, MissListActivity.class);
                 } else {
@@ -330,19 +283,19 @@ public class NotificationUtil {
                 String memberMissCount = missInfos.get(action_owner);
                 int msgCount = 0;
                 int memberCount;
-                if(memberMissCount!=null){
+                if (memberMissCount != null) {
                     //已经有该用户的通知+1
-                    missInfos.put(action_owner,String.valueOf(Integer.valueOf(memberMissCount)+1));
-                }else{
-                    missInfos.put(action_owner,"1");
+                    missInfos.put(action_owner, String.valueOf(Integer.valueOf(memberMissCount) + 1));
+                } else {
+                    missInfos.put(action_owner, "1");
                 }
                 memberCount = missInfos.size();
                 Iterator<String> members = missInfos.keySet().iterator();
-                while (members.hasNext()){
-                    msgCount+=Integer.valueOf(missInfos.get(members.next()));
+                while (members.hasNext()) {
+                    msgCount += Integer.valueOf(missInfos.get(members.next()));
                 }
 
-                newMsg = NotificationMessageGenerateUtil.getMissMessage(context, action, action_owner,memberCount,msgCount);
+                newMsg = NotificationMessageGenerateUtil.getMissMessage(context, action, action_owner, memberCount, msgCount);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 doNotificationHandle(MainActivity.TabEnum.family);
                 break;
@@ -427,6 +380,53 @@ public class NotificationUtil {
         return intent;
     }
 
+    private static Notification getLocalNotification(Context context, MessageType messageType) throws JSONException {
+        Notification notification = null;
+        notification = getSingleNotification(context, getLocalFowwordIntent(context,messageType), context.getString(R.string.app_name), newMsg, 1);
+        return notification;
+    }
+
+    private static PendingIntent getLocalFowwordIntent(Context context, MessageType messageType) {
+        PendingIntent contentIntent = null;
+        Intent intent = null;
+        switch (messageType) {
+            case LOCAL_PRIVACY_SETTINGS:
+                smallIcon = R.drawable.ic_launcher;
+                intent = new Intent(context, GroupPrivacyActivity.class);
+                newMsg = context.getString(R.string.local_notification_text_for_5_minute);
+                break;
+            case LOCAL_NEW_DIARY:
+                smallIcon = R.drawable.bondalert_wall_icon;
+                intent = new Intent(context, NewDiaryActivity.class);
+                newMsg = context.getString(R.string.local_notification_text_for_2_day);
+                break;
+            case LOCAL_STICKIES_STORE:
+                smallIcon = R.drawable.more_sticket_store;
+                intent = new Intent(context, StickerStoreActivity.class);
+                newMsg = context.getString(R.string.local_notification_text_for_3_day);
+
+                break;
+            case LOCAL_FAMILY_PAGE:
+                smallIcon = R.drawable.bondalert_member_icon;
+                intent = new Intent(context, MainActivity.class);
+                intent.putExtra(MainActivity.JUMP_INDEX,0);
+                newMsg = context.getString(R.string.local_notification_text_for_5_day);
+                break;
+        }
+
+        //应用在前台不发通知,不写在最前面是因为需要刷新红点(getFowwordIntent里)
+        if (App.isForeground()) {
+            return null;
+        }
+
+        if (intent != null) {
+            intent.putExtra(BaseActivity.IS_OUTSIDE_INTENT, true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            contentIntent = PendingIntent.getActivity(context, messageType.ordinal(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        return contentIntent;
+    }
+
     private static Notification getNotification(Context context, boolean isGCM, Bundle msg) throws JSONException {
 
         PendingIntent contentIntent = null;
@@ -454,7 +454,7 @@ public class NotificationUtil {
             title = msg.getString(JPushInterface.EXTRA_TITLE);
         }
         if (isOnlyOneModel) {
-            notification = getSingleNotification(context, contentIntent, title,newMsg,1);
+            notification = getSingleNotification(context, contentIntent, title, newMsg, 1);
         } else {
             //        if (msgs.size() == 1) {
             notification = getSingleNotification(context, contentIntent, title);

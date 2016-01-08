@@ -26,6 +26,7 @@ import com.bondwithme.BondWithMe.adapter.WallHolder;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
+import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
@@ -73,6 +74,11 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
 
+    }
+
+    @Override
+    protected void setParentTitle() {
+        setTitle(getString(R.string.title_tab_diary));
     }
 
     @Override
