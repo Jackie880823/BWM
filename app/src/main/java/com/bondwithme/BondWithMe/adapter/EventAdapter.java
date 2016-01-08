@@ -122,23 +122,26 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
             }
         } else if(holder instanceof VHHeader) {
+            int todayCount = 0;
+            int soonCount = 0;
             VHHeader item = (VHHeader) holder;
+            for (int i = 0; i < birthdayEvents.size(); i++){
+                if("0".equals(birthdayEvents.get(i).getDay_count())){
+                    todayCount++;
+                }else {
+                    soonCount++;
+                }
+            }
             BirthdayEntity be = birthdayEvents.get(0);
             if("0".equals(be.getDay_count())) {
-                defaultTitle = todayTitle;
                 item.left_daty_count.setText(mContext.getString(R.string.text_today));
                 item.tv_date_desc.setVisibility(View.GONE);
             } else {
                 item.left_daty_count.setText(be.getDay_count() + "");
                 item.tv_date_desc.setVisibility(View.VISIBLE);
             }
-            if(birthdayEvents.size() == 1) {
-                item.tv_top_event_title.setText(String.format(defaultTitle, be.getUser_given_name(), mContext.getString(R.string.title_birthday_title_prefix2)));
-            } else {
-                String stBirthday =  String.format(mContext.getString(R.string.title_birthday_title_prefix1,birthdayEvents.size() - 1));
-                item.tv_top_event_title.setText(String.format(defaultTitle, be.getUser_given_name() + stBirthday,""));
-            }
-
+            setBirthdayTopText(todayTitle,item.tv_top_today_title,be,todayCount);
+            setBirthdayTopText(defaultTitle,item.tv_top_soon_title,be,soonCount);
             // add start by Jackie
             @SuppressLint("SimpleDateFormat")
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -166,6 +169,18 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return TYPE_HEADER;
 
         return TYPE_ITEM;
+    }
+
+    private void setBirthdayTopText(String text, TextView textView,BirthdayEntity be,int count){
+        if(count == 1) {
+            textView.setText(String.format(text, be.getUser_given_name(), mContext.getString(R.string.title_birthday_title_prefix2)));
+        } else {
+            String stBirthday =  String.format(mContext.getString(R.string.title_birthday_title_prefix1,count));
+            textView.setText(String.format(text, stBirthday,""));
+        }
+        if(count > 0){
+            textView.setVisibility(View.VISIBLE);
+        }
     }
 
     private boolean isPositionHeader(int position) {
@@ -220,7 +235,8 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     class VHHeader extends RecyclerView.ViewHolder {
-        private TextView tv_top_event_title;
+        private TextView tv_top_today_title;
+        private TextView tv_top_soon_title;
         private TextView date;
         private TextView left_daty_count;
         private TextView tv_date_desc;
@@ -230,7 +246,8 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public VHHeader(View itemView) {
             // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
             super(itemView);
-            tv_top_event_title = (TextView) itemView.findViewById(R.id.tv_top_event_title);
+            tv_top_today_title = (TextView) itemView.findViewById(R.id.tv_birthday_today_title);
+            tv_top_soon_title = (TextView) itemView.findViewById(R.id.tv_birthday_soon_title);
             date = (TextView) itemView.findViewById(R.id.date);
             left_daty_count = (TextView) itemView.findViewById(R.id.left_daty_count);
             tv_date_desc = (TextView) itemView.findViewById(R.id.tv_date_desc);

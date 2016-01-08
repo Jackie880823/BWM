@@ -101,9 +101,20 @@ public abstract class BaseFragment<P extends Activity> extends Fragment implemen
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            setParentTitle();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        setParentTitle();
+
+        if (getUserVisibleHint()) {
+            setParentTitle();
+        }
     }
 
     @Override
