@@ -171,9 +171,11 @@ public class RewardsActivity extends BaseActivity {
 
                 loading = false;
 
+                LogUtil.d("RewardActivity","item count"+adapter.getItemCount());
+
                 if (!data.isEmpty()) {
                     llNoData.setVisibility(View.GONE);
-                } else if (data.isEmpty() && !RewardsActivity.this.isFinishing()) {
+                } else if (adapter.getItemCount()<=0 && data.isEmpty() && !RewardsActivity.this.isFinishing()) {
                     llNoData.setVisibility(View.VISIBLE);
                     tvNoData.setText(getResources().getString(R.string.text_no_rewards));
                 }
