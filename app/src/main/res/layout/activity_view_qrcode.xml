@@ -27,8 +27,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_qr"
+        android:layout_marginTop="@dimen/_10dp"
         android:text="@string/text_scan_it"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/text_mirco_size"/>
 
     <Button
         android:id="@+id/btn_scan_qr"

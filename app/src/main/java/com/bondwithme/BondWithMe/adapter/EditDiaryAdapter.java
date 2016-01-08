@@ -50,7 +50,7 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
     private boolean isPhoto = true;
     private String userId = MainActivity.getUser().getUser_id();
     private Context context;
-    private List<PushedPhotoEntity> entities = new ArrayList<>();
+    private List<PushedPhotoEntity> entities;
     private boolean isEdit;
     private String request_url;
     private List<PhotoEntity> data = new ArrayList<>();
