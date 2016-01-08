@@ -46,6 +46,7 @@ public class AlertGroupActivity extends BaseActivity{
     private List<AlertGroupEntity> data = new ArrayList<>();
     private TextView tvNoDate;
     private LinearLayout llNoData;
+    private AlertGroupAdapter adapter;
 
 
     public int getLayout() {
@@ -104,7 +105,7 @@ public class AlertGroupActivity extends BaseActivity{
     }
 
     private void initAdapter() {
-        AlertGroupAdapter adapter = new AlertGroupAdapter(this,data);
+        adapter = new AlertGroupAdapter(this,data);
 
         adapter.setItemClickListener(new AlertGroupAdapter.ItemClickListener() {
             @Override
@@ -268,7 +269,7 @@ public class AlertGroupActivity extends BaseActivity{
                 //no data!
                 if (!data.isEmpty()){
                     llNoData.setVisibility(View.GONE);
-                }else if (data.isEmpty() && !AlertGroupActivity.this.isFinishing()){
+                }else if (adapter.getItemCount()<=0 &&data.isEmpty() && !AlertGroupActivity.this.isFinishing()){
                     llNoData.setVisibility(View.VISIBLE);
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_group));
                 }

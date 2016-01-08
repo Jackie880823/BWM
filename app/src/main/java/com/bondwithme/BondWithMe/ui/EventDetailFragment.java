@@ -825,7 +825,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         getParentActivity().rightButton.setImageResource(R.drawable.btn_edit);
 
                         getParentActivity().rightButton.setVisibility(View.VISIBLE);
-                        if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date()).getTime()))) {
+                        if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date())))) {
                             getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
                             getParentActivity().rightButton.setEnabled(false);
                         }

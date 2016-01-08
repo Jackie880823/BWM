@@ -53,7 +53,7 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
     private List<PushedPhotoEntity> entities;
     private boolean isEdit;
     private String request_url;
-    private ArrayList<PhotoEntity> data = new ArrayList<>();
+    private List<PhotoEntity> data = new ArrayList<>();
 
     public HeadHolder headHolder = null;
     public VideoHolder videoHolder = null;

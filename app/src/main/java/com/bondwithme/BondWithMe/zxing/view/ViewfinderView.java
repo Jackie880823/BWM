@@ -117,13 +117,13 @@ public final class ViewfinderView extends View {
 			 //画扫描框下面的字
             paint.setColor(textColor);
             paint.setFlags(Paint.ANTI_ALIAS_FLAG);
-            paint.setTextSize(22);
+            paint.setTextSize(getResources().getDimensionPixelSize(R.dimen.text_mirco_size));
             String str = getResources().getString(R.string.scan_within_box);
             int textWidth = (int)paint.measureText(str);
             if ((frame.width() - textWidth) >= 0){
-                canvas.drawText(str,frame.left + (frame.width() - textWidth)/2,frame.bottom + 50,paint);
+                canvas.drawText(str,frame.left + (frame.width() - textWidth)/2,frame.bottom + getResources().getDimensionPixelSize(R.dimen._20dp),paint);
             }else {
-                canvas.drawText(str,frame.left - (textWidth -frame.width())/2,frame.bottom + 50,paint);
+                canvas.drawText(str,frame.left - (textWidth -frame.width())/2,frame.bottom + getResources().getDimensionPixelSize(R.dimen._20dp),paint);
             }
 
 

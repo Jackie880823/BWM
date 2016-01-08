@@ -171,7 +171,7 @@ public class AlertWallActivity extends BaseActivity {
 
                 if (!data.isEmpty()){
                     llNoData.setVisibility(View.GONE);
-                }else if (data.isEmpty() && !AlertWallActivity.this.isFinishing()){
+                }else if (adapter.getItemCount()<=0 && data.isEmpty() && !AlertWallActivity.this.isFinishing()){
                     llNoData.setVisibility(View.VISIBLE);
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_diary));
                 }
