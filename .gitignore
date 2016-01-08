@@ -1,3 +1,5 @@
+# custom build file
+/runBuild.sh
 /.gradle
 /**/*build/
 /local.properties
