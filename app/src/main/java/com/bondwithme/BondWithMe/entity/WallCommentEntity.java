@@ -31,6 +31,7 @@ public class WallCommentEntity implements Serializable {
     private String sticker_group_path;
     private String sticker_name;
     private String sticker_type;
+    private String comment_edited;
 
     public String getContent_group_id() {
         return content_group_id;
@@ -208,5 +209,13 @@ public class WallCommentEntity implements Serializable {
 
     public void setSticker_type(String sticker_type) {
         this.sticker_type = sticker_type;
+    }
+
+    public String getComment_edited() {
+        return comment_edited;
+    }
+
+    public void setComment_edited(String comment_edited) {
+        this.comment_edited = comment_edited;
     }
 }

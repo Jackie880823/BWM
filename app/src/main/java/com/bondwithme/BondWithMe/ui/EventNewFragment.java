@@ -148,6 +148,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
         progressBar = getViewById(R.id.rl_progress);
 
@@ -250,23 +255,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (MainActivity.IS_INTERACTIVE_USE && isVisibleToUser) {
-            if(InteractivePopupWindow.firstOpPop){
-                String popText = getParentActivity().getResources().getString(R.string.text_tip_save_event);
-                if(TextUtils.isEmpty(popText))return;
-
-                popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,popText,0);
-                popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                    @Override
-                    public void popDismiss() {
-                        //存储本地
-                        PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,true);
-                    }
-                });
-                popupWindow.showPopupWindow(true);
-            }else {
-                handler.sendEmptyMessageDelayed(GET_DELAY,1000);
-                InteractivePopupWindow.firstOpPop = true;
-            }
+            handler.sendEmptyMessage(GET_DELAY);
         }
     }
 

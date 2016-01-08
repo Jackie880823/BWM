@@ -20,7 +20,7 @@
             android:layout_gravity="center_vertical"
             android:src="@drawable/birthday" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/rl_event_top"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -29,18 +29,40 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_top_event_title"
-                style="@style/text_title_default"
-                android:textColor="@color/default_text_color_dark"
-                android:layout_centerHorizontal="true"
-                android:textStyle="bold"
-                />
+            <LinearLayout
+            android:id="@+id/rl_birthday_text"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/tv_birthday_today_title"
+                    style="@style/text_title_default"
+                    android:textColor="@color/default_text_color_dark"
+                    android:textSize="@dimen/_15dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_birthday_soon_title"
+                    style="@style/text_title_default"
+                    android:layout_toRightOf="@id/tv_birthday_today_title"
+                    android:textColor="@color/default_text_color_dark"
+                    android:textSize="@dimen/_15dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_top_event_title"
+                android:layout_below="@+id/li_birthday_top"
                 android:layout_marginTop="@dimen/default_view_margin">
 
                 <View
@@ -65,7 +87,6 @@
                     android:layout_marginLeft="40dp"
                     android:layout_toRightOf="@+id/line">
 
-
                     <TextView
                         android:id="@+id/left_daty_count"
                         style="@style/text_light_default"
@@ -80,8 +101,7 @@
 
             </RelativeLayout>
 
-        </RelativeLayout>
-
+        </LinearLayout>
 
     </LinearLayout>
 

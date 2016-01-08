@@ -1,10 +1,14 @@
 package com.bondwithme.BondWithMe.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -17,8 +21,10 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.exception.StickerTypeException;
+import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
+import com.bondwithme.BondWithMe.ui.wall.EditCommentActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallMembersOrGroupsActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
@@ -37,16 +43,19 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private Context mContext;
     private List<WallCommentEntity> data;
+    private BaseFragment fragment;
 
-    public DiaryCommentAdapter(Context context, List<WallCommentEntity> data) {
-        mContext = context;
+    public DiaryCommentAdapter(BaseFragment fragment, List<WallCommentEntity> data) {
+        this.fragment = fragment;
+        mContext = fragment.getContext();
         this.data = data;
     }
 
     public void addData(List<WallCommentEntity> newData) {
         int index = data.size();
         data.addAll(newData);
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
+        notifyItemRangeInserted(index, data.size() - index);
     }
 
     public void setData(List<WallCommentEntity> data) {
@@ -79,12 +88,20 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         item.tv_comment_content.setText(comment.getComment_content());
         int count = TextUtils.isEmpty(comment.getLove_count()) ? 0 : Integer.valueOf(comment.getLove_count());
         item.tv_agree_count.setText(String.format(mContext.getString(R.string.loves_count), count));
-        item.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, comment.getComment_creation_date()));
+
+        String commentDate;
+        if ("1".equals(comment.getComment_edited())) {
+            commentDate = mContext.getString(R.string.comment_date_edited) + MyDateUtils.getLocalDateStringFromUTC(mContext, comment.getComment_creation_date());
+        } else {
+            commentDate = MyDateUtils.getLocalDateStringFromUTC(mContext, comment.getComment_creation_date());
+        }
+        item.comment_date.setText(commentDate);
+
 
         if (MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
-            item.btn_comment_del.setVisibility(View.VISIBLE);
+            item.ibtnOptions.setVisibility(View.VISIBLE);
         } else {
-            item.btn_comment_del.setVisibility(View.GONE);
+            item.ibtnOptions.setVisibility(View.GONE);
         }
 
         if (TextUtils.isEmpty(comment.getLove_id())) {
@@ -127,7 +144,7 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         FreedomSelectionTextView tv_comment_content;
         TextView tv_agree_count;
         ImageButton iv_agree;
-        ImageButton btn_comment_del;
+        ImageButton ibtnOptions;
         TextView comment_date;
         GifImageView iv_comment_pic;
         NetworkImageView niv_comment_pic;
@@ -143,14 +160,14 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);
 //            tv_agree = (TextView) itemView.findViewById(R.id.tv_agree);
             iv_agree = (ImageButton) itemView.findViewById(R.id.iv_agree);
-            btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
+            ibtnOptions = (ImageButton) itemView.findViewById(R.id.ibtn_options);
             iv_comment_pic = (GifImageView) itemView.findViewById(R.id.iv_comment_pic);
             niv_comment_pic = (NetworkImageView) itemView.findViewById(R.id.niv_comment_pic);
             commentContent = itemView.findViewById(R.id.comment_content);
 //            tv_agree.setOnClickListener(this);
             iv_agree.setOnClickListener(this);
             tv_agree_count.setOnClickListener(this);
-            btn_comment_del.setOnClickListener(this);
+            ibtnOptions.setOnClickListener(this);
             niv_comment_pic.setOnClickListener(this);
 
         }
@@ -191,13 +208,8 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     //                    }
 
                     break;
-                case R.id.btn_comment_del: {
-                    //自己发的或event creator 可以删除
-                    if (mCommentActionListener != null) {
-                        if (MainActivity.getUser().getUser_id().equals(commentEntity.getUser_id())) {
-                            mCommentActionListener.doDelete(commentEntity.getComment_id());
-                        }
-                    }
+                case R.id.ibtn_options: {
+                    initItemMenu(commentEntity, v);
                     break;
                 }
                 case R.id.niv_comment_pic: {
@@ -303,6 +315,68 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }).start();
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void initItemMenu(final WallCommentEntity commentEntity, View v) {
+        if (commentEntity == null) {
+            return;
+        }
+
+        final String commentID = commentEntity.getComment_id();
+
+        PopupMenu popupMenu;
+        Object object = v.getTag();
+        if (object == null || !(object instanceof PopupMenu)) {
+            popupMenu = new PopupMenu(mContext, v);
+            popupMenu.inflate(R.menu.comment_menu);
+            //使用反射，强制显示菜单图标
+//            try {
+//                Field field = popupMenu.getClass().getDeclaredField("mPopup");
+//                field.setAccessible(true);
+//                MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+//                mHelper.setForceShowIcon(true);
+//            } catch (IllegalAccessException | NoSuchFieldException e) {
+//                e.printStackTrace();
+//            }
+
+            v.setTag(popupMenu);
+        } else {
+            popupMenu = (PopupMenu) object;
+        }
+
+        if (!TextUtils.isEmpty(commentEntity.getFile_id()) || !TextUtils.isEmpty(commentEntity.getSticker_name())) {
+            // 有图片或者表情不显示 “编辑选项”
+            popupMenu.getMenu().findItem(R.id.menu_edit).setVisible(false);
+        } else {
+            popupMenu.getMenu().findItem(R.id.menu_edit).setVisible(true);
+        }
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                boolean result = false;
+                switch (item.getItemId()) {
+                    case R.id.menu_delete:
+                        //自己发的或event creator 可以删除
+                        if (mCommentActionListener != null) {
+                            mCommentActionListener.doDelete(commentID);
+                        }
+                        result = true;
+                        break;
+                    case R.id.menu_edit:// 跳至 EditCommentActivity编辑评论
+                        int index = data.indexOf(commentEntity);
+
+                        Intent intent = new Intent(mContext, EditCommentActivity.class);
+                        intent.putExtra(EditCommentActivity.DATA_INDEX, index);
+                        intent.putExtra(EditCommentActivity.WALL_COMMENT_ENTITY, commentEntity);
+                        fragment.startActivityForResult(intent, Constant.EDIT_COMMENT_REQUEST_CODE);
+                        break;
+                }
+                return result;
+            }
+        });
+
+        popupMenu.show();
+    }
 
     private CommentActionListener mCommentActionListener;
 

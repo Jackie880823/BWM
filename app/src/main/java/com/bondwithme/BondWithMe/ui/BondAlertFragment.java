@@ -52,6 +52,11 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void setLayoutId() {
         this.layoutId = R.layout.fragment_bond_alert;
     }

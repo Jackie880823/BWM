@@ -75,6 +75,11 @@ public class EventFragment extends BaseFragment<MainActivity> {
         this.layoutId = R.layout.fragment_event;
     }
 
+    @Override
+    protected void setParentTitle() {
+        setTitle(getString(R.string.title_tab_event));
+    }
+
 
     private RecyclerView rvList;
     private EventAdapter adapter;
@@ -183,19 +188,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             if(MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT,false)){
-                if(InteractivePopupWindow.firstOpPop){
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_create_event),0);
-                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                        @Override
-                        public void popDismiss() {
-                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT,true);
-                        }
-                    });
-                    popupWindow.showPopupWindow(true);
-                }else {
-                    handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,1000);
-                    InteractivePopupWindow.firstOpPop = true;
-                }
+                handler.sendEmptyMessage(GET_DELAY_RIGHT);
             }
             EventBus.getDefault().registerSticky(this);
 

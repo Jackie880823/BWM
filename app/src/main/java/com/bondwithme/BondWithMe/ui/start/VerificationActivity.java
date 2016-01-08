@@ -127,7 +127,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
                 //以下验证且创建用户出现的各种情况回调
                 case HANDLE_SUCCESS_CREATE_USER:
-                    goSignUpSuccessful();
+                    goDetails();
                     break;
 
                 case HANDLE_LOGIN_ID_EXISET:
@@ -147,7 +147,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
                 case HANDLE_SUCCESS_CREATE_FACEBOOK_USER:
                     //facebook 用户创建成功
-                    goMainActivity();
+                    goMainActivityByFacebook();
                     break;
 
 
@@ -1016,9 +1016,9 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         rlProgress.setVisibility(View.GONE);
     }
 
-    private void goSignUpSuccessful()
+    private void goDetails()
     {
-        Intent intent = new Intent(this, SignUpSuccessfulActivity.class);
+        Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(Constant.LOGIN_USER, userEntity);
         intent.putExtra(Constant.HTTP_TOKEN, tokenEntity);
         switch (userEntity.getUser_login_type())
@@ -1043,7 +1043,9 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         startActivity(intent);
     }
 
-    private void goMainActivity() {
+    private void goMainActivityByFacebook() {
+        userEntity.setShow_tip(true);//从登陆流程进入的必须显示tip，此值作为判断依据。因为facebook登录并不进入detail界面所以要在此设置
+        userEntity.setShow_add_member(true);
         App.userLoginSuccessed(this, userEntity, tokenEntity);
         MyAppsFlyer.appsFlyerRegistrationFacebook();
     }

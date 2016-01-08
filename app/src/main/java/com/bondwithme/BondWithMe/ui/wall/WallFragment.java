@@ -26,6 +26,7 @@ import com.bondwithme.BondWithMe.adapter.WallHolder;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
+import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
@@ -73,6 +74,11 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
 
+    }
+
+    @Override
+    protected void setParentTitle() {
+        setTitle(getString(R.string.title_tab_diary));
     }
 
     @Override
@@ -275,23 +281,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, false)) {
-                if (InteractivePopupWindow.firstOpPop) {
-                    String popText = getParentActivity().getResources().getString(R.string.text_tip_add_diary);
-                    if (TextUtils.isEmpty(popText)) return;
-
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popText, 0);
-                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                        @Override
-                        public void popDismiss() {
-                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, true);
-                            //存储本地
-                        }
-                    });
-                    popupWindow.showPopupWindow(true);
-                } else {
-                    handler.sendEmptyMessageDelayed(GET_DELAY, 1000);
-                    InteractivePopupWindow.firstOpPop = true;
-                }
+                handler.sendEmptyMessage(GET_DELAY);
             }
 
         }

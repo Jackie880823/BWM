@@ -112,7 +112,7 @@ public class NotificationMessageGenerateUtil {
                 msg = action_owner + ":" + snippet;
 //                msg = context.getString(R.string.notification_action_message_postText_personal, action_owner);
             } else {
-                msg = action_owner+"@"+item_name + ":" + snippet;
+                msg = action_owner + "@" + item_name + ":" + snippet;
 //                msg = context.getString(R.string.notification_action_message_postText_group, action_owner, item_name);
             }
         } else if ("postSticker".equals(action)) {
@@ -153,7 +153,7 @@ public class NotificationMessageGenerateUtil {
             } else {
                 msg = context.getString(R.string.notification_action_bigday_birthday_other, action_owner);
             }
-        } else if ("prebirthday ".equals(action)) {
+        } else if ("prebirthday".equals(action)) {
             if ("1day".equals(item_type)) {
                 msg = context.getString(R.string.notification_action_bigday_birthday_prebirthday_1, action_owner);
             } else if ("3day".equals(item_type)) {
@@ -167,17 +167,30 @@ public class NotificationMessageGenerateUtil {
         return msg;
     }
 
-    public static String getMissMessage(Context context, String action, String action_owner) {
+    public static String getMissMessage(Context context, String action, String action_owner, int memberCount, int msgCount) {
 
         String msg = null;
         if ("missyou".equals(action)) {
-            msg = context.getString(R.string.notification_action_miss_missyou, action_owner);
+            /**
+             you hui sent you a Miss
+             you hui sent you 2 Miss
+             然后 jennifer 又 miss 我，就需要改成
+             2 members sent you 3 miss
+             */
+
+            //只有一个人
+            if (memberCount == 1) {
+                msg = context.getString(R.string.notification_action_miss_missyou, "", action_owner, msgCount);
+            } else {
+                msg = context.getString(R.string.notification_action_miss_missyou, "" + memberCount, context.getString(R.string.text_member_unit), msgCount);
+            }
         }
         return msg;
     }
 
     /**
      * 用于可以直接使用的msg(不需要拼装)
+     *
      * @param context
      * @param action
      * @param jsonObjectExtras
@@ -192,6 +205,7 @@ public class NotificationMessageGenerateUtil {
         }
         return msg;
     }
+
     public static String getGroupAlertMessage(Context context, String action, String action_owner, String item_name) throws JSONException {
         String msg = null;
         if ("add".equals(action)) {
@@ -206,7 +220,7 @@ public class NotificationMessageGenerateUtil {
 
     public static String getInactiveMessage(Context context, String action, String action_owner) throws JSONException {
         String msg = null;
-        if("recommendMem".equals(action)){
+        if ("recommendMem".equals(action)) {
             msg = context.getString(R.string.notification_action_message_inactive_recommend, action_owner);
         }
         return msg;

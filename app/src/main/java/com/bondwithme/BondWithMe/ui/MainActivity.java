@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -27,12 +29,15 @@ import com.bondwithme.BondWithMe.Tranck.MyPiwik;
 import com.bondwithme.BondWithMe.adapter.MyFragmentPagerAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.receiver_service.AlarmControler;
 import com.bondwithme.BondWithMe.receiver_service.ReportIntentService;
+import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
@@ -40,7 +45,11 @@ import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.material.widget.SnackBar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -112,18 +121,29 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     public static String STICKER_VERSION = "3";
 
-    public static  Boolean IS_INTERACTIVE_USE;
+    public static Boolean IS_INTERACTIVE_USE;
     public static Map<String,InteractivePopupWindow> interactivePopupWindowMap;
     private static final int GET_DELAY = 0x28;
+
+    public static final String ACTION_REFRESH_RED_POINT_4_FIMILY = "action_refresh_red_point";
+    public static final String JUMP_INDEX = "jumpIndex";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (App.getLoginedUser() == null) {
+        if (App.getLoginedUser() == null) {//防止出现迷之不存在用户数据进入到主页
             App.getContextInstance().logout(this);
             return;
         }
+
+        if (getUser().isShow_add_member())//新用户注册先进入添加好友。
+        {
+            Intent intent = new Intent(this, AddMembersActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        super.onCreate(savedInstanceState);
 
         //表示这个用户已经登陆过。提供给登录界面判断显示sign up 还是 log in
         if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN,"")))
@@ -132,6 +152,14 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         }
 
         App.checkVerSion(this);
+        try {
+            /**少于7天*/
+            if(MyDateUtils.getDayDistanceBetweenDateStrings(getUser().getUser_creation_date(),getUser().getUser_active_date())<7){
+                AlarmControler.getInstance().createAllTasks(this);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -140,12 +168,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    protected void initTitleBar() {
-        super.initTitleBar();
-
-
-        //for default
+    private void init4DefaultPage() {
         setDrawable();
         changeTitleColor(R.color.tab_color_press5);
         changeTitle(R.string.title_tab_my_family);
@@ -154,8 +177,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         tabIv0.setImageResource(R.drawable.tab_family_select);
         ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press5));
         tabTv0.setTextColor(Color.BLACK);
-        //for last tab
-        mViewPager.setCurrentItem(leavePagerIndex);
     }
 
     @Override
@@ -169,6 +190,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
     protected void onResume() {
         if (refersh) {
             refersh = false;
@@ -176,7 +203,14 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             finish();
             startActivity(reintent);
         }
+
         super.onResume();
+        int newJumpIndex = getIntent().getIntExtra(JUMP_INDEX, -1);
+        /**新的跳转，以区分旧的，避免第一次启动重复set tab*/
+        if(newJumpIndex!=-1&&newJumpIndex!=jumpIndex&&currentTabEnum.ordinal()!=newJumpIndex){
+            mViewPager.setCurrentItem(newJumpIndex,false);
+        }
+
         if (fragments != null) {
             for (Fragment f : fragments) {
                 f.getRetainInstance();
@@ -185,9 +219,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //        if(currentTabEnum!=null){
 //            changeTitleColor();
 //        }
-
-
-        //初始小红点
 
 
         //提示异常反馈
@@ -333,7 +364,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                     break;
                 case SHOW_RED_POINT:
                     if (msg.obj != null) {
-                        setRedPoint((TabEnum) msg.obj, false);
+                        disableRedPoint((TabEnum) msg.obj, false);
                     }
                     break;
                 case GET_DELAY:
@@ -353,6 +384,62 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             return false;
         }
     });
+
+    private void bondDatas(JSONObject jsonObject) throws JSONException {
+        checkDataAndBond2View(TabEnum.wall, jsonObject.getString("wall"));
+        checkDataAndBond2View(TabEnum.event, jsonObject.getString("event"));
+        checkDataAndBond2View(TabEnum.family,jsonObject.getString("miss"));
+
+        checkDataAndBond2View(TabEnum.more,jsonObject.getString("miss"));
+        checkDataAndBond2View(TabEnum.more, jsonObject.getString("bigDay"));
+        checkDataAndBond2View(TabEnum.more,jsonObject.getString("group"));
+        checkDataAndBond2View(TabEnum.more, jsonObject.getString("member"));
+    }
+
+    private void checkDataAndBond2View(TabEnum tab, String countString){
+        int count = Integer.valueOf(countString);
+
+        if (count > 0&&tab!=currentTabEnum) {
+            disableRedPoint(tab, false);
+        }
+    }
+
+    public void checkPoint()
+    {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_MODULES_COUNT, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    bondDatas(jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
 
     @Override
     protected void titleRightEvent() {
@@ -375,13 +462,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
-        if(MainActivity.IS_INTERACTIVE_USE){
-//            handler.sendEmptyMessageDelayed(GET_DELAY, 500);
-        }
-//            firstOpPop = true;
-//        }
-
-
     }
 
     public interface TitleEventListenner {
@@ -415,6 +495,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + STICKER_VERSION + App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
         IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START,true);
+        if(getUser().isShow_tip()){
+            IS_INTERACTIVE_USE = true;
+        }
         LogUtil.d(TAG,"isFirstLogin========="+isFirstLogin+"======IS_FIRST_LOGIN======"+IS_FIRST_LOGIN);
         if (isFirstLogin) {
             new Thread() {
@@ -476,7 +559,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         LAST_LEAVE_INDEX += getUser().getUser_id();
         leavePagerIndex = PreferencesUtil.getValue(this, LAST_LEAVE_INDEX, 0);
-        jumpIndex = getIntent().getIntExtra("jumpIndex", -1);
+        jumpIndex = getIntent().getIntExtra(JUMP_INDEX, -1);
         if (jumpIndex != -1) {
             leavePagerIndex = jumpIndex;
         }
@@ -492,6 +575,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         //注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        filter.addAction(this.ACTION_REFRESH_RED_POINT_4_FIMILY);
 //        filter.addAction("refresh");
         registerReceiver(mReceiver, filter);
 
@@ -499,16 +583,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         checkAndShowRedPoit();
 
         //TODO test mush delete
-//        Intent intent = new Intent(this, CrashActivity.class);
-//        startActivity(intent);
-//        try {
-//            MediaUtil.encodeFile2Mp4(this, FileUtil.getSaveRootPath(this, true).toString() + "/VID_20150827_111334.3gp", FileUtil.getSaveRootPath(this, true).toString() + "/" + System.currentTimeMillis() + ".mp4");
-////            MediaUtil.encodeFile2Mp4(this, FileUtil.getSaveRootPath(this, true).toString() + "/VID_20150827_181646.mp4", FileUtil.getSaveRootPath(this, true).toString() + "/" + System.currentTimeMillis() + ".mp4");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
     }
+
+
 
     /**
      * 清除所有tab小红点
@@ -571,8 +649,19 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     }
 
     @Override
-    public void requestData() {
+    protected void initTitleBar() {
+        super.initTitleBar();
+        if (leavePagerIndex!=0){
+            //for last tab
+            mViewPager.setCurrentItem(leavePagerIndex);
+        }else{
+            init4DefaultPage();
+        }
+    }
 
+    @Override
+    public void requestData() {
+        checkPoint();
     }
 
 
@@ -621,7 +710,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 tabIv1.setImageResource(R.drawable.tab_wall_select);
                 ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
                 tabTv1.setTextColor(Color.BLACK);
-                setRedPoint(TabEnum.wall, true);
                 break;
             case event:
                 setDrawable();
@@ -637,7 +725,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 tabIv2.setImageResource(R.drawable.tab_event_select);
                 ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_press2));
                 tabTv2.setTextColor(Color.BLACK);
-                setRedPoint(TabEnum.event, true);
                 break;
             case chat:
                 setDrawable();
@@ -654,7 +741,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 tabIv3.setImageResource(R.drawable.tab_message_select);
                 ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_press3));
                 tabTv3.setTextColor(Color.BLACK);
-                setRedPoint(TabEnum.chat, true);
                 break;
             case more:
                 setDrawable();
@@ -670,27 +756,16 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 tabIv4.setImageResource(R.drawable.tab_more_select);
                 ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
                 tabTv4.setTextColor(Color.BLACK);
-                setRedPoint(TabEnum.more, true);
                 break;
             case family:
-                setDrawable();
-                //ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
-                changeTitleColor(R.color.tab_color_press5);
-                changeTitle(R.string.title_tab_my_family);
-//                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-//                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-//                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-//                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                leftButton.setVisibility(View.INVISIBLE);
-                rightButton.setVisibility(View.VISIBLE);
-                tabIv0.setImageResource(R.drawable.tab_family_select);
-                ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press5));
-                tabTv0.setTextColor(Color.BLACK);
+                init4DefaultPage();
                 break;
         }
         tvTitle.setSelected(true);
         tvTitle.requestFocus();//让title获取焦点以便文字可以滚动
         currentTabEnum = tabEnum;
+        /**当前tab不显示红点*/
+        disableRedPoint(currentTabEnum, true);
     }
 
     @Override
@@ -764,10 +839,11 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         return super.dispatchKeyEvent(event);
     }
 
-    public void setRedPoint(TabEnum tab, boolean cancel) {
+    public void disableRedPoint(TabEnum tab, boolean cancel) {
         int action = cancel ? View.GONE : View.VISIBLE;
         switch (tab) {
             case family:
+                red_point_1.setVisibility(action);
                 break;
             case chat:
                 red_point_2.setVisibility(action);
@@ -824,6 +900,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 if (App.isBackground()) {
                     refersh = true;
                 }
+            }
+            if (intent.getAction().equals(ACTION_REFRESH_RED_POINT_4_FIMILY)) {
+                disableRedPoint(TabEnum.family, true);
             }
         }
     };

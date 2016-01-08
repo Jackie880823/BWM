@@ -111,6 +111,11 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
 
         rlProgress = getViewById(R.id.rl_progress);

@@ -70,6 +70,11 @@ public class Constant {
     public static final int INTENT_REQUEST_HEAD_MULTI_PHOTO = 20;
     public static final int INTENT_REQUEST_FEELING = 21;
 
+    /**
+     *请求编辑评论的意图
+     */
+    public static final int EDIT_COMMENT_REQUEST_CODE = 1000;
+
     public static final int ACTION_EVENT_CREATE = 20;
     public static final int ACTION_EVENT_UPDATE = 21;
     public static final int ACTION_EVENT_UPDATE_BIRTHDAY = 22;
@@ -301,9 +306,13 @@ public class Constant {
     public static final String API_UPDATE_MISS = API_SERVER + "/bondwithme/index.php/api/miss/%s";//消除好友的miss
 
     /**
-     * 编制日记
+     * 编辑日记
      */
     public static final String API_PUT_WALL = API_SERVER + "/bondwithme/index.php/api/updateContent/%s";
+    /**
+     * 编辑评论
+     */
+    public static final String API_PUT_COMMENT = API_SERVER + "/bondwithme/index.php/api/updateComment/%s";
     /**
      * 照片最大号，用于在日志列表直接上传照片的时候，上传全部照片前先更新。
      */

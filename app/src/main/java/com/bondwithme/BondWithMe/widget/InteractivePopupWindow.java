@@ -44,7 +44,7 @@ public class InteractivePopupWindow extends PopupWindow {
     public final static String INTERACTIVE_TIP_DOWNLOAD_STICKIES = "Interactive_tip_download_stickies";
 
 
-    private final static String[] dirayStrings = new String[]{INTERACTIVE_TIP_START,INTERACTIVE_TIP_ADD_MEMBER,INTERACTIVE_TIP_ADD_PHOTO
+    public final static String[] dirayStrings = new String[]{INTERACTIVE_TIP_ADD_MEMBER,INTERACTIVE_TIP_ADD_PHOTO
     ,INTERACTIVE_TIP_ADD_DIARY,INTERACTIVE_TIP_FEELING,INTERACTIVE_TIP_TAG_MEMBER,INTERACTIVE_TIP_ALLOW_ME
     ,INTERACTIVE_TIP_LOCATION,INTERACTIVE_TIP_TAG_POST,INTERACTIVE_TIP_CREATE_EVENT,INTERACTIVE_TIP_SAVE_EVENT
     ,INTERACTIVE_TIP_ADD_MEMBER_CHATTING,INTERACTIVE_TIP_SELECT_MEMBER_CHATTING,INTERACTIVE_TIP_DOWNLOAD_STICKIES};
@@ -60,15 +60,14 @@ public class InteractivePopupWindow extends PopupWindow {
     private String mTest;
     private int[] screen_pos;
     private boolean isConnection;
-    public static boolean firstOpPop;
     private WindowManager.LayoutParams lp;
-
-
 
 
     public InteractivePopupWindow(final Activity context, View parent, String text, int model){
         LogUtil.i(TAG,"INTERACTIVE_TIP_START"+PreferencesUtil.getValue(context,INTERACTIVE_TIP_START,false));
-
+        mContext = context;
+        mParent = parent;
+        mTest = text;
 //        WindowManager windowManager = context.getWindowManager();
 //        Display display =  windowManager.getDefaultDisplay();
         lp = context.getWindow().getAttributes();
@@ -82,9 +81,6 @@ public class InteractivePopupWindow extends PopupWindow {
         }else {
             conentView = LayoutInflater.from(context).inflate(R.layout.interactive_pop_up_dialog,null);
         }
-        mContext = context;
-        mParent = parent;
-        mTest = text;
         // 设置SelectPicPopupWindow的View
         this.setContentView(conentView);
         // 设置SelectPicPopupWindow弹出窗体的宽
@@ -109,11 +105,7 @@ public class InteractivePopupWindow extends PopupWindow {
         // 刷新状态
         this.update();
         preparePopupWindow();
-
-
     }
-
-
 
     private void preparePopupWindow() {
         if (!this.isShowing()) {
@@ -127,10 +119,9 @@ public class InteractivePopupWindow extends PopupWindow {
             position_x = anchor_rect.centerX() - (contentViewWidth / 2);
             position_y = anchor_rect.bottom - (anchor_rect.height() / 2);
 
-//            location = new int[2];
-//            mParent.getLocationOnScreen(location);
-
-            addPopupText(mTest);
+            if(mTest != null){
+                addPopupText(mTest);
+            }
         } else {
             this.dismiss();
         }
@@ -142,8 +133,6 @@ public class InteractivePopupWindow extends PopupWindow {
         TextView textView = new TextView(mContext);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setText(ToDBC(text));
-//        textView.setBackgroundColor(mContext.getResources().getDimension(R.drawable.btn_chat_send_bg)));
-//        textView.setBackground(mContext.getDrawable(R.drawable.btn_chat_send_bg));
         textView.setBackground(mContext.getResources().getDrawable(R.drawable.pop_chat_bg));
         textView.setTextSize(14);
         textView.setTextColor(Color.WHITE);
@@ -161,9 +150,6 @@ public class InteractivePopupWindow extends PopupWindow {
         popText.setFocusable(false);
         popText.setOutsideTouchable(true);
         LogUtil.i("textView.getWidth",": "+textView.getWidth());
-
-//        textView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.group_bg));
-//
     }
 
     /**
@@ -198,7 +184,6 @@ public class InteractivePopupWindow extends PopupWindow {
         popText.dismiss();
     }
 
-
     /**
      * 存储已经显示Pop的状态
      */
@@ -221,8 +206,6 @@ public class InteractivePopupWindow extends PopupWindow {
                 map.put(s,b);
             }
         }
-
-
         return map;
     }
 

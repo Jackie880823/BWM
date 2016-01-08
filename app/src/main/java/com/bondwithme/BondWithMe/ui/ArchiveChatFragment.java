@@ -93,6 +93,10 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
     }
 
     @Override
+    protected void setParentTitle() {
+    }
+
+    @Override
     public void setLayoutId() {
         this.layoutId = R.layout.fragment_archive_chat;
     }

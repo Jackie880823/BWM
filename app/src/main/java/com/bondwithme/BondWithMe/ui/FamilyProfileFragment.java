@@ -102,6 +102,11 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     }
 
     @Override
+    protected void setParentTitle() {
+        setTitle(getString(R.string.title_family_profile));
+    }
+
+    @Override
     public void initView() {
 
         Intent intent = getActivity().getIntent();
@@ -166,18 +171,19 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
             VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
             VolleyUtil.initNetworkImageView(getActivity(), netQrImageView, String.format(Constant.API_GET_PROFILE_QR, memberId), R.drawable.qrcode_button, R.drawable.qrcode_button);
-            if (!TextUtils.isEmpty(getDofeelCode)) {
-                try {
-                    String filePath = "";
-                    if (getDofeelCode.contains("_")) {
-                        filePath = getDofeelCode.replaceAll("_", File.separator);
-                    }
-                    InputStream is = App.getContextInstance().getAssets().open(filePath);
-                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-                    ivBottomLeft.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
+        }
+
+        if (!TextUtils.isEmpty(getDofeelCode)) {
+            try {
+                String filePath = "";
+                if (getDofeelCode.contains("_")) {
+                    filePath = getDofeelCode.replaceAll("_", File.separator);
                 }
+                InputStream is = App.getContextInstance().getAssets().open(filePath);
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                ivBottomLeft.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -346,19 +352,19 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //                    tvName1.setText(userEntity.getUser_login_id());
                     tvId1.setText(userEntity.getDis_bondwithme_id());
                     if(TextUtils.isEmpty(getDofeelCode)){
-                        String dofeel_code = userEntity.getDofeel_code();
-                        if (!TextUtils.isEmpty(dofeel_code)) {
-                            try {
-                                String filePath = "";
-                                if (dofeel_code.contains("_")) {
-                                    filePath = dofeel_code.replaceAll("_", File.separator);
-                                }
-                                InputStream is = App.getContextInstance().getAssets().open(filePath);
-                                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                                ivBottomLeft.setImageBitmap(bitmap);
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                        getDofeelCode = userEntity.getDofeel_code();
+                    }
+                    if (!TextUtils.isEmpty(getDofeelCode)) {
+                        try {
+                            String filePath = "";
+                            if (getDofeelCode.contains("_")) {
+                                filePath = getDofeelCode.replaceAll("_", File.separator);
                             }
+                            InputStream is = App.getContextInstance().getAssets().open(filePath);
+                            Bitmap bitmap = BitmapFactory.decodeStream(is);
+                            ivBottomLeft.setImageBitmap(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                     break;

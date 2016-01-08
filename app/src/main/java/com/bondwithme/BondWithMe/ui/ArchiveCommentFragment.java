@@ -70,6 +70,11 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
         mHttpTools = new HttpTools(getActivity());
         if(getArguments() != null){

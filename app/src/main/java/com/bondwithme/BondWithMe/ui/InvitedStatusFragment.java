@@ -75,6 +75,11 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
     }
 
     @Override
+    protected void setParentTitle() {
+
+    }
+
+    @Override
     public void initView() {
 
         fragmentManager = getFragmentManager();

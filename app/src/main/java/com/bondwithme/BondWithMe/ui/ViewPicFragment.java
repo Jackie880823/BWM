@@ -48,6 +48,11 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
         layoutId = R.layout.fragment_view_pic;
     }
 
+    @Override
+    protected void setParentTitle() {
+
+    }
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

@@ -198,6 +198,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
+            android:name=".ui.wall.EditCommentActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateVisible" />
+        <activity
             android:name=".ui.wall.FeelingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
@@ -690,6 +694,17 @@
             android:windowSoftInputMode="stateAlwaysHidden"
             android:launchMode="singleTask">
         </activity>
+
+        <receiver android:name=".receiver_service.AlarmReceiver" >
+            <intent-filter>
+                <action android:name="com.bondwithme.BondWithMe.android.five_minute_action" />
+                <action android:name="com.bondwithme.BondWithMe.android.two_day_action" />
+                <action android:name="com.bondwithme.BondWithMe.android.three_day_action" />
+                <action android:name="com.bondwithme.BondWithMe.android.five_day_action" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

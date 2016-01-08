@@ -91,7 +91,7 @@
                     android:padding="@dimen/default_view_margin"
                     android:background="@null"
                     android:contentDescription="@string/delete"
-                    android:src="@drawable/wall_option_dots"
+                    android:src="@drawable/option_dots_view"
                     tools:visibility="visible"
                     android:visibility="gone" />
             </RelativeLayout>

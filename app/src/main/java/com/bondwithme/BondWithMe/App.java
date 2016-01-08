@@ -22,6 +22,7 @@ import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
+import com.bondwithme.BondWithMe.receiver_service.AlarmControler;
 import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.start.StartActivity;
@@ -73,7 +74,8 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     private static List<String> notificationEventList = new ArrayList<>();
     private static List<String> notificationMemberList = new ArrayList<>();
     private static List<String> notificationMessageList = new ArrayList<>();
-    private static List<String> notificationMissList = new ArrayList<>();
+    /**特殊的miss通知*/
+    private static HashMap<String,String> notificationMissList = new HashMap<>();
     private static List<String> notificationBigDayList = new ArrayList<>();
     private static List<String> notificationNewsList = new ArrayList<>();
     private static List<String> notificationGroupList = new ArrayList<>();
@@ -225,7 +227,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             updateDialog.show();
     }
 
-    private static void goMain(Activity context) {
+    public static void goMain(Activity context) {
         Intent intent = new Intent(context, MainActivity.class);
 //        ComponentName cn = intent.getComponent();
 //        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
@@ -329,6 +331,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             if (FacebookSdk.isInitialized()) {
                 LoginManager.getInstance().logOut();//清除Facebook授权缓存
             }
+            AlarmControler.getInstance().cancleAllTasks(context);
             context.finish();
         }
         MainActivity.clearAllRedPoint();
@@ -485,8 +488,8 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 return notificationMemberList;
             case BONDALERT_MESSAGE:
                 return notificationMessageList;
-            case BONDALERT_MISS:
-                return notificationMissList;
+//            case BONDALERT_MISS:
+//                return notificationMissList;
             case BONDALERT_BIGDAY:
                 return notificationBigDayList;
             case BONDALERT_NEWS:
@@ -496,6 +499,11 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             default:
                 return new ArrayList<>();
         }
+    }
+
+    /**蛋疼的搞特殊*/
+    public static HashMap<String,String> getMissNotificationInfos() {
+        return notificationMissList;
     }
 
     /**
@@ -513,6 +521,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public void clearNotificationMsgsByType(NotificationUtil.MessageType messageType) {
+        if(messageType==null){
+            return;
+        }
         switch (messageType) {
             case BONDALERT_WALL:
                 notificationWallList.clear();
