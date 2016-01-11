@@ -75,8 +75,9 @@ public class TimePicker extends FrameLayout implements OnClickListener {
 
 	private void updateTime() {
 		System.out.println(mCalendar.getTime());
+		//获取24小时制的时间
+		int hourOfDay = mCalendar.get(Calendar.HOUR_OF_DAY);
 		if (is24Hour) {
-
 			hourPicker.setMinValue(0);
 			hourPicker.setMaxValue(23);
 			hourPicker.setValue(mCalendar.get(Calendar.HOUR_OF_DAY));
@@ -85,14 +86,13 @@ public class TimePicker extends FrameLayout implements OnClickListener {
 			hourPicker.setMinValue(1);
 			hourPicker.setMaxValue(12);
 			hourPicker.setValue(mCalendar.get(Calendar.HOUR));
-			if (mCalendar.get(Calendar.AM_PM) == Calendar.PM) {
-				isAm = false;
-				timeSwitcher.setText(getResources().getString(R.string.afternoon));
-			} else {
+			if(hourOfDay < 12 ){
 				isAm = true;
 				timeSwitcher.setText(getResources().getString(R.string.morning));
+			}else {
+				isAm = false;
+				timeSwitcher.setText(getResources().getString(R.string.afternoon));
 			}
-
 			timeSwitcher.setVisibility(View.VISIBLE);
 
 		}
