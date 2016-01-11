@@ -1,10 +1,8 @@
 package com.bondwithme.BondWithMe.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +14,7 @@ import com.bondwithme.BondWithMe.entity.BirthdayEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -107,13 +102,10 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.tvUserName.setTextColor(mContext.getResources().getColor(R.color.default_text_color_light));
                 item.tvUserName.setText(ee.getUser_given_name());
                 item.tvUserName.setTypeface(null, Typeface.NORMAL);
-                //                item.icon_release_date.setVisibility(View.VISIBLE);
-                //                item.tvReleaseDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
                 item.tvReleaseDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
                 item.tvReleaseDate.setVisibility(View.VISIBLE);
                 if(!"0".equals(ee.getGroup_new_post())) {
                     this.position = position;
-                    //                    item.item_event.setBackgroundResource(0);
                     if(clickitemList.size() > 0 && clickitemList.contains(position)) {
                         item.event_start.setVisibility(View.INVISIBLE);
                     } else {
@@ -122,38 +114,17 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
             }
         } else if(holder instanceof VHHeader) {
-            int todayCount = 0;
-            int soonCount = 0;
+            List<BirthdayEntity> todayEntity = new ArrayList<>(),soonEntity = new ArrayList<>();
             VHHeader item = (VHHeader) holder;
-            for (int i = 0; i < birthdayEvents.size(); i++){
-                if("0".equals(birthdayEvents.get(i).getDay_count())){
-                    todayCount++;
+            for (BirthdayEntity birthdayEntity :birthdayEvents){
+                if("0".equals(birthdayEntity.getDay_count())){
+                    todayEntity.add(birthdayEntity);
                 }else {
-                    soonCount++;
+                    soonEntity.add(birthdayEntity);
                 }
             }
-            BirthdayEntity be = birthdayEvents.get(0);
-            if("0".equals(be.getDay_count())) {
-                item.left_daty_count.setText(mContext.getString(R.string.text_today));
-                item.tv_date_desc.setVisibility(View.GONE);
-            } else {
-                item.left_daty_count.setText(be.getDay_count() + "");
-                item.tv_date_desc.setVisibility(View.VISIBLE);
-            }
-            setBirthdayTopText(todayTitle,item.tv_top_today_title,be,todayCount);
-            setBirthdayTopText(defaultTitle,item.tv_top_soon_title,be,soonCount);
-            // add start by Jackie
-            @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date date = format.parse(be.getUser_dob());
-                String text = DateUtils.formatDateTime(mContext, date.getTime(), DateUtils.FORMAT_NO_YEAR);
-                item.date.setText(text);
-            } catch(ParseException e) {
-                e.printStackTrace();
-                item.date.setText(be.getUser_dob());
-            }
-            // add end by Jackie
+            setBirthdayTopText(todayTitle,item.tv_top_today_title,todayEntity);
+            setBirthdayTopText(defaultTitle,item.tv_top_soon_title,soonEntity);
 
         }
     }
@@ -171,14 +142,14 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return TYPE_ITEM;
     }
 
-    private void setBirthdayTopText(String text, TextView textView,BirthdayEntity be,int count){
-        if(count == 1) {
-            textView.setText(String.format(text, be.getUser_given_name(), mContext.getString(R.string.title_birthday_title_prefix2)));
+    private void setBirthdayTopText(String text, TextView textView,List<BirthdayEntity> be){
+        if(be.size() == 1) {
+            textView.setText(String.format(text, be.get(0).getUser_given_name(), mContext.getString(R.string.title_birthday_title_prefix2)));
         } else {
-            String stBirthday =  String.format(mContext.getString(R.string.title_birthday_title_prefix1,count));
+            String stBirthday =  String.format(mContext.getString(R.string.title_birthday_title_prefix1,be.size()));
             textView.setText(String.format(text, stBirthday,""));
         }
-        if(count > 0){
+        if(be.size() > 0){
             textView.setVisibility(View.VISIBLE);
         }
     }
@@ -192,9 +163,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView tvUserName;
         TextView tvReleaseDate;
         TextView item_unenable;
-        //        ImageView icon_release_date;
         RelativeLayout item_event;
-        //        FrameLayout event_start;
         RelativeLayout event_start;
 
 
@@ -206,13 +175,8 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             tvReleaseDate = (TextView) itemView.findViewById(R.id.tv_release_date);
             item_unenable = (TextView) itemView.findViewById(R.id.item_unenable);
-            //            icon_release_date = (ImageView) itemView.findViewById(R.id.icon_release_date);
             item_event = (RelativeLayout) itemView.findViewById(R.id.item_event);
             event_start = (RelativeLayout) itemView.findViewById(R.id.event_start);
-            //
-            //            if(){
-            //
-            //            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -225,8 +189,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         item_event.setBackgroundResource(0);
                         event_start.setVisibility(View.INVISIBLE);
                         clickitemList.add(position);
-                        //                            Log.i("item_click=======================","");
-                        //                        }
                     }
                 }
             });
@@ -237,9 +199,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     class VHHeader extends RecyclerView.ViewHolder {
         private TextView tv_top_today_title;
         private TextView tv_top_soon_title;
-        private TextView date;
-        private TextView left_daty_count;
-        private TextView tv_date_desc;
         private RelativeLayout event_start;
 
 
@@ -248,9 +207,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             super(itemView);
             tv_top_today_title = (TextView) itemView.findViewById(R.id.tv_birthday_today_title);
             tv_top_soon_title = (TextView) itemView.findViewById(R.id.tv_birthday_soon_title);
-            date = (TextView) itemView.findViewById(R.id.date);
-            left_daty_count = (TextView) itemView.findViewById(R.id.left_daty_count);
-            tv_date_desc = (TextView) itemView.findViewById(R.id.tv_date_desc);
             event_start = (RelativeLayout) itemView.findViewById(R.id.event_start);
 
             itemView.setOnClickListener(new View.OnClickListener() {

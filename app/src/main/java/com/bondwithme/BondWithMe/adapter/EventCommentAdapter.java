@@ -206,7 +206,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(data.size() == 1){
                 second.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_one_shape));
                 layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-                layoutParam.setMargins(itemDistance,14,itemDistance,DensityUtil.dip2px(mContext, 80));
+                layoutParam.setMargins(itemDistance,14,itemDistance,DensityUtil.dip2px(mContext, 55));
 //              layoutParam.setMarginEnd(500);
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.INVISIBLE);
@@ -262,7 +262,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mViewHolder footer = (mViewHolder) holder;
             EventCommentEntity entity =  data.get(position - detailItemCount);
             layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-            layoutParam.setMargins(itemDistance,0,itemDistance,DensityUtil.dip2px(mContext,80));
+            layoutParam.setMargins(itemDistance,0,itemDistance,DensityUtil.dip2px(mContext,55));
             footer.itemView.setLayoutParams(layoutParam);
             footer.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_footer_shape));
             BitmapTools.getInstance(mContext).display(((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);

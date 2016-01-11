@@ -59,47 +59,47 @@
             </LinearLayout>
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/li_birthday_top"
-                android:layout_marginTop="@dimen/default_view_margin">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/li_birthday_top"-->
+                <!--android:layout_marginTop="@dimen/default_view_margin">-->
 
-                <View
-                    android:id="@+id/line"
-                    android:layout_width="1dp"
-                    android:layout_height="20dp"
-                    android:layout_centerInParent="true"
+                <!--<View-->
+                    <!--android:id="@+id/line"-->
+                    <!--android:layout_width="1dp"-->
+                    <!--android:layout_height="20dp"-->
+                    <!--android:layout_centerInParent="true"-->
 
-                    android:background="@color/default_split_line" />
+                    <!--android:background="@color/default_split_line" />-->
 
-                <TextView
-                    android:id="@+id/date"
-                    style="@style/text_light_default"
-                    android:layout_marginRight="40dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@+id/line"
-                     />
+                <!--<TextView-->
+                    <!--android:id="@+id/date"-->
+                    <!--style="@style/text_light_default"-->
+                    <!--android:layout_marginRight="40dp"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_toLeftOf="@+id/line"-->
+                     <!--/>-->
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="40dp"
-                    android:layout_toRightOf="@+id/line">
+                <!--<LinearLayout-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="40dp"-->
+                    <!--android:layout_toRightOf="@+id/line">-->
 
-                    <TextView
-                        android:id="@+id/left_daty_count"
-                        style="@style/text_light_default"
-                        android:layout_marginRight="@dimen/default_view_margin"
-                        android:textColor="@color/default_text_color_red" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/left_daty_count"-->
+                        <!--style="@style/text_light_default"-->
+                        <!--android:layout_marginRight="@dimen/default_view_margin"-->
+                        <!--android:textColor="@color/default_text_color_red" />-->
 
-                    <TextView
-                        android:id="@+id/tv_date_desc"
-                        style="@style/text_dark_default"
-                        android:text="@string/title_birthday_left_day_desc" />
-                </LinearLayout>
+                    <!--<TextView-->
+                        <!--android:id="@+id/tv_date_desc"-->
+                        <!--style="@style/text_dark_default"-->
+                        <!--android:text="@string/title_birthday_left_day_desc" />-->
+                <!--</LinearLayout>-->
 
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
         </LinearLayout>
 
