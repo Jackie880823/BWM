@@ -39,14 +39,14 @@
                 android:text="@string/title_tab_my_family" />
 
         </LinearLayout>
-        <TextView
+        <ImageView
             android:id="@+id/red_point_1"
             android:layout_alignParentRight="true"
-            style="@style/RedPoint"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginRight="@dimen/default_text_padding"
             android:layout_marginTop="@dimen/default_text_padding"
+            android:src="@drawable/love_alert"
             android:visibility="gone"
             />
 

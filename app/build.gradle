@@ -18,7 +18,7 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 61   //TODO
+        versionCode 62   //TODO
         versionName "2.2.1" //TODO
 
         // dex突破65535的限制

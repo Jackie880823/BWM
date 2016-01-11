@@ -12,6 +12,7 @@ import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -90,7 +91,7 @@ public class EditCommentFragment extends BaseFragment<EditCommentActivity> {
                 public void onResult(String string) {
                     LogUtil.d(TAG, "onResult& response: " + string);
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String date = format.format(new Date());
+                    String date = format.format(new Date(MyDateUtils.formatTimestamp2UTC(System.currentTimeMillis())));
                     entity.setComment_creation_date(date);
                     entity.setComment_edited("1");
                     listener.putEntity(entity);

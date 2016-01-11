@@ -697,7 +697,7 @@
     <string name="text_profile_change_prompt">Tap to change cover and profile photo.</string>
 
     <string name="text_invalid_qr">Invalid QR code!</string>
-    <string name="text_member_unit">Member</string>
+    <string name="text_member_unit">Members</string>
 
     <string name="title_birthday_today_title">%1$s%2$s birthday is today !</string>
     <string name="text_edit">Edit</string>
