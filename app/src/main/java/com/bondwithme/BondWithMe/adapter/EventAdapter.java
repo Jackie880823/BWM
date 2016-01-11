@@ -102,13 +102,10 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.tvUserName.setTextColor(mContext.getResources().getColor(R.color.default_text_color_light));
                 item.tvUserName.setText(ee.getUser_given_name());
                 item.tvUserName.setTypeface(null, Typeface.NORMAL);
-                //                item.icon_release_date.setVisibility(View.VISIBLE);
-                //                item.tvReleaseDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
                 item.tvReleaseDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
                 item.tvReleaseDate.setVisibility(View.VISIBLE);
                 if(!"0".equals(ee.getGroup_new_post())) {
                     this.position = position;
-                    //                    item.item_event.setBackgroundResource(0);
                     if(clickitemList.size() > 0 && clickitemList.contains(position)) {
                         item.event_start.setVisibility(View.INVISIBLE);
                     } else {
@@ -117,19 +114,17 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
             }
         } else if(holder instanceof VHHeader) {
-            int todayCount = 0;
-            int soonCount = 0;
+            List<BirthdayEntity> todayEntity = new ArrayList<>(),soonEntity = new ArrayList<>();
             VHHeader item = (VHHeader) holder;
             for (BirthdayEntity birthdayEntity :birthdayEvents){
                 if("0".equals(birthdayEntity.getDay_count())){
-                    todayCount++;
+                    todayEntity.add(birthdayEntity);
                 }else {
-                    soonCount++;
+                    soonEntity.add(birthdayEntity);
                 }
             }
-            BirthdayEntity be = birthdayEvents.get(0);
-            setBirthdayTopText(todayTitle,item.tv_top_today_title,be,todayCount);
-            setBirthdayTopText(defaultTitle,item.tv_top_soon_title,be,soonCount);
+            setBirthdayTopText(todayTitle,item.tv_top_today_title,todayEntity);
+            setBirthdayTopText(defaultTitle,item.tv_top_soon_title,soonEntity);
 
         }
     }
@@ -147,14 +142,14 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return TYPE_ITEM;
     }
 
-    private void setBirthdayTopText(String text, TextView textView,BirthdayEntity be,int count){
-        if(count == 1) {
-            textView.setText(String.format(text, be.getUser_given_name(), mContext.getString(R.string.title_birthday_title_prefix2)));
+    private void setBirthdayTopText(String text, TextView textView,List<BirthdayEntity> be){
+        if(be.size() == 1) {
+            textView.setText(String.format(text, be.get(0).getUser_given_name(), mContext.getString(R.string.title_birthday_title_prefix2)));
         } else {
-            String stBirthday =  String.format(mContext.getString(R.string.title_birthday_title_prefix1,count));
+            String stBirthday =  String.format(mContext.getString(R.string.title_birthday_title_prefix1,be.size()));
             textView.setText(String.format(text, stBirthday,""));
         }
-        if(count > 0){
+        if(be.size() > 0){
             textView.setVisibility(View.VISIBLE);
         }
     }
@@ -168,9 +163,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView tvUserName;
         TextView tvReleaseDate;
         TextView item_unenable;
-        //        ImageView icon_release_date;
         RelativeLayout item_event;
-        //        FrameLayout event_start;
         RelativeLayout event_start;
 
 
@@ -182,13 +175,8 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             tvReleaseDate = (TextView) itemView.findViewById(R.id.tv_release_date);
             item_unenable = (TextView) itemView.findViewById(R.id.item_unenable);
-            //            icon_release_date = (ImageView) itemView.findViewById(R.id.icon_release_date);
             item_event = (RelativeLayout) itemView.findViewById(R.id.item_event);
             event_start = (RelativeLayout) itemView.findViewById(R.id.event_start);
-            //
-            //            if(){
-            //
-            //            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -201,8 +189,6 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         item_event.setBackgroundResource(0);
                         event_start.setVisibility(View.INVISIBLE);
                         clickitemList.add(position);
-                        //                            Log.i("item_click=======================","");
-                        //                        }
                     }
                 }
             });
