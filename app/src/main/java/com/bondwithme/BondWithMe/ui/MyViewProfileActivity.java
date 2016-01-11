@@ -315,15 +315,10 @@ public class MyViewProfileActivity extends BaseActivity {
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
         RlView = (RelativeLayout) findViewById(R.id.rl_view);
-
         llResetPassword = (LinearLayout)getViewById(R.id.ll_reset_password);
-
-
 
         etFirstName = getViewById(R.id.et_first_name);
         etLastName = getViewById(R.id.et_last_name);
-//        tvAge = getViewById(R.id.tv_age);
-//        rlAge = getViewById(R.id.rl_age);
         tvBirthday = getViewById(R.id.tv_birthday);
         tvYearBirthday = getViewById(R.id.tv_year_birthday);
         rlBirthday = getViewById(R.id.rl_birthday);
@@ -930,7 +925,7 @@ public class MyViewProfileActivity extends BaseActivity {
                 mCalendar.set(Calendar.YEAR, datePicker.getYear());
                 mCalendar.set(Calendar.MONTH, datePicker.getMonth());
                 mCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDay());
-                if (!MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
+                if (!MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis() - (1000 * 86400))) {
                     MessageUtil.showMessage(MyViewProfileActivity.this, R.string.text_wrong_data);
                     return;
                 }
