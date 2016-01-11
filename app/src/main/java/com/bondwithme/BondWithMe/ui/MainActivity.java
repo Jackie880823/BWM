@@ -197,13 +197,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onResume() {
-        if (refersh) {
-            refersh = false;
-            Intent reintent = getIntent();
-            finish();
-            startActivity(reintent);
-        }
-
         super.onResume();
         int newJumpIndex = getIntent().getIntExtra(JUMP_INDEX, -1);
         /**新的跳转，以区分旧的，避免第一次启动重复set tab*/
@@ -572,11 +565,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         NotificationUtil.setNotificationOtherHandle(this);
 
-        //注册广播接收器
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_LOCALE_CHANGED);
         filter.addAction(this.ACTION_REFRESH_RED_POINT_4_FIMILY);
-//        filter.addAction("refresh");
         registerReceiver(mReceiver, filter);
 
         //检查显示小红点
@@ -889,18 +879,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //            startActivity(intent);
 //    }
 
-    static boolean refersh;
     /**
      * 更新UI的广播接收器
      */
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
-                if (App.isBackground()) {
-                    refersh = true;
-                }
-            }
             if (intent.getAction().equals(ACTION_REFRESH_RED_POINT_4_FIMILY)) {
                 disableRedPoint(TabEnum.family, true);
             }
