@@ -1,6 +1,9 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -96,6 +99,10 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         //        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
         //                .findViewById(android.R.id.content)).getChildAt(0);
         //        viewGroup.addView(setWaittingView());
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        registerReceiver(mReceiver, filter);
 
     }
 
@@ -271,8 +278,30 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     @Override
     protected void onResume() {
+        if(refersh) {
+            Intent intent = getIntent();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            finish();
+            startActivity(intent);
+            return;
+        }
         super.onResume();
         AppsFlyerLib.onActivityResume(this);
     }
+
+    private boolean refersh;
+    /**
+     * 更新UI的广播接收器
+     */
+    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
+                if (App.isBackground()) {
+                    refersh = true;
+                }
+            }
+        }
+    };
 
 }
