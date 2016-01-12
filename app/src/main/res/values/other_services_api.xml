@@ -4,9 +4,11 @@
 -->
 <resources>
 
+    <string name="api_server" translatable="false">http://dev.bondwith.me</string>
+    <string name="tracker_site_id" translatable="false">3</string>
     <!--map -->
 
-    <string name="baidu_maps_key" templateMergeStrategy="preserve" translatable="false">wCMAL35nTjiyqcpkey7THYjI</string>
+    <string name="baidu_maps_key"  templateMergeStrategy="preserve" translatable="false">wCMAL35nTjiyqcpkey7THYjI</string>
     <string name="baidu_maps_key_debug" templateMergeStrategy="preserve" translatable="false">9VDuucmYXbhGjLnRzwXf1ic8</string>
 
     <string name="jackie_baidu_maps_key_debug" templateMergeStrategy="preserve" translatable="false">enlyKkq5ewHyq4V9kDgGYOYA</string>
