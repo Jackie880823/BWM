@@ -36,6 +36,7 @@ import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
 import com.bondwithme.BondWithMe.widget.NewtonCradleLoading;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -150,13 +151,17 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private HandlerThread mLoadVideoThread = new HandlerThread(LOADER_VIDEO);
 
-    public SelectPhotosFragment(List<MediaData> selectUris) {
+    private static WeakReference<List<MediaData>> weakReference;
+
+    public SelectPhotosFragment() {
         super();
-        mSelectedImageUris = selectUris;
+        mSelectedImageUris = weakReference.get();
+        weakReference = null;
     }
 
     public static SelectPhotosFragment newInstance(List<MediaData> selectUris, String... params) {
-        return createInstance(new SelectPhotosFragment(selectUris), params);
+        weakReference = new WeakReference<>(selectUris);
+        return createInstance(new SelectPhotosFragment(), params);
     }
 
     @Override

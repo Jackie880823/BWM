@@ -131,6 +131,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LogUtil.i(TAG, "onCreate: api: " + Constant.API_SERVER + "; site id: " + Constant.TRACKER_SITE_ID);
         if (App.getLoginedUser() == null) {//防止出现迷之不存在用户数据进入到主页
             App.getContextInstance().logout(this);
             return;
