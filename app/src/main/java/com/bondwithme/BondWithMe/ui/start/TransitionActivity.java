@@ -97,7 +97,6 @@ public class TransitionActivity extends Activity {
         }
     };
 
-
     /**
      * 判断是否已经登录过了
      *
@@ -108,7 +107,7 @@ public class TransitionActivity extends Activity {
         if (userEntity != null) {
             String tokenString = PreferencesUtil.getValue(this, Constant.HTTP_TOKEN, null);
             if (!TextUtils.isEmpty(tokenString)) {
-                App.userLoginSuccessed(this, userEntity, new Gson().fromJson(tokenString, AppTokenEntity.class));
+                App.initToken(userEntity.getUser_login_id(),new Gson().fromJson(tokenString, AppTokenEntity.class));
                 return true;
             }
         }

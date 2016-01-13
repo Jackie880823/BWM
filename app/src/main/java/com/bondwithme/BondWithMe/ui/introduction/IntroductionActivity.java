@@ -133,7 +133,7 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
      */
     private void goMainOrSign() {
         if (isLogin()) {
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, MainActivity.class));//这里是已经登录过的 唯一之路。
         } else {
             startActivity(new Intent(this, StartActivity.class));
         }
@@ -151,7 +151,7 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         if (userEntity != null) {
             String tokenString = PreferencesUtil.getValue(this, Constant.HTTP_TOKEN, null);
             if (!TextUtils.isEmpty(tokenString)) {
-                App.userLoginSuccessed(this, userEntity, new Gson().fromJson(tokenString, AppTokenEntity.class));
+                App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));
                 return true;
             }
         }
