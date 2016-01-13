@@ -29,6 +29,7 @@ import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocationUtil;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
@@ -45,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.piwik.sdk.Piwik;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +56,7 @@ import java.util.Map;
 /**
  * Created by wing on 15/3/21.
  */
-public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks,NetChangeObserver,LocationUtil.GoogleServiceCheckTaskListener {
+public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks, NetChangeObserver, LocationUtil.GoogleServiceCheckTaskListener {
 
     private static UserEntity user;
     private static App appContext;
@@ -74,8 +76,10 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     private static List<String> notificationEventList = new ArrayList<>();
     private static List<String> notificationMemberList = new ArrayList<>();
     private static List<String> notificationMessageList = new ArrayList<>();
-    /**特殊的miss通知*/
-    private static HashMap<String,String> notificationMissList = new HashMap<>();
+    /**
+     * 特殊的miss通知
+     */
+    private static HashMap<String, String> notificationMissList = new HashMap<>();
     private static List<String> notificationBigDayList = new ArrayList<>();
     private static List<String> notificationNewsList = new ArrayList<>();
     private static List<String> notificationGroupList = new ArrayList<>();
@@ -99,7 +103,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         SDKInitializer.initialize(this);
 
         /** 设置从歌地图获取位置，当这次设置获取不到位置说明谷歌地图这次无法使用，应用中调用地图时会默认启动百度地图 */
-        LocationUtil.setRequestLocationUpdates(this,this);
+        LocationUtil.setRequestLocationUpdates(this, this);
 
         /** 初始化第三方 Universal Image Loader图片处理类 */
         UniversalImageLoaderUtil.initImageLoader(App.this);
@@ -119,9 +123,28 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     public static void userLoginSuccessed(Activity context, UserEntity user, AppTokenEntity tokenEntity) {
 
-        changeLoginedUser(user, tokenEntity);
-        goMain(context);
+        if(user!=null) {
+            changeLoginedUser(user, tokenEntity);
+            runAlarmTask(context, user);
+            goMain(context);
+        }
 
+    }
+
+    /**
+     * 运行定时任务
+     * @param context
+     * @param user
+     */
+    private static void runAlarmTask(Activity context, UserEntity user) {
+        try {
+            /**少于7天*/
+            if (MyDateUtils.getDayDistanceBetweenTimestmaps(MyDateUtils.formatDateString2LocalTimestamp(user.getUser_creation_date()), System.currentTimeMillis()) < 7) {
+                AlarmControler.getInstance().createAllTasks(context);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     static boolean needUpdate;
@@ -253,16 +276,16 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         }
     }
 
-    public static boolean isInteractiveTipFinish(){
-        if(appContext != null){
-            if(PreferencesUtil.getValue(appContext, InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST,false) &&
-                    PreferencesUtil.getValue(appContext, InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,false)){
+    public static boolean isInteractiveTipFinish() {
+        if (appContext != null) {
+            if (PreferencesUtil.getValue(appContext, InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false) &&
+                    PreferencesUtil.getValue(appContext, InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT, false)) {
                 return true;
-            }else {
+            } else {
                 return false;
             }
 
-        }else {
+        } else {
             return true;
         }
 
@@ -407,9 +430,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     private List<Activity> activityList = new ArrayList<>();
 
-    public void finishAllActivitys(){
-        if(activityList!=null){
-            for (Activity activity:activityList){
+    public void finishAllActivitys() {
+        if (activityList != null) {
+            for (Activity activity : activityList) {
                 if (activity != null && !activity.isFinishing()) {
                     activity.finish();
                 }
@@ -501,15 +524,17 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         }
     }
 
-    /**蛋疼的搞特殊*/
-    public static HashMap<String,String> getMissNotificationInfos() {
+    /**
+     * 蛋疼的搞特殊
+     */
+    public static HashMap<String, String> getMissNotificationInfos() {
         return notificationMissList;
     }
 
     /**
      * 清除缓存的通知消息
      */
-    public static void clearAllNotificationMsgs(){
+    public static void clearAllNotificationMsgs() {
         notificationWallList.clear();
         notificationEventList.clear();
         notificationMemberList.clear();
@@ -521,7 +546,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public void clearNotificationMsgsByType(NotificationUtil.MessageType messageType) {
-        if(messageType==null){
+        if (messageType == null) {
             return;
         }
         switch (messageType) {
@@ -548,7 +573,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     @Override
     public void OnConnect(int netType) {
         //重新检查是否可用google服务
-        LocationUtil.setRequestLocationUpdates(this,this);
+        LocationUtil.setRequestLocationUpdates(this, this);
     }
 
     @Override
@@ -559,6 +584,6 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     @Override
     public void googleServiceCheckFinished(boolean googleAvailable) {
         //初始推送api
-        PushApi.initPushApi(getContextInstance(),googleAvailable);
+        PushApi.initPushApi(getContextInstance(), googleAvailable);
     }
 }
