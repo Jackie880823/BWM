@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.internal.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
@@ -35,6 +34,7 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.bondwithme.BondWithMe.widget.ViewPagerFixed;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -48,7 +48,7 @@ public class WallViewPicActivity extends BaseActivity {
 
     private static final String TAG = WallViewPicActivity.class.getSimpleName();
 
-    private ViewPager viewPager;
+    private ViewPagerFixed viewPager;
     private String request_url;
     private LayoutInflater layoutInflater;
     private List<PhotoEntity> data;
