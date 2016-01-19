@@ -30,11 +30,11 @@ public class FeelingFragment extends BaseFragment<FeelingActivity> implements Fe
     private int checkItemIndex = -1;
 
     public static FeelingFragment createInstance(String... params) {
-        return createInstance(new FeelingFragment(params[0]), params);
+        return createInstance(new FeelingFragment(), params);
     }
 
-    public FeelingFragment(String checkItemIndexStr){
-        super();
+    public FeelingFragment(){
+        String checkItemIndexStr = getArguments().getString(ARG_PARAM_PREFIX + 0, "-1");
         checkItemIndex = Integer.valueOf(checkItemIndexStr);
     }
 

@@ -121,6 +121,12 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         return appContext;
     }
 
+    /**
+     * 登录才能使用这个方法。
+     * @param context
+     * @param user
+     * @param tokenEntity
+     */
     public static void userLoginSuccessed(Activity context, UserEntity user, AppTokenEntity tokenEntity) {
 
         if(user!=null) {
