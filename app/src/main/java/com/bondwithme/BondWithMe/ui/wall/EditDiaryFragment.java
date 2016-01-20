@@ -735,6 +735,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
             tvDuration.setText(MyDateUtils.formatDuration(duration));
         }
+
+        // 数据上传需要使用以秒为单位，取出的时长已精确到毫秒，所以需要转换为秒。
+        if (duration != null && !TextUtils.isEmpty(duration)) {
+            duration = String.valueOf(Long.valueOf(duration) / 1000L);
+        }
+
         LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
         LogUtil.i(TAG, "addVideoFromActivityResult& videoDuration: " + duration);
     }

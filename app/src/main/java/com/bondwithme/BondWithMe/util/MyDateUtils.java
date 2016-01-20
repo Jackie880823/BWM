@@ -289,18 +289,28 @@ public class MyDateUtils extends android.text.format.DateUtils {
     }
 
 
+    /**
+     * 将秒值的{@code String}转成"MM:ss"或"H:MM:SS"的{@code String}返回
+     * @param durationStr
+     * @return "MM:ss"或"H:MM:SS"
+     */
     public static String formatDuration(String durationStr) {
         String result;
         if (TextUtils.isEmpty(durationStr) || durationStr.contains(":")) {
             result = durationStr;
         } else {
             long duration = Long.valueOf(durationStr);
-            result = formatDuration(duration);
+            result = DateUtils.formatElapsedTime(duration);
         }
         return result;
     }
 
-    public static String formatDuration(long duration) {
+    /**
+     * 将毫秒秒值的{@code Long}转成"MM:ss"或"H:MM:SS"的{@code String}返回
+     * @param duration
+     * @return "MM:ss"或"H:MM:SS"
+     */
+    public static String formatMillisecond(long duration) {
         return DateUtils.formatElapsedTime(duration / 1000);
     }
 
