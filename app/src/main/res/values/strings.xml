@@ -708,4 +708,6 @@
     <string name="local_notification_text_for_3_day">Fall in love with free stickies featuring Papa Panda’s family!</string>
     <string name="local_notification_text_for_5_day">Do you miss your family? Send them a Miss now.</string>
     <string name="title_edit_comment">Edit Comment</string>
+
+    <string name="login_via_facebook">Login via Facebook</string>
 </resources>

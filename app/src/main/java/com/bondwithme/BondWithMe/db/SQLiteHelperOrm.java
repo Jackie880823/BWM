@@ -54,13 +54,14 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
                 TableUtils.dropTable(connectionSource, OrmEntityDemo.class, true);
                 TableUtils.dropTable(connectionSource, LocalStickerInfo.class, true);
                 TableUtils.createTable(connectionSource, LocalStickerInfo.class);
+                return;
             }
             if (oldVersion < 3) {
 //                Dao<LocalStickerInfo, Integer> recordItemDao = getDao(LocalStickerInfo.class);
 //                recordItemDao.executeRaw("ALTER TABLE `sticker_info` ADD COLUMN defaultSticker VARCHAR default '0';");
                 db.execSQL("ALTER TABLE `sticker_info` ADD COLUMN defaultSticker VARCHAR default '0';");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

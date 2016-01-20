@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api_server" translatable="false">http://dev.bondwith.me</string>
+    <string name="tracker_site_id" translatable="false">3</string>
+</resources>

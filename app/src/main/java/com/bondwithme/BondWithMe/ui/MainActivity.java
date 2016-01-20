@@ -29,7 +29,6 @@ import com.bondwithme.BondWithMe.Tranck.MyPiwik;
 import com.bondwithme.BondWithMe.adapter.MyFragmentPagerAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.receiver_service.AlarmControler;
 import com.bondwithme.BondWithMe.receiver_service.ReportIntentService;
 import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
@@ -37,7 +36,6 @@ import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
@@ -49,7 +47,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,14 +150,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         }
 
         App.checkVerSion(this);
-        try {
-            /**少于7天*/
-            if(MyDateUtils.getDayDistanceBetweenTimestmaps(MyDateUtils.formatDateString2LocalTimestamp(getUser().getUser_creation_date()), System.currentTimeMillis())<7){
-                AlarmControler.getInstance().createAllTasks(this);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
     }
 

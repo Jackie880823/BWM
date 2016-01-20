@@ -29,12 +29,12 @@ public class AlarmControler {
         /**5分钟*/
 //        createClock(mContext, 15 * 1000, FIVE_MINUTE_ACTION, null);
         createClock(mContext, 5 * 60 * 1000, FIVE_MINUTE_ACTION, null);
-        /**2天*/
-//        createClock(mContext, 20 * 1000, TWO_DAY_ACTION, null);
+//        /**2天*/
+//        createClock(mContext, 120 * 1000, TWO_DAY_ACTION, null);
         createClock(mContext, 2 * 24 * 60 * 60 * 1000, TWO_DAY_ACTION, null);
-//        createClock(mContext, 25 * 1000, THREE_DAY_ACTION, null);
+//        createClock(mContext, 180 * 1000, THREE_DAY_ACTION, null);
         createClock(mContext, 3 * 24 * 60 * 60 * 1000, THREE_DAY_ACTION, null);
-//        createClock(mContext, 30 * 1000, FIVE_DAY_ACTION, null);
+//        createClock(mContext, 240 * 1000, FIVE_DAY_ACTION, null);
         createClock(mContext, 5 * 24 * 60 * 60 * 1000, FIVE_DAY_ACTION, null);
     }
 
@@ -61,7 +61,7 @@ public class AlarmControler {
             intent.putExtras(extras);
         }
         PendingIntent pendIntent = PendingIntent.getBroadcast(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        // 5秒后发送广播，只发送一次
+        // 延时发送广播，只发送一次
         alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + interval, pendIntent);
     }
 
