@@ -299,8 +299,8 @@ public class MyDateUtils extends android.text.format.DateUtils {
         if (TextUtils.isEmpty(durationStr) || durationStr.contains(":")) {
             result = durationStr;
         } else {
-            long duration = Long.valueOf(durationStr);
-            result = DateUtils.formatElapsedTime(duration);
+            double duration = Double.valueOf(durationStr);
+            result = DateUtils.formatElapsedTime((long) duration);
         }
         return result;
     }
