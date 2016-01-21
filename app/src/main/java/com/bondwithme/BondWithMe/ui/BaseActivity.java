@@ -21,7 +21,6 @@ import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
 import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
-import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 
 /**
@@ -32,7 +31,9 @@ import com.bondwithme.BondWithMe.util.UIUtil;
 public abstract class BaseActivity extends BaseFragmentActivity implements IViewCommon, NetChangeObserver {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
-    /**是否为外部启动*/
+    /**
+     * 是否为外部启动
+     */
     public static final String IS_OUTSIDE_INTENT = "is_outside_intent";
 
     protected ImageButton leftButton;            //头部栏的左边的按钮
@@ -51,11 +52,11 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     public boolean dispatchKeyEvent(KeyEvent event) {
         // 这里会影响子类返回键的监听事件，请谨慎处理
         //        Log.i(TAG, "dispatchKeyEvent& keyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
-        if(event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             doFinish();
             return true;
         }
-        if(event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
             return true;
         }
         return super.dispatchKeyEvent(event); // 按下其他按钮，调用父类进行默认处理
@@ -84,7 +85,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
         msg_bar = getViewById(R.id.msg_bar);
         tvMsg = getViewById(R.id.msg);
-        if(NetworkUtil.isNetworkConnected(this)) {
+        if (NetworkUtil.isNetworkConnected(this)) {
             msgBarChangeByStatus(View.GONE);
         } else {
             msgBarChangeByStatus(View.VISIBLE);
@@ -124,19 +125,19 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
      * TitilBar 左边事件
      */
     protected void titleLeftEvent() {
-            doFinish();
+        doFinish();
     }
 
-    private void doFinish(){
-        if(getIntent().getBooleanExtra(IS_OUTSIDE_INTENT,false)){
+    private void doFinish() {
+        if (getIntent().getBooleanExtra(IS_OUTSIDE_INTENT, false)) {
             Intent intent = new Intent(this, MainActivity.class);
 //            ComponentName cn = intent.getComponent();
 //            Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
 //            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            startActivity(mainIntent);
             startActivity(intent);
-        }else {
-            if(!isFinishing()) {
+        } else {
+            if (!isFinishing()) {
                 UIUtil.hideKeyboard(this, getCurrentFocus());
             }
         }
@@ -145,10 +146,11 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     @Override
     protected void onStop() {
-        /**重置通知数量*/
-        if(getIntent().getBooleanExtra(IS_OUTSIDE_INTENT,false)) {
-            App.getContextInstance().clearNotificationMsgsByType((NotificationUtil.MessageType) getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
-        }
+//        /**重置通知数量*/
+//        if(getIntent().getBooleanExtra(IS_OUTSIDE_INTENT,false)) {
+//            App.clearAllNotificationMsgs();
+////            App.getContextInstance().clearNotificationMsgsByType((NotificationUtil.MessageType) getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
+//        }
         super.onStop();
     }
 
@@ -165,7 +167,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     protected void initTitleBar() {
         titleBar = getViewById(R.id.title_bar);
-        if(currentColor != -1) {
+        if (currentColor != -1) {
             titleBar.setBackgroundColor(getResources().getColor(currentColor));
         }
         leftButton = getViewById(R.id.ib_top_button_left);
@@ -190,7 +192,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected static int currentColor = -1;
 
     protected void changeTitleColor(int color) {
-        if(titleBar != null) {
+        if (titleBar != null) {
             currentColor = color;
             titleBar.setBackgroundColor(getResources().getColor(color));
         }
@@ -202,7 +204,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
      * @return - 颜色值
      */
     public int getActionBarColor() {
-        if(currentColor==-1){
+        if (currentColor == -1) {
             currentColor = R.color.tab_color_press1;
         }
         return currentColor;
@@ -222,7 +224,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
+        switch (v.getId()) {
             // 进行弹出窗口//
             case R.id.ib_top_button_left:
                 titleLeftEvent();
@@ -260,7 +262,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     }
 
     protected void msgBarChangeByStatus(int status) {
-        if(msg_bar != null) {
+        if (msg_bar != null) {
             msg_bar.setVisibility(status);
         }
     }
@@ -278,7 +280,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     @Override
     protected void onResume() {
-        if(refersh) {
+        if (refersh) {
             Intent intent = getIntent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             finish();
@@ -287,6 +289,12 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         }
         super.onResume();
         AppsFlyerLib.onActivityResume(this);
+        /**是否是程序外进入(点击通知)*/
+        if (getIntent().getBooleanExtra(IS_OUTSIDE_INTENT, false)) {
+            /**重置通知数量*/
+            App.clearAllNotificationMsgs();
+//            App.getContextInstance().clearNotificationMsgsByType((NotificationUtil.MessageType) getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
+        }
     }
 
     private boolean refersh;
