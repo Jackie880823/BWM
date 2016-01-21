@@ -476,6 +476,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     /**
      * 上传本地图片
+     *
      * @param contentId
      */
     private void submitLocalPhotos(String contentId) {
@@ -725,24 +726,32 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     private void addVideoFromActivityResult(Intent data) {
         clearPhotos();
+
         mAdapter.notifyDataSetChanged();
         videoUri = data.getData();
-        MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
-        metadataRetriever.setDataSource(getActivity(), videoUri);
-        duration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        metadataRetriever.release();
-        if (!Uri.EMPTY.equals(videoUri) && ivDisplay != null) {
+
+        // 如果videoUri不是空的Uir则取得视频相关信息并显示
+        if (!Uri.EMPTY.equals(videoUri)) {
+            // 获取视频的元数据信息
+            MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
+            metadataRetriever.setDataSource(getActivity(), videoUri);
+            duration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            // 使用之后需要释放资源
+            metadataRetriever.release();
+
+            // 数据上传需要使用以秒为单位，取出的时长已精确到毫秒，所以需要转换为秒。
+            if (duration != null && !TextUtils.isEmpty(duration)) {
+                duration = String.valueOf(Long.valueOf(duration) / 1000L);
+            }
+
+            // 取出视频的一帧画面显示在ivDisplay控件上
             ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
+            // 显示视频的时长
             tvDuration.setText(MyDateUtils.formatDuration(duration));
-        }
 
-        // 数据上传需要使用以秒为单位，取出的时长已精确到毫秒，所以需要转换为秒。
-        if (duration != null && !TextUtils.isEmpty(duration)) {
-            duration = String.valueOf(Long.valueOf(duration) / 1000L);
+            LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
+            LogUtil.i(TAG, "addVideoFromActivityResult& videoDuration: " + duration);
         }
-
-        LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
-        LogUtil.i(TAG, "addVideoFromActivityResult& videoDuration: " + duration);
     }
 
     /**
@@ -973,7 +982,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i(TAG, "onActivityResult");
-
 
 
         if (resultCode == Activity.RESULT_OK) {
