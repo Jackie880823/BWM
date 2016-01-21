@@ -293,12 +293,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     rlProgress.setVisibility(View.GONE);
                     // 得到纬度
                     String strLatitude = wall.getLoc_latitude();
-                    if (!TextUtils.isEmpty(strLatitude) || MyDateUtils.isDouble(strLatitude)) {
+                    if (!TextUtils.isEmpty(strLatitude) && MyDateUtils.isDouble(strLatitude)) {
                         latitude = Double.valueOf(strLatitude);
                     }
                     // 得到经度
                     String strLongitude = wall.getLoc_longitude();
-                    if (!TextUtils.isEmpty(strLongitude) || MyDateUtils.isDouble(strLongitude)) {
+                    if (!TextUtils.isEmpty(strLongitude) && MyDateUtils.isDouble(strLongitude)) {
                         longitude = Double.valueOf(strLongitude);
                     }
                     loc_type = wall.getLoc_type();
