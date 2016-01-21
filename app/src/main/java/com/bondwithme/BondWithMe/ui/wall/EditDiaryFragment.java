@@ -293,13 +293,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     rlProgress.setVisibility(View.GONE);
                     // 得到纬度
                     String strLatitude = wall.getLoc_latitude();
-                    if (!TextUtils.isEmpty(strLatitude)) {
+                    if (!TextUtils.isEmpty(strLatitude) || MyDateUtils.isDouble(strLatitude)) {
                         latitude = Double.valueOf(strLatitude);
                     }
                     // 得到经度
                     String strLongitude = wall.getLoc_longitude();
-                    if (!TextUtils.isEmpty(strLongitude)) {
-                        longitude = Double.valueOf(strLatitude);
+                    if (!TextUtils.isEmpty(strLongitude) || MyDateUtils.isDouble(strLongitude)) {
+                        longitude = Double.valueOf(strLongitude);
                     }
                     loc_type = wall.getLoc_type();
                     // 地名
@@ -744,10 +744,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 duration = String.valueOf(Long.valueOf(duration) / 1000L);
             }
 
-            // 取出视频的一帧画面显示在ivDisplay控件上
-            ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
-            // 显示视频的时长
-            tvDuration.setText(MyDateUtils.formatDuration(duration));
+            if (ivDisplay != null) {
+                // 取出视频的一帧画面显示在ivDisplay控件上
+                ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
+                // 显示视频的时长
+                tvDuration.setText(MyDateUtils.formatDuration(duration));
+            }
 
             LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
             LogUtil.i(TAG, "addVideoFromActivityResult& videoDuration: " + duration);
@@ -764,7 +766,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void onResume() {
         super.onResume();
         if (MainActivity.IS_INTERACTIVE_USE &&
-                !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
+                !PreferencesUtil.getValue(App.getContextInstance(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
             mHandler.sendEmptyMessage(GET_DELAY);
         }
