@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     public static String STICKER_VERSION = "3";
 
     public static Boolean IS_INTERACTIVE_USE;
-    public static Map<String,InteractivePopupWindow> interactivePopupWindowMap;
+    public static Map<String, InteractivePopupWindow> interactivePopupWindowMap;
     private static final int GET_DELAY = 0x28;
 
     public static final String ACTION_REFRESH_RED_POINT_4_FIMILY = "action_refresh_red_point";
@@ -144,8 +144,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         super.onCreate(savedInstanceState);
 
         //表示这个用户已经登陆过。提供给登录界面判断显示sign up 还是 log in
-        if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN,"")))
-        {
+        if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN, ""))) {
             PreferencesUtil.saveValue(this, Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
         }
 
@@ -187,11 +186,21 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onResume() {
+        if (isNeedRefersh) {
+            isNeedRefersh = false;
+            Intent reintent = getIntent();
+            finish();
+            startActivity(reintent);
+        }
+
         super.onResume();
+//        if(currentTabEnum!=null){
+//            changeTitleColor();
+//        }
         int newJumpIndex = getIntent().getIntExtra(JUMP_INDEX, -1);
         /**新的跳转，以区分旧的，避免第一次启动重复set tab*/
-        if(newJumpIndex!=-1&&newJumpIndex!=jumpIndex&&currentTabEnum.ordinal()!=newJumpIndex){
-            mViewPager.setCurrentItem(newJumpIndex,false);
+        if (newJumpIndex != -1 && newJumpIndex != jumpIndex && currentTabEnum.ordinal() != newJumpIndex) {
+            mViewPager.setCurrentItem(newJumpIndex, false);
         }
 
         if (fragments != null) {
@@ -199,10 +208,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 f.getRetainInstance();
             }
         }
-//        if(currentTabEnum!=null){
-//            changeTitleColor();
-//        }
-
 
         //提示异常反馈
         if (PreferencesUtil.getValue(this, Constant.APP_CRASH, false)) {
@@ -351,15 +356,15 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                     }
                     break;
                 case GET_DELAY:
-                    if(!interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
-                        InteractivePopupWindow popupWindow = new InteractivePopupWindow(MainActivity.this,bottom,getResources().getString(R.string.text_tip_add_photo),1) ;
+                    if (!interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)) {
+                        InteractivePopupWindow popupWindow = new InteractivePopupWindow(MainActivity.this, bottom, getResources().getString(R.string.text_tip_add_photo), 1);
                         popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                             @Override
                             public void popDismiss() {
 
                             }
                         });
-                        interactivePopupWindowMap.put(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,popupWindow);
+                        interactivePopupWindowMap.put(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO, popupWindow);
                     }
                     break;
             }
@@ -371,24 +376,23 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private void bondDatas(JSONObject jsonObject) throws JSONException {
         checkDataAndBond2View(TabEnum.wall, jsonObject.getString("wall"));
         checkDataAndBond2View(TabEnum.event, jsonObject.getString("event"));
-        checkDataAndBond2View(TabEnum.family,jsonObject.getString("miss"));
+        checkDataAndBond2View(TabEnum.family, jsonObject.getString("miss"));
 
-        checkDataAndBond2View(TabEnum.more,jsonObject.getString("miss"));
+        checkDataAndBond2View(TabEnum.more, jsonObject.getString("miss"));
         checkDataAndBond2View(TabEnum.more, jsonObject.getString("bigDay"));
-        checkDataAndBond2View(TabEnum.more,jsonObject.getString("group"));
+        checkDataAndBond2View(TabEnum.more, jsonObject.getString("group"));
         checkDataAndBond2View(TabEnum.more, jsonObject.getString("member"));
     }
 
-    private void checkDataAndBond2View(TabEnum tab, String countString){
+    private void checkDataAndBond2View(TabEnum tab, String countString) {
         int count = Integer.valueOf(countString);
 
-        if (count > 0&&tab!=currentTabEnum) {
+        if (count > 0 && tab != currentTabEnum) {
             disableRedPoint(tab, false);
         }
     }
 
-    public void checkPoint()
-    {
+    public void checkPoint() {
         new HttpTools(this).get(String.format(Constant.API_BONDALERT_MODULES_COUNT, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
             @Override
             public void onStart() {
@@ -412,6 +416,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             public void onError(Exception e) {
                 e.printStackTrace();
             }
+
             @Override
             public void onCancelled() {
 
@@ -473,25 +478,25 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     @Override
     public void initView() {
         MyAppsFlyer.doLoginTrack();
-        interactivePopupWindowMap = new HashMap<String,InteractivePopupWindow>();
+        interactivePopupWindowMap = new HashMap<String, InteractivePopupWindow>();
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + STICKER_VERSION + App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
-        IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START,true);
-        if(getUser().isShow_tip()){
+        IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START, true);
+        if (getUser().isShow_tip()) {
             IS_INTERACTIVE_USE = true;
         }
-        LogUtil.d(TAG,"isFirstLogin========="+isFirstLogin+"======IS_FIRST_LOGIN======"+IS_FIRST_LOGIN);
+        LogUtil.d(TAG, "isFirstLogin=========" + isFirstLogin + "======IS_FIRST_LOGIN======" + IS_FIRST_LOGIN);
         if (isFirstLogin) {
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
                     try {
-                        LogUtil.d(TAG,"isFirstLogin");
+                        LogUtil.d(TAG, "isFirstLogin");
                         LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(MainActivity.this);
-                        dao.deleteSticker(MainActivity.this,"Barry");
-                        dao.deleteSticker(MainActivity.this,"PapaPanda");
+                        dao.deleteSticker(MainActivity.this, "Barry");
+                        dao.deleteSticker(MainActivity.this, "PapaPanda");
                         List<String> pathList = FileUtil.getAllFilePathsFromAssets(MainActivity.this, "stickers");
                         if (null != pathList) {
                             for (String string : pathList) {
@@ -567,24 +572,23 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     }
 
 
-
     /**
      * 清除所有tab小红点
      */
-    public static void clearAllRedPoint(){
-        if(red_point_1!=null) {
+    public static void clearAllRedPoint() {
+        if (red_point_1 != null) {
             red_point_1.setVisibility(View.INVISIBLE);
         }
-        if(red_point_2!=null) {
+        if (red_point_2 != null) {
             red_point_2.setVisibility(View.INVISIBLE);
         }
-        if(red_point_3!=null) {
+        if (red_point_3 != null) {
             red_point_3.setVisibility(View.INVISIBLE);
         }
-        if(red_point_4!=null) {
+        if (red_point_4 != null) {
             red_point_4.setVisibility(View.INVISIBLE);
         }
-        if(red_point_5!=null) {
+        if (red_point_5 != null) {
             red_point_5.setVisibility(View.INVISIBLE);
         }
     }
@@ -601,7 +605,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         }
         if (App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_BIGDAY).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MISS).size() != 0
-                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_NEWS).size() != 0
+                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_OTHER).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MEMBER).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_GROUP).size() != 0
                 ) {
@@ -631,10 +635,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        if (leavePagerIndex!=0){
+        if (leavePagerIndex != 0) {
             //for last tab
             mViewPager.setCurrentItem(leavePagerIndex);
-        }else{
+        } else {
             init4DefaultPage();
         }
     }
@@ -775,7 +779,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         if (tab == null || isCurrentTab(tab)) {
             return;
         }
-        mViewPager.setCurrentItem(tab.ordinal(),false);
+        mViewPager.setCurrentItem(tab.ordinal(), false);
 
     }
 
@@ -875,13 +879,16 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+//            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
+//                if (App.isBackground()) {
+//                    isNeedRefersh = true;
+//                }
+//            }
             if (intent.getAction().equals(ACTION_REFRESH_RED_POINT_4_FIMILY)) {
                 disableRedPoint(TabEnum.family, true);
             }
         }
     };
-
-
 
 
 }
