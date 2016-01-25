@@ -20,9 +20,12 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
 import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
+import com.bondwithme.BondWithMe.util.BadgeUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
+
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 /**
  * activity基类
@@ -103,7 +106,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
         registerReceiver(mReceiver, filter);
-
     }
 
     public int getLayout() {
@@ -287,6 +289,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         }
         super.onResume();
         AppsFlyerLib.onActivityResume(this);
+        NotificationUtil.clearBadge(this);
     }
 
     private boolean refersh;
