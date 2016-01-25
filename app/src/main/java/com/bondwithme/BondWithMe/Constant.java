@@ -442,4 +442,8 @@ public class Constant {
 
     public static final String API_GET_PROFILE_QR = API_SERVER + "/bondwithme/index.php/api/photo_profile/%s/fid/qr";
 
+    //新的rewards
+    public static final String API_GET_My_REWARD = API_SERVER + "/bondwithme/index.php/api/myRewardList/%s";
+    public static final String API_GET_REWARD_LIST = API_SERVER + "/bondwithme/index.php/api/rewardList/%s";
+
 }

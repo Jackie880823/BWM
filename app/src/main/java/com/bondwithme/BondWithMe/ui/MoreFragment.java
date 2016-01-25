@@ -18,12 +18,11 @@ import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
 import com.bondwithme.BondWithMe.ui.more.AboutActivity;
 import com.bondwithme.BondWithMe.ui.more.ArchiveActivity;
 import com.bondwithme.BondWithMe.ui.more.MoreSettingActivity;
-import com.bondwithme.BondWithMe.ui.more.RewardsActivity;
+import com.bondwithme.BondWithMe.ui.more.rewards.RewardsActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
-
 
 import org.json.JSONException;
 import org.json.JSONObject;
