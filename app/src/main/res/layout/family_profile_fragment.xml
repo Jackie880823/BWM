@@ -291,7 +291,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/default_view_margin"
                             android:layout_toRightOf="@+id/iv_pr"
-                            android:text="@string/text_path_relationship"
+                            android:text="@string/text_relationship"
                             android:textColor="@color/default_text_color_dark"
                             android:textSize="@dimen/text_medium_size" />
 

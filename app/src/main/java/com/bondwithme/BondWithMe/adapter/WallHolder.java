@@ -438,11 +438,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         if (TextUtils.isEmpty(wallEntity.getLove_id())) {
             count += 1;
-            resId = R.drawable.love_press;
+            resId = R.drawable.goodjob_clicked;
             wallEntity.setLove_id(accountUserId);
         } else {
             count -= 1;
-            resId = R.drawable.love_normal;
+            resId = R.drawable.goodjob_nonclicked;
             wallEntity.setLove_id(null);
         }
 
@@ -577,9 +577,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         if (TextUtils.isEmpty(this.wallEntity.getLove_id())) {
-            ibAgree.setImageResource(R.drawable.love_normal);
+            ibAgree.setImageResource(R.drawable.goodjob_nonclicked);
         } else {
-            ibAgree.setImageResource(R.drawable.love_press);
+            ibAgree.setImageResource(R.drawable.goodjob_clicked);
         }
 
         String locationName = this.wallEntity.getLoc_name();

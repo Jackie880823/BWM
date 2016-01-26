@@ -15,6 +15,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
+import com.bondwithme.BondWithMe.ui.family.FamilyActivity;
 import com.bondwithme.BondWithMe.ui.more.AboutActivity;
 import com.bondwithme.BondWithMe.ui.more.ArchiveActivity;
 import com.bondwithme.BondWithMe.ui.more.MoreSettingActivity;
@@ -323,7 +324,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     }
 
     private void goRewards() {
-        Intent intent = new Intent(getActivity(), RewardsActivity.class);
+        Intent intent = new Intent(getActivity(), FamilyActivity.class);
         startActivity(intent);
     }
 

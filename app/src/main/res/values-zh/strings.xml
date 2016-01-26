@@ -343,7 +343,7 @@
 
     <string name="title_bond_alert">伴通知</string>
     <string name="title_diary_alert">日记提醒</string>
-    <string name="title_event_alert">活动提醒</string>
+    <string name="title_event_alert">Meeting Alert</string>
     <string name="title_big_day_alert">大日子提醒</string>
     <string name="title_miss_alert">想念提醒</string>
     <string name="title_news_alert">新鲜事提醒</string>
@@ -351,11 +351,11 @@
     <string name="title_recommended_alert">推荐</string>
     <string name="title_group_alert">群组提醒</string>
 
-    <string name="text_bond_alert">“伴”通告</string>
+    <string name="text_bond_alert">Alerts</string>
     <!--Diary-->
-    <string name="text_bond_alert_diary">日记</string>
+    <string name="text_bond_alert_diary">Workspace</string>
     <!--Event-->
-    <string name="text_bond_alert_event">活动</string>
+    <string name="text_bond_alert_event">Meetings</string>
     <string name="text_big_day">大日子</string>
     <string name="text_miss">想念</string>
     <string name="text_news">新鲜事</string>
@@ -620,7 +620,7 @@
     <string name="text_feeling">心情</string>
     <string name="text_message_copy">复制</string>
 
-    <string name="title_rewards">奖励</string>
+    <string name="title_rewards">Organisation</string>
     <string name="text_no_rewards">暂无奖励</string>
     <string name="text_more">全文</string>
     <string name="text_close_update_sticker">关闭</string>
@@ -704,4 +704,14 @@
     <string name="local_notification_text_for_3_day">免费酷酷的Papa Panda家庭系列表情超萌！大爱！</string>
     <string name="local_notification_text_for_5_day">想念家人吗？现在就发个想您了给他们呗！</string>
     <string name="title_edit_comment">编辑评论</string>
+    <string name="text_profile_position">Position</string>
+    <string name="text_profile_department">Department</string>
+    <string name="text_about_b2be">B2BE</string>
+    <string name="text_good_job">Good Job</string>
+    <string name="text_internal_phone">Internal Phone Ext.</string>
+    <string name="text_meeting_reminder">Reminder</string>
+    <string name="text_write_new">Write a News</string>
+    <string name="text_category">Category</string>
+    <string name="title_writle_new_title">Title</string>
+    <string name="text_write_new_here">Write your story here</string>
 </resources>

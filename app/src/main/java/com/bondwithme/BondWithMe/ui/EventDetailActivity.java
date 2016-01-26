@@ -161,11 +161,11 @@ public class EventDetailActivity extends BaseActivity {
                         rightButton.setImageResource(R.drawable.btn_edit);
                         rightButton.setVisibility(View.VISIBLE);
                         if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date())))) {
-                            rightButton.setImageResource(R.drawable.icon_edit_press);
+                            rightButton.setImageResource(R.drawable.edit_caption);
                             rightButton.setEnabled(false);
                         }
                         if("2".equals(event.getGroup_event_status())){
-                            rightButton.setImageResource(R.drawable.icon_edit_press);
+                            rightButton.setImageResource(R.drawable.edit_caption);
                             title_icon.setVisibility(View.GONE);
                             rightButton.setEnabled(false);
                         }

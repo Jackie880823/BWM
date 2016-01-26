@@ -80,7 +80,7 @@ public class PathRelationshipActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(getString(R.string.title_path_relationship));
+        tvTitle.setText(getString(R.string.text_relationship));
     }
 
     @Override

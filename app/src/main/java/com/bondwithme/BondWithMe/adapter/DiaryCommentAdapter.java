@@ -105,9 +105,9 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         if (TextUtils.isEmpty(comment.getLove_id())) {
-            item.iv_agree.setImageResource(R.drawable.love_normal);
+            item.iv_agree.setImageResource(R.drawable.goodjob_nonclicked);
         } else {
-            item.iv_agree.setImageResource(R.drawable.love_press);
+            item.iv_agree.setImageResource(R.drawable.goodjob_clicked);
         }
         setCommentPic(item.iv_comment_pic, item.niv_comment_pic, comment);
     }
@@ -244,7 +244,7 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int resId;
             if (TextUtils.isEmpty(commentEntity.getLove_id())) {
                 count += 1;
-                resId = R.drawable.love_press;
+                resId = R.drawable.goodjob_clicked;
                 commentEntity.setLove_id(MainActivity.getUser().getUser_id());
 
 //                if(count > 1) {
@@ -255,7 +255,7 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             } else {
                 count -= 1;
-                resId = R.drawable.love_normal;
+                resId = R.drawable.goodjob_nonclicked;
                 commentEntity.setLove_id(null);
 
 //                if(count > 0) {

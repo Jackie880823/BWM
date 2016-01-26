@@ -2,17 +2,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">BondWithMe</string>
-    <string name="title_tab_diary">Diary</string>
+    <string name="title_tab_diary">WorkSpace</string>
     <string name="title_tab_chat">Message</string>
-    <string name="title_tab_event">Event</string>
+    <string name="title_tab_event">Meeting</string>
     <string name="title_tab_more">More</string>
 
     <!--<string name="msg_google_service_not_found">No valid Google Play Services APK found</string>-->
 
-    <string name="title_event_detail">Details</string>
+    <string name="title_event_detail">Meeting</string>
     <string name="title_diary_comment">Comments</string>
-    <string name="title_event_new">New Event</string>
-    <string name="title_event_edit">Edit Event</string>
+    <string name="title_event_new">New Meeting</string>
+    <string name="title_event_edit">Edit meeting</string>
     <string name="title_diary_new">Write a Post</string>
     <string name="title_map_choose_location">Location</string>
     <string name="title_invited_status">Invited Members</string>
@@ -21,9 +21,9 @@
     <string name="title_birthday_title_prefix2">\'s</string>
     <string name="title_birthday_left_day_desc"> days left</string>
     <string name="text_hint_event_title">Name</string>
-    <string name="text_hint_event_content">Event content</string>
-    <string name="text_hint_event_position">Event location</string>
-    <string name="text_hint_event_date">Date &amp; Time</string>
+    <string name="text_hint_event_content">Meeting content</string>
+    <string name="text_hint_event_position">Meeting location</string>
+    <string name="text_hint_event_date">Start Date &amp; Time</string>
     <string name="text_canceled">Cancelled</string>
     <string name="msg_action_successed">Action successful</string>
     <string name="msg_action_canceled">Action Cancelled</string>
@@ -37,8 +37,8 @@
     <string name="event_accept">YES</string>
     <string name="event_cancel">No</string>
     <string name="text_tips_title">Tips</string>
-    <string name="alert_text_title_null">Choose a great name for your event.</string>
-    <string name="alert_text_desc_null">What\'s your event about?</string>
+    <string name="alert_text_title_null">Choose a great name for your meeting.</string>
+    <string name="alert_text_desc_null">What\'s your meeting about?</string>
     <string name="alert_text_location_null">Where\'s the location?</string>
     <string name="alert_text_date_null">What\'s the date and time?</string>
     <string name="title_message_creategroup">New Group</string>
@@ -76,7 +76,7 @@
     <!-- <string name="text_tag">do what</string> -->
     <!-- <string name="text_face">图标</string> -->
     <string name="text_send">Send</string>
-    <string name="title_pick_date_time">Event date &amp; time</string>
+    <string name="title_pick_date_time">Meeting date &amp; time</string>
     <string name="accept">Accept</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -84,9 +84,14 @@
 
     <!-- about -->
 
-    <string name="text_about_desc1">The BondWithMe group of companies brings you an eco-system of apps for you and your family. We take pride in providing social responsible  family-oriented apps in the market.</string>
-    <string name="text_about_desc2">It is BondWithMe’s mission to use connectivity and sharing to bring family members together even when they are living across the globe. Due to our busy lives in this modern age, we envisage that building our “family bond” is an important priority in our lives.</string>
-    <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
+    <string name="text_about_desc1">B2BE is an international organisation that helps businesses be more efficient and profitable by deploying business-to-business e-Solutions.
+\n\nFounded in Australia in 1998, B2BE expanded across Europe, Oceania, North America and Asia. We have customers in many industries and market segments.
+\n\nOur mission is to provide compelling and innovative e-solutions to facilitate effective process improvement, driving cost savings into businesses with competitive pricing and excellent customer service.
+\n\nB2BE’s team of e-solution specialists have a track record in a wide range of industries. Our consultants have extensive experience from successful collaborations with customers, intermediaries and third party providers.
+\n\nB2BE’s products and solutions are flexible and adaptable. Each solution can be customised to any environment or process.
+\n\nB2BE recently acquired the ECN Group, which has many complementary products and solutions.</string>
+    <string name="text_about_desc2"></string>
+    <string name="text_about_desc3"></string>
     <string name="msg_ask_exit_app">Do you really want to log out?</string>
     <string name="text_yes">YES</string>
     <string name="text_camera">Camera</string>
@@ -116,7 +121,7 @@
     <string name="text_birthday">Birthday</string>
     <string name="text_gender">Gender</string>
     <string name="text_email">Email</string>
-    <string name="text_region">Region</string>
+    <string name="text_region">Location</string>
 
 
     <string name="text_group_name">Group Name</string>
@@ -125,7 +130,7 @@
 
     <string name="text_my_view_profile">Profile</string>
     <string name="text_album_gallery">Album</string>
-    <string name="text_diary_posting">Diary</string>
+    <string name="text_diary_posting">WorkSpace</string>
     <string name="text_reset_password">Reset Password</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
@@ -145,7 +150,7 @@
     <string name="text_message_user">Send a Message</string>
     <string name="text_add_new_member">Add New Member</string>
     <string name="text_create_new_group">Create New Group</string>
-    <string name="text_i_miss_you">I Miss You !</string>
+    <string name="text_i_miss_you">Good Job !</string>
     <string name="text_path_relationship"><![CDATA[Path & Relationship]]></string>
     <string name="text_send_message">Send Message</string>
 
@@ -185,7 +190,7 @@
     <string name="text_success_set_relationship">Relationship added successfully!</string>
     <string name="text_no_network">Poor Internet Connection</string>
 
-    <string name="text_successfully_dismiss_miss">I miss you very much!</string>
+    <string name="text_successfully_dismiss_miss">Good Job!</string>
 
     <string name="text_fail_update_information">Failed to update your information. Please try again.</string>
     <string name="text_success_update_information">Successfully updated your information.</string>
@@ -236,6 +241,7 @@
     <string name="text_message_chat_post_photo">[photo]</string>
     <string name="text_message_chat_post_location">[location]</string>
     <string name="title_tab_my_family">Family</string>
+    <string name="title_tab_my_news">News</string>
 
     <string name="text_month_january">January</string>
     <string name="text_month_february">February</string>
@@ -267,7 +273,7 @@
     <string name="diary_comments">Comments</string>
     <string name="text_new_member">MEMBER</string>
     <string name="text_new_group">GROUP</string>
-    <string name="text_new_family_tree">Family Tree</string>
+    <string name="text_new_family_tree">Organisation Chart</string>
     <string name="text_group_name_here">Type group name here</string>
     <string name="text_dialog_no">NO</string>
     <string name="text_dialog_show_no">NO</string>
@@ -299,12 +305,12 @@
     <string name="text_d">day </string>
     <string name="text_left">left</string>
 
-    <string name="text_miss_you">Miss You</string>
+    <string name="text_miss_you">Says Good Job</string>
 
     <!--diary-->
-    <string name="text_diary_posted_to_diary">posted to diary</string>
+    <string name="text_diary_posted_to_diary">posted to workspace</string>
     <string name="text_diary_tagged_you_in_post">tagged you in a post</string>
-    <string name="text_diary_commented_on_your_post">commented on your diary</string>
+    <string name="text_diary_commented_on_your_post">commented on your workspace</string>
     <string name="text_diary_loved_your_comment">loved your comment</string>
     <string name="text_diary_loved_your_post">loved your post</string>
 
@@ -346,23 +352,23 @@
     <string name="text_item_resend">Resend</string>
     <string name="text_item_remove">Remove</string>
 
-    <string name="title_bond_alert">Bond Alert</string>
-    <string name="title_diary_alert">Diary Alert</string>
-    <string name="title_event_alert">Event Alert</string>
+    <string name="title_bond_alert">Alerts</string>
+    <string name="title_diary_alert">WorkSpace Alert</string>
+    <string name="title_event_alert">Meeting Alert</string>
     <string name="title_big_day_alert">Big Day Alert</string>
-    <string name="title_miss_alert">Miss Alert</string>
+    <string name="title_miss_alert">Good Job Alert</string>
     <string name="title_news_alert">News Alert</string>
     <string name="title_member_alert">Member Alert</string>
     <string name="title_recommended_alert">Recommended</string>
     <string name="title_group_alert">Group Alert</string>
 
-    <string name="text_bond_alert">Bond Alert</string>
+    <string name="text_bond_alert">Alerts</string>
     <!--Diary-->
-    <string name="text_bond_alert_diary">Diary</string>
+    <string name="text_bond_alert_diary">WorkSpace</string>
     <!--Event-->
-    <string name="text_bond_alert_event">Event</string>
+    <string name="text_bond_alert_event">Meeting</string>
     <string name="text_big_day">Big Day</string>
-    <string name="text_miss">Miss</string>
+    <string name="text_miss">Good Job</string>
     <string name="text_news">News</string>
     <string name="text_member">Members</string>
     <string name="text_recommend">Recommended</string>
@@ -377,15 +383,15 @@
     <string name="text_terms">Terms &amp; Privacy</string>
     <string name="text_sign_out">Log Out</string>
 
-    <string name="text_invited_event">%s invited you to an event.</string>
-    <string name="text_responded_event">%s responded for event.</string>
-    <string name="text_commented_event">%s commented on event.</string>
-    <string name="text_also_commented_event">%s also commented on event.</string>
-    <string name="text_updated_event">%s updated event.</string>
-    <string name="text_cancelled_event">%s cancelled event.</string>
-    <string name="text_love_comment_event">%s loved your comment in event.</string>
-    <string name="text_love_event">%s loved your event.</string>
-    <string name="text_upcoming_event">Upcoming event: %s </string>
+    <string name="text_invited_event">%s invited you to an meeting.</string>
+    <string name="text_responded_event">%s responded for meeting.</string>
+    <string name="text_commented_event">%s commented on meeting.</string>
+    <string name="text_also_commented_event">%s also commented on meeting.</string>
+    <string name="text_updated_event">%s updated meeting.</string>
+    <string name="text_cancelled_event">%s cancelled meeting.</string>
+    <string name="text_love_comment_event">%s loved your comment in meeting.</string>
+    <string name="text_love_event">%s loved your meeting.</string>
+    <string name="text_upcoming_event">Upcoming meeting: %s </string>
     <string name="text_dialog_save_draft">Save as Draft?</string>
     <string name="text_empty_add_member">You\'re not alone. Tap on + to start bonding!</string>
     <string name="text_empty_add_group">Tap on + to create new group to bond with your loved ones.</string>
@@ -504,19 +510,19 @@
     <string name="click_again_exit">Click again to exit!</string>
 
     <string name="login">Login</string>
-    <string name="text_phone">Phone</string>
+    <string name="text_phone">Mobile</string>
     <string name="text_change_password">Change Password</string>
 
     <string name="title_member_love">Member Who Love This</string>
 
-    <string name="miss_you">You successfully sent a Miss!</string>
-    <string name="miss_already_you">You have already sent a miss.!</string>
+    <string name="miss_you">You successfully sent a Good Job!</string>
+    <string name="miss_already_you">You have already sent a good job.!</string>
     <string name="text_archive_data">No archive found</string>
 
-    <string name="text_no_date_diary">No diary alert</string>
-    <string name="text_no_date_event">No event alert</string>
+    <string name="text_no_date_diary">No workspace alert</string>
+    <string name="text_no_date_event">No meeting alert</string>
     <string name="text_no_date_bigday">No big day alert</string>
-    <string name="text_no_date_miss">No miss alert</string>
+    <string name="text_no_date_miss">No good job alert</string>
     <string name="text_no_date_news">No news alert</string>
     <string name="text_no_date_members">No members alert</string>
     <string name="text_no_date_recommended">No recommended members</string>
@@ -531,7 +537,7 @@
 
     <string name="text_evnt_empty_happ_with">Happiness is bonding together with</string>
     <string name="text_evnt_empty_love_one">your loved ones!</string>
-    <string name="text_evnt_empty_dont_now">Don\'t wait, organise an Event now.</string>
+    <string name="text_evnt_empty_dont_now">Don\'t wait, organise an meeting now.</string>
     <string name="text_empty_add_member_notlone">You\'re not alone.</string>
     <string name="text_empty_add_member_startbond">Tap on + to start bonding!</string>
     <string name="text_empty_add_group_newgroup">Tap on + to create new group </string>
@@ -547,18 +553,18 @@
     <string name="text_video_too_big">The selected video is too large</string>
     <string name="text_chat_send_video">Video size is %1$s,Confirm send it?</string>
     <string name="go_back_to_me">Go back to Me</string>
-    <string name="write_a_diary">Write a diary now. Sharing is caring.</string>
+    <string name="write_a_diary">Write a workspace now. Sharing is caring.</string>
     <string name="select_media">Select Media</string>
 
-    <string name="notification_action_event_invited">%1$s has invited you to event: %2$s</string>
-    <string name="notification_action_event_update">%1$s has updated event: %2$s</string>
-    <string name="notification_action_event_cancel">%1$s has cancelled the event: %2$s</string>
-    <string name="notification_action_event_resp">%1$s has responsed the event: %2$s</string>
-    <string name="notification_action_event_comment_owner_self">%1$s commented on own event: %2$s</string>
-    <string name="notification_action_event_comment_owner">%1$s commented on your event: %2$s</string>
-    <string name="notification_action_event_comment_not_owner">%1$s commented on %2$s event:%3$s</string>
+    <string name="notification_action_event_invited">%1$s has invited you to meeting: %2$s</string>
+    <string name="notification_action_event_update">%1$s has updated meeting: %2$s</string>
+    <string name="notification_action_event_cancel">%1$s has cancelled the meeting: %2$s</string>
+    <string name="notification_action_event_resp">%1$s has responsed the meeting: %2$s</string>
+    <string name="notification_action_event_comment_owner_self">%1$s commented on own meeting: %2$s</string>
+    <string name="notification_action_event_comment_owner">%1$s commented on your meeting: %2$s</string>
+    <string name="notification_action_event_comment_not_owner">%1$s commented on %2$s meeting:%3$s</string>
     <string name="notification_action_event_loveComment">%1$s love your comment.</string>
-    <string name="notification_action_event_reminder">Upcoming event: %1$s</string>
+    <string name="notification_action_event_reminder">Upcoming meeting: %1$s</string>
 
     <string name="notification_action_member_add">%1$s request to add you as %2$s</string>
     <string name="notification_action_member_autoAcp">You have auto accept request from %1$s add you as %2$s</string>
@@ -586,16 +592,16 @@
     <string name="notification_action_bigday_birthday_prebirthday_7">%1$s birthday is in 1 week</string>
     <string name="notification_action_bigday_birthday_prebirthday_30">%1$s birthday is in 1 month</string>
 
-    <string name="notification_action_diary_comment_owner">%1$s commented your diary</string>
-    <string name="notification_action_diary_comment_not_owner">%1$s commented on %2$s diary.</string>
-    <string name="notification_action_diary_love_owner">%1$s love your diary</string>
-    <string name="notification_action_diary_love_not_owner">%1$s loved on %2$s diary</string>
+    <string name="notification_action_diary_comment_owner">%1$s commented your workspace</string>
+    <string name="notification_action_diary_comment_not_owner">%1$s commented on %2$s workspace.</string>
+    <string name="notification_action_diary_love_owner">%1$s love your workspace</string>
+    <string name="notification_action_diary_love_not_owner">%1$s loved on %2$s workspace</string>
     <string name="notification_action_diary_loveComment">%1$s love your comment.</string>
-    <string name="notification_action_diary_tag">%1$s tag you in diary</string>
-    <string name="notification_action_diary_add_photo">%1$s added new photos to diary</string>
-    <string name="notification_action_diary_add_video">%1$s uploaded new video to diary</string>
+    <string name="notification_action_diary_tag">%1$s tag you in workspace</string>
+    <string name="notification_action_diary_add_photo">%1$s added new photos to workspace</string>
+    <string name="notification_action_diary_add_video">%1$s uploaded new video to workspace</string>
 
-    <string name="notification_action_miss_missyou">%1$s %2$s sent you %3$s Miss</string>
+    <string name="notification_action_miss_missyou">%1$s %2$s sent you %3$s Good Job</string>
     <string name="text_audio_release">Release to Send</string>
     <string name="text_audio_loosen_audition">Release to Replay</string>
     <string name="text_audio_cancle_send">Release to Cancel</string>
@@ -623,7 +629,7 @@
     <string name="text_feeling">Feeling</string>
     <string name="text_message_copy">Copy</string>
 
-    <string name="title_rewards">Rewards</string>
+    <string name="title_rewards">Organisation</string>
     <string name="text_no_rewards">No rewards</string>
     <string name="text_more">More</string>
     <string name="text_close_update_sticker">Close</string>
@@ -646,7 +652,7 @@
     <string name="add_photo_before_title">Please remove your video before you can add new photo.</string>
 
     <string name="text_add_members_search_hint">Search by ID/Username/Phone Number</string>
-    <string name="text_add_members_options_head">Add family member to chat. share moments and create events. Start bonding now!</string>
+    <string name="text_add_members_options_head">Add family member to chat. share moments and create meeting. Start bonding now!</string>
     <string name="text_add_members_via_contact">Add via Contacts</string>
     <string name="text_add_members_facebook">Facebook Account</string>
     <string name="text_add_members_qq">QQ Account</string>
@@ -654,23 +660,23 @@
 
     <string name="text_add_caption">Add caption</string>
 
-    <string name="text_tip_add_member">Add member to build family tree and view their live updates in Diary.</string>
+    <string name="text_tip_add_member">Add member to build family tree and view their live updates in workspace.</string>
     <string name="text_tip_add_photo">Write a post and add photos.</string>
-    <string name="text_tip_add_diary">Add your first diary.</string>
+    <string name="text_tip_add_diary">Add your first workspace.</string>
     <string name="text_tip_feeling">How are you feeling?</string>
     <string name="text_tip_tag_member">Tag members and they will receive alert.</string>
     <string name="text_tip_allow_me">Allow only me to view or share to all members?</string>
     <string name="text_tip_location">Where is the location?</string>
     <string name="text_tip_tap_post">Tap to post.</string>
-    <string name="text_tip_create_event">Start creating upcoming event.</string>
-    <string name="text_tip_save_event">Save your event.</string>
+    <string name="text_tip_create_event">Start creating upcoming meeting.</string>
+    <string name="text_tip_save_event">Save your meeting.</string>
     <string name="text_tip_add_member_chatting">Add member to start chatting. </string>
     <string name="text_tip_select_member_chatting">Select member to start chatting.</string>
     <string name="text_tip_Download_stickie">Download fun stickies.</string>
     <string name="introduction_description_1">A private and secure\n family social networking platform\n that enables you to stay connected,\n make plans and share special moments\n with your family members, no matter\n where they are.</string>
     <string name="introduction_description_2">Express your\n thoughts and feelings\n with our fun Stickies!</string>
-    <string name="introduction_description_3">Organise\n family gatherings\n and Events easily.</string>
-    <string name="introduction_description_4">Share precious moments \nin your Diary, privately with\n your loved ones.</string>
+    <string name="introduction_description_3">Organise\n family gatherings\n and meeting easily.</string>
+    <string name="introduction_description_4">Share precious moments \nin your workspace, privately with\n your loved ones.</string>
     <string name="introduction_description_5">Connect\n with your family members\n individually or in a group chat.</string>
     <string name="diary_hint">Share your moment here</string>
 
@@ -704,8 +710,20 @@
     <!-- &#160; 为空格 -->
     <string name="comment_date_edited">Edited &#160;</string>
     <string name="local_notification_text_for_5_minute">You can set your profile’s privacy to share with Only Me, All Members or Public.</string>
-    <string name="local_notification_text_for_2_day">Express yourself in Diary with photos or words.</string>
+    <string name="local_notification_text_for_2_day">Express yourself in workspace with photos or words.</string>
     <string name="local_notification_text_for_3_day">Fall in love with free stickies featuring Papa Panda’s family!</string>
-    <string name="local_notification_text_for_5_day">Do you miss your family? Send them a Miss now.</string>
+    <string name="local_notification_text_for_5_day">Do you Good Job your organisation? Send them a Good Job now.</string>
     <string name="title_edit_comment">Edit Comment</string>
+    <string name="text_profile_position">Position</string>
+    <string name="text_profile_department">Department</string>
+    <string name="text_about_b2be">B2BE</string>
+    <string name="text_good_job">Good Job</string>
+    <string name="text_internal_phone">Internal Phone Ext.</string>
+
+    <string name="text_hint_event_end_date">End Date &amp; Time</string>
+    <string name="text_meeting_reminder">Reminder</string>
+    <string name="text_write_new">Write a News</string>
+    <string name="text_category">Category</string>
+    <string name="title_writle_new_title">Title</string>
+    <string name="text_write_new_here">Write your story here</string>
 </resources>

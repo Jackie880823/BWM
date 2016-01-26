@@ -51,9 +51,10 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             if (oldVersion < 2) {
-                TableUtils.dropTable(connectionSource, OrmEntityDemo.class, true);
+//                TableUtils.dropTable(connectionSource, OrmEntityDemo.class, true);
                 TableUtils.dropTable(connectionSource, LocalStickerInfo.class, true);
                 TableUtils.createTable(connectionSource, LocalStickerInfo.class);
+                return;
             }
             if (oldVersion < 3) {
 //                Dao<LocalStickerInfo, Integer> recordItemDao = getDao(LocalStickerInfo.class);

@@ -41,6 +41,7 @@ import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
+import com.bondwithme.BondWithMe.ui.family.FamilyActivity;
 import com.bondwithme.BondWithMe.ui.family.FamilyTreeActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -69,7 +70,7 @@ import java.util.regex.Pattern;
 /**
  * Created by quankun on 15/5/12.
  */
-public class FamilyFragment extends BaseFragment<MainActivity> implements View.OnClickListener {
+public class FamilyFragment extends BaseFragment<FamilyActivity> implements View.OnClickListener {
     private static final String Tag = FamilyFragment.class.getSimpleName();
     private EditText etSearch;
     private ViewPager pager;
@@ -235,16 +236,16 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     groupAdapter.addData(groupEntityList);
                     break;
                 case GET_DELAY_ADD_PHOTO:
-                    if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
-                        popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
-                        popupWindowAddPhoto.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                            @Override
-                            public void popDismiss() {
-                                PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,true);
-                            }
-                        });
-                        popupWindowAddPhoto.showPopupWindowUp();
-                    }
+//                    if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+//                        popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
+//                        popupWindowAddPhoto.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+//                            @Override
+//                            public void popDismiss() {
+//                                PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,true);
+//                            }
+//                        });
+//                        popupWindowAddPhoto.showPopupWindowUp();
+//                    }
                     break;
                 case GET_DELAY_RIGHT:
                      popupWindow = new InteractivePopupWindow(getParentActivity(),getParentActivity().rightButton,popTestSt,0);
@@ -462,11 +463,11 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     }
 
     public void onceAdd(String ActionUserId){
-        vProgress.setVisibility(View.VISIBLE);
-        Intent intent = new Intent(getActivity(), AddMemberWorkFlow.class);
-        intent.putExtra("from", MainActivity.getUser().getUser_id());
-        intent.putExtra("to", ActionUserId);
-        startActivityForResult(intent, ADD_MEMBER);
+//        vProgress.setVisibility(View.VISIBLE);
+//        Intent intent = new Intent(getActivity(), AddMemberWorkFlow.class);
+//        intent.putExtra("from", MainActivity.getUser().getUser_id());
+//        intent.putExtra("to", ActionUserId);
+//        startActivityForResult(intent, ADD_MEMBER);
     }
 
     private void awaitingRemove(final String memberId) {
@@ -518,37 +519,37 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         });
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-       if(getUserVisibleHint()){
-           if((MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)) || MainActivity.getUser().isShow_tip()){
-//               相当于Fragment的onResume
-               handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,500);
-           }
-           if(MainActivity.getUser().isShow_tip()){
-               setPopupWindowPopupState(false);
-           }else {
-               if(PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)){
-                   setPopupWindowPopupState(true);
-               }
-           }
-       }
-    }
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//       if(getUserVisibleHint()){
+//           if((MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)) || MainActivity.getUser().isShow_tip()){
+////               相当于Fragment的onResume
+//               handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,500);
+//           }
+//           if(MainActivity.getUser().isShow_tip()){
+//               setPopupWindowPopupState(false);
+//           }else {
+//               if(PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)){
+//                   setPopupWindowPopupState(true);
+//               }
+//           }
+//       }
+//    }
 
-    private void setPopupWindowPopupState(final Boolean mState){
-        UserEntity userEntity = MainActivity.getUser();
-        userEntity.setShow_tip(false);
-        App.changeLoginedUser(userEntity);
-        new Thread(){
-            @Override
-            public void run() {
-                for (int i = 0; i < InteractivePopupWindow.dirayStrings.length; i++){
-                    PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.dirayStrings[i], mState);
-                }
-            }
-        }.start();
-    }
+//    private void setPopupWindowPopupState(final Boolean mState){
+//        UserEntity userEntity = MainActivity.getUser();
+//        userEntity.setShow_tip(false);
+//        App.changeLoginedUser(userEntity);
+//        new Thread(){
+//            @Override
+//            public void run() {
+//                for (int i = 0; i < InteractivePopupWindow.dirayStrings.length; i++){
+//                    PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.dirayStrings[i], mState);
+//                }
+//            }
+//        }.start();
+//    }
 
     private void showMemberEmptyView() {
         if (memberRefreshLayout.getVisibility() == View.VISIBLE) {

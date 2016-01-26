@@ -80,6 +80,8 @@ public class Constant {
     public static final int ACTION_EVENT_UPDATE_BIRTHDAY = 22;
     public static final int ACTION_EVENT_UPDATE_MEMBERS = 23;
 
+    public static final int ACTION_NEWS_CREATE = 24;
+
     public static final String ACTION_SHOW_NOTIFY_USER = "ACTION_SHOW_NOTIFY_USER";
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";

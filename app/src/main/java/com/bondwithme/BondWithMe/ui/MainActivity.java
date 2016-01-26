@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     public static String STICKER_VERSION = "3";
 
     public static Boolean IS_INTERACTIVE_USE;
-    public static Map<String,InteractivePopupWindow> interactivePopupWindowMap;
+    public static Map<String, InteractivePopupWindow> interactivePopupWindowMap;
     private static final int GET_DELAY = 0x28;
 
     public static final String ACTION_REFRESH_RED_POINT_4_FIMILY = "action_refresh_red_point";
@@ -144,8 +144,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         super.onCreate(savedInstanceState);
 
         //表示这个用户已经登陆过。提供给登录界面判断显示sign up 还是 log in
-        if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN,"")))
-        {
+        if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN, ""))) {
             PreferencesUtil.saveValue(this, Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
         }
 
@@ -161,12 +160,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private void init4DefaultPage() {
         setDrawable();
         changeTitleColor(R.color.tab_color_press5);
-        changeTitle(R.string.title_tab_my_family);
+        changeTitle(R.string.title_tab_my_news);
         leftButton.setVisibility(View.INVISIBLE);
         rightButton.setVisibility(View.VISIBLE);
-        tabIv0.setImageResource(R.drawable.tab_family_select);
-        ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press5));
-        tabTv0.setTextColor(Color.BLACK);
+        tabIv2.setImageResource(R.drawable.tab_news_select);
+        ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_press5));
+        tabTv2.setTextColor(Color.BLACK);
     }
 
     @Override
@@ -190,8 +189,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         super.onResume();
         int newJumpIndex = getIntent().getIntExtra(JUMP_INDEX, -1);
         /**新的跳转，以区分旧的，避免第一次启动重复set tab*/
-        if(newJumpIndex!=-1&&newJumpIndex!=jumpIndex&&currentTabEnum.ordinal()!=newJumpIndex){
-            mViewPager.setCurrentItem(newJumpIndex,false);
+        if (newJumpIndex != -1 && newJumpIndex != jumpIndex && currentTabEnum.ordinal() != newJumpIndex) {
+            mViewPager.setCurrentItem(newJumpIndex, false);
         }
 
         if (fragments != null) {
@@ -318,10 +317,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                             }
                             break;
                         case family:
-//                          fragment.startActivity(new Intent(getApplicationContext(), CreateGroupActivity.class));
-                            if (familyCommandListener != null) {
-                                familyCommandListener.execute(rightButton);
-                            }
+                            fragment.startActivityForResult(new Intent(getApplicationContext(), WriteNewsActivity.class), Constant.ACTION_NEWS_CREATE);
+//                            if (familyCommandListener != null) {
+//                                familyCommandListener.execute(rightButton);
+//                            }
                             break;
                         case more:
                             // TODO
@@ -351,15 +350,15 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                     }
                     break;
                 case GET_DELAY:
-                    if(!interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
-                        InteractivePopupWindow popupWindow = new InteractivePopupWindow(MainActivity.this,bottom,getResources().getString(R.string.text_tip_add_photo),1) ;
+                    if (!interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)) {
+                        InteractivePopupWindow popupWindow = new InteractivePopupWindow(MainActivity.this, bottom, getResources().getString(R.string.text_tip_add_photo), 1);
                         popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                             @Override
                             public void popDismiss() {
 
                             }
                         });
-                        interactivePopupWindowMap.put(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,popupWindow);
+                        interactivePopupWindowMap.put(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO, popupWindow);
                     }
                     break;
             }
@@ -371,24 +370,23 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private void bondDatas(JSONObject jsonObject) throws JSONException {
         checkDataAndBond2View(TabEnum.wall, jsonObject.getString("wall"));
         checkDataAndBond2View(TabEnum.event, jsonObject.getString("event"));
-        checkDataAndBond2View(TabEnum.family,jsonObject.getString("miss"));
+        checkDataAndBond2View(TabEnum.family, jsonObject.getString("miss"));
 
-        checkDataAndBond2View(TabEnum.more,jsonObject.getString("miss"));
+        checkDataAndBond2View(TabEnum.more, jsonObject.getString("miss"));
         checkDataAndBond2View(TabEnum.more, jsonObject.getString("bigDay"));
-        checkDataAndBond2View(TabEnum.more,jsonObject.getString("group"));
+        checkDataAndBond2View(TabEnum.more, jsonObject.getString("group"));
         checkDataAndBond2View(TabEnum.more, jsonObject.getString("member"));
     }
 
-    private void checkDataAndBond2View(TabEnum tab, String countString){
+    private void checkDataAndBond2View(TabEnum tab, String countString) {
         int count = Integer.valueOf(countString);
 
-        if (count > 0&&tab!=currentTabEnum) {
+        if (count > 0 && tab != currentTabEnum) {
             disableRedPoint(tab, false);
         }
     }
 
-    public void checkPoint()
-    {
+    public void checkPoint() {
         new HttpTools(this).get(String.format(Constant.API_BONDALERT_MODULES_COUNT, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
             @Override
             public void onStart() {
@@ -412,6 +410,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             public void onError(Exception e) {
                 e.printStackTrace();
             }
+
             @Override
             public void onCancelled() {
 
@@ -473,25 +472,25 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     @Override
     public void initView() {
         MyAppsFlyer.doLoginTrack();
-        interactivePopupWindowMap = new HashMap<String,InteractivePopupWindow>();
+        interactivePopupWindowMap = new HashMap<String, InteractivePopupWindow>();
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + STICKER_VERSION + App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
-        IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START,true);
-        if(getUser().isShow_tip()){
+        IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START, true);
+        if (getUser().isShow_tip()) {
             IS_INTERACTIVE_USE = true;
         }
-        LogUtil.d(TAG,"isFirstLogin========="+isFirstLogin+"======IS_FIRST_LOGIN======"+IS_FIRST_LOGIN);
+        LogUtil.d(TAG, "isFirstLogin=========" + isFirstLogin + "======IS_FIRST_LOGIN======" + IS_FIRST_LOGIN);
         if (isFirstLogin) {
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
                     try {
-                        LogUtil.d(TAG,"isFirstLogin");
+                        LogUtil.d(TAG, "isFirstLogin");
                         LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(MainActivity.this);
-                        dao.deleteSticker(MainActivity.this,"Barry");
-                        dao.deleteSticker(MainActivity.this,"PapaPanda");
+                        dao.deleteSticker(MainActivity.this, "Barry");
+                        dao.deleteSticker(MainActivity.this, "PapaPanda");
                         List<String> pathList = FileUtil.getAllFilePathsFromAssets(MainActivity.this, "stickers");
                         if (null != pathList) {
                             for (String string : pathList) {
@@ -510,10 +509,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
-        fragments.add(FamilyFragment.newInstance());
-        fragments.add(MessageMainFragment.newInstance());
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
+        fragments.add(NewsFragment.newInstance());
+        fragments.add(MessageMainFragment.newInstance());
 //        eventFragment = EventFragment.newInstance();
 //        fragments.add(eventFragment);
 //        if(isEventFragmentDate()){
@@ -567,24 +566,23 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     }
 
 
-
     /**
      * 清除所有tab小红点
      */
-    public static void clearAllRedPoint(){
-        if(red_point_1!=null) {
+    public static void clearAllRedPoint() {
+        if (red_point_1 != null) {
             red_point_1.setVisibility(View.INVISIBLE);
         }
-        if(red_point_2!=null) {
+        if (red_point_2 != null) {
             red_point_2.setVisibility(View.INVISIBLE);
         }
-        if(red_point_3!=null) {
+        if (red_point_3 != null) {
             red_point_3.setVisibility(View.INVISIBLE);
         }
-        if(red_point_4!=null) {
+        if (red_point_4 != null) {
             red_point_4.setVisibility(View.INVISIBLE);
         }
-        if(red_point_5!=null) {
+        if (red_point_5 != null) {
             red_point_5.setVisibility(View.INVISIBLE);
         }
     }
@@ -631,11 +629,24 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        if (leavePagerIndex!=0){
+        if (leavePagerIndex != 0) {
             //for last tab
             mViewPager.setCurrentItem(leavePagerIndex);
-        }else{
-            init4DefaultPage();
+        } else {
+//            init4DefaultPage();
+            setDrawable();
+            //ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
+            changeTitleColor(R.color.tab_color_press1);
+            changeTitle(R.string.title_tab_diary);
+//                ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+            leftButton.setVisibility(View.INVISIBLE);
+            rightButton.setVisibility(View.VISIBLE);
+            tabIv0.setImageResource(R.drawable.tab_workspace_select);
+            ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
+            tabTv0.setTextColor(Color.BLACK);
         }
     }
 
@@ -645,7 +656,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     }
 
 
-    private TabEnum currentTabEnum = TabEnum.family;
+    private TabEnum currentTabEnum = TabEnum.wall;
 
     private void changeTitle(int title) {
         if (tvTitle != null) {
@@ -654,9 +665,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     }
 
     private void setDrawable() {
-        tabIv0.setImageResource(R.drawable.tab_family);
-        tabIv1.setImageResource(R.drawable.tab_wall);
-        tabIv2.setImageResource(R.drawable.tab_event);
+        tabIv0.setImageResource(R.drawable.tab_workspace);
+        tabIv1.setImageResource(R.drawable.tab_event);
+        tabIv2.setImageResource(R.drawable.tab_news);
         tabIv3.setImageResource(R.drawable.tab_message);
         tabIv4.setImageResource(R.drawable.tab_more);
         tabTv0.setTextColor(Color.GRAY);
@@ -687,9 +698,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                 leftButton.setVisibility(View.INVISIBLE);
                 rightButton.setVisibility(View.VISIBLE);
-                tabIv1.setImageResource(R.drawable.tab_wall_select);
-                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
-                tabTv1.setTextColor(Color.BLACK);
+                tabIv0.setImageResource(R.drawable.tab_workspace_select);
+                ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
+                tabTv0.setTextColor(Color.BLACK);
                 break;
             case event:
                 setDrawable();
@@ -702,9 +713,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                 leftButton.setVisibility(View.INVISIBLE);
                 rightButton.setVisibility(View.VISIBLE);
-                tabIv2.setImageResource(R.drawable.tab_event_select);
-                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_press2));
-                tabTv2.setTextColor(Color.BLACK);
+                tabIv1.setImageResource(R.drawable.tab_event_select);
+                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press2));
+                tabTv1.setTextColor(Color.BLACK);
                 break;
             case chat:
                 setDrawable();
@@ -754,19 +765,19 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         switch (v.getId()) {
             case R.id.iv_tab_icon0:
-                tab = TabEnum.family;
+                tab = TabEnum.values()[0];
                 break;
             case R.id.iv_tab_icon1:
-                tab = TabEnum.wall;
+                tab = TabEnum.values()[1];
                 break;
             case R.id.iv_tab_icon2:
-                tab = TabEnum.event;
+                tab = TabEnum.values()[2];
                 break;
             case R.id.iv_tab_icon3:
-                tab = TabEnum.chat;
+                tab = TabEnum.values()[3];
                 break;
             case R.id.iv_tab_icon4:
-                tab = TabEnum.more;
+                tab = TabEnum.values()[4];
                 break;
             default:
                 super.onClick(v);
@@ -775,12 +786,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         if (tab == null || isCurrentTab(tab)) {
             return;
         }
-        mViewPager.setCurrentItem(tab.ordinal(),false);
+        mViewPager.setCurrentItem(tab.ordinal(), false);
 
     }
 
     public enum TabEnum {
-        family, chat, wall, event, more;
+        wall, event, family, chat, more;
     }
 
     SnackBar snackBar;
@@ -880,8 +891,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             }
         }
     };
-
-
 
 
 }

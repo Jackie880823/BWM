@@ -1,8 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,10 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
+ * Created by quankun on 16/1/22.
  */
-public class NewsActivity extends BaseActivity {
-
+public class NewsFragment extends BaseFragment<MainActivity> {
     View mProgressDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
@@ -46,37 +42,18 @@ public class NewsActivity extends BaseActivity {
     private TextView tvNoData;
     private LinearLayout llNoData;
 
-
-    public int getLayout() {
-        return R.layout.activity_news;
+    public static NewsFragment newInstance(String... params) {
+        return createInstance(new NewsFragment(), params);
     }
 
     @Override
-    protected void initBottomBar() {
-
+    public void setLayoutId() {
+        this.layoutId = R.layout.activity_news_fragment;
     }
 
     @Override
-    protected void setTitle() {
-        tvTitle.setText(R.string.title_news_alert);
-    }
+    protected void setParentTitle() {
 
-    @Override
-    protected void initTitleBar() {
-        super.initTitleBar();
-        titleBar.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
-        rightButton.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    protected void titleRightEvent() {
-        Intent intent = new Intent(NewsActivity.this, WriteNewsActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    protected Fragment getFragment() {
-        return null;
     }
 
     @Override
@@ -87,7 +64,7 @@ public class NewsActivity extends BaseActivity {
         llNoData = getViewById(R.id.ll_no_data_display);
 
         rvList = getViewById(R.id.rvList);
-        llm = new LinearLayoutManager(this);
+        llm = new LinearLayoutManager(getActivity());
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
         initAdapter();
@@ -121,11 +98,6 @@ public class NewsActivity extends BaseActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
@@ -134,13 +106,12 @@ public class NewsActivity extends BaseActivity {
 
     @Override
     public void requestData() {
-
         Map<String, String> params = new HashMap<>();
         params.put("start", "" + startIndex);
         params.put("limit", "" + offSet);
 
 
-        new HttpTools(this).get(String.format(Constant.API_NEWS, MainActivity.getUser().getUser_id()), params, this, new HttpCallback() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_NEWS, MainActivity.getUser().getUser_id()), params, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -176,7 +147,7 @@ public class NewsActivity extends BaseActivity {
                 //no data!!!
                 if (!data.isEmpty()) {
                     llNoData.setVisibility(View.GONE);
-                } else if (adapter.getItemCount() <= 0 && data.isEmpty() && !NewsActivity.this.isFinishing()) {
+                } else if (adapter.getItemCount() <= 0 && data.isEmpty() && !getActivity().isFinishing()) {
                     llNoData.setVisibility(View.VISIBLE);
                     tvNoData.setText(getResources().getString(R.string.text_no_date_news));
                 }
@@ -185,7 +156,7 @@ public class NewsActivity extends BaseActivity {
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(NewsActivity.this, R.string.msg_action_failed);
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }
@@ -202,18 +173,10 @@ public class NewsActivity extends BaseActivity {
 
             }
         });
-
-
     }
 
     private void initAdapter() {
-        adapter = new NewsAdapter(this, data);
+        adapter = new NewsAdapter(getActivity(), data);
         rvList.setAdapter(adapter);
     }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
 }

@@ -296,9 +296,9 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             btn_comment_del.setVisibility(View.GONE);
         }
         if (TextUtils.isEmpty(entity.getLove_id())) {//如果有人点赞
-                iv_agree.setImageResource(R.drawable.love_normal);
+                iv_agree.setImageResource(R.drawable.goodjob_nonclicked);
             } else {
-                iv_agree.setImageResource(R.drawable.love_press);
+                iv_agree.setImageResource(R.drawable.goodjob_clicked);
             }
         if(lovedate != null && lovedate.containsKey(position)){
             tv_agree_count.setText(lovedate.get(position));
@@ -591,11 +591,11 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());
                     if (TextUtils.isEmpty(commentEntity.getLove_id())) {
-                        iv_agree.setImageResource(R.drawable.love_press);
+                        iv_agree.setImageResource(R.drawable.goodjob_clicked);
                         commentEntity.setLove_id(MainActivity.getUser().getUser_id());
                         tv_agree_count.setText(count + 1 + "");
                     } else {
-                        iv_agree.setImageResource(R.drawable.love_normal);
+                        iv_agree.setImageResource(R.drawable.goodjob_nonclicked);
                         commentEntity.setLove_id(null);
                         tv_agree_count.setText(count - 1 + "");
                     }

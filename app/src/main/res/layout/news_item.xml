@@ -8,30 +8,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="@dimen/_5dp"
-        >
+        android:padding="@dimen/_5dp">
 
         <TextView
+            style="@style/text_title_default"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            style="@style/text_title_default"
             android:text="@string/app_name"
             android:textColor="@color/default_text_color_dark"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/news_title"
             style="@style/text_title_default"
             android:layout_centerVertical="true"
             android:textColor="@color/tab_color_press4"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/news_date"
-            style="@style/text_light_default"
-             />
+            style="@style/text_light_default" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,17 +37,16 @@
                 android:id="@+id/iv_pic"
                 android:layout_width="match_parent"
                 android:layout_height="360dp"
-                android:scaleType="fitXY"
-                />
+                android:scaleType="fitXY" />
 
             <ImageButton
                 android:id="@+id/ibtn_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/btn_video"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:visibility="gone"/>
+                android:src="@drawable/btn_video"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -59,17 +54,58 @@
             android:id="@+id/news_content"
             style="@style/text_dark_default"
             android:autoLink="web"
-            android:linksClickable="true"
-            />
+            android:linksClickable="true" />
 
         <TextView
             android:id="@+id/tv_more_or_collapse"
             style="@style/text_default"
             android:text="@string/more"
+            android:textColor="@android:color/holo_blue_bright"
             android:textStyle="bold"
-            android:visibility="gone"
-            android:textColor="@android:color/holo_blue_bright"/>
+            android:visibility="gone" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/goodjob_nonclicked"/>
+                <TextView
+                    android:id="@+id/new_good_job"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_20dp"
+                    android:layout_marginLeft="@dimen/_10dp"
+                    android:layout_centerVertical="true"
+                    android:text="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_alignParentRight="true">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/btn_comment"/>
+                <TextView
+                    android:id="@+id/new_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_20dp"
+                    android:layout_marginLeft="@dimen/_10dp"
+                    android:layout_centerVertical="true"
+                    android:text="1" />
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <View style="@style/split_line_default" />
