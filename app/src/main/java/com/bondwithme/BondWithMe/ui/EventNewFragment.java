@@ -72,7 +72,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private EditText event_desc;
     private TextView mTextView;
     private CardView item_date;
+    private CardView item_end_date;
     private TextView date_desc;
+    private TextView date_end_desc;
     private EditText position_name;
     private ImageButton position_choose;
 
@@ -166,8 +168,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         mTextView = getViewById(R.id.count);
         position_choose = getViewById(R.id.position_choose);
         item_date = getViewById(R.id.item_date);
-
+        item_end_date= getViewById(R.id.item_end_date);
         date_desc = getViewById(R.id.date_desc);
+        date_end_desc= getViewById(R.id.date_end_desc);
         position_name = getViewById(R.id.position_name);
         position_name.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -205,7 +208,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         position_choose.setOnClickListener(this);
         item_date.setOnClickListener(this);
 
-
+        item_end_date.setOnClickListener(this);
         //点击事件
         getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
             @Override
@@ -612,7 +615,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private final static int GET_MEMBERS = 2;
     private final static int OPEN_GPS = 3;
     private MyDialog pickDateTimeDialog;
-
+    private MyDialog pickEndDateTimeDialog;
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
@@ -647,6 +650,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             case R.id.item_date:
                 if(pickDateTimeDialog == null || !pickDateTimeDialog.isShowing()) {
                     showDateTimePicker();
+                }
+                break;
+            case R.id.item_end_date:
+                if(pickEndDateTimeDialog == null || !pickEndDateTimeDialog.isShowing()) {
+                    showEndDateTimePicker();
                 }
                 break;
         }
@@ -692,6 +700,70 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         if(!saveAlertDialog.isShowing()) {
             saveAlertDialog.show();
         }
+    }
+
+    private void showEndDateTimePicker(){
+        LayoutInflater factory = LayoutInflater.from(getActivity());
+        final View dateTimePicker = factory.inflate(R.layout.dialog_date_time_picker, null);
+        final DatePicker datePicker = (DatePicker) dateTimePicker.findViewById(R.id.datePicker);
+        final TimePicker timePicker = (TimePicker) dateTimePicker.findViewById(R.id.timePicker);
+
+        calendar = Calendar.getInstance();
+        //        MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis())
+        //        Long ltime =  (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
+        //如果有时间缓存
+        if(mEevent.getGroup_event_date() != null) {
+            Timestamp ts = Timestamp.valueOf(mEevent.getGroup_event_date());
+            calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
+            datePicker.setCalendar(calendar);
+            timePicker.setCalendar(calendar);
+        } else if(date != null && date != 0L) {
+
+            Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
+            calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
+            datePicker.setCalendar(calendar);
+            timePicker.setCalendar(calendar);
+            mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
+        }
+        //日历dialog
+        pickEndDateTimeDialog = new MyDialog(getParentActivity(), getString(R.string.title_pick_date_time), dateTimePicker);
+        pickEndDateTimeDialog.setButtonAccept(getString(R.string.ok), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickEndDateTimeDialog.dismiss();
+                if(datePicker != null && timePicker != null) {
+
+                }
+                mCalendar = Calendar.getInstance();
+                mCalendar.set(Calendar.YEAR, datePicker.getYear());
+                mCalendar.set(Calendar.MONTH, datePicker.getMonth());
+                mCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDay());
+                mCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHourOfDay());
+                mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
+
+                if(MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
+                    return;
+                }
+                //把时间储存到缓存
+                if(mCalendar != null) {
+                    PreferencesUtil.saveValue(getParentActivity(), "date", mCalendar.getTimeInMillis());
+                }
+                //将日历的时间转化成字符串
+                String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
+                mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
+                //将日历的时间显示出来
+                date_end_desc.setText(dateDesc);
+            }
+        });
+        pickEndDateTimeDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickEndDateTimeDialog.dismiss();
+            }
+        });
+
+        pickEndDateTimeDialog.show();
     }
 
     //日历
