@@ -36,6 +36,7 @@
                 android:id="@+id/iv_tab_icon0_tv"
                 android:layout_gravity="center_horizontal"
                 style="@style/text_default"
+                android:textSize="@dimen/text_size_13sp"
                 android:text="@string/title_tab_diary" />
 
         </LinearLayout>
@@ -83,6 +84,7 @@
                 android:id="@+id/iv_tab_icon1_tv"
                 style="@style/text_default"
                 android:text="@string/title_tab_event"
+                android:textSize="@dimen/text_size_13sp"
                 android:layout_gravity="center_horizontal"
                 />
 
@@ -130,6 +132,7 @@
                 android:id="@+id/iv_tab_icon2_tv"
                 android:layout_gravity="center_horizontal"
                 style="@style/text_default"
+                android:textSize="@dimen/text_size_13sp"
                 android:text="@string/title_tab_my_news" />
 
         </LinearLayout>
@@ -176,6 +179,7 @@
                 android:id="@+id/iv_tab_icon3_tv"
                 style="@style/text_default"
                 android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/text_size_13sp"
                 android:text="@string/title_tab_chat" />
 
         </LinearLayout>
@@ -224,6 +228,7 @@
                 android:id="@+id/iv_tab_icon4_tv"
                 style="@style/text_default"
                 android:text="@string/title_tab_more"
+                android:textSize="@dimen/text_size_13sp"
                 android:layout_gravity="center_horizontal" />
 
         </LinearLayout>

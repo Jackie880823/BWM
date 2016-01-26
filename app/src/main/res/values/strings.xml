@@ -305,10 +305,10 @@
     <string name="text_d">day </string>
     <string name="text_left">left</string>
 
-    <string name="text_miss_you">Says Good Job</string>
+    <string name="text_miss_you">says Good Job</string>
 
     <!--diary-->
-    <string name="text_diary_posted_to_diary">posted to workspace</string>
+    <string name="text_diary_posted_to_diary">posted to WorkSpace</string>
     <string name="text_diary_tagged_you_in_post">tagged you in a post</string>
     <string name="text_diary_commented_on_your_post">commented on your workspace</string>
     <string name="text_diary_loved_your_comment">loved your comment</string>
@@ -383,7 +383,7 @@
     <string name="text_terms">Terms &amp; Privacy</string>
     <string name="text_sign_out">Log Out</string>
 
-    <string name="text_invited_event">%s invited you to an meeting.</string>
+    <string name="text_invited_event">%s invited you to a Meeting.</string>
     <string name="text_responded_event">%s responded for meeting.</string>
     <string name="text_commented_event">%s commented on meeting.</string>
     <string name="text_also_commented_event">%s also commented on meeting.</string>

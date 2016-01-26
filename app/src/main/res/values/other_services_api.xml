@@ -5,7 +5,7 @@
 <resources>
 
     <!-- default build -->
-    <string name="api_server" translatable="false">http://dev.bondwith.me</string>
+    <string name="api_server" translatable="false">http://devb2be.bondwith.me</string>
     <string name="tracker_site_id" translatable="false">3</string>
     <!--map -->
 
