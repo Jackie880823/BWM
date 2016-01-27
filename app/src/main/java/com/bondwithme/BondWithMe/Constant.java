@@ -100,6 +100,8 @@ public class Constant {
     /**
      * for api
      */
+//    public static final String API_SERVER = "http://m.bondwith.me";
+//    public static final int TRACKER_SITE_ID = 5;//dev
     public static final String API_SERVER = App.getContextInstance().getString(R.string.api_server);
     public static final int TRACKER_SITE_ID = Integer.valueOf(App.getContextInstance().getString(R.string.tracker_site_id));//dev
 

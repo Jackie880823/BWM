@@ -190,7 +190,7 @@ public class LocalMediaAdapter extends BaseAdapter {
                 holder.llDuration.setVisibility(View.VISIBLE);
                 holder.videoIcon.setVisibility(View.VISIBLE);
                 long duration = mediaData.getDuration();
-                holder.tvDuration.setText(MyDateUtils.formatDuration(duration));
+                holder.tvDuration.setText(MyDateUtils.formatMillisecond(duration));
             } else {
                 holder.llDuration.setVisibility(View.GONE);
                 holder.videoIcon.setVisibility(View.GONE);

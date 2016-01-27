@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * 日期工具类 主要负责处理时间java.util.Date与String类型的转换
@@ -26,7 +27,8 @@ public class MyDateUtils extends android.text.format.DateUtils {
 
     /**
      * 根据传入的时间截，获取一个时间描述
-     * @param when 时间截
+     *
+     * @param when       时间截
      * @param fullFormat 是否显示全格式
      */
     public static String formatTimeStampString(Context context, long when, boolean fullFormat) {
@@ -147,6 +149,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
 
     /**
      * 将日期转默认格式的本地时区的时间字符
+     *
      * @param date
      * @return
      */
@@ -252,6 +255,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
     public static long formatDateString2LocalTimestamp(String dateString) {
         return formatTimestamp2Local(dateString2Timestamp(dateString));
     }
+
     public static long formatTimestamp2Local(Timestamp timestamp) {
         return timestamp.getTime() + getZoneTime();
     }
@@ -289,18 +293,59 @@ public class MyDateUtils extends android.text.format.DateUtils {
     }
 
 
+    /**
+     * 将秒值的{@code String}转成"MM:ss"或"H:MM:SS"的{@code String}返回
+     *
+     * @param durationStr
+     * @return "MM:ss"或"H:MM:SS"
+     */
     public static String formatDuration(String durationStr) {
         String result;
-        if (TextUtils.isEmpty(durationStr) || durationStr.contains(":")) {
-            result = durationStr;
+        if (!TextUtils.isEmpty(durationStr) && !durationStr.contains(":")) {
+            if (isNumber(durationStr)) {
+                long duration = Integer.valueOf(durationStr);
+                result = DateUtils.formatElapsedTime(duration);
+            } else if (isDouble(durationStr)) {
+                double duration = Double.valueOf(durationStr);
+                result = DateUtils.formatElapsedTime((long) duration);
+            } else {
+                result = durationStr;
+            }
         } else {
-            long duration = Long.valueOf(durationStr);
-            result = formatDuration(duration);
+            result = durationStr;
         }
         return result;
     }
 
-    public static String formatDuration(long duration) {
+    /**
+     * 字符串匹配为数字
+     *
+     * @param string
+     * @return
+     */
+    public static boolean isNumber(String string) {
+        Pattern pattern = Pattern.compile("^\\d+$");
+        return pattern.matcher(string).matches();
+    }
+
+    /**
+     * 检测客串是否为小数或数字
+     *
+     * @param string
+     * @return
+     */
+    public static boolean isDouble(String string) {
+        Pattern pattern = Pattern.compile("^\\d+.?\\d+");
+        return pattern.matcher(string).matches();
+    }
+
+    /**
+     * 将毫秒秒值的{@code Long}转成"MM:ss"或"H:MM:SS"的{@code String}返回
+     *
+     * @param duration
+     * @return "MM:ss"或"H:MM:SS"
+     */
+    public static String formatMillisecond(long duration) {
         return DateUtils.formatElapsedTime(duration / 1000);
     }
 
@@ -308,7 +353,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date begin = df.parse(dateString1);
         Date end = df.parse(dateString2);
-        return getDayDistanceBetweenTimestmaps(begin.getTime(),end.getTime());
+        return getDayDistanceBetweenTimestmaps(begin.getTime(), end.getTime());
     }
 
     public static int getDayDistanceBetweenTimestmaps(long timestamp1, long timestamp2) throws ParseException {

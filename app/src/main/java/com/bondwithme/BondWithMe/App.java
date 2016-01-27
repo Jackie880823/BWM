@@ -114,6 +114,8 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 //        filter.addAction("refresh");
         registerReceiver(mReceiver, filter);
         NetWorkStateReceiver.registerNetStateObserver(this);
+
+
     }
 
 
@@ -549,6 +551,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         notificationBigDayList.clear();
         notificationNewsList.clear();
         notificationGroupList.clear();
+        NotificationUtil.clearNotification(appContext);
     }
 
     public void clearNotificationMsgsByType(NotificationUtil.MessageType messageType) {
