@@ -118,4 +118,8 @@
     <color name="viewfinder_laser">#ffff0000</color>
     <color name="viewfinder_mask">#60000000</color>
     <color name="result_view">#b0000000</color>
+    <color name="expired_view">#80000000</color>
+    <color name="reward_count_down">#53000000</color>
+    <color name="reward_info">#a3000000</color>
+    <color name="reward_locked">#80000000</color>
 </resources>

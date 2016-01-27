@@ -34,8 +34,6 @@ public class FeelingFragment extends BaseFragment<FeelingActivity> implements Fe
     }
 
     public FeelingFragment(){
-        String checkItemIndexStr = getArguments().getString(ARG_PARAM_PREFIX + 0, "-1");
-        checkItemIndex = Integer.valueOf(checkItemIndexStr);
     }
 
     @Override
@@ -50,6 +48,9 @@ public class FeelingFragment extends BaseFragment<FeelingActivity> implements Fe
 
     @Override
     public void initView() {
+        String checkItemIndexStr = getArguments().getString(ARG_PARAM_PREFIX + 0, "-1");
+        checkItemIndex = Integer.valueOf(checkItemIndexStr);
+
         RecyclerView feeling_icons = getViewById(R.id.feeling_icons);
         LinearLayoutManager llmFeeling = new LinearLayoutManager(getParentActivity());
         llmFeeling.setOrientation(LinearLayoutManager.VERTICAL);

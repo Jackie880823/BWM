@@ -695,6 +695,31 @@
             android:launchMode="singleTask">
         </activity>
 
+        <activity android:name=".ui.more.rewards.RewardsActivity"
+                  android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity android:name=".ui.more.rewards.MyRewardsActivity"
+                  android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity android:name=".ui.more.rewards.RewardInfoActivity"
+                  android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity android:name=".ui.more.rewards.RewardCodeActivity"
+                  android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity android:name=".ui.more.rewards.RewardDetailActivity"
+                  android:screenOrientation="portrait"
+            >
+        </activity>
+
         <receiver android:name=".receiver_service.AlarmReceiver" >
             <intent-filter>
                 <action android:name="com.bondwithme.BondWithMe.android.five_minute_action" />
