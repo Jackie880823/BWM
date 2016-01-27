@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_180dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
     <RelativeLayout
 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_180dp"
         android:layout_margin="@dimen/_8dp"
+
         >
 
         <com.android.volley.toolbox.NetworkImageView
@@ -33,7 +34,7 @@
                 android:id="@+id/tv_reward_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="dewdwcw"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:textStyle="bold"
                 style="@style/text_white_center"/>
@@ -42,7 +43,7 @@
                 android:id="@+id/tv_reward_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="dcdcwcew"
                 android:layout_below="@+id/tv_reward_title"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:textColor="@color/btn_gray_normal"/>
@@ -86,7 +87,8 @@
     </RelativeLayout>
 
 
+    <View style="@style/split_line_default"
+        />
 
-    <View style="@style/split_line_default"/>
 
 </LinearLayout>

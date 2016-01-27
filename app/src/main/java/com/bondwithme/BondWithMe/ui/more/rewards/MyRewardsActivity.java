@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 已经兑换的优惠券列表页面；
  * Created by heweidong on 16/1/21.
  */
 public class MyRewardsActivity extends BaseActivity {

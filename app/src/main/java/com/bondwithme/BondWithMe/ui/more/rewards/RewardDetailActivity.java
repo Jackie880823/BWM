@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 /**
+ * 查看Reward详细信息的页面；
  * Created by heweidong on 16/1/21.
  */
 public class RewardDetailActivity extends BaseActivity {

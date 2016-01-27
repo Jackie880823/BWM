@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -25,6 +24,7 @@ import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
+import com.bondwithme.BondWithMe.widget.OverScrollView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Rewards主页；
  * Created by heweidong on 16/1/20.
  */
 public class RewardsActivity extends BaseActivity {
@@ -212,7 +213,7 @@ public class RewardsActivity extends BaseActivity {
             generalRewardEntity = dataGeneralReward.get(0);
             BitmapTools.getInstance(this).display(ivGeneralReward,generalRewardEntity.getImage(),R.drawable.network_image_default, R.drawable.network_image_default);
             tvGeneralRewardTitle.setText(generalRewardEntity.getTitle());
-            tvGeneralRewardData.setText(getString(R.string.valid_till) + generalRewardEntity.getVoucher_due());
+            tvGeneralRewardData.setText(getString(R.string.valid_till) +" "+ generalRewardEntity.getVoucher_due());
             ivGeneralReward.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -233,7 +234,7 @@ public class RewardsActivity extends BaseActivity {
         reList.post(new Runnable() {
             @Override
             public void run() {
-                ((ScrollView) RewardsActivity.this.getViewById(R.id.sc_rewards)).scrollTo(0, 0);
+                ((OverScrollView) RewardsActivity.this.getViewById(R.id.sc_rewards)).scrollTo(0, 0);
             }
         });
     }
