@@ -53,7 +53,7 @@
                                 android:id="@+id/tv_general_reward_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="20% off storewide"
+                                android:text=""
                                 android:layout_marginLeft="@dimen/_8dp"
                                 android:textStyle="bold"
                                 android:textSize="@dimen/text_medium_size"
@@ -64,7 +64,7 @@
                                 android:id="@+id/tv_general_reward_date"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="30 Jun 2016"
+                                android:text=""
                                 android:layout_below="@+id/tv_general_reward_title"
                                 android:layout_marginLeft="@dimen/_8dp"
                                 android:textColor="@color/btn_gray_normal"/>
@@ -92,7 +92,23 @@
                         android:padding="@dimen/_8dp">
 
                         <TextView
-                            android:id="@+id/tv_reward_point_description"
+                            android:id="@+id/tv_reward_point_description_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/tv_reward_point_description_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            />
+
+                        <TextView
+                            android:id="@+id/tv_reward_point_description_3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text=""
@@ -145,7 +161,6 @@
                             android:layout_alignBottom="@+id/tv_pts"
                             android:layout_toLeftOf="@+id/tv_pts"
                             android:textSize="@dimen/text_large_size"
-                            android:text="30"
                             android:textColor="@color/indicator_5"
                             android:textStyle="bold"/>
                         <TextView
@@ -177,7 +192,6 @@
                                     android:id="@+id/tv_count_invited"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="50"
                                     android:gravity="center"
                                     android:textColor="@color/default_text_color_dark"/>
 
@@ -199,7 +213,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_toRightOf="@+id/spit_line"
-                                    android:text="20"
                                     android:gravity="center"
                                     android:textColor="@color/default_text_color_dark"/>
                                 <TextView

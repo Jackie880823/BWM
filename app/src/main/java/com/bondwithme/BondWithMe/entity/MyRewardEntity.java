@@ -28,6 +28,33 @@ public class MyRewardEntity implements Serializable {
     private String voucher_due_month;
     private String voucher_due_year;
     private String code;
+    private String expired_flag;
+    private String merchant_name;
+    private String voucher_sys_due;
+
+    public String getExpired_flag() {
+        return expired_flag;
+    }
+
+    public void setExpired_flag(String expired_flag) {
+        this.expired_flag = expired_flag;
+    }
+
+    public String getMerchant_name() {
+        return merchant_name;
+    }
+
+    public void setMerchant_name(String merchant_name) {
+        this.merchant_name = merchant_name;
+    }
+
+    public String getVoucher_sys_due() {
+        return voucher_sys_due;
+    }
+
+    public void setVoucher_sys_due(String voucher_sys_due) {
+        this.voucher_sys_due = voucher_sys_due;
+    }
 
     public MyRewardEntity() {
     }

@@ -43,11 +43,16 @@ public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.VHItem
         myRewardEntity = data.get(position);
         BitmapTools.getInstance(mContext).display(holder.ivMyReward,myRewardEntity.getImage(),R.drawable.network_image_default, R.drawable.network_image_default);
         holder.tvReWardTitle.setText(myRewardEntity.getTitle());
-        holder.tvReWardExpireDate.setText(mContext.getString(R.string.valid_till) + myRewardEntity.getVoucher_due());
-        if(getTimeMillis(myRewardEntity.getVoucher_due()+"00:00:00") <= System.currentTimeMillis()){
-            holder.rlMyReward.setBackgroundColor(mContext.getResources().getColor(R.color.expired_view));
+        holder.tvReWardExpireDate.setText(mContext.getString(R.string.valid_till) + " "+myRewardEntity.getVoucher_due());
+//        if(getTimeMillis(myRewardEntity.getVoucher_due()+" 00:00:00") <= System.currentTimeMillis()){
+        if("1".equals(myRewardEntity.getExpired_flag())){
+            holder.rlMyReward.setVisibility(View.VISIBLE);
             holder.tvExpired.setVisibility(View.VISIBLE);
             holder.rlRewardInfo.setVisibility(View.INVISIBLE);
+        }else {
+            holder.rlMyReward.setVisibility(View.INVISIBLE);
+            holder.tvExpired.setVisibility(View.INVISIBLE);
+            holder.rlRewardInfo.setVisibility(View.VISIBLE);
         }
 
     }
@@ -88,6 +93,27 @@ public class MyRewardAdapter extends RecyclerView.Adapter<MyRewardAdapter.VHItem
             rlMyReward = (RelativeLayout) itemView.findViewById(R.id.rl_my_reward);
             rlRewardInfo = (RelativeLayout) itemView.findViewById(R.id.rl_reward_info);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemClickListener != null && data != null) {
+                        itemClickListener.itemClick(data.get(getAdapterPosition()), getAdapterPosition());
+
+                    }
+                }
+            });
+
         }
+    }
+
+    public ItemClickListener itemClickListener;
+
+    public interface ItemClickListener {
+        void itemClick(MyRewardEntity myRewardEntity, int position);
+
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 }

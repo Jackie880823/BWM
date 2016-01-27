@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_150dp"
+                android:layout_height="@dimen/_180dp"
                 android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/rl_my_reward"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_8dp"
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#a3000000"
+            android:background="@color/reward_info"
             android:padding="@dimen/_8dp"
             android:visibility="visible">
 
@@ -33,7 +33,7 @@
                 android:id="@+id/tv_reward_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20% off storewide"
+                android:text=""
                 android:layout_marginLeft="@dimen/_8dp"
                 android:textStyle="bold"
                 style="@style/text_white_center"/>
@@ -42,20 +42,17 @@
                 android:id="@+id/tv_reward_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="30 Jun 2016"
+                android:text=""
                 android:layout_below="@+id/tv_reward_title"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:textColor="@color/btn_gray_normal"/>
-            <TextView
-                android:id="@+id/tv_reward_point"
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10 points"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="@dimen/_8dp"
-                android:textStyle="bold"
-                android:textColor="@color/indicator_5"/>
+                android:src="@drawable/item_next_arrow"/>
 
 
 
@@ -63,6 +60,15 @@
 
         </RelativeLayout>
 
+
+
+        <RelativeLayout
+            android:id="@+id/rl_my_reward"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/expired_view"
+            android:visibility="invisible"
+            ></RelativeLayout>
 
         <TextView
             android:id="@+id/tv_expired"

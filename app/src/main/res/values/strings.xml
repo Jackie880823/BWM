@@ -719,5 +719,10 @@
     <string name="redeem">Click to Redeem</string>
     <string name="tap_copy">Tap the box to copy</string>
     <string name="points">Points</string>
+    <string name="text_capital_points">POINTS</string>
+    <string name="redemption_point">REDEMPTION POINT</string>
+    <string name="copy_success">Copy Successfully</string>
+    <string name="sure_redeem">Are you sure you want to redeem this voucher with</string>
+    <string name="reward_point"> Reward Points?</string>
 
 </resources>

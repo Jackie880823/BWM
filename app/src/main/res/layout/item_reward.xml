@@ -24,9 +24,11 @@
 
 
         <RelativeLayout
+            android:id="@+id/rl_count_down_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:background="@color/reward_count_down">
 
             <TableLayout
@@ -175,7 +177,7 @@
                 android:id="@+id/tv_reward_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="30 Jun 2016"
+                android:text=""
                 android:layout_below="@+id/tv_reward_title"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:textColor="@color/btn_gray_normal"/>
@@ -183,7 +185,7 @@
                 android:id="@+id/tv_reward_point"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10 points"
+                android:text=""
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="@dimen/_8dp"
@@ -199,6 +201,17 @@
             android:layout_height="match_parent"
             android:background="@color/reward_locked"></RelativeLayout>
 
+        <TextView
+            android:id="@+id/tv_fully_redeemed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fully Redeemed"
+            style="@style/text_white_center"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/text_large_size"
+            android:visibility="invisible"
+            />
+
         <ImageView
             android:id="@+id/iv_locked"
             android:layout_width="wrap_content"
@@ -206,12 +219,6 @@
             android:layout_centerInParent="true"
             android:src="@drawable/lock_icon"
             android:visibility="visible"/>
-
-
-
-
-
-
 
     </RelativeLayout>
 

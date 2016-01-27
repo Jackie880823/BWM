@@ -27,10 +27,7 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.google.gson.Gson;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +37,8 @@ import java.util.List;
 public class RewardsActivity extends BaseActivity {
 
     private final String TAG = getClass().getSimpleName();
+    public final static String GENERAL_REWARD_CODE = "general_reward";
+    public final static String REWARD = "reward";
     private RewardAdapter adapter;
     private List<GeneralRewardEntity> dataGeneralReward = new ArrayList<>();
     private List<RewardPointEntity> dataRewardPoint = new ArrayList<>();
@@ -53,7 +52,9 @@ public class RewardsActivity extends BaseActivity {
     private TextView tvAddMemberForPoint;
     private TextView tvPointAcc;
     private TextView tvGeneralRewardTitle;
-    private TextView tvRewardPointDesc;
+    private TextView tvRewardPointDesc1;
+    private TextView tvRewardPointDesc2;
+    private TextView tvRewardPointDesc3;
     private TextView tvUserPoint;
     private TextView tvCountInvited;
     private TextView tvCountPending;
@@ -97,7 +98,9 @@ public class RewardsActivity extends BaseActivity {
         tvPointAcc = getViewById(R.id.tv_point_acc);
         tvGeneralRewardTitle = getViewById(R.id.tv_general_reward_title);
         tvGeneralRewardData = getViewById(R.id.tv_general_reward_date);
-        tvRewardPointDesc = getViewById(R.id.tv_reward_point_description);
+        tvRewardPointDesc1 = getViewById(R.id.tv_reward_point_description_1);
+        tvRewardPointDesc2 = getViewById(R.id.tv_reward_point_description_2);
+        tvRewardPointDesc3 = getViewById(R.id.tv_reward_point_description_3);
         tvUserPoint = getViewById(R.id.tv_reward_pts);
         tvCountInvited = getViewById(R.id.tv_count_invited);
         tvCountPending = getViewById(R.id.tv_count_pending);
@@ -109,39 +112,33 @@ public class RewardsActivity extends BaseActivity {
         reList.setHasFixedSize(true);
         reList.setItemAnimator(new DefaultItemAnimator());
 
-        reList.post(new Runnable() {
+
+    }
+
+    int userPoint;
+    private void initAdapter() {
+        userPoint = Integer.parseInt(dataRewardPoint.get(0).getUser_point());
+        adapter = new RewardAdapter(this,dataReward,String.valueOf(userPoint));
+        reList.setAdapter(adapter);
+        adapter.setItemClickListener(new RewardAdapter.ItemClickListener() {
             @Override
-            public void run() {
-                ((ScrollView) RewardsActivity.this.getViewById(R.id.sc_rewards)).scrollTo(0, 0);
+            public void itemClick(RewardEntity rewardEntity, int position) {
+                int rewardPoint = Integer.parseInt(rewardEntity.getPoint());
+                if (!rewardEntity.getTotal_voucher().equals("0") && rewardPoint <= userPoint){
+                    Intent intent = new Intent(RewardsActivity.this,RewardDetailActivity.class);
+                    intent.putExtra(REWARD,rewardEntity);
+                    startActivity(intent);
+                }
+
             }
         });
     }
 
-    private void initAdapter() {
-        adapter = new RewardAdapter(this,dataReward,dataRewardPoint.get(0).getUser_point());
-        reList.setAdapter(adapter);
-    }
-
-
-    public static Long getTime(String user_time) {
-        String re_time = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date d;
-        long l = 0;
-        try {
-            d = sdf.parse(user_time);
-            l = d.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return l;
-    }
 
     @Override
     public void requestData() {
         HashMap<String, String> params = new HashMap<>();
-        params.put("country_code", "60");
-//        MainActivity.getUser().getUser_country_code()
+        params.put("country_code", MainActivity.getUser().getUser_country_code());
         new HttpTools(this).get(String.format(Constant.API_GET_REWARD_LIST,MainActivity.getUser().getUser_id()), params,TAG, new HttpCallback() {
             @Override
             public void onStart() {
@@ -201,7 +198,9 @@ public class RewardsActivity extends BaseActivity {
         });
         if (!dataRewardPoint.isEmpty()){
             rewardPointEntity = dataRewardPoint.get(0);
-            tvRewardPointDesc.setText(rewardPointEntity.getDescription());
+            tvRewardPointDesc1.setText(rewardPointEntity.getDescription_1());
+            tvRewardPointDesc2.setText(rewardPointEntity.getDescription_2());
+            tvRewardPointDesc3.setText(rewardPointEntity.getDescription_3());
             tvUserPoint.setText(rewardPointEntity.getUser_point());
             tvCountInvited.setText(rewardPointEntity.getInvited());
             tvCountPending.setText(rewardPointEntity.getPending());
@@ -214,9 +213,29 @@ public class RewardsActivity extends BaseActivity {
             BitmapTools.getInstance(this).display(ivGeneralReward,generalRewardEntity.getImage(),R.drawable.network_image_default, R.drawable.network_image_default);
             tvGeneralRewardTitle.setText(generalRewardEntity.getTitle());
             tvGeneralRewardData.setText(getString(R.string.valid_till) + generalRewardEntity.getVoucher_due());
+            ivGeneralReward.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(RewardsActivity.this,RewardCodeActivity.class);
+                    intent.putExtra(GENERAL_REWARD_CODE,generalRewardEntity);
+                    startActivity(intent);
+                }
+            });
 
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        requestData();
+        reList.post(new Runnable() {
+            @Override
+            public void run() {
+                ((ScrollView) RewardsActivity.this.getViewById(R.id.sc_rewards)).scrollTo(0, 0);
+            }
+        });
     }
 
     @Override

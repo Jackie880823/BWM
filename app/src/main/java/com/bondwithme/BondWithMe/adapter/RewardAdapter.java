@@ -35,6 +35,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.VHItem> {
             super.handleMessage(msg);
             switch (msg.what){
                 case REFRESH_MER_SEC:
+                    downCount++;
                     notifyDataSetChanged();
                     handler.sendEmptyMessageDelayed(REFRESH_MER_SEC,1000);
                     break;
@@ -65,22 +66,48 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.VHItem> {
     @Override
     public void onBindViewHolder(final VHItem holder, int position) {
         rewardEntity = data.get(position);
-        BitmapTools.getInstance(mContext).display(holder.ivReward,rewardEntity.getImage(),R.drawable.network_image_default, R.drawable.network_image_default);
-        holder.tvRewardTile.setText(rewardEntity.getTitle());
-        holder.tvRewardDate.setText(mContext.getString(R.string.valid_till)+" "+rewardEntity.getVoucher_due());
-        holder.tvRewardCostPoint.setText(rewardEntity.getPoint()+" "+mContext.getString(R.string.points));
-
-        //user_point < reward_point，locked；
-        if(Integer.parseInt(rewardEntity.getPoint()) > Integer.parseInt(userPoint)){
-            holder.ivLock.setVisibility(View.VISIBLE);
-            holder.rl.setBackgroundColor(mContext.getResources().getColor(R.color.reward_locked));
+        long leftTime  = Long.parseLong(rewardEntity.getTimestamp_left())-downCount;
+//        long leftTime  =  10 - downCount;
+        if(leftTime < 0){
+            data.remove(position);
+            notifyItemRemoved(position);
         }else {
-            holder.ivLock.setVisibility(View.INVISIBLE);
-            holder.rl.setBackgroundColor(mContext.getResources().getColor(R.color.default_text_color_while));
+            BitmapTools.getInstance(mContext).display(holder.ivReward, rewardEntity.getImage(), R.drawable.network_image_default, R.drawable.network_image_default);
+            holder.tvRewardTile.setText(rewardEntity.getTitle());
+            holder.tvRewardDate.setText(mContext.getString(R.string.valid_till) + " " + rewardEntity.getVoucher_due());
+            holder.tvRewardCostPoint.setText(rewardEntity.getPoint() + " " + mContext.getString(R.string.points));
+
+            //user_point < reward_point，locked；
+            if (Integer.parseInt(rewardEntity.getPoint()) > Integer.parseInt(userPoint)) {
+                holder.ivLock.setVisibility(View.VISIBLE);
+                holder.rl.setVisibility(View.VISIBLE);
+            } else {
+                holder.ivLock.setVisibility(View.INVISIBLE);
+                holder.rl.setVisibility(View.INVISIBLE);
+            }
+            LogUtil.d(TAG,"onBindViewHolder==Total_voucher="+rewardEntity.getTotal_voucher());
+            //voucher_total = 0;
+            if ("0".equals(rewardEntity.getTotal_voucher())){
+                holder.rl.setVisibility(View.VISIBLE);
+                holder.ivLock.setVisibility(View.INVISIBLE);
+                holder.rlRewardInfo.setVisibility(View.INVISIBLE);
+                holder.rlCountDownTime.setVisibility(View.INVISIBLE);
+                holder.tvFullyRed.setVisibility(View.VISIBLE);
+            }else {
+                holder.rlRewardInfo.setVisibility(View.VISIBLE);
+                holder.rlCountDownTime.setVisibility(View.VISIBLE);
+                holder.tvFullyRed.setVisibility(View.INVISIBLE);
+            }
+//        Long finishMillis = getFinishMillis(rewardEntity.getEnd_date_timestamp());
+//        LogUtil.d(TAG,"reward_id:"+rewardEntity.getId() +" 服务器时间计时    getTimestamp_left:" + rewardEntity.getTimestamp_left() + "手机时间计时 finishSec:"+finishMillis);
+            holder.setTextTime(leftTime);
+            LogUtil.d(TAG,"count==="+downCount);
         }
-        Long finishMillis = getFinishMillis(rewardEntity.getEnd_date_timestamp());
-        holder.setTextTime(finishMillis);
+
+
     }
+
+    int downCount = 0;
 
     private Long getFinishMillis(String sec) {
         Long currentSec = System.currentTimeMillis()/1000;
@@ -95,7 +122,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.VHItem> {
     }
 
 
-    class VHItem extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class VHItem extends RecyclerView.ViewHolder {
         private TextView tvDay;
         private TextView tvHrs;
         private TextView tvMin;
@@ -103,8 +130,11 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.VHItem> {
         private TextView tvRewardTile;
         private TextView tvRewardDate;
         private TextView tvRewardCostPoint;
+        private TextView tvFullyRed;
         private NetworkImageView ivReward;
         private RelativeLayout rl;
+        private RelativeLayout rlRewardInfo;
+        private RelativeLayout rlCountDownTime;
         private ImageView ivLock;
 
         public VHItem(View itemView) {
@@ -117,9 +147,22 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.VHItem> {
             tvRewardTile = (TextView) itemView.findViewById(R.id.tv_reward_title);
             tvRewardDate = (TextView) itemView.findViewById(R.id.tv_reward_time);
             tvRewardCostPoint = (TextView) itemView.findViewById(R.id.tv_reward_point);
+            tvFullyRed = (TextView) itemView.findViewById(R.id.tv_fully_redeemed);
             ivReward = (NetworkImageView) itemView.findViewById(R.id.iv_reward);
             rl = (RelativeLayout) itemView.findViewById(R.id.rl_reward_item);
+            rlRewardInfo = (RelativeLayout) itemView.findViewById(R.id.rl_reward_info);
+            rlCountDownTime = (RelativeLayout) itemView.findViewById(R.id.rl_count_down_time);
             ivLock = (ImageView) itemView.findViewById(R.id.iv_locked);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemClickListener != null && data != null) {
+                        itemClickListener.itemClick(data.get(getAdapterPosition()), getAdapterPosition());
+
+                    }
+                }
+            });
         }
 
         public void setTextTime(Long finishTime) {
@@ -135,12 +178,19 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.VHItem> {
         }
 
 
-        @Override
-        public void onClick(View v) {
-
-        }
     }
 
+
+    public ItemClickListener itemClickListener;
+
+    public interface ItemClickListener {
+        void itemClick(RewardEntity rewardEntity, int position);
+
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
 
 }

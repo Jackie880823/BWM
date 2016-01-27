@@ -1,7 +1,9 @@
 package com.bondwithme.BondWithMe.ui.more.rewards;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -13,7 +15,6 @@ import com.bondwithme.BondWithMe.adapter.MyRewardAdapter;
 import com.bondwithme.BondWithMe.entity.MyRewardEntity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -27,7 +28,8 @@ import java.util.List;
 public class MyRewardsActivity extends BaseActivity {
 
     private final String TAG = getClass().getSimpleName();
-    private FullyLinearLayoutManager llm;
+    public final static String MY_REWARD_CODE = "my_reward_code";
+    private LinearLayoutManager llm;
     private RecyclerView rvList;
     private View vProgress;
     private MyRewardAdapter adapter;
@@ -70,8 +72,9 @@ public class MyRewardsActivity extends BaseActivity {
     @Override
     public void initView() {
         vProgress = getViewById(R.id.rl_progress);
-        llm = new FullyLinearLayoutManager(this);
+        llm = new LinearLayoutManager(this);
         rvList = getViewById(R.id.rvList);
+        rvList.setHasFixedSize(true);
         rvList.setLayoutManager(llm);
 
     }
@@ -79,6 +82,16 @@ public class MyRewardsActivity extends BaseActivity {
     private void initAdapter() {
         adapter = new MyRewardAdapter(data,this);
         rvList.setAdapter(adapter);
+        adapter.setItemClickListener(new MyRewardAdapter.ItemClickListener() {
+            @Override
+            public void itemClick(MyRewardEntity myRewardEntity, int position) {
+                if (myRewardEntity.getExpired_flag().equals("0")){
+                    Intent intent = new Intent(MyRewardsActivity.this,RewardCodeActivity.class);
+                    intent.putExtra(MY_REWARD_CODE,myRewardEntity);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
@@ -99,7 +112,6 @@ public class MyRewardsActivity extends BaseActivity {
                 Gson gson = new GsonBuilder().create();
                 data = gson.fromJson(string,new TypeToken<ArrayList<MyRewardEntity>>(){}.getType());
                 initAdapter();
-
             }
 
             @Override

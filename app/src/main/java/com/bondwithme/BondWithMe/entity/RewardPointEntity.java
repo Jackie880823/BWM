@@ -21,6 +21,42 @@ public class RewardPointEntity implements Serializable {
     private String invited;
     private String accepted;
     private String pending;
+    private String description_1;
+    private String description_2;
+    private String description_3;
+    private String user_given_name;
+
+    public String getDescription_1() {
+        return description_1;
+    }
+
+    public void setDescription_1(String description_1) {
+        this.description_1 = description_1;
+    }
+
+    public String getDescription_2() {
+        return description_2;
+    }
+
+    public void setDescription_2(String description_2) {
+        this.description_2 = description_2;
+    }
+
+    public String getDescription_3() {
+        return description_3;
+    }
+
+    public void setDescription_3(String description_3) {
+        this.description_3 = description_3;
+    }
+
+    public String getUser_given_name() {
+        return user_given_name;
+    }
+
+    public void setUser_given_name(String user_given_name) {
+        this.user_given_name = user_given_name;
+    }
 
     public String getId() {
         return id;
