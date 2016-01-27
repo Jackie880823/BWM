@@ -9,7 +9,6 @@
 /fzAndroidMap
 /**/*.apk
 /**/*.iml
-/**/*-report.txt
 app/out.map
 /app/gradle.properties
 /app/ormlite_config.txt
@@ -18,7 +17,6 @@ app/out.map
 # files for the dex VM
 *.dex
 # Java class files
-*.class
 # generated files
 bin/
 gen/
@@ -37,9 +35,4 @@ Thumbs.db
 *~
 *.swp
 .gitignore.swp
-**/*.DS_Store
 demo/*
-
-demo_app
-build
-build/intermediates/dex-cache/cache.xml
