@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="@color/tab_color_normal"
+    android:orientation="horizontal"
     android:weightSum="5">
 
     <RelativeLayout
@@ -18,38 +18,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:focusable="true"
             android:orientation="vertical"
             android:paddingBottom="6dp"
-            android:paddingTop="6dp"
-            android:focusable="true"
-            >
+            android:paddingTop="6dp">
 
             <ImageView
                 android:id="@+id/iv_tab_icon0_iv"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/tab_workspace"
-                />
+                android:src="@drawable/tab_workspace" />
 
             <TextView
                 android:id="@+id/iv_tab_icon0_tv"
-                android:layout_gravity="center_horizontal"
                 style="@style/text_default"
-                android:textSize="@dimen/text_size_13sp"
-                android:text="@string/title_tab_diary" />
+                android:layout_gravity="center_horizontal"
+                android:text="@string/title_tab_diary"
+                android:textSize="@dimen/text_size_13sp" />
 
         </LinearLayout>
-        <ImageView
+
+        <TextView
             android:id="@+id/red_point_1"
+            style="@style/RedPoint"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
             android:layout_alignParentRight="true"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
             android:layout_marginRight="@dimen/default_text_padding"
             android:layout_marginTop="@dimen/default_text_padding"
-            android:src="@drawable/love_alert"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
+        <!--<ImageView-->
+        <!--android:id="@+id/red_point_1"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_width="16dp"-->
+        <!--android:layout_height="16dp"-->
+        <!--android:layout_marginRight="@dimen/default_text_padding"-->
+        <!--android:layout_marginTop="@dimen/default_text_padding"-->
+        <!--android:src="@drawable/love_alert"-->
+        <!--android:visibility="gone"-->
+        <!--/>-->
 
     </RelativeLayout>
 
@@ -59,8 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:clickable="true"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,23 +90,21 @@
             <TextView
                 android:id="@+id/iv_tab_icon1_tv"
                 style="@style/text_default"
-                android:text="@string/title_tab_event"
-                android:textSize="@dimen/text_size_13sp"
                 android:layout_gravity="center_horizontal"
-                />
+                android:text="@string/title_tab_event"
+                android:textSize="@dimen/text_size_13sp" />
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/red_point_2"
-            android:layout_alignParentRight="true"
             style="@style/RedPoint"
             android:layout_width="8dp"
             android:layout_height="8dp"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/default_text_padding"
             android:layout_marginTop="@dimen/default_text_padding"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -130,23 +135,22 @@
 
             <TextView
                 android:id="@+id/iv_tab_icon2_tv"
-                android:layout_gravity="center_horizontal"
                 style="@style/text_default"
-                android:textSize="@dimen/text_size_13sp"
-                android:text="@string/title_tab_my_news" />
+                android:layout_gravity="center_horizontal"
+                android:text="@string/title_tab_my_news"
+                android:textSize="@dimen/text_size_13sp" />
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/red_point_3"
-            android:layout_alignParentRight="true"
             style="@style/RedPoint"
             android:layout_width="8dp"
             android:layout_height="8dp"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/default_text_padding"
             android:layout_marginTop="@dimen/default_text_padding"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -179,23 +183,22 @@
                 android:id="@+id/iv_tab_icon3_tv"
                 style="@style/text_default"
                 android:layout_gravity="center_horizontal"
-                android:textSize="@dimen/text_size_13sp"
-                android:text="@string/title_tab_chat" />
+                android:text="@string/title_tab_chat"
+                android:textSize="@dimen/text_size_13sp" />
 
         </LinearLayout>
+
         <TextView
             android:id="@+id/red_point_4"
-            android:layout_alignParentRight="true"
             style="@style/RedPoint"
             android:layout_width="8dp"
             android:layout_height="8dp"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/default_text_padding"
             android:layout_marginTop="@dimen/default_text_padding"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
     </RelativeLayout>
-
 
 
     <RelativeLayout
@@ -204,8 +207,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:clickable="true"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -227,21 +229,21 @@
             <TextView
                 android:id="@+id/iv_tab_icon4_tv"
                 style="@style/text_default"
+                android:layout_gravity="center_horizontal"
                 android:text="@string/title_tab_more"
-                android:textSize="@dimen/text_size_13sp"
-                android:layout_gravity="center_horizontal" />
+                android:textSize="@dimen/text_size_13sp" />
 
         </LinearLayout>
+
         <TextView
             android:id="@+id/red_point_5"
-            android:layout_alignParentRight="true"
             style="@style/RedPoint"
             android:layout_width="8dp"
             android:layout_height="8dp"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/default_text_padding"
             android:layout_marginTop="@dimen/default_text_padding"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
     </RelativeLayout>
 

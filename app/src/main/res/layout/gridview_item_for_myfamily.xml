@@ -33,7 +33,7 @@
                 android:layout_width="@dimen/_20dp"
                 android:layout_height="@dimen/_20dp"
                 android:visibility="gone"
-                android:src="@drawable/miss"
+                android:src="@drawable/good_job"
                 android:layout_gravity="right|top" />
 
             <ImageView
