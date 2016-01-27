@@ -424,7 +424,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     private void showSaveAlert() {
         if(saveAlertDialog == null) {
             saveAlertDialog = new MyDialog(getActivity(), getString(R.string.text_tips_title), getString(R.string.msg_ask_save));
-            saveAlertDialog.setButtonAccept(getString(R.string.accept), new View.OnClickListener() {
+            saveAlertDialog.setButtonAccept(getString(R.string.text_dialog_accept), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     saveAlertDialog.dismiss();
@@ -468,7 +468,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         timePicker.setCalendar(calendar);
 
         pickDateTimeDialog = new MyDialog(getParentActivity(), getString(R.string.title_pick_date_time), dateTimePicker);
-        pickDateTimeDialog.setButtonAccept(getString(R.string.accept), new View.OnClickListener() {
+        pickDateTimeDialog.setButtonAccept(getString(R.string.text_dialog_accept), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickDateTimeDialog.dismiss();

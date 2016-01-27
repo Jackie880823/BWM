@@ -519,7 +519,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
                     }
                 }
             });
-            myDialog.setButtonAccept(R.string.accept, new View.OnClickListener() {
+            myDialog.setButtonAccept(R.string.text_dialog_accept, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     myDialog.dismiss();

@@ -327,7 +327,7 @@ public class WallViewPicActivity extends BaseActivity {
 
         final Dialog deleteDialog = new MyDialog(WallViewPicActivity.this, R.string.text_wall_view_pic_delete, R.string.text_wall_view_pic_delete_warning);
 
-        deleteDialog.setButtonAccept(R.string.accept, new View.OnClickListener() {
+        deleteDialog.setButtonAccept(R.string.text_dialog_accept, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO

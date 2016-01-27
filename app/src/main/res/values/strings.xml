@@ -77,7 +77,7 @@
     <!-- <string name="text_face">图标</string> -->
     <string name="text_send">Send</string>
     <string name="title_pick_date_time">Meeting date &amp; time</string>
-    <string name="accept">Accept</string>
+    <string name="text_dialog_accept">Accept</string>
     <string name="ok">OK</string>
     <string name="text_dialog_cancel">Cancel</string>
     <string name="msg_ask_save">Do you want to save as draft?</string>

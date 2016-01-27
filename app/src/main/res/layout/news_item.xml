@@ -70,6 +70,7 @@
             android:layout_marginTop="@dimen/_15dp">
 
             <LinearLayout
+                android:id="@+id/new_good_job_linear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical">
@@ -88,6 +89,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/new_comment_linear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"

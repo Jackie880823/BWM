@@ -917,7 +917,7 @@ public class MyViewProfileActivity extends BaseActivity {
         datePicker.setCalendar(mCalendar);
 
         pickDateTimeDialog = new MyDialog(this, null, dateTimePicker);
-        pickDateTimeDialog.setButtonAccept(getString(R.string.accept), new View.OnClickListener() {
+        pickDateTimeDialog.setButtonAccept(getString(R.string.text_dialog_accept), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickDateTimeDialog.dismiss();

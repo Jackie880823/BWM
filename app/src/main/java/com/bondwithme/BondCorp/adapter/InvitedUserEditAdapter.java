@@ -109,7 +109,7 @@ public class InvitedUserEditAdapter extends RecyclerView.Adapter<InvitedUserEdit
         private void showDeleteAlert() {
             if (alertDialog == null) {
                 alertDialog = new MyDialog(mContext, mContext.getString(R.string.text_tips_title), mContext.getString(R.string.text_ask_delete));
-                alertDialog.setButtonAccept(mContext.getString(R.string.accept), new View.OnClickListener() {
+                alertDialog.setButtonAccept(mContext.getString(R.string.text_dialog_accept), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mMemberDeleteListenere != null) {
