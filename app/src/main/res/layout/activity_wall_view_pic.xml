@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context="com.bondwithme.BondWithMe.ui.wall.WallViewPicActivity">
+    tools:context="com.bondwithme.BondCorp.ui.wall.WallViewPicActivity">
         <include
             android:id="@+id/fragment_main_top"
             layout="@layout/title_view"
@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true" />
 
-        <com.bondwithme.BondWithMe.widget.ViewPagerFixed
+        <com.bondwithme.BondCorp.widget.ViewPagerFixed
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

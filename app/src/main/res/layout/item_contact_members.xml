@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/default_content_padding">
-            <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+            <com.bondwithme.BondCorp.widget.CircularNetworkImage
                 android:id="@+id/cni"
                 android:layout_width="@dimen/default_user_head_width_height"
                 android:layout_height="@dimen/default_user_head_width_height"

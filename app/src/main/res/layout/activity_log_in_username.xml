@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/default_text_color_while"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.bondwithme.BondWithMe.ui.start.LogInUsernameActivity">
+    tools:context="com.bondwithme.BondCorp.ui.start.LogInUsernameActivity">
         <include
             android:id="@+id/fragment_main_top"
             layout="@layout/title_view"

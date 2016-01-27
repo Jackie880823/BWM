@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
 
 
-        <com.bondwithme.BondWithMe.widget.CustomGridView
+        <com.bondwithme.BondCorp.widget.CustomGridView
             android:id="@+id/gv_select_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:choiceMode="singleChoice"
             android:drawSelectorOnTop="false">
 
-            <com.bondwithme.BondWithMe.widget.NewtonCradleLoading
+            <com.bondwithme.BondCorp.widget.NewtonCradleLoading
                 android:id="@+id/ncl_loading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/default_view_margin">
 
-            </com.bondwithme.BondWithMe.widget.NewtonCradleLoading>
+            </com.bondwithme.BondCorp.widget.NewtonCradleLoading>
 
             <ListView
                 android:id="@+id/lv_images_titles"

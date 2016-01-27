@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/default_text_color_while"
-    tools:context="com.bondwithme.BondWithMe.ui.AddNewMembersActivity">
+    tools:context="com.bondwithme.BondCorp.ui.AddNewMembersActivity">
 
     <include
         android:id="@+id/fragment_main_top"

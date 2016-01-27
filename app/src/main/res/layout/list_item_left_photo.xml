@@ -10,7 +10,7 @@
     android:paddingBottom="@dimen/default_view_margin"
     >
 
-    <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+    <com.bondwithme.BondCorp.widget.CircularNetworkImage
         android:id="@+id/left_iv"
         app:border="false"
         android:layout_width="50dp"

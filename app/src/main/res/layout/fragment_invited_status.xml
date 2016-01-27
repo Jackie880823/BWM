@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-    <!--<com.bondwithme.BondWithMe.widget.InvitedFrameLayout-->
+    <!--<com.bondwithme.BondCorp.widget.InvitedFrameLayout-->
         <!--android:layout_width=""-->
-        <!--android:layout_height=""></com.bondwithme.BondWithMe.widget.InvitedFrameLayout>-->
-        <!--<com.bondwithme.BondWithMe.widget.SYBViewPager-->
+        <!--android:layout_height=""></com.bondwithme.BondCorp.widget.InvitedFrameLayout>-->
+        <!--<com.bondwithme.BondCorp.widget.SYBViewPager-->
             <!--android:id="@+id/myiewpager"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="match_parent">-->
-        <!--</com.bondwithme.BondWithMe.widget.SYBViewPager>-->
+        <!--</com.bondwithme.BondCorp.widget.SYBViewPager>-->
 
     <LinearLayout
         android:id="@+id/linearLayout1"

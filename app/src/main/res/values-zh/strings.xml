@@ -74,7 +74,7 @@
     <!--<string name="title_pick_date_time">活动的日期 &amp; 时间</string>-->
     <!--<string name="accept">确定</string>-->
     <!--<string name="ok">确定</string>-->
-    <!--<string name="cancel">取消</string>-->
+    <!--<string name="text_dialog_cancel">取消</string>-->
     <!--<string name="msg_ask_save">是否保存为草稿？</string>-->
 
     <!--&lt;!&ndash; about &ndash;&gt;-->

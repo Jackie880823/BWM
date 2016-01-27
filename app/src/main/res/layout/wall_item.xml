@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+                <com.bondwithme.BondCorp.widget.CircularNetworkImage
                     android:id="@+id/owner_head"
                     android:layout_width="@dimen/default_user_head_width_height"
                     android:layout_height="@dimen/default_user_head_width_height" />
@@ -102,7 +102,7 @@
                 android:layout_marginTop="@dimen/default_view_margin"
                 android:orientation="vertical">
 
-                <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+                <com.bondwithme.BondCorp.widget.FreedomSelectionTextView
                     android:id="@+id/tv_wall_content"
                     style="@style/text_dark_default"
                     android:autoLink="web"

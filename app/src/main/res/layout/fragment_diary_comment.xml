@@ -35,7 +35,7 @@
             android:src="@drawable/wall_right" />
     </RelativeLayout>
 
-    <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+    <com.bondwithme.BondCorp.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,9 +47,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical" />
-    </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
+    </com.bondwithme.BondCorp.widget.MySwipeRefreshLayout>
 
-    <com.bondwithme.BondWithMe.widget.SendComment
+    <com.bondwithme.BondCorp.widget.SendComment
         android:id="@+id/send_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

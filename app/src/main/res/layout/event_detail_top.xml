@@ -22,7 +22,7 @@
                 android:paddingLeft="@dimen/default_view_margin"
                 android:paddingRight="@dimen/default_view_margin">
 
-                <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+                <com.bondwithme.BondCorp.widget.CircularNetworkImage
                     android:id="@+id/owner_head"
                     android:layout_width="@dimen/default_user_head_width_height"
                     android:layout_height="@dimen/default_user_head_width_height"
@@ -80,7 +80,7 @@
                 android:paddingBottom="@dimen/_10dp">
 
 
-                <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+                <com.bondwithme.BondCorp.widget.FreedomSelectionTextView
                     android:id="@+id/event_desc"
                     android:textIsSelectable="true"
                     style="@style/text_dark_default"

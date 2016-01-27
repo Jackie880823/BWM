@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+    <com.bondwithme.BondCorp.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_archive_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -22,7 +22,7 @@
 
             </android.support.v7.widget.RecyclerView>
         <!--</LinearLayout>-->
-    </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
+    </com.bondwithme.BondCorp.widget.MySwipeRefreshLayout>
 
     <include layout="@layout/progress_layout"/>
 </RelativeLayout>

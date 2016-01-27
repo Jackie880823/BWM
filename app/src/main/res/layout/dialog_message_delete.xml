@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:gravity="center_horizontal"
             android:padding="@dimen/default_content_padding"
-            android:text="@string/cancel"
+            android:text="@string/text_dialog_cancel"
             android:textColor="@color/high_light_color"
             android:textStyle="bold" />
     </LinearLayout>

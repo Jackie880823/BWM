@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context="com.bondwithme.BondWithMe.WallMembersOrGroupsActivityFragment">
+    tools:context="com.bondwithme.BondCorp.WallMembersOrGroupsActivityFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_wall_member_or_group_list"

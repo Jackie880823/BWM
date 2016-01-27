@@ -6,7 +6,7 @@
     android:paddingBottom="@dimen/_10dp"
     android:paddingTop="@dimen/_10dp">
 
-    <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+    <com.bondwithme.BondCorp.widget.CircularNetworkImage
         android:id="@+id/message_icon_image"
         android:layout_width="@dimen/_50dp"
         android:layout_height="@dimen/_50dp"
@@ -61,7 +61,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical">
 
-            <com.bondwithme.BondWithMe.widget.HorizontalProgressBarWithNumber
+            <com.bondwithme.BondCorp.widget.HorizontalProgressBarWithNumber
                 android:id="@+id/id_progressbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

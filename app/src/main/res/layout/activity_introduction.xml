@@ -10,13 +10,13 @@
     <!--android:layout_height="@dimen/_0dp"-->
     <!--android:layout_weight="8.0">-->
 
-    <com.bondwithme.BondWithMe.widget.viewpager.ScrollerViewPager
+    <com.bondwithme.BondCorp.widget.viewpager.ScrollerViewPager
         android:id="@+id/introduction_view_paper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/indicator" />
 
-    <com.bondwithme.BondWithMe.widget.SpringIndicator
+    <com.bondwithme.BondCorp.widget.SpringIndicator
         android:id="@+id/indicator"
         android:layout_width="146dp"
         android:layout_height="28dp"
