@@ -33,8 +33,8 @@
         <shape>
 
             <gradient
-                android:endColor="@color/tab_color_press4"
-                android:startColor="@color/tab_color_press4" />
+                android:endColor="@color/reward_code_box"
+                android:startColor="@color/reward_code_box" />
             <corners
                 android:radius="10dp"/>
         </shape>

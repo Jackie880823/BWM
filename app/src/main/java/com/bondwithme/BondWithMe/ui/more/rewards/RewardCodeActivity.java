@@ -20,6 +20,7 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 
 /**
+ * 查看reward_code页面；
  * Created by heweidong on 16/1/25.
  */
 public class RewardCodeActivity extends BaseActivity {

@@ -13,6 +13,7 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import java.util.Locale;
 
 /**
+ * 获取Rewards Point详细规则；
  * Created by heweidong on 16/1/24.
  */
 public class RewardInfoActivity extends BaseActivity {
