@@ -428,7 +428,8 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             JSONObject jsonObject = new JSONObject(response);
                             List<PrivateMessageEntity> userList = gson.fromJson(jsonObject.getString("member"), new TypeToken<ArrayList<PrivateMessageEntity>>() {
                             }.getType());
-                            String totalUnread = jsonObject.optString("totalUnread", "");//私聊的消息总共有多少未读
+
+                            String totalUnread = jsonObject.optString("memberUnread", "");//私聊的消息总共有多少未读"groupUnread","memberUnread","totalUnread"
                             Map<String, Object> map = new HashMap<>();
                             map.put(MESSAGE_DATA, userList);
                             map.put(MESSAGE_UNREAD_NUM, totalUnread);
@@ -615,7 +616,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             JSONObject jsonObject = new JSONObject(response);
                             List<GroupMessageEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupMessageEntity>>() {
                             }.getType());
-                            String totalUnread = jsonObject.optString("totalUnread", "");//私聊的消息总共有多少未读
+                            String totalUnread = jsonObject.optString("groupUnread", "");//私聊的消息总共有多少未读
                             Map<String, Object> map = new HashMap<>();
                             map.put(MESSAGE_DATA, groupList);
                             map.put(MESSAGE_UNREAD_NUM, totalUnread);
