@@ -259,13 +259,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static final int ACTION_SUCCEED = 14;
     private static final int GET_WALL_SUCCEED = 15;
 
-    Handler mHandler = new Handler() {
+    Handler mHandler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
+        public boolean handleMessage(Message message) {
+            switch (message.what) {
                 case ACTION_FAILED:
                     MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_failed);
-                    sendEmptyMessage(HIDE_PROGRESS);
+                    mHandler.sendEmptyMessage(HIDE_PROGRESS);
                     break;
                 case ACTION_SUCCEED:
                     if (!isEdit) {
@@ -281,7 +281,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     }
-                    sendEmptyMessage(HIDE_PROGRESS);
+                    mHandler.sendEmptyMessage(HIDE_PROGRESS);
                     break;
                 case SHOW_PROGRESS:
                     rlProgress.setVisibility(View.VISIBLE);
@@ -387,8 +387,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     cutPopInteractive(tipTexts, tipViews, 0);
                     break;
             }
+            return false;
         }
-    };
+    });
 
     public EditDiaryFragment() {
         super();
@@ -476,6 +477,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     /**
      * 上传本地图片
+     *
      * @param contentId
      */
     private void submitLocalPhotos(String contentId) {
@@ -967,7 +969,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i(TAG, "onActivityResult");
-
 
 
         if (resultCode == Activity.RESULT_OK) {

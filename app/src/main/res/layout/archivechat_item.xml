@@ -191,7 +191,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@id/memeber_love"
                 android:layout_marginLeft="@dimen/default_view_margin"
-                android:text="@string/text_like_desc"/>
+                android:text="@string/text_like_desc"
+                android:visibility="gone"/>
             <TextView
                 android:id="@+id/member_comment"
                 android:layout_toLeftOf="@id/comments"
@@ -202,7 +203,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/default_view_margin"
-                android:text="@string/title_diary_comment"/>
+                android:text="@string/title_diary_comment"
+                android:visibility="gone"/>
         </RelativeLayout>
     </LinearLayout>
 

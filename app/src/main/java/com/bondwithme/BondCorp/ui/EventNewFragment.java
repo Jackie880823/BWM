@@ -52,6 +52,7 @@ import org.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +108,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     Calendar calendar;
 
     private String locationName;
+    private long startMeetingTime = 0;
 
     String members;
     String groups;
@@ -667,8 +669,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 }
                 break;
             case R.id.item_end_date:
-                if (pickEndDateTimeDialog == null || !pickEndDateTimeDialog.isShowing()) {
-                    showEndDateTimePicker();
+                if (TextUtils.isEmpty(date_desc.getText())) {
+                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_choose_start_time));
+                } else {
+                    if (pickEndDateTimeDialog == null || !pickEndDateTimeDialog.isShowing()) {
+                        showEndDateTimePicker();
+                    }
                 }
                 break;
             case R.id.item_reminder:
@@ -683,16 +689,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View reminderView = factory.inflate(R.layout.meeting_reminder_list, null);
         ListView listView = (ListView) reminderView.findViewById(R.id.reminder_list_view);
-        final List<String> list = new ArrayList<>();
-        list.add("one hour");
-        list.add("Two hours");
-        list.add("Four hours");
-        list.add("Five hours");
-        list.add("Ten hours");
-        list.add("one day");
-        list.add("Two days");
-        list.add("Three days");
-
+        String[] reminderArrayUs = getActivity().getResources().getStringArray(R.array.reminder_item);
+        final List<String> list = Arrays.asList(reminderArrayUs);
         ArrayAdapter reminderAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         listView.setAdapter(reminderAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -778,7 +776,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         pickEndDateTimeDialog.setButtonAccept(getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickEndDateTimeDialog.dismiss();
+
                 if (datePicker != null && timePicker != null) {
 
                 }
@@ -798,10 +796,16 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     PreferencesUtil.saveValue(getParentActivity(), "date", mCalendar.getTimeInMillis());
                 }
                 //将日历的时间转化成字符串
+                long endMeetingTime = mCalendar.getTimeInMillis();
                 String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
                 mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
                 //将日历的时间显示出来
-                date_end_desc.setText(dateDesc);
+                if (endMeetingTime - startMeetingTime <= 0) {
+                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
+                } else {
+                    pickEndDateTimeDialog.dismiss();
+                    date_end_desc.setText(dateDesc);
+                }
             }
         });
         pickEndDateTimeDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
@@ -866,6 +870,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
                 mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
                 //将日历的时间显示出来
+                startMeetingTime = mCalendar.getTimeInMillis();
                 date_desc.setText(dateDesc);
             }
         });
@@ -903,22 +908,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             switch (requestCode) {
                 case GET_LOCATION:
                     if (data != null) {
-                        //        intent.putExtra("has_location", position_name.getText().toString());
-                        //                        if (SystemUtil.checkPlayServices(getActivity())) {
-                        //                            final Place place = PlacePicker.getPlace(data, getActivity());
-                        //                            if(place!=null) {
-                        ////                                String locationName = place.getAddress().toString();
-                        //                                String locationName = place.getName().toString();
-                        //                                //TODO 弹窗输入目标名称
-                        //                                if(locationName==null){
-                        //
-                        //                                }
-                        //                                position_name.setText(locationName);
-                        //                                latitude = place.getLatLng().latitude;
-                        //                                longitude = place.getLatLng().longitude;
-                        //                            }
-                        //
-                        //                        }else {
                         locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
                         if (!TextUtils.isEmpty(locationName)) {
                             position_name.setText(locationName);
@@ -988,6 +977,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             MessageUtil.showMessage(getParentActivity(), R.string.alert_text_date_null);
             return false;
         }
+        if (TextUtils.isEmpty(date_end_desc.getText())) {
+            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_date_null);
+            return false;
+        }
 
         if (mCalendar == null) {
             if (MyDateUtils.isBeforeDate(MyDateUtils.dateString2Timestamp(MyDateUtils.getLocalDateString4DefaultFromUTC(mEevent.getGroup_event_date())).getTime())) {
@@ -996,7 +989,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             }
 
         } else {
-            if (MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
+            if (MyDateUtils.isBeforeDate(startMeetingTime)) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
                 return false;
             }

@@ -10,9 +10,10 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -414,9 +415,8 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name="com.bondwithme.BondCorp.ui.WriteNewsActivity"
-            android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name="com.bondwithme.BondCorp.ui.more.ArchiveActivity"
             android:screenOrientation="portrait" />
@@ -679,33 +679,30 @@
         <activity
             android:name="com.bondwithme.BondCorp.ui.add.AddMembersActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.bondwithme.BondCorp.ui.add.AddContactMembersActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.bondwithme.BondCorp.ui.add.AddInviteMembersActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name="com.bondwithme.BondCorp.ui.more.ViewQRCodeActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
-            >
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
-            android:configChanges="orientation|keyboardHidden"
             android:name="com.bondwithme.BondCorp.zxing.activity.CaptureActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:launchMode="singleTask">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
 
-        <receiver android:name="com.bondwithme.BondCorp.receiver_service.AlarmReceiver" >
+        <receiver android:name="com.bondwithme.BondCorp.receiver_service.AlarmReceiver">
             <intent-filter>
                 <action android:name="com.bondwithme.BondCorp.android.five_minute_action" />
                 <action android:name="com.bondwithme.BondCorp.android.two_day_action" />

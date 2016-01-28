@@ -58,7 +58,7 @@
     <string name="text_updated">Updated</string>
     <string name="text_awaiting">Pending</string>
     <string name="text_private">Private</string>
-    <string name="text_like_desc">Love</string>
+    <string name="text_like_desc"></string>
     <string name="text_ask_delete">Are you sure you want to remove this member?</string>
     <string name="text_comments">Comments</string>
 
@@ -311,8 +311,8 @@
     <string name="text_diary_posted_to_diary">posted to WorkSpace</string>
     <string name="text_diary_tagged_you_in_post">tagged you in a post</string>
     <string name="text_diary_commented_on_your_post">commented on your workspace</string>
-    <string name="text_diary_loved_your_comment">loved your comment</string>
-    <string name="text_diary_loved_your_post">loved your post</string>
+    <string name="text_diary_loved_your_comment">likes your comment</string>
+    <string name="text_diary_loved_your_post">likes your post</string>
 
     <!--Alert Group-->
     <string name="text_pending">&#160;requested you to join the group</string>
@@ -389,8 +389,8 @@
     <string name="text_also_commented_event">%s also commented on meeting.</string>
     <string name="text_updated_event">%s updated meeting.</string>
     <string name="text_cancelled_event">%s cancelled meeting.</string>
-    <string name="text_love_comment_event">%s loved your comment in meeting.</string>
-    <string name="text_love_event">%s loved your meeting.</string>
+    <string name="text_love_comment_event">%s likes your comment in meeting.</string>
+    <string name="text_love_event">%s likes your meeting.</string>
     <string name="text_upcoming_event">Upcoming meeting: %s </string>
     <string name="text_dialog_save_draft">Save as Draft?</string>
     <string name="text_empty_add_member">You\'re not alone. Tap on + to start bonding!</string>
@@ -529,7 +529,7 @@
     <string name="text_no_date_group">No group alert</string>
     <string name="text_hold_and_speak">Hold to Talk</string>
 
-    <string name="loves_count">%d Loves</string>
+    <string name="loves_count">%d</string>
     <string name="text_message_chat_post_audio">[Audio]</string>
     <string name="text_message_chat_post_video">[Video]</string>
     <string name="notification_title_expand">New Messages</string>
@@ -594,9 +594,9 @@
 
     <string name="notification_action_diary_comment_owner">%1$s commented your workspace</string>
     <string name="notification_action_diary_comment_not_owner">%1$s commented on %2$s workspace.</string>
-    <string name="notification_action_diary_love_owner">%1$s love your workspace</string>
-    <string name="notification_action_diary_love_not_owner">%1$s loved on %2$s workspace</string>
-    <string name="notification_action_diary_loveComment">%1$s love your comment.</string>
+    <string name="notification_action_diary_love_owner">%1$s likes your workspace</string>
+    <string name="notification_action_diary_love_not_owner">%1$s likes on %2$s workspace</string>
+    <string name="notification_action_diary_loveComment">%1$s likes your comment.</string>
     <string name="notification_action_diary_tag">%1$s tag you in workspace</string>
     <string name="notification_action_diary_add_photo">%1$s added new photos to workspace</string>
     <string name="notification_action_diary_add_video">%1$s uploaded new video to workspace</string>
@@ -726,4 +726,6 @@
     <string name="text_category">Category</string>
     <string name="title_writle_new_title">Title</string>
     <string name="text_write_new_here">Write your story here</string>
+    <string name="text_meeting_end_time">会议结束时间必须晚于开始时间</string>
+    <string name="text_choose_start_time">请选择会议开始时间</string>
 </resources>

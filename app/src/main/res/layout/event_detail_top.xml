@@ -5,10 +5,9 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/cv_top_event_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         style="@style/CardViewDefault"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,8 +47,8 @@
 
                         <TextView
                             android:id="@+id/owner_name"
-                            android:textColor="@color/default_text_color_light"
-                            style="@style/text_user_name" />
+                            style="@style/text_user_name"
+                            android:textColor="@color/default_text_color_light" />
 
 
                         <TextView
@@ -64,12 +63,11 @@
 
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/event_picture_4_location"
+                style="@style/ListImageDefault"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_gravity="center_vertical"
-                style="@style/ListImageDefault"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/btn_event_desc"
@@ -82,11 +80,11 @@
 
                 <com.bondwithme.BondCorp.widget.FreedomSelectionTextView
                     android:id="@+id/event_desc"
-                    android:textIsSelectable="true"
                     style="@style/text_dark_default"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/default_view_margin"
                     android:autoLink="web"
-                    android:layout_marginLeft="@dimen/default_view_margin" />
+                    android:textIsSelectable="true" />
 
             </LinearLayout>
 
@@ -96,10 +94,9 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/btn_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         style="@style/CardViewDefault"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -126,10 +123,9 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/btn_event_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         style="@style/CardViewDefault"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -155,10 +151,67 @@
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/item_end_date"
         style="@style/CardViewDefault"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/default_content_padding">
+
+
+            <ImageView
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:scaleType="centerInside"
+                android:src="@drawable/calendar" />
+
+            <TextView
+                android:id="@+id/date_end_desc"
+                style="@style/text_dark_default"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_view_margin" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/item_reminder"
+        style="@style/CardViewDefault"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/default_content_padding">
+
+
+            <ImageView
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:scaleType="centerInside"
+                android:src="@drawable/reminder" />
+
+            <TextView
+                android:id="@+id/reminder_desc"
+                style="@style/text_dark_default"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_view_margin" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        style="@style/CardViewDefault"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -222,8 +275,8 @@
                         <TextView
                             android:id="@+id/going_count"
                             style="@style/text_default"
-                            android:textSize="@dimen/text_large_size"
-                            android:textColor="@color/default_text_color_green" />
+                            android:textColor="@color/default_text_color_green"
+                            android:textSize="@dimen/text_large_size" />
 
                         <TextView
                             style="@style/text_dark_default"
@@ -255,8 +308,7 @@
                             android:id="@+id/maybe_count"
                             style="@style/text_default"
                             android:textColor="@color/default_text_color_purple"
-                            android:textSize="@dimen/text_large_size"
-                             />
+                            android:textSize="@dimen/text_large_size" />
 
                         <TextView
                             style="@style/text_dark_default"
@@ -287,8 +339,8 @@
                         <TextView
                             android:id="@+id/not_going_count"
                             style="@style/text_default"
-                            android:textSize="@dimen/text_large_size"
-                            android:textColor="@color/default_text_color_red" />
+                            android:textColor="@color/default_text_color_red"
+                            android:textSize="@dimen/text_large_size" />
 
                         <TextView
                             style="@style/text_dark_default"

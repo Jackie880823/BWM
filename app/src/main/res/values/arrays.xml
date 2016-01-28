@@ -606,4 +606,26 @@
         <item>@string/introduction_description_4</item>
         <item>@string/introduction_description_5</item>
     </string-array>
+
+    <array name="reminder_item">
+        <item>None</item>
+        <item>0 minutes</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>1 day</item>
+        <item>2 days</item>
+    </array>
+    <array name="category_item">
+        <item>General</item>
+        <item>Human Resources - Departure</item>
+        <item>Human Resources - New Employee</item>
+        <item>Human Resources - Promotion</item>
+        <item>Marketing</item>
+        <item>Projects</item>
+        <item>Sales</item>
+        <item>Technical</item>
+    </array>
+
 </resources>
