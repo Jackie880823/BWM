@@ -46,6 +46,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by quankun on 15/4/17.
@@ -54,9 +55,14 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     private ViewPager pager;
     private TextView message_member_tv;
     private TextView message_group_tv;
+    private View msg_member_relative;
+    private View msg_group_relative;
+    private View group_red_point;
     private Dialog showSelectDialog;
     private static final int GET_DELAY_ADD_PHOTO = 0x30;
     private InteractivePopupWindow popupWindowAddPhoto;
+    private static final String MESSAGE_DATA = "data";
+    private static final String MESSAGE_UNREAD_NUM = "num";
 
     public static MessageMainFragment newInstance(String... params) {
 
@@ -79,7 +85,10 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         TAG = mContext.getClass().getSimpleName();
         pager = getViewById(R.id.message_list_viewpager);
         message_member_tv = getViewById(R.id.message_member_tv);
+        msg_member_relative = getViewById(R.id.msg_member_relative);
         message_group_tv = getViewById(R.id.message_group_tv);
+        msg_group_relative = getViewById(R.id.msg_group_relative);
+        group_red_point = getViewById(R.id.group_red_point);
         //绑定自定义适配器
         pager.setAdapter(new FamilyPagerAdapter(initPagerView()));
         pager.setOnPageChangeListener(new MyOnPageChanger());
@@ -97,17 +106,17 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                 return false;
             }
         });
-        message_member_tv.setOnClickListener(this);
-        message_group_tv.setOnClickListener(this);
+        msg_member_relative.setOnClickListener(this);
+        msg_group_relative.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.message_member_tv:
+            case R.id.msg_member_relative:
                 pager.setCurrentItem(0);
                 break;
-            case R.id.message_group_tv:
+            case R.id.msg_group_relative:
                 pager.setCurrentItem(1);
                 break;
         }
@@ -126,13 +135,13 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         @Override
         public void onPageSelected(int arg0) {
             if (arg0 == 0) {
-                message_member_tv.setBackgroundResource(R.drawable.message_member_selected_shap);
-                message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
+                msg_member_relative.setBackgroundResource(R.drawable.message_member_selected_shap);
+                msg_group_relative.setBackgroundResource(R.drawable.message_group_normal_shap);
                 message_group_tv.setTextColor(Color.parseColor("#666666"));
                 message_member_tv.setTextColor(Color.parseColor("#ffffff"));
             } else {
-                message_member_tv.setBackgroundResource(R.drawable.message_member_normal_shap);
-                message_group_tv.setBackgroundResource(R.drawable.message_group_selected_shap);
+                msg_member_relative.setBackgroundResource(R.drawable.message_member_normal_shap);
+                msg_group_relative.setBackgroundResource(R.drawable.message_group_selected_shap);
                 message_group_tv.setTextColor(Color.parseColor("#ffffff"));
                 message_member_tv.setTextColor(Color.parseColor("#666666"));
             }
@@ -419,19 +428,22 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             JSONObject jsonObject = new JSONObject(response);
                             List<PrivateMessageEntity> userList = gson.fromJson(jsonObject.getString("member"), new TypeToken<ArrayList<PrivateMessageEntity>>() {
                             }.getType());
-                            String totalUnread = jsonObject.optString("totalUnread", "0");//私聊的消息总共有多少未读
+                            String totalUnread = jsonObject.optString("totalUnread", "");//私聊的消息总共有多少未读
+                            Map<String, Object> map = new HashMap<>();
+                            map.put(MESSAGE_DATA, userList);
+                            map.put(MESSAGE_UNREAD_NUM, totalUnread);
                             if (isPullData) {
                                 if (userList != null && userList.size() == DEF_DATA_NUM) {
                                     startIndex++;
                                 }
-                                Message.obtain(handler, GET_PULL_DATA, userList).sendToTarget();
+                                Message.obtain(handler, GET_PULL_DATA, map).sendToTarget();
                             } else {
                                 if (null == userList || userList.size() == 0) {
                                     showMemberEmptyView();
                                 } else {
                                     hideMemberEmptyView();
                                 }
-                                Message.obtain(handler, GET_NEW_DATA, userList).sendToTarget();
+                                Message.obtain(handler, GET_NEW_DATA, map).sendToTarget();
                             }
                         } catch (JSONException e) {
                             if (isPullData) {
@@ -475,23 +487,48 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_NEW_DATA:
-                    List<PrivateMessageEntity> userEntityList1 = (List<PrivateMessageEntity>) msg.obj;
+                    Map<String, Object> pullPrivateMapNew = (Map) msg.obj;
+                    List<PrivateMessageEntity> userEntityList1 = (List<PrivateMessageEntity>) pullPrivateMapNew.get(MESSAGE_DATA);
+                    String unReadNumNewPrivate = (String) pullPrivateMapNew.get(MESSAGE_UNREAD_NUM);
+                    if (TextUtils.isEmpty(unReadNumNewPrivate) || "0".equalsIgnoreCase(unReadNumNewPrivate)) {
+//                        ,,
+                    }
                     privateAdapter.NewUserEntityData(userEntityList1);
                     break;
                 case GET_PULL_DATA:
-                    List<PrivateMessageEntity> userEntityListPull1 = (List<PrivateMessageEntity>) msg.obj;
+                    Map<String, Object> pullPrivateMap = (Map) msg.obj;
+                    List<PrivateMessageEntity> userEntityListPull1 = (List<PrivateMessageEntity>) pullPrivateMap.get(MESSAGE_DATA);
+                    String unReadNumPullPrivate = (String) pullPrivateMap.get(MESSAGE_UNREAD_NUM);
+                    if (TextUtils.isEmpty(unReadNumPullPrivate) || "0".equalsIgnoreCase(unReadNumPullPrivate)) {
+//                        ,,
+                    }
+//                    List<PrivateMessageEntity> userEntityListPull1 = (List<PrivateMessageEntity>) msg.obj;
                     privateAdapter.AddUserEntityData(userEntityListPull1);
                     break;
                 case GET_NEW_DATA_GROUP:
-                    List<GroupMessageEntity> userEntityList = (List<GroupMessageEntity>) msg.obj;
+                    Map<String, Object> newGroupMap = (Map) msg.obj;
+                    List<GroupMessageEntity> userEntityList = (List<GroupMessageEntity>) newGroupMap.get(MESSAGE_DATA);
+                    String unReadNum = (String) newGroupMap.get(MESSAGE_UNREAD_NUM);
+                    if (TextUtils.isEmpty(unReadNum) || "0".equalsIgnoreCase(unReadNum)) {
+                        group_red_point.setVisibility(View.GONE);
+                    } else {
+                        group_red_point.setVisibility(View.VISIBLE);
+                    }
                     messageGroupAdapter.NewGroupEntityData(userEntityList);
                     break;
                 case GET_PULL_DATA_GROUP:
-                    List<GroupMessageEntity> userEntityListPull = (List<GroupMessageEntity>) msg.obj;
+                    Map<String, Object> pullGroupMap = (Map) msg.obj;
+                    List<GroupMessageEntity> userEntityListPull = (List<GroupMessageEntity>) pullGroupMap.get(MESSAGE_DATA);
+                    String unReadNumPull = (String) pullGroupMap.get(MESSAGE_UNREAD_NUM);
+                    if (TextUtils.isEmpty(unReadNumPull) || "0".equalsIgnoreCase(unReadNumPull)) {
+                        group_red_point.setVisibility(View.GONE);
+                    } else {
+                        group_red_point.setVisibility(View.VISIBLE);
+                    }
                     messageGroupAdapter.AddGroupEntityData(userEntityListPull);
                     break;
                 case GET_DELAY_ADD_PHOTO:
-                    if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+                    if (MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)) {
                         popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
                         popupWindowAddPhoto.showPopupWindowUp();
                     }
@@ -504,16 +541,16 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
+        if (isVisibleToUser) {
 //            newPopAddPhoto();
         }
     }
 
-    private void newPopAddPhoto(){
-        if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+    private void newPopAddPhoto() {
+        if (MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)) {
             popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
             popupWindowAddPhoto.showPopupWindowUp();
-        }else {
+        } else {
             handler.sendEmptyMessageDelayed(GET_DELAY_ADD_PHOTO, 500);
         }
 
@@ -578,19 +615,22 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             JSONObject jsonObject = new JSONObject(response);
                             List<GroupMessageEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupMessageEntity>>() {
                             }.getType());
-
+                            String totalUnread = jsonObject.optString("totalUnread", "");//私聊的消息总共有多少未读
+                            Map<String, Object> map = new HashMap<>();
+                            map.put(MESSAGE_DATA, groupList);
+                            map.put(MESSAGE_UNREAD_NUM, totalUnread);
                             if (isPullDataGroup) {
                                 if (groupList != null && groupList.size() == DEF_DATA_NUM) {
                                     startIndexGroup++;
                                 }
-                                Message.obtain(handler, GET_PULL_DATA_GROUP, groupList).sendToTarget();
+                                Message.obtain(handler, GET_PULL_DATA_GROUP, map).sendToTarget();
                             } else {
                                 if (null == groupList || groupList.size() == 0) {
                                     showGroupEmptyView();
                                 } else {
                                     hideGroupEmptyView();
                                 }
-                                Message.obtain(handler, GET_NEW_DATA_GROUP, groupList).sendToTarget();
+                                Message.obtain(handler, GET_NEW_DATA_GROUP, map).sendToTarget();
                             }
                         } catch (JSONException e) {
                             if (isPullDataGroup) {

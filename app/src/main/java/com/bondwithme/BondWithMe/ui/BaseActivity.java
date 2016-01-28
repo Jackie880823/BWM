@@ -18,7 +18,9 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
 import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
+import com.bondwithme.BondWithMe.util.BadgeUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
+import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 
 /**
@@ -279,6 +281,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onResume() {
         super.onResume();
         AppsFlyerLib.onActivityResume(this);
+        NotificationUtil.clearBadge(this);//重置应用图标上的数量
         /**是否是程序外进入(点击通知)*/
         if (getIntent().getBooleanExtra(IS_OUTSIDE_INTENT, false)) {
             /**重置通知数量*/

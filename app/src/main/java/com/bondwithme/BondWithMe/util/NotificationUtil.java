@@ -40,6 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 /**
  * Created by wing on 15/5/8.
@@ -120,6 +121,16 @@ public class NotificationUtil {
         }
     }
 
+    private static int allCount;
+
+    public static int getAllCount() {
+        return allCount;
+    }
+
+    public static void setAllCount(int allCount) {
+        NotificationUtil.allCount = allCount;
+    }
+
     /**
      * @param msg
      */
@@ -131,7 +142,7 @@ public class NotificationUtil {
 
         Notification notification = getNotification(context, isGCM, msg);
         if (notification != null) {
-
+            ShortcutBadger.with(context).count(++allCount);
             getNotivficationManager(context).notify(msgType.ordinal(), notification);
         }
 
@@ -477,6 +488,7 @@ public class NotificationUtil {
     public static void clearNotification(Context context) {
         getNotivficationManager(context).cancelAll();
         JPushInterface.clearAllNotifications(context);
+        clearBadge(context);
     }
 
     private static void doNotificationHandle(MainActivity.TabEnum tab) {
@@ -643,4 +655,10 @@ public class NotificationUtil {
     }
 
     public static final String NOTIFICATION_DELETED_ACTION = "notification_deleted_action";
+
+    public static void clearBadge(Context context)
+    {
+        ShortcutBadger.with(context).remove();
+        allCount = 0;
+    }
 }
