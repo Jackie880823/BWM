@@ -284,11 +284,16 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     @Override
     protected void onResume() {
-        if (refersh) {
+        if (isNeedRefersh&&!(this instanceof MainActivity)) {
             Intent intent = getIntent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             finish();
             startActivity(intent);
+
+//            isNeedRefersh = false;
+//            Intent reintent = getIntent();
+//            finish();
+//            startActivity(reintent);
             return;
         }
         super.onResume();
@@ -302,16 +307,17 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         }
     }
 
-    private boolean refersh;
+    protected boolean isNeedRefersh;
     /**
      * 更新UI的广播接收器
      */
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
                 if (App.isBackground()) {
-                    refersh = true;
+                    isNeedRefersh = true;
                 }
             }
         }

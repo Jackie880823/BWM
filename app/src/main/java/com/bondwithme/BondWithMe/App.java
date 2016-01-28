@@ -523,7 +523,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 //                return notificationMissList;
             case BONDALERT_BIGDAY:
                 return notificationBigDayList;
-            case BONDALERT_NEWS:
+            case BONDALERT_OTHER:
                 return notificationNewsList;
             case BONDALERT_GROUP:
                 return notificationGroupList;
@@ -571,7 +571,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 notificationMissList.clear();
             case BONDALERT_BIGDAY:
                 notificationBigDayList.clear();
-            case BONDALERT_NEWS:
+            case BONDALERT_OTHER:
                 notificationNewsList.clear();
             case BONDALERT_GROUP:
                 notificationGroupList.clear();

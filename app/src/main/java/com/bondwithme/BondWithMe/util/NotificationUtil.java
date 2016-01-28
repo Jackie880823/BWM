@@ -54,7 +54,7 @@ public class NotificationUtil {
      * 通知类型
      */
     public enum MessageType {
-        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_NEWS("news"),
+        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_OTHER("other"),
         BONDALERT_MEMBER("member"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group"), BONDALERT_INACTIVE("inactive"),
         LOCAL_PRIVACY_SETTINGS("privacy_settings"), LOCAL_NEW_DIARY("new_diary"), LOCAL_STICKIES_STORE("stickies_store"),
         LOCAL_FAMILY_PAGE("family_page");
@@ -324,16 +324,16 @@ public class NotificationUtil {
                 newMsg = NotificationMessageGenerateUtil.getBirthdayMessage(context, action, item_type, action_owner);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
-            case BONDALERT_NEWS:
+            case BONDALERT_OTHER:
                 smallIcon = R.drawable.bondalert_news_icon;
-                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_NEWS);
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_OTHER);
                 if (msgs.size() == 0) {
                     intent = new Intent(context, NewsActivity.class);
                 } else {
                     //TODO
                     intent = new Intent(context, NewsActivity.class);
                 }
-                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_NEWS);
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_OTHER);
                 newMsg = NotificationMessageGenerateUtil.getOtherMessage(context, action, jsonObjectExtras);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
@@ -432,7 +432,7 @@ public class NotificationUtil {
 
         if (intent != null) {
             intent.putExtra(BaseActivity.IS_OUTSIDE_INTENT, true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             contentIntent = PendingIntent.getActivity(context, messageType.ordinal(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
         return contentIntent;
