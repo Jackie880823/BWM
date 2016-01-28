@@ -155,8 +155,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     public SelectPhotosFragment() {
         super();
-        mSelectedImageUris = weakReference.get();
-        weakReference = null;
+        if(weakReference!=null) {
+            mSelectedImageUris = weakReference.get();
+            weakReference = null;
+        }
     }
 
     public static SelectPhotosFragment newInstance(List<MediaData> selectUris, String... params) {

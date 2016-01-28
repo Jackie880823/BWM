@@ -1,9 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -16,6 +13,7 @@ import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
 import com.bondwithme.BondWithMe.App;
+import com.bondwithme.BondWithMe.AppControler;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
@@ -69,6 +67,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppControler.getAppControler().addActivity(this);
         mSavedInstanceState = savedInstanceState;
         // 打开Activity隐藏软键盘；
         //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -100,10 +99,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         //        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
         //                .findViewById(android.R.id.content)).getChildAt(0);
         //        viewGroup.addView(setWaittingView());
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_LOCALE_CHANGED);
-        registerReceiver(mReceiver, filter);
 
     }
 
@@ -276,23 +271,12 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onDestroy() {
         super.onDestroy();
         NetWorkStateReceiver.unRegisterNetStateObserver(this);
-        unregisterReceiver(mReceiver);
+        AppControler.getAppControler().finishActivity(this);
+
     }
 
     @Override
     protected void onResume() {
-        if (isNeedRefersh&&!(this instanceof MainActivity)) {
-            Intent intent = getIntent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            startActivity(intent);
-
-//            isNeedRefersh = false;
-//            Intent reintent = getIntent();
-//            finish();
-//            startActivity(reintent);
-            return;
-        }
         super.onResume();
         AppsFlyerLib.onActivityResume(this);
         /**是否是程序外进入(点击通知)*/
@@ -302,21 +286,5 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //            App.getContextInstance().clearNotificationMsgsByType((NotificationUtil.MessageType) getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
         }
     }
-
-    protected boolean isNeedRefersh;
-    /**
-     * 更新UI的广播接收器
-     */
-    BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
-                if (App.isBackground()) {
-                    isNeedRefersh = true;
-                }
-            }
-        }
-    };
 
 }
