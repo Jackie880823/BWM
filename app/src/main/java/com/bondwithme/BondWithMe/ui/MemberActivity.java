@@ -176,9 +176,9 @@ public class MemberActivity extends BaseActivity {
             public void onError(Exception e) {
                 e.printStackTrace();
                 MessageUtil.showMessage(MemberActivity.this, R.string.msg_action_failed);
-                if (isRefresh) {
-                    finishReFresh();
-                }
+//                if (isRefresh) {
+//                    finishReFresh();
+//                }
 //                loading = false;
             }
 
@@ -220,13 +220,13 @@ public class MemberActivity extends BaseActivity {
             case ADD_MEMBER:
                 if (resultCode == RESULT_OK) {
                     MessageUtil.showMessage(this, R.string.msg_action_successed);
-                    mProgressDialog.setVisibility(View.GONE);
 //                    startIndex = 0;
 //                    isRefresh = true;
                     requestData();//这样直接请求???
                 } else {
                     MessageUtil.showMessage(this, R.string.msg_action_canceled);
                 }
+                mProgressDialog.setVisibility(View.GONE);
                 break;
         }
     }

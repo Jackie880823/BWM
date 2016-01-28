@@ -421,7 +421,7 @@ public class NotificationUtil {
 
         if (intent != null) {
             intent.putExtra(BaseActivity.IS_OUTSIDE_INTENT, true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             contentIntent = PendingIntent.getActivity(context, messageType.ordinal(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
         return contentIntent;
