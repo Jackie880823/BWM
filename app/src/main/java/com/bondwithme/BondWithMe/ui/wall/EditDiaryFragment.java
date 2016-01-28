@@ -991,7 +991,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 // 进入编辑确定Wall是更新了
                 isUpate = true;
             } else {
-                // 没有退出编辑不用保存蓝草稿
+                // 没有退出编辑不用保存草稿
                 if (draftPreferences != null) {
                     draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).apply();
                 }
