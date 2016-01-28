@@ -3,6 +3,7 @@ package com.bondwithme.BondWithMe.ui;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -49,6 +50,7 @@ public class TermsActivity extends BaseActivity {
     @Override
     public void initView() {
         webView = getViewById(R.id.webView);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
         webView.loadUrl("http://bondwithme.com/term.php?lang="+ Locale.getDefault().getLanguage());
 //        webView.loadUrl("http://bondwithme.com/term.php?lang="+ HttpTools.getHeaders().get("X_BWM_APPLANG"));
 //        webView.loadUrl("http://bondwithme.com/bonding-terms.htm");

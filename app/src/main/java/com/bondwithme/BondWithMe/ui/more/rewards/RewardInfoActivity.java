@@ -3,9 +3,11 @@ package com.bondwithme.BondWithMe.ui.more.rewards;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -56,20 +58,12 @@ public class RewardInfoActivity extends BaseActivity {
     public void initView() {
         wv = getViewById(R.id.wv_reward_info);
         LogUtil.d(TAG,"current_Language========="+Locale.getDefault().getLanguage());
-        if("zh".equals(Locale.getDefault().getLanguage())){
-            wv.loadUrl("http://bondwithme.com/reward/cn/reward_info.htm");
-        }else {
-            wv.loadUrl("http://bondwithme.com/reward/en/reward_info.htm");
-        }
-
+        wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
+        LogUtil.d(TAG,"RewardINfo_url========"+"http://bondwithme.com/reward_info.php?lang="+ HttpTools.getHeaders().get("X_BWM_APPLANG"));
+        //http://bondwithme.com/reward_info.php?lang=en
+//        wv.loadUrl("http://bondwithme.com/reward_info.php?lang="+ Locale.getDefault().getLanguage());
+        wv.loadUrl("http://bondwithme.com/reward_info.php?lang="+ HttpTools.getHeaders().get("X_BWM_APPLANG"));
 //        webView.loadUrl("http://bondwithme.com/term.php?lang="+ HttpTools.getHeaders().get("X_BWM_APPLANG"));
-//        webView.loadUrl("http://bondwithme.com/bonding-terms.htm");
-//        中文：
-//        http://bondwithme.com/reward/cn/reward_info.htm
-//
-//        英文:
-//        http://bondwithme.com/reward/en/reward_info.htm
-
         wv.getSettings().setJavaScriptEnabled(true);//修复url不能跳转bug,add by wing
         wv.setWebViewClient(new WebViewClient());
 
