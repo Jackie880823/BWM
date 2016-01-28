@@ -20,8 +20,12 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
 import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
+import com.bondwithme.BondWithMe.util.BadgeUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
+import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
+
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 /**
  * activity基类
@@ -104,7 +108,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
         registerReceiver(mReceiver, filter);
-
     }
 
     public int getLayout() {
@@ -281,15 +284,21 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     @Override
     protected void onResume() {
-        if (refersh) {
+        if (isNeedRefersh&&!(this instanceof MainActivity)) {
             Intent intent = getIntent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             finish();
             startActivity(intent);
+
+//            isNeedRefersh = false;
+//            Intent reintent = getIntent();
+//            finish();
+//            startActivity(reintent);
             return;
         }
         super.onResume();
         AppsFlyerLib.onActivityResume(this);
+        NotificationUtil.clearBadge(this);//重置应用图标上的数量
         /**是否是程序外进入(点击通知)*/
         if (getIntent().getBooleanExtra(IS_OUTSIDE_INTENT, false)) {
             /**重置通知数量*/
@@ -298,16 +307,17 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         }
     }
 
-    private boolean refersh;
+    protected boolean isNeedRefersh;
     /**
      * 更新UI的广播接收器
      */
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
                 if (App.isBackground()) {
-                    refersh = true;
+                    isNeedRefersh = true;
                 }
             }
         }
