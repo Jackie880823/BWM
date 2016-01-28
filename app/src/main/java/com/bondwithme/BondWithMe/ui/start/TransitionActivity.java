@@ -33,7 +33,7 @@ public class TransitionActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transition);
-
+        App.clearAllNotificationMsgs();
         init(this);
 
         new Thread(new Runnable() {
