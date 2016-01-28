@@ -4,7 +4,7 @@
     android:orientation="vertical">
 
     <!--
-    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com.bondwithme.BondWithMe/widget/SendCommentView.java
+    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com.bondwithme.BondCorp/widget/SendCommentView.java
     -->
     <!-- 隐藏的选项 -->
     <RelativeLayout
@@ -113,7 +113,7 @@
                     style="@style/text_dark_default"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/default_view_margin"
-                    android:text="@string/cancel" />
+                    android:text="@string/text_dialog_cancel" />
             </LinearLayout>
 
             <View
@@ -130,7 +130,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+            <com.bondwithme.BondCorp.widget.MySwipeRefreshLayout
                 android:id="@+id/swipe_archive_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -142,7 +142,7 @@
                     android:layout_below="@+id/top_event"
                     android:scrollbars="vertical">
                 </android.support.v7.widget.RecyclerView>
-            </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
+            </com.bondwithme.BondCorp.widget.MySwipeRefreshLayout>
         </RelativeLayout>
 
         <!--<RelativeLayout-->
@@ -154,7 +154,7 @@
         <!--</RelativeLayout>-->
     </RelativeLayout>
 
-    <com.bondwithme.BondWithMe.widget.SendComment
+    <com.bondwithme.BondCorp.widget.SendComment
         android:id="@+id/send_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

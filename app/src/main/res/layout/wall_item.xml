@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+                <com.bondwithme.BondCorp.widget.CircularNetworkImage
                     android:id="@+id/owner_head"
                     android:layout_width="@dimen/default_user_head_width_height"
                     android:layout_height="@dimen/default_user_head_width_height" />
@@ -59,9 +59,9 @@
                             android:layout_width="@dimen/default_small_button_width_height"
                             android:layout_height="@dimen/default_small_button_width_height"
                             android:layout_centerVertical="true"
-                            android:visibility="visible"
                             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                            android:scaleType="fitCenter" />
+                            android:scaleType="fitCenter"
+                            android:visibility="visible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -88,12 +88,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:padding="@dimen/default_view_margin"
                     android:background="@null"
                     android:contentDescription="@string/delete"
+                    android:padding="@dimen/default_view_margin"
                     android:src="@drawable/option_dots_view"
-                    tools:visibility="visible"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </RelativeLayout>
 
             <LinearLayout
@@ -102,7 +102,7 @@
                 android:layout_marginTop="@dimen/default_view_margin"
                 android:orientation="vertical">
 
-                <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+                <com.bondwithme.BondCorp.widget.FreedomSelectionTextView
                     android:id="@+id/tv_wall_content"
                     style="@style/text_dark_default"
                     android:autoLink="web"
@@ -214,7 +214,7 @@
                     android:id="@+id/tv_wall_agree_count"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/_15dp" />
+                    android:layout_marginLeft="@dimen/_8dp" />
 
                 <TextView
                     android:id="@+id/tv_love_list"
@@ -226,7 +226,7 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="@color/default_text_color_blue"
-                    android:textSize="@dimen/text_small_size"
+                    android:textSize="@dimen/_20dp"
                     android:visibility="gone" />
             </LinearLayout>
 
@@ -250,13 +250,15 @@
                     android:id="@+id/tv_wall_relay_count"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/default_view_margin" />
+                    android:layout_marginLeft="@dimen/_8dp" />
 
                 <TextView
                     style="@style/text_light_default"
+                    android:textSize="@dimen/_20dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/default_view_margin"
-                    android:text="@string/diary_comments" />
+                    android:text="@string/diary_comments"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

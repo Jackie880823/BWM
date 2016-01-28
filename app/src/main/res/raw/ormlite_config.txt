@@ -1,8 +1,8 @@
 #
-# generated on 2015/11/04 11:19:43
+# generated on 2016/01/27 11:31:53
 #
 # --table-start--
-dataClass=com.bondwithme.BondWithMe.entity.LocalStickerInfo
+dataClass=com.bondwithme.BondCorp.entity.LocalStickerInfo
 tableName=sticker_info
 # --table-fields-start--
 # --field-start--

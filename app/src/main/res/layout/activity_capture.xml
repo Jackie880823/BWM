@@ -31,7 +31,7 @@
                 android:layout_centerInParent="true"
                 />
 
-            <com.bondwithme.BondWithMe.zxing.view.ViewfinderView
+            <com.bondwithme.BondCorp.zxing.view.ViewfinderView
                 android:id="@+id/viewfinder_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

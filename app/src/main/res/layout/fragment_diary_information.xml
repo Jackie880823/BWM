@@ -9,7 +9,7 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-        <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+        <com.bondwithme.BondCorp.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"/>
-        </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
+        </com.bondwithme.BondCorp.widget.MySwipeRefreshLayout>
     </LinearLayout>
 
     <include layout="@layout/progress_layout" />

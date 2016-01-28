@@ -16,7 +16,7 @@
         android:gravity="left"
         android:orientation="horizontal">
 
-        <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+        <com.bondwithme.BondCorp.widget.CircularNetworkImage
             android:id="@+id/civ_comment_owner_head"
             android:layout_width="60dp"
             android:layout_height="60dp" />
@@ -80,7 +80,7 @@
         android:layout_marginLeft="@dimen/default_content_padding"
         android:visibility="gone" />
 
-    <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+    <com.bondwithme.BondCorp.widget.FreedomSelectionTextView
         android:id="@+id/tv_comment_content"
         style="@style/text_dark_default"
         android:layout_marginLeft="@dimen/default_content_padding"

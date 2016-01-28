@@ -9,12 +9,12 @@ import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondWithMe.Constant;
-import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondCorp.Constant;
+import com.bondwithme.BondCorp.R;
+import com.bondwithme.BondCorp.ui.BaseActivity;
+import com.bondwithme.BondCorp.ui.MainActivity;
 import com.bondwithme.BondWithMe.adapter.MyRewardAdapter;
 import com.bondwithme.BondWithMe.entity.MyRewardEntity;
-import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

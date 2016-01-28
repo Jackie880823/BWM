@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context="com.bondwithme.BondWithMe.ui.more.ViewUrlPicActivity">
+    tools:context="com.bondwithme.BondCorp.ui.more.ViewUrlPicActivity">
 
     <include
         android:id="@+id/fragment_main_top"

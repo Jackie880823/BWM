@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondCorp.R;
+import com.bondwithme.BondCorp.util.LogUtil;
 import com.bondwithme.BondWithMe.entity.RewardEntity;
-import com.bondwithme.BondWithMe.util.LogUtil;
 
 import java.util.List;
 

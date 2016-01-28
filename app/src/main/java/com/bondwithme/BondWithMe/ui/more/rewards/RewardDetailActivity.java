@@ -13,11 +13,11 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondWithMe.Constant;
-import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondCorp.Constant;
+import com.bondwithme.BondCorp.R;
+import com.bondwithme.BondCorp.ui.BaseActivity;
+import com.bondwithme.BondCorp.ui.MainActivity;
 import com.bondwithme.BondWithMe.entity.RewardEntity;
-import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -128,7 +128,7 @@ public class RewardDetailActivity extends BaseActivity {
 
     public void getRewardCode() {
         HashMap<String,String> param = new HashMap<>();
-        param.put("user_id",MainActivity.getUser().getUser_id());
+        param.put("user_id", MainActivity.getUser().getUser_id());
         param.put("reward_id",rewardEntity.getId());
         new HttpTools(this).post(Constant.API_POST_REWARD_CODE, param, TAG, new HttpCallback() {
             @Override

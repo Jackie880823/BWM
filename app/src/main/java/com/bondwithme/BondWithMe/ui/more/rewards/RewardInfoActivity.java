@@ -8,9 +8,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondCorp.R;
+import com.bondwithme.BondCorp.ui.BaseActivity;
+import com.bondwithme.BondCorp.util.LogUtil;
 
 import java.util.Locale;
 

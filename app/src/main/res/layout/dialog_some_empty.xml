@@ -37,7 +37,7 @@
             android:background="@drawable/bg_white_gray"
             android:gravity="center_horizontal"
             android:padding="@dimen/default_content_padding"
-            android:text="@string/cancel"
+            android:text="@string/text_dialog_cancel"
             android:textSize="@dimen/_18dp"
             android:visibility="gone" />
 

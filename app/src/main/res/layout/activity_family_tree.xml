@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bondwithme.BondWithMe.ui.TermsActivity">
+    tools:context="com.bondwithme.BondCorp.ui.TermsActivity">
 
     <include
         android:id="@+id/fragment_main_top"

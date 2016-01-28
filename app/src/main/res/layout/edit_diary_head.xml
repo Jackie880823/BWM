@@ -16,7 +16,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+        <com.bondwithme.BondCorp.widget.CircularNetworkImage
             android:id="@+id/owner_head"
             android:layout_width="@dimen/default_user_head_width_height"
             android:layout_height="@dimen/default_user_head_width_height" />
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.bondwithme.BondWithMe.widget.WallEditView
+        <com.bondwithme.BondCorp.widget.WallEditView
             android:id="@+id/diary_edit_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

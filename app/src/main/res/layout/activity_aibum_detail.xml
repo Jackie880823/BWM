@@ -30,7 +30,7 @@
             android:transcriptMode="alwaysScroll" />
     </LinearLayout>
 
-    <com.bondwithme.BondWithMe.widget.SquareLinnerLayout
+    <com.bondwithme.BondCorp.widget.SquareLinnerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_linear"
@@ -44,7 +44,7 @@
             android:padding="2dp"
             android:scaleType="fitXY"
             android:background="@null" />
-    </com.bondwithme.BondWithMe.widget.SquareLinnerLayout>
+    </com.bondwithme.BondCorp.widget.SquareLinnerLayout>
 
     <include
         android:id="@+id/fragment_main_top"

@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <com.bondwithme.BondWithMe.widget.CircularImageView
+    <com.bondwithme.BondCorp.widget.CircularImageView
         android:layout_width="@dimen/_120dp"
         android:layout_height="@dimen/_120dp"
         android:id="@+id/creategroup_imageview"

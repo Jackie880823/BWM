@@ -375,64 +375,11 @@
     </string-array>
 
     <array name="relationship_item">
-        <item>Mother</item>
-        <item>Father</item>
-        <item>Wife</item>
-        <item>Husband</item>
-        <item>Sister</item>
-        <item>Brother</item>
-        <item>Daughter</item>
-        <item>Son</item>
-        <item>Grandma</item>
-        <item>Grandpa</item>
-        <item>Granddaughter</item>
-        <item>Grandson</item>
-        <item>Granduncle</item>
-        <item>Grandaunt</item>
-        <item>Grandniece</item>
-        <item>Grandnephew</item>
-        <item>Great Grandma</item>
-        <item>Great Grandpa</item>
-        <item>Great Grandniece</item>
-        <item>Great Grandnephew</item>
-        <item>Aunt</item>
-        <item>Uncle</item>
-        <item>First Cousin</item>
-        <item>Second Cousin</item>
-        <item>Cousin</item>
-        <item>Niece</item>
-        <item>Nephew</item>
-        <item>Mother-in-law</item>
-        <item>Father-in-law</item>
-        <item>Aunty-in-law</item>
-        <item>Uncle-in-law</item>
-        <item>Sister-in-law</item>
-        <item>Brother-in-law</item>
-        <item>Daughter-in-law</item>
-        <item>Son-in-law</item>
-        <item>Cousin-in-law</item>
-        <item>Niece-in-Law</item>
-        <item>Nephew-in-Law</item>
-        <item>Fiancee</item>
-        <item>Fiance</item>
-        <item>Ex-wife</item>
-        <item>Ex-husband</item>
-        <item>Godmother</item>
-        <item>Godfather</item>
-        <item>Godsister</item>
-        <item>Godbrother</item>
-        <item>Goddaughter</item>
-        <item>Godson</item>
-        <item>Stepmother</item>
-        <item>Stepfather</item>
-        <item>Stepsister</item>
-        <item>Stepbrother</item>
-        <item>Stepdaughter</item>
-        <item>Stepson</item>
-        <item>Other Relative</item>
-        <item>Partner</item>
-        <item>Friend</item>
+        <item>Supervisor</item>
+        <item>Subordinate</item>
         <item>Colleague</item>
+        <item>Supplier</item>
+        <item>Customer</item>
     </array>
 
     <string-array name="CountryCodes">
@@ -659,4 +606,26 @@
         <item>@string/introduction_description_4</item>
         <item>@string/introduction_description_5</item>
     </string-array>
+
+    <array name="reminder_item">
+        <item>None</item>
+        <item>0 minutes</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>1 day</item>
+        <item>2 days</item>
+    </array>
+    <array name="category_item">
+        <item>General</item>
+        <item>Human Resources - Departure</item>
+        <item>Human Resources - New Employee</item>
+        <item>Human Resources - Promotion</item>
+        <item>Marketing</item>
+        <item>Projects</item>
+        <item>Sales</item>
+        <item>Technical</item>
+    </array>
+
 </resources>

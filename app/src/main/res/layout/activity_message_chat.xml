@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:background="@color/default_content_bg"
     android:orientation="vertical"
-    tools:context="com.bondwithme.BondWithMe.ui.MessageChatActivity">
+    tools:context="com.bondwithme.BondCorp.ui.MessageChatActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ScrollView>
 
-    <com.bondwithme.BondWithMe.widget.StickerLinearLayout
+    <com.bondwithme.BondCorp.widget.StickerLinearLayout
         android:id="@+id/chat_main_ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -306,7 +306,7 @@
                 android:layout_centerInParent="true"
                 android:src="@drawable/chat_voice" />
 
-            <com.bondwithme.BondWithMe.widget.RoundProgressBarWidthNumber
+            <com.bondwithme.BondCorp.widget.RoundProgressBarWidthNumber
                 android:id="@+id/id_progressbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -340,5 +340,5 @@
                 android:visibility="invisible" />
         </RelativeLayout>
 
-    </com.bondwithme.BondWithMe.widget.StickerLinearLayout>
+    </com.bondwithme.BondCorp.widget.StickerLinearLayout>
 </FrameLayout>

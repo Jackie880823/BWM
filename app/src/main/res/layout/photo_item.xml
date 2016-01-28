@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.bondwithme.BondWithMe.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.bondwithme.BondCorp.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_transparent"
@@ -28,7 +28,7 @@
         android:src="@drawable/x_delete_icon" />
 
 
-    <com.bondwithme.BondWithMe.widget.WallEditView
+    <com.bondwithme.BondCorp.widget.WallEditView
         android:id="@+id/diary_edit_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,6 +43,6 @@
         android:singleLine="true"
         android:textColor="@android:color/widget_edittext_dark"
         android:textSize="@dimen/text_medium_size" />
-</com.bondwithme.BondWithMe.widget.SquareRelativeLayout>
+</com.bondwithme.BondCorp.widget.SquareRelativeLayout>
 
 
