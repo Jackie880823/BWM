@@ -6,13 +6,10 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_180dp"
         android:layout_margin="@dimen/_8dp"
+
         >
-
-
-
-
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/iv_reward"
@@ -199,7 +196,8 @@
             android:id="@+id/rl_reward_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/reward_locked"></RelativeLayout>
+            android:background="@color/reward_locked"
+            android:visibility="invisible"></RelativeLayout>
 
         <TextView
             android:id="@+id/tv_fully_redeemed"
