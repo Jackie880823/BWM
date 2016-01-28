@@ -138,6 +138,10 @@ public class RewardsActivity extends BaseActivity {
 
     @Override
     public void requestData() {
+
+    }
+
+    private void refreshData() {
         HashMap<String, String> params = new HashMap<>();
         params.put("country_code", MainActivity.getUser().getUser_country_code());
         new HttpTools(this).get(String.format(Constant.API_GET_REWARD_LIST,MainActivity.getUser().getUser_id()), params,TAG, new HttpCallback() {
@@ -154,7 +158,7 @@ public class RewardsActivity extends BaseActivity {
             @Override
             public void onResult(String string) {
                 Gson gson =new Gson();
-                LogUtil.d(TAG,"onResult====="+string);
+                LogUtil.d(TAG, "onResult=====" + string);
                 rewardResultEntity = gson.fromJson(string, RewardResultEntity.class);
                 dataGeneralReward = rewardResultEntity.getGeneralReward();
                 dataRewardPoint = rewardResultEntity.getRewardPoint();
@@ -179,7 +183,6 @@ public class RewardsActivity extends BaseActivity {
 
             }
         });
-
     }
 
     private void initRewardPointView() {
@@ -230,7 +233,7 @@ public class RewardsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        requestData();
+        refreshData();
         reList.post(new Runnable() {
             @Override
             public void run() {

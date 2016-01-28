@@ -98,22 +98,16 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.VHItem> {
                 holder.rlCountDownTime.setVisibility(View.VISIBLE);
                 holder.tvFullyRed.setVisibility(View.INVISIBLE);
             }
-//        Long finishMillis = getFinishMillis(rewardEntity.getEnd_date_timestamp());
-//        LogUtil.d(TAG,"reward_id:"+rewardEntity.getId() +" 服务器时间计时    getTimestamp_left:" + rewardEntity.getTimestamp_left() + "手机时间计时 finishSec:"+finishMillis);
+
             holder.setTextTime(leftTime);
             LogUtil.d(TAG,"count==="+downCount);
+
+            LogUtil.d(TAG,"rl_item_visibility======"+holder.rl.getVisibility());
         }
 
 
     }
-
     int downCount = 0;
-
-    private Long getFinishMillis(String sec) {
-        Long currentSec = System.currentTimeMillis()/1000;
-        LogUtil.d(TAG,"currentSec======="+currentSec + "second======"+sec);
-        return Long.parseLong(sec) - currentSec;
-    }
 
 
     @Override
