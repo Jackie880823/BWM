@@ -7,7 +7,7 @@
     <RelativeLayout
 
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_180dp"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/_8dp"
 
         >
@@ -15,7 +15,7 @@
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/iv_my_reward"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_180dp"
             android:scaleType="fitXY"
             />
 
@@ -34,7 +34,7 @@
                 android:id="@+id/tv_reward_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="dewdwcw"
+                android:text=""
                 android:layout_marginLeft="@dimen/_8dp"
                 android:textStyle="bold"
                 style="@style/text_white_center"/>
@@ -43,7 +43,7 @@
                 android:id="@+id/tv_reward_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="dcdcwcew"
+                android:text=""
                 android:layout_below="@+id/tv_reward_title"
                 android:layout_marginLeft="@dimen/_8dp"
                 android:textColor="@color/btn_gray_normal"/>
