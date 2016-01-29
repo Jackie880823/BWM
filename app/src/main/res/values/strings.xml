@@ -288,11 +288,11 @@
 
     <string name="text_setting_2_title">Auto Accept Relationship</string>
     <string name="text_setting_2_1">All</string>
-    <string name="text_setting_2_2">Parent</string>
-    <string name="text_setting_2_3">Spouse</string>
-    <string name="text_setting_2_4">Sibling</string>
-    <string name="text_setting_2_5">Children</string>
-    <string name="text_setting_2_6">Others</string>
+    <string name="text_setting_2_2">Supervisor </string>
+    <string name="text_setting_2_3">Subordinate </string>
+    <string name="text_setting_2_4">Colleague </string>
+    <string name="text_setting_2_5">Supplier </string>
+    <string name="text_setting_2_6">Customer </string>
 
     <string name="text_auto_accept">Auto-Accept Relationship</string>
     <string name="text_birthday_alert_reminder">Birthday Reminder</string>

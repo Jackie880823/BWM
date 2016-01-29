@@ -20,6 +20,7 @@ import com.bondwithme.BondCorp.ui.BaseActivity;
 import com.bondwithme.BondCorp.ui.MainActivity;
 import com.bondwithme.BondCorp.util.LogUtil;
 import com.bondwithme.BondCorp.widget.MyDialog;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -246,11 +247,10 @@ public class GroupPrivacyActivity extends BaseActivity {
     }
 
     private void updateConfig() {
-
-        mProgressDialog.setVisibility(View.VISIBLE);
         if (profilePrivacyEntity == null) {
             return;
         }
+        mProgressDialog.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<>();
         params.put("recommend_me", (cbTO.isChecked() ? "1" : "0"));
         params.put("recommend_others", (cbTM.isChecked() ? "1" : "0"));
@@ -261,15 +261,6 @@ public class GroupPrivacyActivity extends BaseActivity {
         params.put("email", profilePrivacyEntity.getEmail());
         params.put("phone", profilePrivacyEntity.getPhone());
         params.put("location", profilePrivacyEntity.getLocation());
-
-        //                "dob_date": "0", //Birthday
-//                "dob_year": "0", //Year of Birth
-//                "gender": "0", //Gender
-//                "email": "0", //Email
-//                "phone": "0", //Phone
-//                "location": "0" //Region
-
-
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id());
@@ -329,15 +320,8 @@ public class GroupPrivacyActivity extends BaseActivity {
             @Override
             public void onResult(String string) {
                 try {
-                    JSONObject jsonObject = new JSONObject(string);
-                    if (jsonObject != null) {
-//                        JSONObject birthdayConfig = jsonObject.getJSONObject("birthday");
-//                        bindConfig2Birthday(jsonObject);
-
-//                        JSONObject acceptConfig = jsonObject.getJSONObject("auto");
-//                        bindConfig2Accept(jsonObject);
-
-                        bindConfig2Group(jsonObject);
+                    if (string != null) {
+                        bindConfig2Group(string);
                         result = true;
                     }
                 } catch (Exception e) {
@@ -363,41 +347,33 @@ public class GroupPrivacyActivity extends BaseActivity {
         });
     }
 
-    private void bindConfig2Group(JSONObject config) throws JSONException {
-        if ("1".equals(config.get("recommend_me"))) {
-            cbTO.setChecked(true);
-        } else {
-            cbTO.setChecked(false);
+    private void bindConfig2Group(String config) throws JSONException {
+        profilePrivacyEntity = (new GsonBuilder()).create().fromJson(config, ProfilePrivacyEntity.class);
+        if (profilePrivacyEntity == null) {
+            return;
         }
-        if ("1".equals(config.get("recommend_others"))) {
-            cbTM.setChecked(true);
-        } else {
-            cbTM.setChecked(false);
-        }
-        if ("1".equals(config.get("group_add"))) {
+//        if ("1".equals(config.get("recommend_me"))) {
+//            cbTO.setChecked(true);
+//        } else {
+//            cbTO.setChecked(false);
+//        }
+//        if ("1".equals(config.get("recommend_others"))) {
+//            cbTM.setChecked(true);
+//        } else {
+//            cbTM.setChecked(false);
+//        }
+        if ("1".equals(profilePrivacyEntity.getGroup_add())) {
             cbGC.setChecked(true);
         } else {
             cbGC.setChecked(false);
         }
 
-
-        profilePrivacyEntity = new ProfilePrivacyEntity(config.get("dob_date").toString(),
-                config.get("dob_year").toString(),
-                config.get("gender").toString(),
-                config.get("email").toString(),
-                config.get("phone").toString(),
-                config.get("location").toString());
-        if (profilePrivacyEntity == null) {
-            return;
-        }
         displayPrivacyLevel(profilePrivacyEntity.getDob_date(), tvBirthday);
         displayPrivacyLevel(profilePrivacyEntity.getDob_year(), tvYearOfBirth);
         displayPrivacyLevel(profilePrivacyEntity.getGender(), tvGender);
         displayPrivacyLevel(profilePrivacyEntity.getEmail(), tvEmail);
         displayPrivacyLevel(profilePrivacyEntity.getPhone(), tvPhone);
         displayPrivacyLevel(profilePrivacyEntity.getLocation(), tvRegion);
-
-
     }
 
     private void displayPrivacyLevel(Object level, TextView tv) {

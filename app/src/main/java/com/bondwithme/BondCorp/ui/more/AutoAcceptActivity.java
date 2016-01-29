@@ -23,7 +23,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheckedChangeListener{
+public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheckedChangeListener {
 
     View mProgressDialog;
     LinearLayout llAutoAccept;
@@ -31,11 +31,11 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
     private int checkCount = 0;
 
     private CheckBox auto_acp_all;
-    private CheckBox auto_acp_chd;
-    private CheckBox auto_acp_oth;
-    private CheckBox auto_acp_prt;
-    private CheckBox auto_acp_sib;
-    private CheckBox auto_acp_sps;
+    private CheckBox auto_acp_supervisor;
+    private CheckBox auto_acp_colleague;
+    private CheckBox auto_acp_supplier;
+    private CheckBox auto_acp_subordinate;
+    private CheckBox auto_acp_customer;
 
     @Override
     public int getLayout() {
@@ -72,42 +72,41 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
 
     @Override
     public void initView() {
-
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
 
         llAutoAccept = getViewById(R.id.ll_autoaccept);
 
         auto_acp_all = getViewById(R.id.auto_acp_all);
-        auto_acp_chd = getViewById(R.id.auto_acp_chd);
-        auto_acp_oth = getViewById(R.id.auto_acp_oth);
-        auto_acp_prt = getViewById(R.id.auto_acp_prt);
-        auto_acp_sib = getViewById(R.id.auto_acp_sib);
-        auto_acp_sps = getViewById(R.id.auto_acp_sps);
+        auto_acp_supervisor = getViewById(R.id.auto_acp_chd);
+        auto_acp_colleague = getViewById(R.id.auto_acp_oth);
+        auto_acp_supplier = getViewById(R.id.auto_acp_prt);
+        auto_acp_subordinate = getViewById(R.id.auto_acp_sib);
+        auto_acp_customer = getViewById(R.id.auto_acp_sps);
 
-        auto_acp_chd.setOnCheckedChangeListener(this);
-        auto_acp_oth.setOnCheckedChangeListener(this);
-        auto_acp_prt.setOnCheckedChangeListener(this);
-        auto_acp_sib.setOnCheckedChangeListener(this);
-        auto_acp_sps.setOnCheckedChangeListener(this);
+        auto_acp_supervisor.setOnCheckedChangeListener(this);
+        auto_acp_colleague.setOnCheckedChangeListener(this);
+        auto_acp_supplier.setOnCheckedChangeListener(this);
+        auto_acp_subordinate.setOnCheckedChangeListener(this);
+        auto_acp_customer.setOnCheckedChangeListener(this);
 
 
         auto_acp_all.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (auto_acp_all.isChecked()) {
-                    auto_acp_chd.setChecked(true);
-                    auto_acp_oth.setChecked(true);
-                    auto_acp_prt.setChecked(true);
-                    auto_acp_sib.setChecked(true);
-                    auto_acp_sps.setChecked(true);
+                    auto_acp_supervisor.setChecked(true);
+                    auto_acp_colleague.setChecked(true);
+                    auto_acp_supplier.setChecked(true);
+                    auto_acp_subordinate.setChecked(true);
+                    auto_acp_customer.setChecked(true);
                     checkCount = 5;
                 } else {
-                    auto_acp_chd.setChecked(false);
-                    auto_acp_oth.setChecked(false);
-                    auto_acp_prt.setChecked(false);
-                    auto_acp_sib.setChecked(false);
-                    auto_acp_sps.setChecked(false);
+                    auto_acp_supervisor.setChecked(false);
+                    auto_acp_colleague.setChecked(false);
+                    auto_acp_supplier.setChecked(false);
+                    auto_acp_subordinate.setChecked(false);
+                    auto_acp_customer.setChecked(false);
                     checkCount = 0;
                 }
             }
@@ -116,70 +115,69 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
     }
 
     private void bindConfig2Accept(JSONObject acceptConfig) throws JSONException {
-
-        if("1".equals(acceptConfig.get("auto_acp_all"))){
+        if ("1".equals(acceptConfig.optString("auto_acp_all"))) {
             auto_acp_all.setChecked(true);
-            auto_acp_chd.setChecked(true);
-            auto_acp_oth.setChecked(true);
-            auto_acp_prt.setChecked(true);
-            auto_acp_sps.setChecked(true);
-            auto_acp_sib.setChecked(true);
-            checkCount=5;
+            auto_acp_supervisor.setChecked(true);
+            auto_acp_colleague.setChecked(true);
+            auto_acp_supplier.setChecked(true);
+            auto_acp_customer.setChecked(true);
+            auto_acp_subordinate.setChecked(true);
+            checkCount = 5;
             return;
-        }else{
+        } else {
             auto_acp_all.setChecked(false);
         }
 
-        if("1".equals(acceptConfig.get("auto_acp_chd"))){
-            auto_acp_chd.setChecked(true);
+        if ("1".equals(acceptConfig.optString("auto_acp_supervisor"))) {
+            auto_acp_supervisor.setChecked(true);
             checkCount++;
-        }else{
-            auto_acp_chd.setChecked(false);
+        } else {
+            auto_acp_supervisor.setChecked(false);
         }
-        if("1".equals(acceptConfig.get("auto_acp_sib"))){
-            auto_acp_sib.setChecked(true);
+        if ("1".equals(acceptConfig.optString("auto_acp_subordinate"))) {
+            auto_acp_subordinate.setChecked(true);
             checkCount++;
-        }else{
-            auto_acp_sib.setChecked(false);
+        } else {
+            auto_acp_subordinate.setChecked(false);
         }
-        if("1".equals(acceptConfig.get("auto_acp_oth"))){
-            auto_acp_oth.setChecked(true);
+        if ("1".equals(acceptConfig.optString("auto_acp_colleague"))) {
+            auto_acp_colleague.setChecked(true);
             checkCount++;
-        }else{
-            auto_acp_oth.setChecked(false);
+        } else {
+            auto_acp_colleague.setChecked(false);
         }
-        if("1".equals(acceptConfig.get("auto_acp_prt"))){
-            auto_acp_prt.setChecked(true);
+        if ("1".equals(acceptConfig.optString("auto_acp_supplier"))) {
+            auto_acp_supplier.setChecked(true);
             checkCount++;
-        }else{
-            auto_acp_prt.setChecked(false);
+        } else {
+            auto_acp_supplier.setChecked(false);
         }
-        if("1".equals(acceptConfig.get("auto_acp_sps"))){
-            auto_acp_sps.setChecked(true);
+        if ("1".equals(acceptConfig.optString("auto_acp_customer"))) {
+            auto_acp_customer.setChecked(true);
             checkCount++;
-        }else{
-            auto_acp_sps.setChecked(false);
+        } else {
+            auto_acp_customer.setChecked(false);
         }
     }
 
-    private void updateConfig(){
+    private void updateConfig() {
 
         mProgressDialog.setVisibility(View.VISIBLE);
 
         Map<String, String> params = new HashMap<>();
 
-        params.put("auto_acp_all",(auto_acp_all.isChecked()?"1":"0"));
-        params.put("auto_acp_chd",(auto_acp_chd.isChecked()?"1":"0"));
-        params.put("auto_acp_oth",(auto_acp_oth.isChecked()?"1":"0"));
-        params.put("auto_acp_prt",(auto_acp_prt.isChecked()?"1":"0"));
-        params.put("auto_acp_sib",(auto_acp_sib.isChecked()?"1":"0"));
-        params.put("auto_acp_sps",(auto_acp_sps.isChecked()?"1":"0"));
+        params.put("auto_acp_all", (auto_acp_all.isChecked() ? "1" : "0"));
+        params.put("auto_acp_supervisor", (auto_acp_supervisor.isChecked() ? "1" : "0"));
+        params.put("auto_acp_colleague", (auto_acp_colleague.isChecked() ? "1" : "0"));
+        params.put("auto_acp_supplier", (auto_acp_supplier.isChecked() ? "1" : "0"));
+        params.put("auto_acp_subordinate", (auto_acp_subordinate.isChecked() ? "1" : "0"));
+        params.put("auto_acp_customer", (auto_acp_customer.isChecked() ? "1" : "0"));
 
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id());
 
-        new HttpTools(this).put(requestInfo,this,new HttpCallback() {
+        new HttpTools(this).put(requestInfo, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -214,9 +212,10 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
     }
 
     boolean result;
+
     @Override
     public void requestData() {
-        new HttpTools(this).get(String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id()),null,this,new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
             @Override
             public void onStart() {
                 result = false;
@@ -225,7 +224,7 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
             @Override
             public void onFinish() {
                 mProgressDialog.setVisibility(View.INVISIBLE);
-                if(result) {
+                if (result) {
                     llAutoAccept.setVisibility(View.VISIBLE);
                 }
             }
@@ -234,7 +233,7 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
             public void onResult(String string) {
                 try {
                     JSONObject jsonObject = new JSONObject(string);
-                    if(jsonObject!=null){
+                    if (jsonObject != null) {
 //                        JSONObject birthdayConfig = jsonObject.getJSONObject("birthday");
 //                        bindConfig2Birthday(jsonObject);
 
@@ -274,23 +273,22 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mProgressDialog != null)
-        {
+        if (mProgressDialog != null) {
             mProgressDialog.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isCheckeded) {
-        if(isCheckeded){
+        if (isCheckeded) {
             checkCount++;
-        }else{
+        } else {
             checkCount--;
         }
-        if(checkCount==5){
+        if (checkCount == 5) {
 //            autoCheck = true;
             auto_acp_all.setChecked(true);
-        }else{
+        } else {
 //            autoCheck = true;
             auto_acp_all.setChecked(false);
         }
