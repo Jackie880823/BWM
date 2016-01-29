@@ -16,6 +16,15 @@ public class GroupMessageEntity implements Serializable {
     private String member_name; // last member post username
     private String type; // last action in group
     private String message;  // last post message
+    private String group_default;
+
+    public String getGroup_default() {
+        return group_default;
+    }
+
+    public void setGroup_default(String group_default) {
+        this.group_default = group_default;
+    }
 
     public String getGroup_id() {
         return group_id;

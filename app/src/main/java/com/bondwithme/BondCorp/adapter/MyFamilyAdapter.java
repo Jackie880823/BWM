@@ -102,15 +102,15 @@ public class MyFamilyAdapter extends BaseAdapter implements Filterable {
         viewHolder.imageRight.setVisibility(View.GONE);
         viewHolder.imageLeft.setVisibility(View.GONE);
         if (FamilyFragment.FAMILY_TREE.equals(userId)) {
-            viewHolder.textName.setText(mContext.getString(R.string.text_new_family_tree));
+            viewHolder.textName.setText(R.string.text_org_chart);
             BitmapTools.getInstance(mContext).display(viewHolder.imageMain, null, R.drawable.org_chart, R.drawable.org_chart);
         } else if (FamilyFragment.FAMILY_MORE_MEMBER.equals(userId)) {
             viewHolder.textName.setText(familyMemberEntity.getUser_given_name());
-            BitmapTools.getInstance(mContext).display(viewHolder.imageMain, null, R.drawable.everyone_icon, R.drawable.org_chart);
+            BitmapTools.getInstance(mContext).display(viewHolder.imageMain, null, R.drawable.everyone_icon, R.drawable.everyone_icon);
 
         } else if (FamilyFragment.FAMILY_HIDE_MEMBER.equals(userId)) {
             viewHolder.textName.setText(familyMemberEntity.getUser_given_name());
-            BitmapTools.getInstance(mContext).display(viewHolder.imageMain, null, R.drawable.my_family, R.drawable.org_chart);
+            BitmapTools.getInstance(mContext).display(viewHolder.imageMain, null, R.drawable.my_organisation, R.drawable.my_organisation);
         } else {
             viewHolder.textName.setText(familyMemberEntity.getUser_given_name());
             BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile,

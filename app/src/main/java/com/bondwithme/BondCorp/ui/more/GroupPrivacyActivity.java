@@ -124,46 +124,27 @@ public class GroupPrivacyActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-
-        switch (v.getId()) {
-            case R.id.ll_birthday_privacy:
-                if (profilePrivacyEntity == null) {
-                    return;
-                }
-                setProfilePrivacy(getString(R.string.text_birthday), profilePrivacyEntity.getDob_date(), tvBirthday);
-                break;
-            case R.id.ll_yearOfBirth_privacy:
-                if (profilePrivacyEntity == null) {
-                    return;
-                }
-                setProfilePrivacy(getString(R.string.year_of_birth), profilePrivacyEntity.getDob_year(), tvYearOfBirth);
-                break;
-            case R.id.ll_gender_privacy:
-                if (profilePrivacyEntity == null) {
-                    return;
-                }
-                setProfilePrivacy(getString(R.string.text_gender), profilePrivacyEntity.getGender(), tvGender);
-                break;
-            case R.id.ll_email_privacy:
-                if (profilePrivacyEntity == null) {
-                    return;
-                }
-                setProfilePrivacy(getString(R.string.text_email), profilePrivacyEntity.getEmail(), tvEmail);
-                break;
-            case R.id.ll_region_privacy:
-                if (profilePrivacyEntity == null) {
-                    return;
-                }
-                setProfilePrivacy(getString(R.string.text_region), profilePrivacyEntity.getLocation(), tvRegion);
-                break;
-            case R.id.ll_phone_privacy:
-                if (profilePrivacyEntity == null) {
-                    return;
-                }
-                setProfilePrivacy(getString(R.string.text_phone), profilePrivacyEntity.getPhone(), tvPhone);
-                break;
-
-
+        if (profilePrivacyEntity != null) {
+            switch (v.getId()) {
+                case R.id.ll_birthday_privacy:
+                    setProfilePrivacy(getString(R.string.text_birthday), profilePrivacyEntity.getDob_date(), tvBirthday);
+                    break;
+                case R.id.ll_yearOfBirth_privacy:
+                    setProfilePrivacy(getString(R.string.year_of_birth), profilePrivacyEntity.getDob_year(), tvYearOfBirth);
+                    break;
+                case R.id.ll_gender_privacy:
+                    setProfilePrivacy(getString(R.string.text_gender), profilePrivacyEntity.getGender(), tvGender);
+                    break;
+                case R.id.ll_email_privacy:
+                    setProfilePrivacy(getString(R.string.text_email), profilePrivacyEntity.getEmail(), tvEmail);
+                    break;
+                case R.id.ll_region_privacy:
+                    setProfilePrivacy(getString(R.string.text_region), profilePrivacyEntity.getLocation(), tvRegion);
+                    break;
+                case R.id.ll_phone_privacy:
+                    setProfilePrivacy(getString(R.string.text_phone), profilePrivacyEntity.getPhone(), tvPhone);
+                    break;
+            }
         }
     }
 

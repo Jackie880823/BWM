@@ -726,6 +726,7 @@
     <string name="text_category">Category</string>
     <string name="title_writle_new_title">Title</string>
     <string name="text_write_new_here">Write your story here</string>
-    <string name="text_meeting_end_time">会议结束时间必须晚于开始时间</string>
-    <string name="text_choose_start_time">请选择会议开始时间</string>
+    <string name="text_meeting_end_time">Meeting End Date &amp; Time must be later than Start Date &amp; Time</string>
+    <string name="text_choose_start_time">Please Select Start Date &amp; Time</string>
+    <string name="text_org_chart">Org Chart</string>
 </resources>
