@@ -125,24 +125,42 @@ public class GroupPrivacyActivity extends BaseActivity {
     public void onClick(View v) {
         super.onClick(v);
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ll_birthday_privacy:
-                setProfilePrivacy(getString(R.string.text_birthday),profilePrivacyEntity.getDob_date(),tvBirthday);
+                if (profilePrivacyEntity == null) {
+                    return;
+                }
+                setProfilePrivacy(getString(R.string.text_birthday), profilePrivacyEntity.getDob_date(), tvBirthday);
                 break;
             case R.id.ll_yearOfBirth_privacy:
-                setProfilePrivacy(getString(R.string.year_of_birth),profilePrivacyEntity.getDob_year(),tvYearOfBirth);
+                if (profilePrivacyEntity == null) {
+                    return;
+                }
+                setProfilePrivacy(getString(R.string.year_of_birth), profilePrivacyEntity.getDob_year(), tvYearOfBirth);
                 break;
             case R.id.ll_gender_privacy:
-                setProfilePrivacy(getString(R.string.text_gender),profilePrivacyEntity.getGender(),tvGender);
+                if (profilePrivacyEntity == null) {
+                    return;
+                }
+                setProfilePrivacy(getString(R.string.text_gender), profilePrivacyEntity.getGender(), tvGender);
                 break;
             case R.id.ll_email_privacy:
-                setProfilePrivacy(getString(R.string.text_email),profilePrivacyEntity.getEmail(),tvEmail);
+                if (profilePrivacyEntity == null) {
+                    return;
+                }
+                setProfilePrivacy(getString(R.string.text_email), profilePrivacyEntity.getEmail(), tvEmail);
                 break;
             case R.id.ll_region_privacy:
-                setProfilePrivacy(getString(R.string.text_region),profilePrivacyEntity.getLocation(),tvRegion);
+                if (profilePrivacyEntity == null) {
+                    return;
+                }
+                setProfilePrivacy(getString(R.string.text_region), profilePrivacyEntity.getLocation(), tvRegion);
                 break;
             case R.id.ll_phone_privacy:
-                setProfilePrivacy(getString(R.string.text_phone),profilePrivacyEntity.getPhone(),tvPhone);
+                if (profilePrivacyEntity == null) {
+                    return;
+                }
+                setProfilePrivacy(getString(R.string.text_phone), profilePrivacyEntity.getPhone(), tvPhone);
                 break;
 
 
@@ -152,9 +170,10 @@ public class GroupPrivacyActivity extends BaseActivity {
     RadioButton rbOnlyMe;
     RadioButton rbAllMember;
     RadioButton rbPublic;
+
     private void setProfilePrivacy(String dialogTitle, final String strLevel, final TextView tv) {
 
-        LogUtil.d("setProfilePrivacy"+strLevel,"GroupPrivacyActivity"+dialogTitle);
+        LogUtil.d("setProfilePrivacy" + strLevel, "GroupPrivacyActivity" + dialogTitle);
         LayoutInflater factory = LayoutInflater.from(this);
         final View dialogView = factory.inflate(R.layout.dialog_profile_privacy, null);
 
@@ -165,11 +184,11 @@ public class GroupPrivacyActivity extends BaseActivity {
         rbOnlyMe = (RadioButton) dialogView.findViewById(R.id.rb_only_me);
         rbAllMember = (RadioButton) dialogView.findViewById(R.id.rb_all_member);
         rbPublic = (RadioButton) dialogView.findViewById(R.id.rb_public);
-        if ("0".equals(strLevel)){
+        if ("0".equals(strLevel)) {
             rbOnlyMe.setChecked(true);
-        }else if ("1".equals(strLevel)){
+        } else if ("1".equals(strLevel)) {
             rbAllMember.setChecked(true);
-        }else if ("2".equals(strLevel)){
+        } else if ("2".equals(strLevel)) {
             rbPublic.setChecked(true);
         }
 
@@ -180,10 +199,10 @@ public class GroupPrivacyActivity extends BaseActivity {
             public void onClick(View v) {
                 changePrivacyDialog.dismiss();
                 String str = Integer.toString(intLevel);
-                switch (tv.getId()){
+                switch (tv.getId()) {
                     case R.id.tv_birthday_privacy:
                         profilePrivacyEntity.setDob_date(str);
-                        displayPrivacyLevel(str,tvBirthday);
+                        displayPrivacyLevel(str, tvBirthday);
                         break;
                     case R.id.tv_yearOfBirth_privacy:
                         profilePrivacyEntity.setDob_year(str);
@@ -245,21 +264,22 @@ public class GroupPrivacyActivity extends BaseActivity {
 
     }
 
-    private void updateConfig(){
+    private void updateConfig() {
 
         mProgressDialog.setVisibility(View.VISIBLE);
-
+        if (profilePrivacyEntity == null) {
+            return;
+        }
         Map<String, String> params = new HashMap<>();
-
-        params.put("recommend_me",(cbTO.isChecked()?"1":"0"));
-        params.put("recommend_others",(cbTM.isChecked()?"1":"0"));
+        params.put("recommend_me", (cbTO.isChecked() ? "1" : "0"));
+        params.put("recommend_others", (cbTM.isChecked() ? "1" : "0"));
         params.put("group_add", (cbGC.isChecked() ? "1" : "0"));
-        params.put("dob_date",profilePrivacyEntity.getDob_date());
-        params.put("dob_year",profilePrivacyEntity.getDob_year());
-        params.put("gender",profilePrivacyEntity.getGender());
-        params.put("email",profilePrivacyEntity.getEmail());
-        params.put("phone",profilePrivacyEntity.getPhone());
-        params.put("location",profilePrivacyEntity.getLocation());
+        params.put("dob_date", profilePrivacyEntity.getDob_date());
+        params.put("dob_year", profilePrivacyEntity.getDob_year());
+        params.put("gender", profilePrivacyEntity.getGender());
+        params.put("email", profilePrivacyEntity.getEmail());
+        params.put("phone", profilePrivacyEntity.getPhone());
+        params.put("location", profilePrivacyEntity.getLocation());
 
         //                "dob_date": "0", //Birthday
 //                "dob_year": "0", //Year of Birth
@@ -308,9 +328,10 @@ public class GroupPrivacyActivity extends BaseActivity {
     }
 
     boolean result;
+
     @Override
     public void requestData() {
-        new HttpTools(this).get(String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id()), null,this, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -319,7 +340,7 @@ public class GroupPrivacyActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 mProgressDialog.setVisibility(View.INVISIBLE);
-                if(result) {
+                if (result) {
                     llGroupPrivacy.setVisibility(View.VISIBLE);
                 }
             }
@@ -361,20 +382,20 @@ public class GroupPrivacyActivity extends BaseActivity {
         });
     }
 
-    private void    bindConfig2Group(JSONObject config) throws JSONException {
-        if("1".equals(config.get("recommend_me"))){
+    private void bindConfig2Group(JSONObject config) throws JSONException {
+        if ("1".equals(config.get("recommend_me"))) {
             cbTO.setChecked(true);
-        }else{
+        } else {
             cbTO.setChecked(false);
         }
-        if("1".equals(config.get("recommend_others"))){
+        if ("1".equals(config.get("recommend_others"))) {
             cbTM.setChecked(true);
-        }else{
+        } else {
             cbTM.setChecked(false);
         }
-        if("1".equals(config.get("group_add"))){
+        if ("1".equals(config.get("group_add"))) {
             cbGC.setChecked(true);
-        }else{
+        } else {
             cbGC.setChecked(false);
         }
 
@@ -385,26 +406,27 @@ public class GroupPrivacyActivity extends BaseActivity {
                 config.get("email").toString(),
                 config.get("phone").toString(),
                 config.get("location").toString());
-
+        if (profilePrivacyEntity == null) {
+            return;
+        }
         displayPrivacyLevel(profilePrivacyEntity.getDob_date(), tvBirthday);
-        displayPrivacyLevel(profilePrivacyEntity.getDob_year(),tvYearOfBirth);
-        displayPrivacyLevel(profilePrivacyEntity.getGender(),tvGender);
-        displayPrivacyLevel(profilePrivacyEntity.getEmail(),tvEmail);
-        displayPrivacyLevel(profilePrivacyEntity.getPhone(),tvPhone);
-        displayPrivacyLevel(profilePrivacyEntity.getLocation(),tvRegion);
-
+        displayPrivacyLevel(profilePrivacyEntity.getDob_year(), tvYearOfBirth);
+        displayPrivacyLevel(profilePrivacyEntity.getGender(), tvGender);
+        displayPrivacyLevel(profilePrivacyEntity.getEmail(), tvEmail);
+        displayPrivacyLevel(profilePrivacyEntity.getPhone(), tvPhone);
+        displayPrivacyLevel(profilePrivacyEntity.getLocation(), tvRegion);
 
 
     }
 
-    private void displayPrivacyLevel(Object level,TextView tv) {
-        LogUtil.d("level===="+level,"TextView===="+tv.getId());
+    private void displayPrivacyLevel(Object level, TextView tv) {
+        LogUtil.d("level====" + level, "TextView====" + tv.getId());
 
-        if ("0".equals(level)){
+        if ("0".equals(level)) {
             tv.setText(getString(R.string.text_only_me));       //0 代表仅自己可以看 (Only Me)
-        }else if ("1".equals(level)){
+        } else if ("1".equals(level)) {
             tv.setText(getString(R.string.text_all_member));    //1 代表只有成员可以看 (All Members)
-        }else  if("2".equals(level)){
+        } else if ("2".equals(level)) {
             tv.setText(getString(R.string.text_public));        //2代表公开资料 (Public)
         }
     }
@@ -417,8 +439,7 @@ public class GroupPrivacyActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mProgressDialog != null)
-        {
+        if (mProgressDialog != null) {
             mProgressDialog.setVisibility(View.INVISIBLE);
         }
     }
