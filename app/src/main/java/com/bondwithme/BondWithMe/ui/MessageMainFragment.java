@@ -428,7 +428,8 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             JSONObject jsonObject = new JSONObject(response);
                             List<PrivateMessageEntity> userList = gson.fromJson(jsonObject.getString("member"), new TypeToken<ArrayList<PrivateMessageEntity>>() {
                             }.getType());
-                            String totalUnread = jsonObject.optString("totalUnread", "");//私聊的消息总共有多少未读
+
+                            String totalUnread = jsonObject.optString("memberUnread", "");//私聊的消息总共有多少未读"groupUnread","memberUnread","totalUnread"
                             Map<String, Object> map = new HashMap<>();
                             map.put(MESSAGE_DATA, userList);
                             map.put(MESSAGE_UNREAD_NUM, totalUnread);
@@ -490,7 +491,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     Map<String, Object> pullPrivateMapNew = (Map) msg.obj;
                     List<PrivateMessageEntity> userEntityList1 = (List<PrivateMessageEntity>) pullPrivateMapNew.get(MESSAGE_DATA);
                     String unReadNumNewPrivate = (String) pullPrivateMapNew.get(MESSAGE_UNREAD_NUM);
-                    if (TextUtils.isEmpty(unReadNumNewPrivate) || "0".equalsIgnoreCase(unReadNumNewPrivate)) {
+                    if (TextUtils.isEmpty(unReadNumNewPrivate)||"0".equalsIgnoreCase(unReadNumNewPrivate)) {
 //                        ,,
                     }
                     privateAdapter.NewUserEntityData(userEntityList1);
@@ -499,7 +500,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     Map<String, Object> pullPrivateMap = (Map) msg.obj;
                     List<PrivateMessageEntity> userEntityListPull1 = (List<PrivateMessageEntity>) pullPrivateMap.get(MESSAGE_DATA);
                     String unReadNumPullPrivate = (String) pullPrivateMap.get(MESSAGE_UNREAD_NUM);
-                    if (TextUtils.isEmpty(unReadNumPullPrivate) || "0".equalsIgnoreCase(unReadNumPullPrivate)) {
+                    if (TextUtils.isEmpty(unReadNumPullPrivate)||"0".equalsIgnoreCase(unReadNumPullPrivate)) {
 //                        ,,
                     }
 //                    List<PrivateMessageEntity> userEntityListPull1 = (List<PrivateMessageEntity>) msg.obj;
@@ -509,7 +510,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     Map<String, Object> newGroupMap = (Map) msg.obj;
                     List<GroupMessageEntity> userEntityList = (List<GroupMessageEntity>) newGroupMap.get(MESSAGE_DATA);
                     String unReadNum = (String) newGroupMap.get(MESSAGE_UNREAD_NUM);
-                    if (TextUtils.isEmpty(unReadNum) || "0".equalsIgnoreCase(unReadNum)) {
+                    if (TextUtils.isEmpty(unReadNum)||"0".equalsIgnoreCase(unReadNum)) {
                         group_red_point.setVisibility(View.GONE);
                     } else {
                         group_red_point.setVisibility(View.VISIBLE);
@@ -520,7 +521,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     Map<String, Object> pullGroupMap = (Map) msg.obj;
                     List<GroupMessageEntity> userEntityListPull = (List<GroupMessageEntity>) pullGroupMap.get(MESSAGE_DATA);
                     String unReadNumPull = (String) pullGroupMap.get(MESSAGE_UNREAD_NUM);
-                    if (TextUtils.isEmpty(unReadNumPull) || "0".equalsIgnoreCase(unReadNumPull)) {
+                    if (TextUtils.isEmpty(unReadNumPull)||"0".equalsIgnoreCase(unReadNumPull)) {
                         group_red_point.setVisibility(View.GONE);
                     } else {
                         group_red_point.setVisibility(View.VISIBLE);
@@ -615,7 +616,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             JSONObject jsonObject = new JSONObject(response);
                             List<GroupMessageEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupMessageEntity>>() {
                             }.getType());
-                            String totalUnread = jsonObject.optString("totalUnread", "");//私聊的消息总共有多少未读
+                            String totalUnread = jsonObject.optString("groupUnread", "");//私聊的消息总共有多少未读
                             Map<String, Object> map = new HashMap<>();
                             map.put(MESSAGE_DATA, groupList);
                             map.put(MESSAGE_UNREAD_NUM, totalUnread);
