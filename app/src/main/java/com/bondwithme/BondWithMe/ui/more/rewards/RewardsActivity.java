@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -49,6 +51,7 @@ public class RewardsActivity extends BaseActivity {
     private RewardResultEntity rewardResultEntity = null;
     private RecyclerView reList;
     private FullyLinearLayoutManager fll;
+    private RelativeLayout rlGeneralRewardInfo;
     private TextView tvGeneralRewardData;
     private TextView tvAddMemberForPoint;
     private TextView tvPointAcc;
@@ -61,6 +64,8 @@ public class RewardsActivity extends BaseActivity {
     private TextView tvCountPending;
     private NetworkImageView ivGeneralReward;
     private View progress;
+    private ImageView ivNoGeneralReward;
+    private ImageView ivNoReward;
 
     @Override
     public int getLayout() {
@@ -105,6 +110,10 @@ public class RewardsActivity extends BaseActivity {
         tvUserPoint = getViewById(R.id.tv_reward_pts);
         tvCountInvited = getViewById(R.id.tv_count_invited);
         tvCountPending = getViewById(R.id.tv_count_pending);
+        ivNoGeneralReward = getViewById(R.id.iv_no_general_reward);
+        ivNoReward = getViewById(R.id.iv_no_reward);
+        rlGeneralRewardInfo = getViewById(R.id.rl_reward_info);
+
 
 
         reList = getViewById(R.id.rvList);
@@ -118,21 +127,26 @@ public class RewardsActivity extends BaseActivity {
 
     int userPoint;
     private void initAdapter() {
-        userPoint = Integer.parseInt(dataRewardPoint.get(0).getUser_point());
-        adapter = new RewardAdapter(this,dataReward,String.valueOf(userPoint));
-        reList.setAdapter(adapter);
-        adapter.setItemClickListener(new RewardAdapter.ItemClickListener() {
-            @Override
-            public void itemClick(RewardEntity rewardEntity, int position) {
-                int rewardPoint = Integer.parseInt(rewardEntity.getPoint());
-                if (!rewardEntity.getTotal_voucher().equals("0") && rewardPoint <= userPoint){
-                    Intent intent = new Intent(RewardsActivity.this,RewardDetailActivity.class);
-                    intent.putExtra(REWARD,rewardEntity);
-                    startActivity(intent);
-                }
+        if (!dataReward.isEmpty()){
+            userPoint = Integer.parseInt(dataRewardPoint.get(0).getUser_point());
+            adapter = new RewardAdapter(this,dataReward,String.valueOf(userPoint));
+            reList.setAdapter(adapter);
+            adapter.setItemClickListener(new RewardAdapter.ItemClickListener() {
+                @Override
+                public void itemClick(RewardEntity rewardEntity, int position) {
+                    int rewardPoint = Integer.parseInt(rewardEntity.getPoint());
+                    if (!rewardEntity.getTotal_voucher().equals("0") && rewardPoint <= userPoint){
+                        Intent intent = new Intent(RewardsActivity.this,RewardDetailActivity.class);
+                        intent.putExtra(REWARD,rewardEntity);
+                        startActivity(intent);
+                    }
 
-            }
-        });
+                }
+            });
+        }else {
+            ivNoReward.setVisibility(View.VISIBLE);
+        }
+
     }
 
 
@@ -226,6 +240,10 @@ public class RewardsActivity extends BaseActivity {
                 }
             });
 
+        }else {
+            ivGeneralReward.setVisibility(View.VISIBLE);
+            ivGeneralReward.setVisibility(View.INVISIBLE);
+            rlGeneralRewardInfo.setVisibility(View.INVISIBLE);
         }
 
     }
