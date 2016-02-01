@@ -45,6 +45,7 @@ import com.bondwithme.BondCorp.entity.NewsEntity;
 import com.bondwithme.BondCorp.entity.PushedPhotoEntity;
 import com.bondwithme.BondCorp.entity.PutNewsEntity;
 import com.bondwithme.BondCorp.entity.UserEntity;
+import com.bondwithme.BondCorp.http.PicturesCacheUtil;
 import com.bondwithme.BondCorp.http.UrlUtil;
 import com.bondwithme.BondCorp.interfaces.ImagesRecyclerListener;
 import com.bondwithme.BondCorp.ui.share.PreviewVideoActivity;
@@ -60,6 +61,7 @@ import com.bondwithme.BondCorp.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondCorp.widget.MyDialog;
 import com.bondwithme.BondCorp.widget.WallEditView;
 import com.google.gson.Gson;
+import com.material.widget.Dialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
@@ -88,6 +90,8 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
 
     private NewsFragmentAdapter mAdapter;
     private RelativeLayout rlProgress;
+
+    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
 
     /**
      * 保存草稿的首选项
@@ -441,7 +445,8 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                 showCateGoryDialog();
                 break;
             case R.id.tv_camera:
-                openPhotos();
+//                openPhotos();
+                openChooseDialog();
                 break;
             case R.id.tv_album:
                 openPhotos();
@@ -477,6 +482,14 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         }
         if(resultCode == Activity.RESULT_OK){
             switch (requestCode){
+                case Constant.INTENT_REQUEST_HEAD_CAMERA:
+                    clearVideo();
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP,true));
+                    imageUris.add(uri);
+                    ArrayList<Uri> pickUris2 = new ArrayList<>();
+                    pickUris2.add(uri);
+                    addDataAndNotify(pickUris2);
+                    break;
                 case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
                     if (data != null) {
                         String type = data.getStringExtra(MediaData.EXTRA_MEDIA_TYPE);
@@ -686,12 +699,15 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
 //        LogUtil.d("", "openPhotos========");
         Intent intent = new Intent(getParentActivity(), SelectPhotosActivity.class);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//        /**
-//         * 使用了Universal Image Loader库来处理图片需要返回的Uri与传统有差异，传此值用于区分
-//         */
+        /**
+         * 使用了Universal Image Loader库来处理图片需要返回的Uri与传统有差异，传此值用于区分
+         */
         intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
         intent.putExtra(MediaData.USE_VIDEO_AVAILABLE, true);
-        intent.putExtra(SelectPhotosActivity.EXTRA_HAD_PHOTOS, false);
+        String photoCount = entity == null ? null : entity.getPhoto_count();
+        boolean hadPhotos = !imageUris.isEmpty() || (!TextUtils.isEmpty(photoCount) && Integer.valueOf(photoCount) > 0);
+        LogUtil.d(TAG, "openPhotos& hadPhotos: " + hadPhotos);
+        intent.putExtra(SelectPhotosActivity.EXTRA_HAD_PHOTOS, hadPhotos);
         intent.putParcelableArrayListExtra(SelectPhotosActivity.EXTRA_SELECTED_PHOTOS, (ArrayList<? extends Parcelable>) imageUris);
         int residue = SelectPhotosActivity.MAX_SELECT - photoEntities.size();
         intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
@@ -699,6 +715,61 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO);
     }
 
+    private void openChooseDialog(){
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tvAddNewMember = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
+        TextView tvCreateNewGroup = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        tvAddNewMember.setText(R.string.text_recording_video);
+        tvCreateNewGroup.setText(R.string.text_take_photos);
+        tvAddNewMember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Modify start by Jackie, Use custom recorder
+                Intent mIntent = new Intent(MediaData.ACTION_RECORDER_VIDEO);
+//                        Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                // Modify end by Jackie
+                mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.9);//画质0.5
+                //mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60000);//60s
+//                        mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 45 * 1024 * 1024l);
+                startActivityForResult(mIntent, Constant.INTENT_REQUEST_HEAD_CAMERA);//CAMERA_ACTIVITY = 1
+                showSelectDialog.dismiss();
+            }
+        });
+
+        tvCreateNewGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCamera();
+                showSelectDialog.dismiss();
+            }
+        });
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
+    }
+
+    /**
+     * 打开相机
+     */
+    private void openCamera(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra("camerasensortype", 2);
+        // 下面这句指定调用相机拍照后的照片存储的路径
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
+                        CACHE_PIC_NAME_TEMP,true)));
+        // 图片质量为高
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent.putExtra("return-data", false);
+        startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_CAMERA);
+    }
     class CallBack implements HttpCallback {
 
         /**
