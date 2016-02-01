@@ -486,6 +486,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         if (getUser().isShow_tip()) {
             IS_INTERACTIVE_USE = true;
         }
+//        IS_INTERACTIVE_USE = false;
         LogUtil.d(TAG, "isFirstLogin=========" + isFirstLogin + "======IS_FIRST_LOGIN======" + IS_FIRST_LOGIN);
         if (isFirstLogin) {
             new Thread() {

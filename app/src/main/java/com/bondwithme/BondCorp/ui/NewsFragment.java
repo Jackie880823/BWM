@@ -1,5 +1,9 @@
 package com.bondwithme.BondCorp.ui;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +17,7 @@ import com.bondwithme.BondCorp.Constant;
 import com.bondwithme.BondCorp.R;
 import com.bondwithme.BondCorp.adapter.NewsAdapter;
 import com.bondwithme.BondCorp.entity.NewsEntity;
+import com.bondwithme.BondCorp.http.UrlUtil;
 import com.bondwithme.BondCorp.util.LogUtil;
 import com.bondwithme.BondCorp.util.MessageUtil;
 import com.google.gson.Gson;
@@ -28,6 +33,7 @@ import java.util.Map;
  * Created by quankun on 16/1/22.
  */
 public class NewsFragment extends BaseFragment<MainActivity> {
+    private static final String TAG = "NewsFragment";
     View mProgressDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
@@ -98,6 +104,22 @@ public class NewsFragment extends BaseFragment<MainActivity> {
         });
     }
 
+
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case Constant.ACTION_EVENT_UPDATE_BIRTHDAY:
+                    swipeRefreshLayout.setRefreshing(true);
+                    isRefresh = true;
+                    startIndex = 0;
+                    requestData();
+                    break;
+            }
+
+        }
+    };
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
@@ -105,13 +127,26 @@ public class NewsFragment extends BaseFragment<MainActivity> {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case Constant.ACTION_NEWS_CREATE:
+                    handler.sendEmptyMessage(Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
+                    break;
+            }
+        }
+    }
+
+    @Override
     public void requestData() {
         Map<String, String> params = new HashMap<>();
         params.put("start", "" + startIndex);
         params.put("limit", "" + offSet);
+        params.put("user_id", MainActivity.getUser().getUser_id());
 
 
-        new HttpTools(getActivity()).get(String.format(Constant.API_NEWS, MainActivity.getUser().getUser_id()), params, this, new HttpCallback() {
+        String url = UrlUtil.generateUrl(Constant.API_GET_NEWS_LIST, params);
+        new HttpTools(getActivity()).get(url, params,TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -176,7 +211,7 @@ public class NewsFragment extends BaseFragment<MainActivity> {
     }
 
     private void initAdapter() {
-        adapter = new NewsAdapter(getActivity(), data);
+        adapter = new NewsAdapter(this,getActivity(), data);
         rvList.setAdapter(adapter);
     }
 }

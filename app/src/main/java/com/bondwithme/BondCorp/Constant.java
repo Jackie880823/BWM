@@ -452,4 +452,10 @@ public class Constant {
     public static final String API_GET_REWARD_LIST = API_SERVER + "/bondwithme/index.php/api/rewardList/%s";
     public static final String API_POST_REWARD_CODE = API_SERVER +"/bondwithme/index.php/api/redeemReward";
 
+    //news
+    public static final String API_GET_NEWS_LIST = API_SERVER+"/bondwithme/index.php/api/news";
+    public static final String API_POST_NEWS = API_SERVER +"/bondwithme/index.php/api/news";
+    public static final String API_GET_NEWS_DETAIL = API_SERVER +"/bondwithme/index.php/api/news";
+    public static final String API_PUT_NEWS = API_SERVER +"/bondwithme/index.php/api/updateContent/%s";
+
 }

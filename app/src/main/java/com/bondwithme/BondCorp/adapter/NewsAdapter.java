@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.bondwithme.BondCorp.R;
 import com.bondwithme.BondCorp.entity.NewsEntity;
+import com.bondwithme.BondCorp.ui.BaseFragment;
 import com.bondwithme.BondCorp.util.LogUtil;
 
 import java.util.List;
@@ -18,11 +19,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
     private int contentDisplayStatus = 0;//默认未展开
     private final int defaultMaxLineCount = 5;
     private String TAG = "NewsAdapter";
-
+    private BaseFragment fragment;
 
     public NewsAdapter(Context context, List<NewsEntity> data) {
         mContext = context;
         this.data = data;
+    }
+
+    public NewsAdapter(BaseFragment fragment,Context context, List<NewsEntity> data) {
+        mContext = context;
+        this.data = data;
+        this.fragment = fragment;
     }
 
     @Override
@@ -30,7 +37,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
         LogUtil.d(TAG,"onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_item, parent, false);
         // ViewHolder参数一定要是Item的Root节点.
-        return new NewsHolder(view,mContext);
+        return new NewsHolder(fragment,view,mContext);
     }
 
     public void add(List<NewsEntity> newData) {

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <LinearLayout
@@ -9,14 +10,40 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="@dimen/_5dp">
-
-        <TextView
-            style="@style/text_title_default"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/app_name"
-            android:textColor="@color/default_text_color_dark"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_content_padding"
+            android:layout_marginRight="@dimen/default_content_padding"
+            android:layout_marginTop="@dimen/default_content_padding"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/news_category_name"
+                    style="@style/text_title_default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/default_text_color_dark"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/btn_option"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@null"
+                    android:contentDescription="@string/delete"
+                    android:padding="@dimen/default_view_margin"
+                    android:src="@drawable/option_dots_view"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/news_title"
@@ -30,25 +57,54 @@
             style="@style/text_light_default" />
 
         <RelativeLayout
+            android:id="@+id/ll_news_image"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_200dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:visibility="gone">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/iv_pic"
+            style="@style/ListImageDefault"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent" />
 
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/iv_pic"
-                android:layout_width="match_parent"
-                android:layout_height="360dp"
-                android:scaleType="fitXY" />
-
-            <ImageButton
-                android:id="@+id/ibtn_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/btn_video"
-                android:visibility="gone" />
-
+        <ImageView
+            android:id="@+id/iv_video_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBaseline="@+id/iv_walls_images"
+            android:layout_alignBottom="@+id/iv_walls_images"
+            android:layout_alignEnd="@+id/iv_walls_images"
+            android:layout_alignLeft="@+id/iv_walls_images"
+            android:layout_alignRight="@+id/iv_walls_images"
+            android:layout_alignStart="@+id/iv_walls_images"
+            android:layout_alignTop="@+id/iv_walls_images"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_video"
+            android:visibility="gone" />
         </RelativeLayout>
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <!--<com.android.volley.toolbox.NetworkImageView-->
+                <!--android:id="@+id/iv_pic"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="360dp"-->
+                <!--android:scaleType="fitXY" />-->
+
+            <!--<ImageButton-->
+                <!--android:id="@+id/ibtn_video"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:src="@drawable/btn_video"-->
+                <!--android:visibility="gone" />-->
+
+        <!--</RelativeLayout>-->
 
         <TextView
             android:id="@+id/news_content"
@@ -85,7 +141,7 @@
                     android:textSize="@dimen/_20dp"
                     android:layout_marginLeft="@dimen/_8dp"
                     android:layout_centerVertical="true"
-                    android:text="1" />
+                    android:text="0" />
             </LinearLayout>
 
             <LinearLayout
@@ -105,7 +161,7 @@
                     android:textSize="@dimen/_20dp"
                     android:layout_marginLeft="@dimen/_8dp"
                     android:layout_centerVertical="true"
-                    android:text="1" />
+                    android:text="0" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
