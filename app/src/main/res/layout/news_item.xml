@@ -13,9 +13,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_content_padding"
-            android:layout_marginRight="@dimen/default_content_padding"
-            android:layout_marginTop="@dimen/default_content_padding"
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -27,6 +24,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/default_text_color_dark"
+                    android:layout_centerVertical="true"
                     android:textStyle="bold" />
 
                 <ImageButton
@@ -49,12 +47,20 @@
             android:id="@+id/news_title"
             style="@style/text_title_default"
             android:layout_centerVertical="true"
-            android:textColor="@color/tab_color_press4"
+            android:textColor="@color/new_title"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/news_date"
-            style="@style/text_light_default" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/news_date"
+                style="@style/text_light_default" />
+            <TextView
+                android:id="@+id/news_user"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                style="@style/text_light_default" />
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/ll_news_image"
@@ -84,27 +90,18 @@
             android:scaleType="centerInside"
             android:src="@drawable/btn_video"
             android:visibility="gone" />
+            <TextView
+                android:id="@+id/tv_wall_photo_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/_1dp"
+                android:background="@android:drawable/screen_background_dark_transparent"
+                android:padding="@dimen/_4dp"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_12sp" />
         </RelativeLayout>
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-
-            <!--<com.android.volley.toolbox.NetworkImageView-->
-                <!--android:id="@+id/iv_pic"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="360dp"-->
-                <!--android:scaleType="fitXY" />-->
-
-            <!--<ImageButton-->
-                <!--android:id="@+id/ibtn_video"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:src="@drawable/btn_video"-->
-                <!--android:visibility="gone" />-->
-
-        <!--</RelativeLayout>-->
 
         <TextView
             android:id="@+id/news_content"
@@ -125,32 +122,40 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_15dp">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/new_good_job_linear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding"
                 android:gravity="center_vertical">
                 <ImageView
+                    android:id="@+id/iv_good"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/goodjob_nonclicked"/>
                 <TextView
                     android:id="@+id/new_good_job"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/_20dp"
+                    android:layout_toRightOf="@id/iv_good"
+                    android:textSize="@dimen/_15dp"
                     android:layout_marginLeft="@dimen/_8dp"
                     android:layout_centerVertical="true"
                     android:text="0" />
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/new_comment_linear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding"
                 android:gravity="center_vertical"
                 android:layout_alignParentRight="true">
                 <ImageView
+                    android:id="@+id/iv_new_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/btn_comment"/>
@@ -158,11 +163,13 @@
                     android:id="@+id/new_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/_20dp"
-                    android:layout_marginLeft="@dimen/_8dp"
+                    android:layout_toRightOf="@id/iv_new_comment"
+                    android:layout_marginLeft="@dimen/default_content_padding"
+                    android:textSize="@dimen/_15dp"
                     android:layout_centerVertical="true"
                     android:text="0" />
-            </LinearLayout>
+
+            </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
 

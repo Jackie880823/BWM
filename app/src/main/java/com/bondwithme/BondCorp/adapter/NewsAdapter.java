@@ -54,7 +54,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
         if(!news.isVisibleOfTvMore()){
             holder.setSwitchVisibility(View.GONE);
         }
-        holder.setContent(news,mContext);
+        holder.setContent(news,mContext,position);
     }
 
 

@@ -19,7 +19,7 @@ public class NewsEntity implements Serializable {
         this.visibleOfTvMore = visibleOfTvMore;
     }
 
-
+    public static final String CONTENT_TYPE_ADS = "ads";
 
     private String group_id;
     private String group_owner_id;
@@ -49,6 +49,7 @@ public class NewsEntity implements Serializable {
     private String video_duration;
     private String dofeel_code;
     private String user_id;
+    private String user_given_name;
     private String love_id;
     private String comment_count;
     private String love_count;
@@ -56,6 +57,14 @@ public class NewsEntity implements Serializable {
     private String photo_max;
     private String track_url;
     private String video_url;
+
+    public String getUser_given_name() {
+        return user_given_name;
+    }
+
+    public void setUser_given_name(String user_given_name) {
+        this.user_given_name = user_given_name;
+    }
 
     public String getGroup_id() {
         return group_id;

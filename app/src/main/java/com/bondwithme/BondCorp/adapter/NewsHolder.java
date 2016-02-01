@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.internal.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
@@ -17,18 +18,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondCorp.Constant;
 import com.bondwithme.BondCorp.R;
 import com.bondwithme.BondCorp.entity.NewsEntity;
+import com.bondwithme.BondCorp.http.UrlUtil;
+import com.bondwithme.BondCorp.http.VolleyUtil;
 import com.bondwithme.BondCorp.ui.BaseFragment;
 import com.bondwithme.BondCorp.ui.MainActivity;
 import com.bondwithme.BondCorp.ui.WriteNewsActivity;
+import com.bondwithme.BondCorp.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondCorp.ui.wall.DiaryCommentActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.bondwithme.BondCorp.ui.wall.WallViewPicActivity;
 import com.bondwithme.BondCorp.util.MyDateUtils;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 用于显示news item，便于动态显示文本内容：展开（More）、收起（collapse），兼有播放视频的功能
@@ -41,6 +48,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
     private NewsEntity newsEntity;
     private Context mContext;
+    private int position = -1;
 
     /**
      * 新闻类型
@@ -55,6 +63,10 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     private TextView tvDate;
     /**
+     * 用户
+     */
+    private TextView tvUser;
+    /**
      * 内容
      */
     private TextView tvContent;
@@ -65,6 +77,10 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     private NetworkImageView ivPic;
     /**
+     * 图片总数
+     */
+    private TextView tvPhotoCount;
+    /**
      * 视频图标
      */
     private ImageView ibtnVideo;
@@ -74,7 +90,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
     /**
      * 网络图片父亲视图
      */
-    public View llnewsImage;
+    public View llNewsImage;
     private static final String accountUserId = MainActivity.getUser().getUser_id();
     private BaseFragment fragment;
 
@@ -92,10 +108,12 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tvCategoryName = (TextView) itemView.findViewById(R.id.news_category_name);
         tvTitle = (TextView) itemView.findViewById(R.id.news_title);
         tvDate = (TextView) itemView.findViewById(R.id.news_date);
+        tvUser = (TextView) itemView.findViewById(R.id.news_user);
 
-        llnewsImage = itemView.findViewById(R.id.ll_news_image);
+        llNewsImage = itemView.findViewById(R.id.ll_news_image);
         ivPic = (NetworkImageView) itemView.findViewById(R.id.iv_pic);
         ibtnVideo = (ImageView) itemView.findViewById(R.id.iv_video_top);
+        tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
 
         tvContent = (TextView) itemView.findViewById(R.id.news_content);
         tvMoreOrCollapse = (TextView) itemView.findViewById(R.id.tv_more_or_collapse);
@@ -119,11 +137,14 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
 
     //news content包括title，date，image，video_thumbnail，content_text
-    public void setContent(NewsEntity newsEntity, Context mContext) {
+    public void setContent(NewsEntity newsEntity, Context mContext,int position) {
+        this.position = position;
+        tvCategoryName.setText(newsEntity.getCategory_name());
         tvTitle.setText(newsEntity.getContent_title());
-        LogUtil.d(TAG, "date======" + newsEntity.getContent_creation_date());
+//        LogUtil.d(TAG, "date======" + newsEntity.getContent_creation_date());
 //        tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, newsEntity.getRelease_date()));
         tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, newsEntity.getContent_creation_date()));
+        tvUser.setText("Posted by: "+newsEntity.getUser_given_name());
         tvContent.setText(newsEntity.getText_description());
 
         if ((!accountUserId.equals(this.newsEntity.getUser_id()) && (Integer.valueOf(newsEntity.getPhoto_count()) <= 0 && TextUtils.isEmpty(newsEntity.getVideo_filename())))) {
@@ -131,6 +152,39 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
             btnOption.setVisibility(View.GONE);
         } else {
             btnOption.setVisibility(View.VISIBLE);
+        }
+
+        if(TextUtils.isEmpty(this.newsEntity.getFile_id()) && TextUtils.isEmpty(newsEntity.getVideo_thumbnail())){
+            llNewsImage.setVisibility(View.GONE);
+        }else {
+            llNewsImage.setVisibility(View.VISIBLE);
+
+            if (!TextUtils.isEmpty(this.newsEntity.getVideo_thumbnail())) { // 有视频图片说这条Wall上传的是视频并有图片，显示视频图片
+                String url = String.format(Constant.API_GET_VIDEO_THUMBNAIL, newsEntity.getContent_creator_id(), newsEntity.getVideo_thumbnail());
+//                LogUtil.i(TAG, "setContent& video_thumbnail: " + url);
+                ibtnVideo.setVisibility(View.VISIBLE);
+                VolleyUtil.initNetworkImageView(mContext, ivPic, url, R.drawable.network_image_default, R.drawable.network_image_default);
+
+                String duration = MyDateUtils.formatDuration(newsEntity.getVideo_duration());
+                if (TextUtils.isEmpty(duration)) {
+                    tvPhotoCount.setVisibility(View.GONE);
+                } else {
+                    tvPhotoCount.setVisibility(View.VISIBLE);
+                    tvPhotoCount.setText(duration);
+                }
+            }else {
+                int count = Integer.valueOf(newsEntity.getPhoto_count());
+                if (count > 1) {
+                    String photoCountStr;
+                    photoCountStr = count + " " + mContext.getString(R.string.text_photos);
+                    tvPhotoCount.setText(photoCountStr);
+                    tvPhotoCount.setVisibility(View.VISIBLE);
+                } else {
+                    tvPhotoCount.setVisibility(View.GONE);
+                }
+                ibtnVideo.setVisibility(View.GONE);
+                VolleyUtil.initNetworkImageView(mContext, ivPic, String.format(Constant.API_GET_PIC, Constant.Module_preview, newsEntity.getUser_id(), newsEntity.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            }
         }
 //        imageUrl = newsEntity.getImage();
 //        videoUrl = newsEntity.getVideo();
@@ -158,14 +212,28 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 changeTextDisplay(!isDisplayMore);
                 break;
 
-            case R.id.ibtn_video:
+            case R.id.iv_video_top:
                 playVideo();
                 break;
 
             case R.id.iv_pic:
-                if (!TextUtils.isEmpty(imageUrl)) {
-                    enlargePic();
+                if (needOpenWeb(newsEntity)) {
+                    String trackUrl = newsEntity.getTrack_url() + accountUserId;
+                    if (!TextUtils.isEmpty(trackUrl)) {
+                        Uri uri = Uri.parse(trackUrl);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        mContext.startActivity(intent);
+                    }
+                } else {
+                    if (TextUtils.isEmpty(newsEntity.getVideo_filename())) {
+                        enlargePic();
+                    } else {
+                        playVideo();
+                    }
                 }
+//                if (!TextUtils.isEmpty(imageUrl)) {
+//                    enlargePic();
+//                }
                 break;
             case R.id.new_comment_linear://评论
                 Intent intent;
@@ -233,35 +301,52 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         fragment.startActivityForResult(intent, Constant.ACTION_NEWS_CREATE);
     }
 
+    public boolean needOpenWeb(NewsEntity newsEntity) {
+        if (NewsEntity.CONTENT_TYPE_ADS.equals(newsEntity.getContent_type())) {
+            if (!TextUtils.isEmpty(newsEntity.getVideo_filename())) { // 视频不为空
+                new HttpTools(mContext).get(newsEntity.getTrack_url() + accountUserId, null, null, null);
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void enlargePic() {
-//        Intent intent = new Intent(mContext, ViewLargePicActivity.class);
-//        Intent intent = new Intent(mContext, ViewUrlPicActivity.class);
-//        intent.putExtra(PIC_URL, newsEntity.getImage());
-//        mContext.startActivity(intent);
+        Intent intent = new Intent(mContext, WallViewPicActivity.class);
+        Map<String, String> condition = new HashMap<>();
+        condition.put(Constant.CONTENT_ID, newsEntity.getContent_id());
+        Map<String, String> params = new HashMap<>();
+        params.put(Constant.CONDITION, UrlUtil.mapToJsonstring(condition));
+        String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
+        intent.putExtra(Constant.REQUEST_URL, url);
+        intent.putExtra(Constant.USER_ID, newsEntity.getUser_id());
+        intent.putExtra(Constant.POSITION, position);
+        fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_PHOTOS);
 
 
     }
 
     private void playVideo() {
-//        LogUtil.d(TAG, "playVideo==========" + newsEntity.getVideo());
-//        // 启动网络视频预览Activity的隐式意图，也可选择显示启动PreviewVideoActivity
-//        Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
-//        // 传的值对应视频的content_creator_id,news or rewards的视频除外
-//        intent.putExtra(PreviewVideoActivity.CONTENT_CREATOR_ID, "for_news_or_rewards");
-//        // 传的值对应video_filename，news or rewards的视频传full_url.
-//        intent.putExtra(PreviewVideoActivity.VIDEO_FILENAME, newsEntity.getVideo());
-//        mContext.startActivity(intent);
+//       // 启动网络视频预览Activity的隐式意图，也可选择显示启动PreviewVideoActivity
+        Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
+        // 传的值对应视频的content_creator_id
+        intent.putExtra(PreviewVideoActivity.CONTENT_CREATOR_ID, newsEntity.getContent_creator_id());
+        // 传的值对应video_filename
+        intent.putExtra(PreviewVideoActivity.VIDEO_FILENAME, newsEntity.getVideo_filename());
+        fragment.startActivity(intent);
 
     }
 
     private void changeTextDisplay(boolean isDisplayMore) {
         this.isDisplayMore = isDisplayMore;
-        LogUtil.i(TAG, "isDisplayMore==========" + isDisplayMore);
+//        LogUtil.i(TAG, "isDisplayMore==========" + isDisplayMore);
         if (globalLayoutListener == null) {
             globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    LogUtil.i(TAG, "onGlobalLayout");
+//                    LogUtil.i(TAG, "onGlobalLayout");
 
                     int lineCount = tvContent.getLineCount();
                     if (lineCount > defaultLineCount) {

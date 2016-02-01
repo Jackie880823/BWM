@@ -123,5 +123,6 @@
     <color name="reward_info">#a3000000</color>
     <color name="reward_locked">#80000000</color>
     <color name="reward_code_box">#ffce15</color>
+    <color name="new_title">#dc7400</color>
 
 </resources>
