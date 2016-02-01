@@ -114,7 +114,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
             addViews(holder, minSize - count, position);
         }
 
-        if(this.type == RelationshipEnum.sibling) {
+        if(this.type == RelationshipEnum.colleague) {
             checkArrow(holder, position);
         }
 
@@ -144,7 +144,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
     private void addViews(RelationHolder holder, int count, int position) {
         for(int i = 0; i < count; i++) {
             View child = LayoutInflater.from(context).inflate(R.layout.relationship_item_layout, null);
-            if(type == RelationshipEnum.sibling) {
+            if(type == RelationshipEnum.colleague) {
                 child.findViewById(R.id.relationship_item_content).setBackgroundResource(R.color.family_tree_relationship_sibling_background_color);
             }
             child.setOnClickListener(new View.OnClickListener() {

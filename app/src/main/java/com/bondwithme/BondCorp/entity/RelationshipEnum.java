@@ -9,7 +9,7 @@ package com.bondwithme.BondCorp.entity;
  * @version 1.0
  */
 public enum RelationshipEnum {
-    parent("parent"), sibling("sibling"), children("children");
+    supervisor("supervisor"), colleague("colleague"), subordinate("subordinate");
     private final String type;
 
     RelationshipEnum(String type) {

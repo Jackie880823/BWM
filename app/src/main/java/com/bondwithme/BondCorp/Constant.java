@@ -283,7 +283,7 @@ public class Constant {
     /**
      * 获得家庭关系的URL,
      */
-    public static final String API_FAMILY_RELATIONSHIP = API_SERVER + "/bondwithme/index.php/api/listDirectMemberWithSpouse/%s/member_id/%s";
+    public static final String API_FAMILY_RELATIONSHIP = API_SERVER + "/bondwithme/index.php/api/listDirectMemberWithColleage/%s/member_id/%s";
 
     public static final String API_ALBUM_GALLERY = API_SERVER + "/bondwithme/index.php/api/userPhotos";//album gallery
 

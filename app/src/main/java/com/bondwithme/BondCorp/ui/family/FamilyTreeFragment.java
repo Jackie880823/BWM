@@ -264,11 +264,11 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
             String type = familyMemberEntity.getRelationship_type();
             RelationshipEnum relationship = RelationshipEnum.valueOf(type);
             switch(relationship) {
-                case parent:
+                case supervisor:
                     parentMembers.add(familyMemberEntity);
                     break;
 
-                case sibling:
+                case colleague:
                     if(selectUseId.equals(familyMemberEntity.getUser_id())) {
                         LogUtil.i(TAG, "parseResponse& add first");
                         siblingMembers.add(0, familyMemberEntity);
@@ -276,7 +276,7 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
                         siblingMembers.add(familyMemberEntity);
                     }
                     break;
-                case children:
+                case subordinate:
                     childrenMembers.add(familyMemberEntity);
                     break;
 
@@ -287,11 +287,11 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
         }
 
         // 更新父辈关系列表
-        updateAdapter(parentRelation, parentAdapter, parentMembers, RelationshipEnum.parent);
+        updateAdapter(parentRelation, parentAdapter, parentMembers, RelationshipEnum.supervisor);
         // 更新兄弟姐妹关系列表
-        updateAdapter(siblingRelation, siblingAdapter, siblingMembers, RelationshipEnum.sibling);
+        updateAdapter(siblingRelation, siblingAdapter, siblingMembers, RelationshipEnum.colleague);
         // 更新孩子关系列表
-        updateAdapter(childrenRelation, childrenAdapter, childrenMembers, RelationshipEnum.children);
+        updateAdapter(childrenRelation, childrenAdapter, childrenMembers, RelationshipEnum.subordinate);
     }
 
     /**
@@ -300,7 +300,7 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
      * @param recyclerView 列表视图{@link RecyclerView}
      * @param adapter      需要更新或初始化的{@link RelationshipAdapter}
      * @param members      装入{@code adapter}的数据
-     * @param type         关系类型枚举:{@link RelationshipEnum#parent}; {@link RelationshipEnum#children}; {@link RelationshipEnum#sibling}
+     * @param type         关系类型枚举:{@link RelationshipEnum#supervisor}; {@link RelationshipEnum#colleague}; {@link RelationshipEnum#subordinate}
      */
     private void updateAdapter(RecyclerView recyclerView, RelationshipAdapter adapter, ArrayList<FamilyMemberEntity> members, RelationshipEnum type) {
         if(adapter == null) {
