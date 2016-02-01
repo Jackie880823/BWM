@@ -724,5 +724,6 @@
     <string name="text_pts">点</string>
 
     <string name="members_invited"><![CDATA[邀请了<font color="#0087FF">%1$s</font>个成员]]></string>
-    <string name="members_pending"><![CDATA[<font color="#0087FF">%1$s</font>个等待通过]]></string>
+    <string name="members_pending"><![CDATA[<font color="#0087FF">%1$s</font>个待批准成员]]></string>
+    <string name="voucher_code">优惠码</string>
 </resources>

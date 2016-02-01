@@ -728,5 +728,6 @@
     <string name="text_pts">pts</string>
     <string name="members_invited"><![CDATA[<font color="#0087FF">%1$s</font> members invited]]></string>
     <string name="members_pending"><![CDATA[<font color="#0087FF">%1$s</font> members pending]]></string>
+    <string name="voucher_code">VOUCHER CODE</string>
 
 </resources>
