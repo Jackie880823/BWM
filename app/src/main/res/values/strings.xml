@@ -726,7 +726,7 @@
     <string name="reward_point"> Reward Points?</string>
     <string name="fully_redeemed">Fully Redeemed</string>
     <string name="text_pts">pts</string>
-    <string name="members_invited">members invited</string>
-    <string name="members_pending">members pending</string>
+    <string name="members_invited"><![CDATA[<font color="#0087FF">%1$s</font> members invited]]></string>
+    <string name="members_pending"><![CDATA[<font color="#0087FF">%1$s</font> members pending]]></string>
 
 </resources>

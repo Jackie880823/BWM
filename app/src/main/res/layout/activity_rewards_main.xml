@@ -202,14 +202,8 @@
                                     android:id="@+id/tv_count_invited"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:textColor="@color/default_text_color_dark"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
                                     android:layout_toRightOf="@+id/tv_count_invited"
-                                    android:text="@string/members_invited"/>
+                                    />
 
                                 <View
                                     android:id="@+id/spit_line"
@@ -222,14 +216,8 @@
                                     android:id="@+id/tv_count_pending"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@+id/spit_line"
-                                    android:gravity="center"
-                                    android:textColor="@color/default_text_color_dark"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
                                     android:layout_toRightOf="@+id/tv_count_pending"
-                                    android:text="@string/members_pending"/>
+                                    />
                             </TableRow>
 
                         </TableLayout>
