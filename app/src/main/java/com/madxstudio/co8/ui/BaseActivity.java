@@ -274,6 +274,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onDestroy() {
         super.onDestroy();
         NetWorkStateReceiver.unRegisterNetStateObserver(this);
+        unregisterReceiver(mReceiver);
     }
 
     @Override

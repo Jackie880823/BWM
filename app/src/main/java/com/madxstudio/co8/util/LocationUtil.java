@@ -19,8 +19,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.ui.Map4BaiduActivity;
-import com.madxstudio.co8.ui.Map4GoogleActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -131,7 +129,7 @@ public class LocationUtil {
         }
         String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=%1s,%2s&key=%3s";
         final String request = String.format(url, latitude, longitude, context.getString(R.string.google_maps_place_key));
-        LogUtil.i(TAG, "getAddressByHttp& " + request);
+        com.madxstudio.co8.util.LogUtil.i(TAG, "getAddressByHttp& " + request);
         HttpTools httpTools = new HttpTools(context);
         HttpTools.getHeaders().put("Accept-Language", Locale.getDefault().getLanguage());
         httpTools.get(request, null, null, new HttpCallback() {
@@ -147,7 +145,7 @@ public class LocationUtil {
 
             @Override
             public void onResult(String string) {
-                LogUtil.i(TAG, "getAddressByHttp& onResult: " + string);
+                com.madxstudio.co8.util.LogUtil.i(TAG, "getAddressByHttp& onResult: " + string);
                 try {
                     JSONObject dataJson;
                     dataJson = new JSONObject(string);
@@ -211,7 +209,7 @@ public class LocationUtil {
      * @param context 上下文资源
      */
     public static void setRequestLocationUpdates(Context context, final GoogleServiceCheckTaskListener mGoogleServiceCheckTaskListener) {
-        if (SystemUtil.checkPlayServices(context)) {
+        if (com.madxstudio.co8.util.SystemUtil.checkPlayServices(context)) {
             if (lm == null) {
                 lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             }
@@ -243,7 +241,7 @@ public class LocationUtil {
                 @Override
                 public void onResult(String string) {
                     googleAvailable = true;
-                    LogUtil.i(TAG, string);
+                    com.madxstudio.co8.util.LogUtil.i(TAG, string);
                 }
 
                 @Override
@@ -288,9 +286,9 @@ public class LocationUtil {
         //判断这个存在缺陷。如果用户网络状态突然更改不翻墙，此时导致用户无法使用谷歌地图，导致此功能不能使用。
         if (!googleAvailable) {
             // 应用启动后用谷歌获取了一次地址信息，如果这次地址信息为空则证明谷歌地图不可用，启用百度地
-            intent.setClass(context, Map4BaiduActivity.class);
+            intent.setClass(context, com.madxstudio.co8.ui.Map4BaiduActivity.class);
         } else {
-            intent.setClass(context, Map4GoogleActivity.class);
+            intent.setClass(context, com.madxstudio.co8.ui.Map4GoogleActivity.class);
         }
 
         return intent;
@@ -429,8 +427,8 @@ public class LocationUtil {
 
     private static void goWithBaidu(Context context, double latitude, double longitude, String locationType) {
         Intent intent;//判断没有百度地图
-        if (SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
-            String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
+        if (com.madxstudio.co8.util.SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
+            String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, com.madxstudio.co8.util.AppInfoUtil.APP_NAME);
             try {
                 intent = Intent.getIntent(uri);
                 intent.setAction(Intent.ACTION_VIEW);
@@ -447,7 +445,7 @@ public class LocationUtil {
 
     private static void openWebViewGoogle2baidu(final Context context, final double latitude, final double longitude) {
         String url = String.format("http://api.map.baidu.com/geoconv/v1/?coords=%s,%s&mcode=%s&from=3&to=5&ak=%s", longitude, latitude, "E9:37:78:D3:36:04:44:E3:D3:51:84:CA:D3:17:57:07:5A:67:75:E2;com.madxstudio.co8", context.getResources().getString(R.string.baidu_maps_key));
-        LogUtil.d(TAG, "0string============" + url);
+        com.madxstudio.co8.util.LogUtil.d(TAG, "0string============" + url);
         new HttpTools(context).get(url, null, TAG, new HttpCallback() {
             @Override
             public void onStart() {
@@ -456,12 +454,12 @@ public class LocationUtil {
 
             @Override
             public void onFinish() {
-                LogUtil.d(TAG, "2string============");
+                com.madxstudio.co8.util.LogUtil.d(TAG, "2string============");
             }
 
             @Override
             public void onResult(String string) {
-                LogUtil.d(TAG, "1string============" + string);
+                com.madxstudio.co8.util.LogUtil.d(TAG, "1string============" + string);
                 try {
                     JSONArray result = (JSONArray) new JSONObject(string).get("result");
                     double x = 0;
@@ -471,8 +469,8 @@ public class LocationUtil {
                         x = (double) jsonObject.get("x");
                         y = (double) jsonObject.get("y");
                     }
-                    LogUtil.d(TAG, "4string============" + x);
-                    LogUtil.d(TAG, "4string============" + y);
+                    com.madxstudio.co8.util.LogUtil.d(TAG, "4string============" + x);
+                    com.madxstudio.co8.util.LogUtil.d(TAG, "4string============" + y);
                     goWithBaidu(context, y, x, LOCATION_TYPE_BD09LL);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -500,8 +498,8 @@ public class LocationUtil {
         String uri = "http://api.map.baidu.com/geocoder?location=%s&coord_type=%s&output=html&src=%s";
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-        Uri content_url = Uri.parse(String.format(uri, (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME));
-        LogUtil.d(TAG, "5string============" + content_url);
+        Uri content_url = Uri.parse(String.format(uri, (latitude + "," + longitude), locationType, com.madxstudio.co8.util.AppInfoUtil.APP_NAME));
+        com.madxstudio.co8.util.LogUtil.d(TAG, "5string============" + content_url);
         intent.setData(content_url);
         context.startActivity(intent);
     }
@@ -516,7 +514,7 @@ public class LocationUtil {
      * @return 返回的所需位置图片的URL路径
      */
     public static String getLocationPicUrl(Context context, String latitude, String longitude, String locationType) {
-        LogUtil.i(TAG, "getLocationPicUrl& locationType: " + locationType);
+        com.madxstudio.co8.util.LogUtil.i(TAG, "getLocationPicUrl& locationType: " + locationType);
         String location;
         String result;
         if (googleAvailable) {
@@ -536,7 +534,7 @@ public class LocationUtil {
             location = longitude + "," + latitude;
             result = String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, location, context.getString(R.string.google_map_pic_size), location);
         }
-        LogUtil.i(TAG, "getLocationPicUrl& result picture url: " + result);
+        com.madxstudio.co8.util.LogUtil.i(TAG, "getLocationPicUrl& result picture url: " + result);
         return result;
     }
 

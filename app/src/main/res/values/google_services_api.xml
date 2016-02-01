@@ -21,9 +21,9 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
     string in this file.
     --></string>
 
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDpTdBQK5pFyfijzfynDXYWjBLpkGm1g2M</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDS-U6pCmB5CjSZjbNWSA56A_1ThrLT00A</string>
     <!--用于搜索-->
-    <string name="google_maps_place_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDT_b4XSfwPPIuTTugObeZFi2Wo9M1UBVM</string>
+    <string name="google_maps_place_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDS-U6pCmB5CjSZjbNWSA56A_1ThrLT00A</string>
 
 
     <!-- GCM -->

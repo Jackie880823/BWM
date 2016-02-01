@@ -189,13 +189,15 @@ public class CaptureActivity extends BaseActivity implements Callback {
 	 * @param barcode
 	 *            获取结果
 	 */
+
+    String strPrefixId = "=";
 	public void handleDecode(Result result, Bitmap barcode) {
 		inactivityTimer.onActivity();
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
         LogUtil.d("CaptureActivity", "handleDecode()====resultString===" + resultString);
-        if (resultString.contains("bondwith.me")){
-            resultString=resultString.substring(resultString.length()-10);
+        if (resultString.contains("bid=")){
+            resultString=resultString.substring(resultString.indexOf(strPrefixId) + 1,resultString.length());
             LogUtil.d("CaptureActivity", "resultString===" + resultString);
             checkId(resultString);
         }else {
@@ -208,11 +210,11 @@ public class CaptureActivity extends BaseActivity implements Callback {
 	}
 
     private void checkId(final String bwmId) {
-        LogUtil.d(TAG,"checkId()======");
         UserEntity me  = MainActivity.getUser();
-        LogUtil.d(TAG,"checkId()======Bondwithme_id():"+me.getBondwithme_id());
-        if (bwmId.equals(me.getDis_bondwithme_id())) {
-            LogUtil.d(TAG,"checkId()"+"bemId:"+me.getDis_bondwithme_id());
+        LogUtil.d(TAG,"checkId()======bwmId:"+bwmId);
+        LogUtil.d(TAG,"checkId()======Dis_Bondwithme_id():"+me.getDis_bondwithme_id());
+        if (me.getDis_bondwithme_id().equals(bwmId)) {
+            LogUtil.d(TAG,"checkId()"+"bemIIIIIIIIIId:"+me.getDis_bondwithme_id());
             Intent resultIntent = new Intent(CaptureActivity.this, MeActivity.class);
             startActivity(resultIntent);
             return;
@@ -264,7 +266,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
                             startActivity(resultIntent);
                         }else if("1".equals(memberFlag)){
                             Intent resultIntent = new Intent(CaptureActivity.this, FamilyProfileActivity.class);
-                        resultIntent.putExtra("userEntity", userEntity);
+                            resultIntent.putExtra("userEntity", userEntity);
                             resultIntent.putExtra(SCAN_RESULT,bwmId);
                             startActivity(resultIntent);
                         }
