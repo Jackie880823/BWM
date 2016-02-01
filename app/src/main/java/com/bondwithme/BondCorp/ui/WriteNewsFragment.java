@@ -43,7 +43,7 @@ import com.bondwithme.BondCorp.entity.DiaryPhotoEntity;
 import com.bondwithme.BondCorp.entity.MediaData;
 import com.bondwithme.BondCorp.entity.NewsEntity;
 import com.bondwithme.BondCorp.entity.PushedPhotoEntity;
-import com.bondwithme.BondCorp.entity.PutWallEntity;
+import com.bondwithme.BondCorp.entity.PutNewsEntity;
 import com.bondwithme.BondCorp.entity.UserEntity;
 import com.bondwithme.BondCorp.http.UrlUtil;
 import com.bondwithme.BondCorp.interfaces.ImagesRecyclerListener;
@@ -52,6 +52,7 @@ import com.bondwithme.BondCorp.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondCorp.util.LocalImageLoader;
 import com.bondwithme.BondCorp.util.LocationUtil;
 import com.bondwithme.BondCorp.util.LogUtil;
+import com.bondwithme.BondCorp.util.MessageUtil;
 import com.bondwithme.BondCorp.util.MyDateUtils;
 import com.bondwithme.BondCorp.util.SDKUtil;
 import com.bondwithme.BondCorp.util.UIUtil;
@@ -348,7 +349,13 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                     }
                     tvLocationDesc.setText(locName);
                     wevContent.setText(entity.getText_description());
-                    category_tv.setText(list.get(Integer.valueOf(entity.getCategory_id()).intValue()));
+                    categoryId = entity.getCategory_id();
+                    String categoryText = list.get(Integer.valueOf(categoryId).intValue() - 1);
+                    if(!TextUtils.isEmpty(categoryText)){
+                        category_tv.setText(categoryText);
+                    }else {
+                        category_tv.setText(list.get(0));
+                    }
                     String s = entity.getContent_title();
                     titleDesc.setText(s);
 
@@ -611,7 +618,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 categoryDialog.dismiss();
-                categoryId = String.valueOf(i);
+                categoryId = String.valueOf(i + 1);
                 category_tv.setText(list.get(i));
             }
         });
@@ -801,7 +808,14 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
             putWall();
             return;
         }
+
         String text_content = wevContent.getRelText();
+        if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)
+                || TextUtils.isEmpty(categoryId) || TextUtils.isEmpty(titleDesc.getText().toString())) {
+            // 没文字、没图片、没视频不能上传日记
+            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            return;
+        }
         mHandler.sendEmptyMessage(SHOW_PROGRESS);
         String locationDesc = tvLocationDesc.getText().toString();
         String latitudeDesc;
@@ -1018,11 +1032,12 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
      */
     public void putWall() {
         String text_content = wevContent.getRelText();
-//        if (!isUpate && (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri))) {
-//            // 没文字、没图片、没视频不能上传日记
-//            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
-//            return;
-//        }
+        if (!isUpate && (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri))
+                || TextUtils.isEmpty(categoryId) || TextUtils.isEmpty(titleDesc.getText().toString())) {
+            // 没文字、没图片、没视频不能上传日记
+            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            return;
+        }
         mHandler.sendEmptyMessage(SHOW_PROGRESS);
         String locationDesc = tvLocationDesc.getText().toString();
         String latitudeDesc;
@@ -1042,20 +1057,21 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
          *
          */
 
-        PutWallEntity putWallEntity = new PutWallEntity();
-        putWallEntity.setNew_photo("0");
-        putWallEntity.setUser_id(MainActivity.getUser().getUser_id());
-        putWallEntity.setText_description(text_content);
-        putWallEntity.setLoc_latitude(latitudeDesc);
-        putWallEntity.setLoc_longitude(longitudeDesc);
-        putWallEntity.setLoc_name(locationDesc);
-        putWallEntity.setLoc_type(loc_type);
-        putWallEntity.setDelete_photo(deletePhoto);
-        putWallEntity.setDelete_video(deleteVideo);
-        putWallEntity.setPhoto_max(String.valueOf(photoEntities.size() - 1));
-
+        PutNewsEntity putNewsEntity = new PutNewsEntity();
+        putNewsEntity.setNew_photo("0");
+        putNewsEntity.setUser_id(MainActivity.getUser().getUser_id());
+        putNewsEntity.setText_description(text_content);
+        putNewsEntity.setLoc_latitude(latitudeDesc);
+        putNewsEntity.setLoc_longitude(longitudeDesc);
+        putNewsEntity.setLoc_name(locationDesc);
+        putNewsEntity.setLoc_type(loc_type);
+        putNewsEntity.setDelete_photo(deletePhoto);
+        putNewsEntity.setDelete_video(deleteVideo);
+        putNewsEntity.setPhoto_max(String.valueOf(photoEntities.size() - 1));
+        putNewsEntity.setCategory_id(categoryId);
+        putNewsEntity.setContent_title(titleDesc.getText().toString());
         if (!Uri.EMPTY.equals(videoUri)) {
-            putWallEntity.setNew_video("1");
+            putNewsEntity.setNew_video("1");
         } else {
             ArrayList<PushedPhotoEntity> pushedPhotoEntities = new ArrayList<>();
             for (int i = 0; i < photoEntities.size() - localEntities.size(); i++) {
@@ -1065,16 +1081,16 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                 photoEntity.setPhoto_caption(caption);
                 pushedPhotoEntities.add(photoEntity);
             }
-            putWallEntity.setEdit_photo(pushedPhotoEntities);
+            putNewsEntity.setEdit_photo(pushedPhotoEntities);
         }
 
         if (!localEntities.isEmpty()) {
-            putWallEntity.setNew_photo("1");
+            putNewsEntity.setNew_photo("1");
         }
 
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = String.format(Constant.API_PUT_NEWS, entity.getContent_id());
-        requestInfo.jsonParam = gson.toJson(putWallEntity);
+        requestInfo.jsonParam = gson.toJson(putNewsEntity);
         LogUtil.d(TAG, "params: " + requestInfo.jsonParam);
         callBack.setLinkType(CallBack.LINK_TYPE_PUT_WALL);
         mHttpTools.put(requestInfo, TAG, callBack);
