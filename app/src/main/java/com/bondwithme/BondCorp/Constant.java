@@ -457,5 +457,7 @@ public class Constant {
     public static final String API_POST_NEWS = API_SERVER +"/bondwithme/index.php/api/news";
     public static final String API_GET_NEWS_DETAIL = API_SERVER +"/bondwithme/index.php/api/news";
     public static final String API_PUT_NEWS = API_SERVER +"/bondwithme/index.php/api/updateContent/%s";
+    public static final String API_GOOD_JOB_MEMBER = API_SERVER + "/bondwithme/index.php/api/goodjob";//goodjob用户
+    public static final String API_UPDATE_GOOD_JOB = API_SERVER + "/bondwithme/index.php/api/goodjob/%s";//消除好友的goodjob
 
 }

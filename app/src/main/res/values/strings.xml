@@ -288,11 +288,11 @@
 
     <string name="text_setting_2_title">Auto Accept Relationship</string>
     <string name="text_setting_2_1">All</string>
-    <string name="text_setting_2_2">Parent</string>
-    <string name="text_setting_2_3">Spouse</string>
-    <string name="text_setting_2_4">Sibling</string>
-    <string name="text_setting_2_5">Children</string>
-    <string name="text_setting_2_6">Others</string>
+    <string name="text_setting_2_2">Supervisor </string>
+    <string name="text_setting_2_3">Subordinate </string>
+    <string name="text_setting_2_4">Colleague </string>
+    <string name="text_setting_2_5">Supplier </string>
+    <string name="text_setting_2_6">Customer </string>
 
     <string name="text_auto_accept">Auto-Accept Relationship</string>
     <string name="text_birthday_alert_reminder">Birthday Reminder</string>
@@ -414,7 +414,7 @@
     <string name="text_no_data">Nothing found.</string>
     <string name="year">Year</string>
     <string name="text_new_everyone">All Members</string>
-    <string name="text_new_family">Family</string>
+    <string name="text_new_family">Organisation</string>
 
 
     <string name="text_sticker_store">Stickies Store</string>
@@ -743,6 +743,8 @@
     <string name="text_category">Category</string>
     <string name="title_writle_new_title">Title</string>
     <string name="text_write_new_here">Write your story here</string>
-    <string name="text_meeting_end_time">会议结束时间必须晚于开始时间</string>
-    <string name="text_choose_start_time">请选择会议开始时间</string>
+    <string name="text_meeting_end_time">Meeting End Date &amp; Time must be later than Start Date &amp; Time</string>
+    <string name="text_choose_start_time">Please Select Start Date &amp; Time</string>
+    <string name="text_org_chart">Org Chart</string>
+    <string name="text_orgin_workspace">Organisation</string>
 </resources>

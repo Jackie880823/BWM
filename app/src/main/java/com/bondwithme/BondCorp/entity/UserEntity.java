@@ -14,10 +14,12 @@ public class UserEntity implements Serializable {
     public static final String EXTRA_GROUP_ID = "groupId";
     public static final String EXTRA_GROUP_NAME = "groupName";
 
-    /**实体关系UserEntity为测试用，可以到UserEntity注释看反引用关系写法*/
+    /**
+     * 实体关系UserEntity为测试用，可以到UserEntity注释看反引用关系写法
+     */
 //	@ForeignCollectionField(eager = true,orderColumnName="date",orderAscending=false)
-	@ForeignCollectionField(eager = true,orderAscending=false)
-	private ForeignCollection<LocalStickerInfo> stickers;
+    @ForeignCollectionField(eager = true, orderAscending = false)
+    private ForeignCollection<LocalStickerInfo> stickers;
 
     private String user_id;
     private String user_given_name;
@@ -61,6 +63,21 @@ public class UserEntity implements Serializable {
     private String group_member_response;
     private List<String> user_phone_number;
 
+    private String user_dob_day;
+    private String user_dob_month;
+    private String user_dob_year;
+    private String user_qr;
+    private String dofeel_code;
+    private String department;
+    private String position;
+    private String organisation;
+    private String fam_accept_flag2;
+    private String owner_user_name;
+    private String user_accept_flag;
+    private List<String> int_phone_ext;
+    private List<String> office_phone;
+    private List<String> mobile_phone;
+
     public List<String> getUser_phone_number() {
         return user_phone_number;
     }
@@ -101,6 +118,110 @@ public class UserEntity implements Serializable {
     private String member_flag;
     private boolean show_tip;
     private boolean show_add_member;
+
+    public String getUser_dob_day() {
+        return user_dob_day;
+    }
+
+    public void setUser_dob_day(String user_dob_day) {
+        this.user_dob_day = user_dob_day;
+    }
+
+    public String getUser_dob_month() {
+        return user_dob_month;
+    }
+
+    public void setUser_dob_month(String user_dob_month) {
+        this.user_dob_month = user_dob_month;
+    }
+
+    public String getUser_dob_year() {
+        return user_dob_year;
+    }
+
+    public void setUser_dob_year(String user_dob_year) {
+        this.user_dob_year = user_dob_year;
+    }
+
+    public String getUser_qr() {
+        return user_qr;
+    }
+
+    public void setUser_qr(String user_qr) {
+        this.user_qr = user_qr;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(String organisation) {
+        this.organisation = organisation;
+    }
+
+    public String getFam_accept_flag2() {
+        return fam_accept_flag2;
+    }
+
+    public void setFam_accept_flag2(String fam_accept_flag2) {
+        this.fam_accept_flag2 = fam_accept_flag2;
+    }
+
+    public String getOwner_user_name() {
+        return owner_user_name;
+    }
+
+    public void setOwner_user_name(String owner_user_name) {
+        this.owner_user_name = owner_user_name;
+    }
+
+    public String getUser_accept_flag() {
+        return user_accept_flag;
+    }
+
+    public void setUser_accept_flag(String user_accept_flag) {
+        this.user_accept_flag = user_accept_flag;
+    }
+
+    public List<String> getInt_phone_ext() {
+        return int_phone_ext;
+    }
+
+    public void setInt_phone_ext(List<String> int_phone_ext) {
+        this.int_phone_ext = int_phone_ext;
+    }
+
+    public List<String> getOffice_phone() {
+        return office_phone;
+    }
+
+    public void setOffice_phone(List<String> office_phone) {
+        this.office_phone = office_phone;
+    }
+
+    public List<String> getMobile_phone() {
+        return mobile_phone;
+    }
+
+    public void setMobile_phone(List<String> mobile_phone) {
+        this.mobile_phone = mobile_phone;
+    }
 
     public boolean isShow_add_member() {
         return show_add_member;
@@ -189,9 +310,6 @@ public class UserEntity implements Serializable {
     public void setAdded_flag(String added_flag) {
         this.added_flag = added_flag;
     }
-
-    private String dofeel_code;
-    /*Update Profile Details */
 
     public String getDofeel_code() {
         return dofeel_code;

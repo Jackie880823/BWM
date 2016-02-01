@@ -228,7 +228,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                     int countOfTotal = Integer.valueOf(countString);
                     int countOfNews = Integer.valueOf(jsonObject.getString("news"));
                     int countOfMember = Integer.valueOf(jsonObject.getString("member"));
-                    int countOfRecommended = Integer.valueOf(jsonObject.getString("recommended"));
+                    int countOfRecommended = Integer.valueOf(jsonObject.optString("recommended","0"));
                     int countOfRewards = Integer.valueOf(jsonObject.getString("reward"));
                     LogUtil.d(TAG,"countOfNews======"+countOfNews+"countOfRewards========="+countOfRewards);
                     int count = countOfTotal - countOfNews - countOfRecommended;

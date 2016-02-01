@@ -32,7 +32,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/default_content_padding">
+                android:padding="@dimen/default_content_padding"
+                android:visibility="gone">
 
                 <TextView
                     style="@style/text_title_default"
@@ -51,13 +52,15 @@
 
             </RelativeLayout>
 
-            <View style="@style/split_line_default" />
+            <View style="@style/split_line_default"
+                android:visibility="gone"/>
 
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/default_content_padding">
+                android:padding="@dimen/default_content_padding"
+                android:visibility="gone">
 
                 <TextView
                     style="@style/text_title_default"
@@ -76,7 +79,8 @@
 
             </RelativeLayout>
 
-            <View style="@style/split_line_default" />
+            <View style="@style/split_line_default"
+                android:visibility="gone"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"

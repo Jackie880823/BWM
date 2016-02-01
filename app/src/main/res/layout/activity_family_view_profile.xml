@@ -10,75 +10,86 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/fragment_main_top">
+
         <RelativeLayout
             android:id="@+id/rl_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <RelativeLayout
                 android:id="@+id/ll_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@color/default_content_bg">
+                android:background="@color/default_content_bg"
+                android:orientation="horizontal">
 
                 <com.android.volley.toolbox.NetworkImageView
                     android:id="@+id/iv_profile_images"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitStart"
-                    android:adjustViewBounds="true" />
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitStart" />
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:layout_alignParentBottom="true">
+                    android:layout_alignParentBottom="true"
+                    android:padding="16dp">
+
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
+
                         <com.bondwithme.BondCorp.widget.CircularNetworkImage
                             android:id="@+id/cni_main"
                             android:layout_width="90dp"
                             android:layout_height="90dp"
-                            android:src="@drawable/sign_up"/>
+                            android:src="@drawable/sign_up" />
+
                         <ImageView
                             android:id="@+id/civ_left"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:layout_gravity="bottom|left"/>
+                            android:layout_gravity="bottom|left" />
+
                         <ImageView
                             android:id="@+id/civ_right"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:layout_gravity="bottom|right"/>
+                            android:layout_gravity="bottom|right" />
                     </FrameLayout>
                 </LinearLayout>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/default_view_margin"
                     android:visibility="gone">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true">
+                        android:orientation="vertical">
+
                         <TextView
                             android:id="@+id/tv_name1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
                             android:singleLine="true"
                             android:text=""
-                            android:ellipsize="end"
-                            android:textSize="@dimen/text_large_size"
-                            android:textColor="@android:color/black"/>
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/text_large_size" />
+
                         <TextView
                             android:id="@+id/tv_id1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=""
                             android:layout_marginTop="@dimen/default_view_margin"
-                            android:textSize="@dimen/text_small_size"/>
+                            android:text=""
+                            android:textSize="@dimen/text_small_size" />
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -86,19 +97,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
+                android:layout_below="@+id/ll_card"
+                android:orientation="vertical">
 
-                android:layout_below="@+id/ll_card">
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
-                    android:background="@color/default_wide_split_line"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:background="@color/default_wide_split_line" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/default_split_line"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:background="@color/default_split_line" />
+
                 <RelativeLayout
                     android:id="@+id/rl_first_name"
                     android:layout_width="match_parent"
@@ -109,30 +122,33 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/_10dp"
-                            android:text="@string/text_first_name"/>
+                            android:text="@string/text_first_name"
+                            android:textSize="@dimen/_10dp" />
+
                         <TextView
                             android:id="@+id/tv_first_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:textSize="@dimen/text_small_size"
-                            android:singleLine="true"
                             android:gravity="left"
+                            android:singleLine="true"
+                            android:text=""
                             android:textColor="@color/drawer_arrow_color"
-                            android:text=""/>
+                            android:textSize="@dimen/text_small_size" />
                     </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/default_split_line"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -140,34 +156,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/_10dp"
-                            android:text="@string/text_last_name"/>
+                            android:text="@string/text_last_name"
+                            android:textSize="@dimen/_10dp" />
+
                         <TextView
                             android:id="@+id/tv_last_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:textSize="@dimen/text_small_size"
-                            android:singleLine="true"
                             android:gravity="left"
+                            android:singleLine="true"
+                            android:text=""
                             android:textColor="@color/drawer_arrow_color"
-                            android:text=""/>
+                            android:textSize="@dimen/text_small_size" />
                     </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/default_split_line"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -175,38 +195,43 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:lines="2"/>
+                        android:lines="2" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/_10dp"
-                            android:text="@string/text_birthday"/>
+                            android:text="@string/text_birthday"
+                            android:textSize="@dimen/_10dp" />
+
                         <TextView
                             android:id="@+id/tv_birthday"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:textSize="@dimen/text_small_size"
-                            android:singleLine="true"
                             android:gravity="left"
+                            android:singleLine="true"
+                            android:text=""
                             android:textColor="@color/drawer_arrow_color"
-                            android:text=""/>
+                            android:textSize="@dimen/text_small_size" />
                     </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/default_split_line"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -214,34 +239,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/_10dp"
-                            android:text="@string/text_profile_year_of_birth"/>
+                            android:text="@string/text_profile_year_of_birth"
+                            android:textSize="@dimen/_10dp" />
+
                         <TextView
                             android:id="@+id/tv_year_birthday"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:textSize="@dimen/text_small_size"
-                            android:singleLine="true"
                             android:gravity="left"
+                            android:singleLine="true"
+                            android:text=""
                             android:textColor="@color/drawer_arrow_color"
-                            android:text=""/>
+                            android:textSize="@dimen/text_small_size" />
                     </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/default_split_line"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
                 </RelativeLayout>
 
 
@@ -250,38 +279,43 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:lines="2"/>
+                        android:lines="2" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/_10dp"
-                            android:text="@string/text_gender"/>
+                            android:text="@string/text_gender"
+                            android:textSize="@dimen/_10dp" />
+
                         <TextView
                             android:id="@+id/tv_gender"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:textSize="@dimen/text_small_size"
-                            android:singleLine="true"
                             android:gravity="left"
+                            android:singleLine="true"
+                            android:text=""
                             android:textColor="@color/drawer_arrow_color"
-                            android:text=""/>
+                            android:textSize="@dimen/text_small_size" />
                     </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/default_split_line"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -289,34 +323,113 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/_10dp"
-                            android:text="@string/text_email"/>
+                            android:text="@string/text_email"
+                            android:textSize="@dimen/_10dp" />
+
                         <TextView
                             android:id="@+id/tv_email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:textSize="@dimen/text_small_size"
-                            android:singleLine="true"
                             android:gravity="left"
+                            android:singleLine="true"
+                            android:text=""
                             android:textColor="@color/drawer_arrow_color"
-                            android:text=""/>
+                            android:textSize="@dimen/text_small_size" />
                     </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/default_split_line"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_position"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_profile_position"
+                            android:textSize="@dimen/_10dp" />
+
+                        <TextView
+                            android:id="@+id/et_position"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:gravity="left"
+                            android:singleLine="true"
+                            android:text=""
+                            android:textSize="@dimen/text_small_size" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_department"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_profile_department"
+                            android:textSize="@dimen/_10dp" />
+
+                        <TextView
+                            android:id="@+id/et_department"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:gravity="left"
+                            android:singleLine="true"
+                            android:text=""
+                            android:textSize="@dimen/text_small_size" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -324,34 +437,69 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/_10dp"
-                            android:text="@string/text_region"/>
+                            android:text="@string/text_region"
+                            android:textSize="@dimen/_10dp" />
+
                         <TextView
                             android:id="@+id/tv_region"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
-                            android:textSize="@dimen/text_small_size"
-                            android:singleLine="true"
                             android:gravity="left"
+                            android:singleLine="true"
+                            android:text=""
                             android:textColor="@color/drawer_arrow_color"
-                            android:text=""/>
+                            android:textSize="@dimen/text_small_size" />
                     </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/default_split_line"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_et_internal_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_internal_phone"
+                            android:textSize="@dimen/_10dp" />
+
+                        <com.bondwithme.BondCorp.widget.NoScrollListView
+                            android:id="@+id/et_internal_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"></com.bondwithme.BondCorp.widget.NoScrollListView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -359,92 +507,107 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone">
+
                     <View
                         android:id="@+id/line"
                         android:layout_width="match_parent"
                         android:layout_height="5dp"
-                        android:background="@color/default_wide_split_line"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:background="@color/default_wide_split_line" />
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignBottom="@+id/line"
-                        android:background="@color/default_split_line"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
+
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:padding="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/_10dp"
-                            android:text="@string/text_phone"/>
-                        <TextView
+                            android:text="@string/text_phone"
+                            android:textSize="@dimen/_10dp" />
+
+                        <com.bondwithme.BondCorp.widget.NoScrollListView
                             android:id="@+id/tv_phone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:textSize="@dimen/text_small_size"
-                            android:singleLine="true"
-                            android:gravity="right"
-                            android:textColor="@color/drawer_arrow_color"
-                            android:text=""/>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </com.bondwithme.BondCorp.widget.NoScrollListView>
+                        <!--<TextView-->
+                        <!--android:id="@+id/tv_phone"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:background="@null"-->
+                        <!--android:gravity="right"-->
+                        <!--android:singleLine="true"-->
+                        <!--android:text=""-->
+                        <!--android:textColor="@color/drawer_arrow_color"-->
+                        <!--android:textSize="@dimen/text_small_size" />-->
                     </LinearLayout>
                 </RelativeLayout>
 
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
+
     <FrameLayout
         android:id="@+id/fl_member"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
+        android:background="@android:color/white"
         android:orientation="vertical"
-        android:background="@android:color/white">
+        android:visibility="gone">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <Button
                 android:id="@+id/btn_add_member"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40dp"
-                android:background="@drawable/btn_chat_add_member_bg"
-                android:padding="@dimen/default_content_padding"
-                android:text="@string/text_add_member"
-                android:textColor="#ffffff"
-                android:textAllCaps="false"
-                android:typeface="normal"
-                android:visibility="gone"
+                android:layout_marginBottom="@dimen/_10dp"
                 android:layout_marginLeft="@dimen/_20dp"
                 android:layout_marginRight="@dimen/_20dp"
-                android:layout_marginBottom="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_10dp"
+                android:background="@drawable/btn_chat_add_member_bg"
                 android:gravity="center"
-                android:textSize="@dimen/_22dp"/>
+                android:padding="@dimen/default_content_padding"
+                android:text="@string/text_add_member"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/_22dp"
+                android:typeface="normal"
+                android:visibility="gone" />
+
             <Button
                 android:id="@+id/btn_message"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40dp"
-                android:background="@drawable/btn_chat_add_member_bg"
-                android:padding="@dimen/default_content_padding"
-                android:text="@string/text_send_message"
-                android:textColor="#ffffff"
-                android:textAllCaps="false"
-                android:typeface="normal"
-                android:visibility="gone"
+                android:layout_marginBottom="@dimen/_10dp"
                 android:layout_marginLeft="@dimen/_20dp"
                 android:layout_marginRight="@dimen/_20dp"
-                android:layout_marginBottom="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_10dp"
+                android:background="@drawable/btn_chat_add_member_bg"
                 android:gravity="center"
-                android:textSize="@dimen/_22dp"/>
+                android:padding="@dimen/default_content_padding"
+                android:text="@string/text_send_message"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/_22dp"
+                android:typeface="normal"
+                android:visibility="gone" />
         </RelativeLayout>
     </FrameLayout>
-    <include layout="@layout/progress_layout"/>
+
+    <include layout="@layout/progress_layout" />
 
 </RelativeLayout>

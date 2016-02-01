@@ -266,7 +266,7 @@ public class PathRelationshipActivity extends BaseActivity {
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("member_id", memberId);
         jsonParams.put("user_relationship_name", relationship);//上传的是英文字符串
-        jsonParams.put("fam_nickname", fam_nickname);
+//        jsonParams.put("fam_nickname", fam_nickname);
         jsonParams.put("member_status", member_status);
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 

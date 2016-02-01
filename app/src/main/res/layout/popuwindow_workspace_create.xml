@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_120dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_only_me"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40dp"
+        android:drawableLeft="@drawable/privacy_lock"
+        android:drawablePadding="@dimen/_5dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/_5dp"
+        android:text="@string/text_only_me"
+        android:textColor="@color/btn_bg_color_gray_normal"
+        android:textSize="@dimen/text_mirco_size" />
+
+    <View
+        style="@style/split_line_default"
+        android:layout_width="@dimen/_120dp" />
+
+    <TextView
+        android:id="@+id/tv_all_member"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40dp"
+        android:drawableLeft="@drawable/privacy_open"
+        android:drawablePadding="@dimen/_5dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/_5dp"
+        android:text="@string/text_all_member"
+        android:textColor="@color/btn_bg_color_gray_normal"
+        android:textSize="@dimen/text_mirco_size" />
+
+    <LinearLayout
+        android:id="@+id/linear_organisation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            style="@style/split_line_default"
+            android:layout_width="@dimen/_120dp" />
+
+        <TextView
+            android:id="@+id/tv_organisation"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40dp"
+            android:drawableLeft="@drawable/workspace_management_icon"
+            android:drawablePadding="@dimen/_5dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/_5dp"
+            android:text="@string/text_orgin_workspace"
+            android:textColor="@color/btn_bg_color_gray_normal"
+            android:textSize="@dimen/text_mirco_size" />
+    </LinearLayout>
+</LinearLayout>
