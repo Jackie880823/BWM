@@ -148,21 +148,28 @@
                         android:background="@drawable/bg_white_round_corner">
 
 
-
-                        <TextView
-                            android:id="@+id/tv_point_acc"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/point_accumulated"
-                            android:padding="@dimen/_8dp"
-                            android:textColor="@color/default_text_color_blue"
-                            android:clickable="true"
-                            />
-                        <ImageView
-                            android:layout_width="@dimen/_20dp"
-                            android:layout_height="@dimen/_20dp"
-                            android:layout_toRightOf="@+id/tv_point_acc"
-                            android:src="@drawable/thumb"/>
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/default_content_padding"
+                            >
+                            <TextView
+                                android:id="@+id/tv_point_acc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/point_accumulated"
+                                android:textColor="@color/default_text_color_blue"
+                                android:clickable="true"
+                                />
+                            <ImageView
+                                android:layout_width="@dimen/_20dp"
+                                android:layout_height="@dimen/_20dp"
+                                android:layout_marginLeft="@dimen/default_content_padding"
+                                android:src="@drawable/thumb"/>
+
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/tv_reward_pts"
