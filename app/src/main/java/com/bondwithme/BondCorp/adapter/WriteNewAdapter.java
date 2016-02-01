@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,18 +12,18 @@ import android.widget.ListView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.DiaryPhotoEntity;
-import com.bondwithme.BondCorp.entity.PhotoEntity;
-import com.bondwithme.BondCorp.entity.PushedPhotoEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.http.VolleyUtil;
-import com.bondwithme.BondCorp.interfaces.ImagesRecyclerListener;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.UniversalImageLoaderUtil;
-import com.bondwithme.BondCorp.widget.WallEditView;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.DiaryPhotoEntity;
+import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.entity.PushedPhotoEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.http.VolleyUtil;
+import com.madxstudio.co8.interfaces.ImagesRecyclerListener;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
+import com.madxstudio.co8.widget.WallEditView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

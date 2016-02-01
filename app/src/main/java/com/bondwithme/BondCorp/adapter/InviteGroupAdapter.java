@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,12 +11,12 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.FamilyGroupEntity;
-import com.bondwithme.BondCorp.util.MyTextUtil;
-import com.bondwithme.BondCorp.util.PinYin4JUtil;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.FamilyGroupEntity;
+import com.madxstudio.co8.util.MyTextUtil;
+import com.madxstudio.co8.util.PinYin4JUtil;
+import com.madxstudio.co8.widget.CircularNetworkImage;
 
 import java.util.ArrayList;
 import java.util.List;

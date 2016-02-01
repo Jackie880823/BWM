@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 /**
  * Created by wing on 15/3/22.
@@ -12,8 +12,8 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.ui.MainActivity;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.ui.MainActivity;
 
 import java.io.File;
 import java.io.FileInputStream;

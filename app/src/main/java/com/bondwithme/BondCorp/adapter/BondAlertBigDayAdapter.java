@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,12 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.BigDayEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.ui.FamilyProfileActivity;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.BigDayEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.ui.FamilyProfileActivity;
+import com.madxstudio.co8.widget.CircularNetworkImage;
 
 import java.util.List;
 

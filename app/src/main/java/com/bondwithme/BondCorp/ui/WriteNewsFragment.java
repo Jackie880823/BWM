@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,23 +16,23 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.EditDiaryAdapter;
-import com.bondwithme.BondCorp.adapter.HeadHolder;
-import com.bondwithme.BondCorp.adapter.VideoHolder;
-import com.bondwithme.BondCorp.adapter.WriteNewAdapter;
-import com.bondwithme.BondCorp.entity.DiaryPhotoEntity;
-import com.bondwithme.BondCorp.entity.GroupEntity;
-import com.bondwithme.BondCorp.entity.PushedPhotoEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.entity.WallEntity;
-import com.bondwithme.BondCorp.interfaces.ImagesRecyclerListener;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MyDateUtils;
-import com.bondwithme.BondCorp.util.UniversalImageLoaderUtil;
-import com.bondwithme.BondCorp.widget.MyDialog;
-import com.bondwithme.BondCorp.widget.WallEditView;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.EditDiaryAdapter;
+import com.madxstudio.co8.adapter.HeadHolder;
+import com.madxstudio.co8.adapter.VideoHolder;
+import com.madxstudio.co8.adapter.WriteNewAdapter;
+import com.madxstudio.co8.entity.DiaryPhotoEntity;
+import com.madxstudio.co8.entity.GroupEntity;
+import com.madxstudio.co8.entity.PushedPhotoEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.entity.WallEntity;
+import com.madxstudio.co8.interfaces.ImagesRecyclerListener;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MyDateUtils;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
+import com.madxstudio.co8.widget.MyDialog;
+import com.madxstudio.co8.widget.WallEditView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;

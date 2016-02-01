@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ProgressBar;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 public class HorizontalProgressBarWithNumber extends ProgressBar {
 

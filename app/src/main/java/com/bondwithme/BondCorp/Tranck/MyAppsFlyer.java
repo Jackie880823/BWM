@@ -1,14 +1,14 @@
-package com.bondwithme.BondCorp.Tranck;
+package com.madxstudio.co8.Tranck;
 
 import android.text.TextUtils;
 
 import com.appsflyer.AFInAppEventParameterName;
 import com.appsflyer.AFInAppEventType;
 import com.appsflyer.AppsFlyerLib;
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.util.AppInfoUtil;
-import com.bondwithme.BondCorp.util.SystemUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.util.AppInfoUtil;
+import com.madxstudio.co8.util.SystemUtil;
 
 import java.util.HashMap;
 import java.util.Map;

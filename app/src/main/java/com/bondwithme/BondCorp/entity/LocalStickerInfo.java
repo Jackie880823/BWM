@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.entity;
+package com.madxstudio.co8.entity;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

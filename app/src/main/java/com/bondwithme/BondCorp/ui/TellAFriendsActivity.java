@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -15,15 +15,15 @@ import android.view.inputmethod.InputMethodManager;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.ContactCursorAdapter;
-import com.bondwithme.BondCorp.entity.ContactDetailEntity;
-import com.bondwithme.BondCorp.entity.ContactMessageEntity;
-import com.bondwithme.BondCorp.util.ContactUtil;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.ContactCursorAdapter;
+import com.madxstudio.co8.entity.ContactDetailEntity;
+import com.madxstudio.co8.entity.ContactMessageEntity;
+import com.madxstudio.co8.util.ContactUtil;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.widget.MyDialog;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;

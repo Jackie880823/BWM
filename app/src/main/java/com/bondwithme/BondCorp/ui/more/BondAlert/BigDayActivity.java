@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.more.BondAlert;
+package com.madxstudio.co8.ui.more.BondAlert;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -13,12 +13,12 @@ import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.BondAlertBigDayAdapter;
-import com.bondwithme.BondCorp.entity.BigDayEntity;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.MainActivity;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.BondAlertBigDayAdapter;
+import com.madxstudio.co8.entity.BigDayEntity;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

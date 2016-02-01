@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -24,7 +24,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
-import com.bondwithme.BondCorp.http.PicturesCacheUtil;
+import com.madxstudio.co8.http.PicturesCacheUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 

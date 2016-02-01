@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.zxing.decoding;
+package com.madxstudio.co8.zxing.decoding;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,10 +22,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.zxing.activity.CaptureActivity;
-import com.bondwithme.BondCorp.zxing.camera.CameraManager;
-import com.bondwithme.BondCorp.zxing.camera.PlanarYUVLuminanceSource;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.zxing.activity.CaptureActivity;
+import com.madxstudio.co8.zxing.camera.CameraManager;
+import com.madxstudio.co8.zxing.camera.PlanarYUVLuminanceSource;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;

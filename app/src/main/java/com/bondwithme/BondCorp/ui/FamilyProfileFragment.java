@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,18 +20,18 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.PhotoEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.http.VolleyUtil;
-import com.bondwithme.BondCorp.ui.more.ViewQRCodeActivity;
-import com.bondwithme.BondCorp.ui.wall.WallFragment;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.http.VolleyUtil;
+import com.madxstudio.co8.ui.more.ViewQRCodeActivity;
+import com.madxstudio.co8.ui.wall.WallFragment;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.widget.CircularNetworkImage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -50,9 +50,9 @@ import java.util.Random;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.bondwithme.BondCorp.ui.FamilyProfileFragment.OnFragmentInteractionListener} interface
+ * {@link com.madxstudio.co8.ui.FamilyProfileFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link com.bondwithme.BondCorp.ui.FamilyProfileFragment#newInstance} factory method to
+ * Use the {@link com.madxstudio.co8.ui.FamilyProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {

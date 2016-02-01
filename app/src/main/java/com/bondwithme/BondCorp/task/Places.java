@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.task;
+package com.madxstudio.co8.task;
 
 /**
  * Created by wing on 15/5/15.

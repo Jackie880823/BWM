@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 //import android.app.ProgressDialog;
 
@@ -9,12 +9,12 @@ import android.text.TextUtils;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.InvitedUserAdapter;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.InvitedUserAdapter;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.util.MessageUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -26,9 +26,9 @@ import java.util.List;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.bondwithme.BondCorp.ui.InvitedTabFragment.OnFragmentInteractionListener} interface
+ * {@link com.madxstudio.co8.ui.InvitedTabFragment.OnFragmentInteractionListener} interface
  * to handle interaction events
- * Use the {@link com.bondwithme.BondCorp.ui.InvitedTabFragment#newInstance} factory method to
+ * Use the {@link com.madxstudio.co8.ui.InvitedTabFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> implements InvitedUserAdapter.OperaListener {

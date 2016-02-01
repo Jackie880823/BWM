@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -7,8 +7,8 @@ import android.text.TextUtils;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;

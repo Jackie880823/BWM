@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.LocalStickerInfo;
-import com.bondwithme.BondCorp.util.FileUtil;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.LocalStickerInfo;
+import com.madxstudio.co8.util.FileUtil;
 
 /***
  * 自定义可拖拽ListView适配器

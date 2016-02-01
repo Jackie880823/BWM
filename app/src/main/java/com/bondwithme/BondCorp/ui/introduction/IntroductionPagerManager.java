@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.introduction;
+package com.madxstudio.co8.ui.introduction;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

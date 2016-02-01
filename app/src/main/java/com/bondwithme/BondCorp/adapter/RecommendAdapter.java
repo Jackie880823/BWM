@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,12 +14,12 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.RecommendEntity;
-import com.bondwithme.BondCorp.ui.RecommendActivity;
-import com.bondwithme.BondCorp.ui.RelationshipActivity;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.RecommendEntity;
+import com.madxstudio.co8.ui.RecommendActivity;
+import com.madxstudio.co8.ui.RelationshipActivity;
+import com.madxstudio.co8.widget.CircularNetworkImage;
 
 import java.util.ArrayList;
 import java.util.Arrays;

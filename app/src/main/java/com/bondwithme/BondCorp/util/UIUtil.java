@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.bondwithme.BondCorp.util.animation.ViewHelper;
+import com.madxstudio.co8.util.animation.ViewHelper;
 
 
 public class UIUtil {

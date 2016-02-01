@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,10 +6,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
-import com.bondwithme.BondCorp.http.PicturesCacheUtil;
-import com.bondwithme.BondCorp.ui.share.SelectPhotosActivity;
-import com.bondwithme.BondCorp.util.LocalImageLoader;
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.http.PicturesCacheUtil;
+import com.madxstudio.co8.ui.share.SelectPhotosActivity;
+import com.madxstudio.co8.util.LocalImageLoader;
+import com.madxstudio.co8.util.LogUtil;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;

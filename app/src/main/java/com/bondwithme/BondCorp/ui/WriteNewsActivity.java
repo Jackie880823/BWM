@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 /**
  * Created by quankun on 16/1/25.

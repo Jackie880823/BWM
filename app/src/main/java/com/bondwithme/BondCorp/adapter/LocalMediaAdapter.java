@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -19,12 +19,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.MediaData;
-import com.bondwithme.BondCorp.interfaces.SelectImageUirChangeListener;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MyDateUtils;
-import com.bondwithme.BondCorp.util.UniversalImageLoaderUtil;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.MediaData;
+import com.madxstudio.co8.interfaces.SelectImageUirChangeListener;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MyDateUtils;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;

@@ -1,11 +1,11 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 
-import com.bondwithme.BondCorp.entity.ContactDetailEntity;
+import com.madxstudio.co8.entity.ContactDetailEntity;
 
 import java.util.ArrayList;
 import java.util.List;

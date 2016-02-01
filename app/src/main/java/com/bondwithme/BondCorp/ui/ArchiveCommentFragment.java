@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,17 +10,17 @@ import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.ArchiveCommentAdapter;
-import com.bondwithme.BondCorp.adapter.ArchiveDetailAdapter;
-import com.bondwithme.BondCorp.entity.ArchiveChatEntity;
-import com.bondwithme.BondCorp.entity.ArchiveCommentEntity;
-import com.bondwithme.BondCorp.entity.PhotoEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.interfaces.ArchiveChatViewClickListener;
-import com.bondwithme.BondCorp.widget.ArchiveCommentHead;
-import com.bondwithme.BondCorp.widget.MySwipeRefreshLayout;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.ArchiveCommentAdapter;
+import com.madxstudio.co8.adapter.ArchiveDetailAdapter;
+import com.madxstudio.co8.entity.ArchiveChatEntity;
+import com.madxstudio.co8.entity.ArchiveCommentEntity;
+import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.interfaces.ArchiveChatViewClickListener;
+import com.madxstudio.co8.widget.ArchiveCommentHead;
+import com.madxstudio.co8.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

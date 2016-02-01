@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 import java.util.ArrayList;
 import java.util.List;

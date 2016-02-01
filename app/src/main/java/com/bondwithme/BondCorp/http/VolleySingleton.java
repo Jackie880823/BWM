@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.http;
+package com.madxstudio.co8.http;
 
 
 import android.app.ActivityManager;
@@ -9,8 +9,8 @@ import android.util.LruCache;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.http.cache.ImageLreCache;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.http.cache.ImageLreCache;
 
 
 public class VolleySingleton {

@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bondwithme.BondCorp.interfaces.IViewCommon;
+import com.madxstudio.co8.interfaces.IViewCommon;
 
 /**
  * fragment 基类

@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.util.LogUtil;
 
 
 public abstract class HeaderListRecyclerAdapter<E, VH extends RecyclerView.ViewHolder>

@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.share;
+package com.madxstudio.co8.ui.share;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -17,17 +17,17 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.LocalMediaAdapter;
-import com.bondwithme.BondCorp.entity.MediaData;
-import com.bondwithme.BondCorp.http.PicturesCacheUtil;
-import com.bondwithme.BondCorp.interfaces.SelectImageUirChangeListener;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.widget.DrawerArrowDrawable;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.LocalMediaAdapter;
+import com.madxstudio.co8.entity.MediaData;
+import com.madxstudio.co8.http.PicturesCacheUtil;
+import com.madxstudio.co8.interfaces.SelectImageUirChangeListener;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.widget.DrawerArrowDrawable;
+import com.madxstudio.co8.widget.MyDialog;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
@@ -108,7 +108,7 @@ public class SelectPhotosActivity extends BaseActivity {
 
     private SelectImageUirChangeListener listener = new SelectImageUirChangeListener() {
 
-        com.bondwithme.BondCorp.ui.share.PreviewFragment previewFragment;
+        com.madxstudio.co8.ui.share.PreviewFragment previewFragment;
 
         /**
          * 添加图片{@code mediaData}到选择列表
@@ -209,7 +209,7 @@ public class SelectPhotosActivity extends BaseActivity {
             LogUtil.i(TAG, "preview& mediaData: " + mediaData.toString());
             //            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(getApplicationContext(), mediaData);
             if (previewFragment == null) {
-                previewFragment = com.bondwithme.BondCorp.ui.share.PreviewFragment.newInstance("");
+                previewFragment = com.madxstudio.co8.ui.share.PreviewFragment.newInstance("");
             }
             changeFragment(previewFragment, true);
             previewFragment.displayImage(currentData);

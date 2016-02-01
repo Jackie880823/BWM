@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.wall;
+package com.madxstudio.co8.ui.wall;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,12 +11,12 @@ import android.widget.EditText;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.UIUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.UIUtil;
 
 import java.util.HashMap;
 

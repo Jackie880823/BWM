@@ -1,12 +1,12 @@
-package com.bondwithme.BondCorp.ui.more.Archive;
+package com.madxstudio.co8.ui.more.Archive;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.ArchiveCommentFragment;
-import com.bondwithme.BondCorp.ui.BaseActivity;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.ArchiveCommentFragment;
+import com.madxstudio.co8.ui.BaseActivity;
 
 
 /**

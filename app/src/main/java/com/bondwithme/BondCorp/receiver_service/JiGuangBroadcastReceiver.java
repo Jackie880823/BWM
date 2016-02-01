@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.receiver_service;
+package com.madxstudio.co8.receiver_service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.ui.MissListActivity;
-import com.bondwithme.BondCorp.util.LocationUtil;
-import com.bondwithme.BondCorp.util.NotificationUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.ui.MissListActivity;
+import com.madxstudio.co8.util.LocationUtil;
+import com.madxstudio.co8.util.NotificationUtil;
 
 import org.json.JSONException;
 

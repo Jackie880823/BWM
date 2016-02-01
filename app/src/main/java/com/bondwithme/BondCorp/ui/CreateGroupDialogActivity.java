@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,15 +21,15 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.FamilyGroupEntity;
-import com.bondwithme.BondCorp.entity.GroupEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.MD5Util;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.FamilyGroupEntity;
+import com.madxstudio.co8.entity.GroupEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.MD5Util;
+import com.madxstudio.co8.widget.MyDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

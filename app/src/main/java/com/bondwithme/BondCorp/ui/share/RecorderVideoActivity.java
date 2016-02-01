@@ -9,7 +9,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from EaseMob Technologies.
  */
-package com.bondwithme.BondCorp.ui.share;
+package com.madxstudio.co8.ui.share;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -48,10 +48,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.MediaData;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.MediaData;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.LogUtil;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.BufferedOutputStream;

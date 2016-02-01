@@ -1,12 +1,12 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.UserEntity;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;

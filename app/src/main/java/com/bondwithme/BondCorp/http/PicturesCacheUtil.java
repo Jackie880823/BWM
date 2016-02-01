@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.http;
+package com.madxstudio.co8.http;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -9,7 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.bondwithme.BondCorp.util.FileUtil;
+import com.madxstudio.co8.util.FileUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;

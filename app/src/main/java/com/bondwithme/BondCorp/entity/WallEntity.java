@@ -1,6 +1,6 @@
-package com.bondwithme.BondCorp.entity;
+package com.madxstudio.co8.entity;
 
-import com.bondwithme.BondCorp.Constant;
+import com.madxstudio.co8.Constant;
 
 import java.io.Serializable;
 import java.util.List;

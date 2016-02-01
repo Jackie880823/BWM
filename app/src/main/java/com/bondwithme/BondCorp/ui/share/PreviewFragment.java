@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.share;
+package com.madxstudio.co8.ui.share;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -9,11 +9,11 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.MediaData;
-import com.bondwithme.BondCorp.ui.BaseFragment;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.UniversalImageLoaderUtil;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.MediaData;
+import com.madxstudio.co8.ui.BaseFragment;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**

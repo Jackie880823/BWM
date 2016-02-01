@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.http.cache;
+package com.madxstudio.co8.http.cache;
 
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.bondwithme.BondCorp.App;
+import com.madxstudio.co8.App;
 
 
 /**

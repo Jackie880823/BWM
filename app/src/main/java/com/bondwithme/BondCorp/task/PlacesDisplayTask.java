@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.task;
+package com.madxstudio.co8.task;
 
 
 import android.os.AsyncTask;

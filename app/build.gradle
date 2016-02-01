@@ -127,7 +127,7 @@ android {
 //                javaexec {
 ////                    println "Triggering customer build for flavor " + flavor.name
 ////                    classpath += files("libs/my-jarfile.jar")
-//                    main = "com.bondwithme.BondCorp.db.DatabaseConfigUtil"
+//                    main = "com.madxstudio.co8.db.DatabaseConfigUtil"
 ////                    args flavor.name, variant.versionName
 //                }
 ////                println "Done building customer for flavor " + flavor.name

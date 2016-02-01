@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.wall;
+package com.madxstudio.co8.ui.wall;
 
 import android.view.View;
 import android.widget.EditText;
@@ -6,13 +6,13 @@ import android.widget.EditText;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.WallCommentEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.ui.BaseFragment;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MyDateUtils;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.WallCommentEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.ui.BaseFragment;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MyDateUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.task;
+package com.madxstudio.co8.task;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,11 +7,11 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.SDKUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.SDKUtil;
 import com.material.widget.CircularProgress;
 
 import java.io.ByteArrayOutputStream;

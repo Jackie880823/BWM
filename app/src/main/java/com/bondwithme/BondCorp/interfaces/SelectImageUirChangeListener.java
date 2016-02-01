@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.interfaces;
+package com.madxstudio.co8.interfaces;
 
 /**
  * Created by Jackie Zhu on 7/14/15.
@@ -6,8 +6,8 @@ package com.bondwithme.BondCorp.interfaces;
 
 import android.graphics.drawable.Drawable;
 
-import com.bondwithme.BondCorp.adapter.LocalMediaAdapter;
-import com.bondwithme.BondCorp.entity.MediaData;
+import com.madxstudio.co8.adapter.LocalMediaAdapter;
+import com.madxstudio.co8.entity.MediaData;
 
 import java.util.List;
 

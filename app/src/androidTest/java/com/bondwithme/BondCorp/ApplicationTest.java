@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp;
+package com.madxstudio.co8;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

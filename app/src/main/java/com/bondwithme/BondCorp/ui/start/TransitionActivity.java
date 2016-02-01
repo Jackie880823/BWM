@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.start;
+package com.madxstudio.co8.ui.start;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,15 +7,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.Tranck.MyAppsFlyer;
-import com.bondwithme.BondCorp.entity.AppTokenEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.ui.introduction.IntroductionActivity;
-import com.bondwithme.BondCorp.util.PreferencesUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.Tranck.MyAppsFlyer;
+import com.madxstudio.co8.entity.AppTokenEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.introduction.IntroductionActivity;
+import com.madxstudio.co8.util.PreferencesUtil;
 import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
 

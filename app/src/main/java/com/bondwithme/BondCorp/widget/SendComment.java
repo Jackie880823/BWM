@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,19 +21,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.MediaData;
-import com.bondwithme.BondCorp.http.PicturesCacheUtil;
-import com.bondwithme.BondCorp.interfaces.StickerViewClickListener;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.BaseFragment;
-import com.bondwithme.BondCorp.ui.StickerMainFragment;
-import com.bondwithme.BondCorp.ui.StickerMainNewFragment;
-import com.bondwithme.BondCorp.ui.share.SelectPhotosActivity;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.UIUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.MediaData;
+import com.madxstudio.co8.http.PicturesCacheUtil;
+import com.madxstudio.co8.interfaces.StickerViewClickListener;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.BaseFragment;
+import com.madxstudio.co8.ui.StickerMainFragment;
+import com.madxstudio.co8.ui.StickerMainNewFragment;
+import com.madxstudio.co8.ui.share.SelectPhotosActivity;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.UIUtil;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;

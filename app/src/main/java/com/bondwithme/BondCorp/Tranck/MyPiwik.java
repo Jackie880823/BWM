@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.Tranck;
+package com.madxstudio.co8.Tranck;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -6,10 +6,10 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.util.AppInfoUtil;
-import com.bondwithme.BondCorp.util.PreferencesUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.util.AppInfoUtil;
+import com.madxstudio.co8.util.PreferencesUtil;
 
 import org.piwik.sdk.Piwik;
 import org.piwik.sdk.Tracker;

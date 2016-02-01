@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,15 +18,15 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.RecommendEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.ui.add.AddContactMembersActivity;
-import com.bondwithme.BondCorp.ui.add.AddMembersActivity;
-import com.bondwithme.BondCorp.util.RelationshipUtil;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.RecommendEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.add.AddContactMembersActivity;
+import com.madxstudio.co8.ui.add.AddMembersActivity;
+import com.madxstudio.co8.util.RelationshipUtil;
+import com.madxstudio.co8.widget.CircularNetworkImage;
 import com.google.gson.Gson;
 
 import java.util.HashMap;

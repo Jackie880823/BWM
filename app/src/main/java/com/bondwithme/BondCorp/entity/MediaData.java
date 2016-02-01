@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.entity;
+package com.madxstudio.co8.entity;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -7,9 +7,9 @@ import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.ui.share.SelectPhotosActivity;
-import com.bondwithme.BondCorp.ui.share.SelectPhotosFragment;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.ui.share.SelectPhotosActivity;
+import com.madxstudio.co8.ui.share.SelectPhotosFragment;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
@@ -29,7 +29,7 @@ public class MediaData {
     /**
      * 隐式启动录制视频的Activity
      */
-    public static final String ACTION_RECORDER_VIDEO = "com.bondwithme.BondCorp.RECORDER_VIDEO";
+    public static final String ACTION_RECORDER_VIDEO = "com.madxstudio.co8.RECORDER_VIDEO";
 
 
     public static final String EXTRA_MEDIA_TYPE = "result_media_type";

@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.more.sticker;
+package com.madxstudio.co8.ui.more.sticker;
 
 import android.net.Uri;
 import android.os.Handler;
@@ -6,15 +6,15 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.DragListAdapter;
-import com.bondwithme.BondCorp.dao.LocalStickerInfoDao;
-import com.bondwithme.BondCorp.db.SQLiteHelperOrm;
-import com.bondwithme.BondCorp.entity.LocalStickerInfo;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.widget.DragListView;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.DragListAdapter;
+import com.madxstudio.co8.dao.LocalStickerInfoDao;
+import com.madxstudio.co8.db.SQLiteHelperOrm;
+import com.madxstudio.co8.entity.LocalStickerInfo;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.widget.DragListView;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 

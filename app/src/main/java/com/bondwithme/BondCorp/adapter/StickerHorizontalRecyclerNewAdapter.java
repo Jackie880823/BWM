@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.util.AnimatedGifDrawable;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.util.AnimatedGifDrawable;
 
 import java.io.File;
 import java.io.FileInputStream;

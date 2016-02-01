@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.start;
+package com.madxstudio.co8.ui.start;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,14 +18,14 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.CountryCodeActivity;
-import com.bondwithme.BondCorp.util.CountryCodeUtil;
-import com.bondwithme.BondCorp.util.MyTextUtil;
-import com.bondwithme.BondCorp.util.NetworkUtil;
-import com.bondwithme.BondCorp.util.UIUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.CountryCodeActivity;
+import com.madxstudio.co8.util.CountryCodeUtil;
+import com.madxstudio.co8.util.MyTextUtil;
+import com.madxstudio.co8.util.NetworkUtil;
+import com.madxstudio.co8.util.UIUtil;
 import com.material.widget.PaperButton;
 
 import org.json.JSONException;

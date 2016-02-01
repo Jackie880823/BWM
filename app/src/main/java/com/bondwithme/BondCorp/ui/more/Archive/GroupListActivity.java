@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.more.Archive;
+package com.madxstudio.co8.ui.more.Archive;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,14 +11,14 @@ import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.GroupListAdapter;
-import com.bondwithme.BondCorp.entity.GroupListEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.util.MessageUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.GroupListAdapter;
+import com.madxstudio.co8.entity.GroupListEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.util.MessageUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

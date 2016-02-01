@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.start;
+package com.madxstudio.co8.ui.start;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,19 +23,19 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.AppTokenEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.http.PicturesCacheUtil;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.share.SelectPhotosActivity;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.LocalImageLoader;
-import com.bondwithme.BondCorp.util.MyTextUtil;
-import com.bondwithme.BondCorp.widget.CircularImageView;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.AppTokenEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.http.PicturesCacheUtil;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.share.SelectPhotosActivity;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.LocalImageLoader;
+import com.madxstudio.co8.util.MyTextUtil;
+import com.madxstudio.co8.widget.CircularImageView;
+import com.madxstudio.co8.widget.MyDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.material.widget.Dialog;

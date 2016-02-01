@@ -1,15 +1,15 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
-import com.bondwithme.BondCorp.widget.WallEditView;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.widget.CircularNetworkImage;
+import com.madxstudio.co8.widget.WallEditView;
 
 /**
  * Created 10/23/15.

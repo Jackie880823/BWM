@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.MessageChatActivity;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.MessageChatActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

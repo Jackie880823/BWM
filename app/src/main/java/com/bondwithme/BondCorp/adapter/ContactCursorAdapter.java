@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -13,7 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 import java.util.ArrayList;
 import java.util.List;

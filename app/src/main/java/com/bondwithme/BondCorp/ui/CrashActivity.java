@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,16 +7,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.mail.MailSender;
-import com.bondwithme.BondCorp.mail.MailSenderModel;
-import com.bondwithme.BondCorp.receiver_service.ReportIntentService;
-import com.bondwithme.BondCorp.util.AppInfoUtil;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.mail.MailSender;
+import com.madxstudio.co8.mail.MailSenderModel;
+import com.madxstudio.co8.receiver_service.ReportIntentService;
+import com.madxstudio.co8.util.AppInfoUtil;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.widget.MyDialog;
 
 /**
  * Created by wing on 15/8/4.

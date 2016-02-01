@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.zxing.view;
+package com.madxstudio.co8.zxing.view;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -26,8 +26,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.zxing.camera.CameraManager;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.zxing.camera.CameraManager;
 import com.google.zxing.ResultPoint;
 
 import java.util.Collection;

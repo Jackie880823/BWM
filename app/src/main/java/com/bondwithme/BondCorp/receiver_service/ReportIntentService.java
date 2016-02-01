@@ -1,13 +1,13 @@
-package com.bondwithme.BondCorp.receiver_service;
+package com.madxstudio.co8.receiver_service;
 
 import android.app.IntentService;
 import android.content.Intent;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.mail.MailSender;
-import com.bondwithme.BondCorp.mail.MailSenderModel;
-import com.bondwithme.BondCorp.util.AppInfoUtil;
-import com.bondwithme.BondCorp.util.FileUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.mail.MailSender;
+import com.madxstudio.co8.mail.MailSenderModel;
+import com.madxstudio.co8.util.AppInfoUtil;
+import com.madxstudio.co8.util.FileUtil;
 
 /**
  * 异常报告服务

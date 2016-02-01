@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <View style="@style/split_line_default" />
-    <com.bondwithme.BondCorp.widget.SendComment
+    <com.madxstudio.co8.widget.SendComment
         android:id="@+id/send_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

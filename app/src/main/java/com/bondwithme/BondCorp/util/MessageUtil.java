@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.bondwithme.BondCorp.widget.CustomDialog;
+import com.madxstudio.co8.widget.CustomDialog;
 
 
 public class MessageUtil {

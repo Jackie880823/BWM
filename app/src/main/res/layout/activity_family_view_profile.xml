@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context="com.bondwithme.BondCorp.ui.FamilyViewProfileActivity">
+    tools:context="com.madxstudio.co8.ui.FamilyViewProfileActivity">
 
 
     <ScrollView
@@ -40,7 +40,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <com.bondwithme.BondCorp.widget.CircularNetworkImage
+                        <com.madxstudio.co8.widget.CircularNetworkImage
                             android:id="@+id/cni_main"
                             android:layout_width="90dp"
                             android:layout_height="90dp"
@@ -488,10 +488,10 @@
                             android:text="@string/text_internal_phone"
                             android:textSize="@dimen/_10dp" />
 
-                        <com.bondwithme.BondCorp.widget.NoScrollListView
+                        <com.madxstudio.co8.widget.NoScrollListView
                             android:id="@+id/et_internal_phone"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"></com.bondwithme.BondCorp.widget.NoScrollListView>
+                            android:layout_height="wrap_content"></com.madxstudio.co8.widget.NoScrollListView>
                     </LinearLayout>
 
                     <View
@@ -534,12 +534,12 @@
                             android:text="@string/text_phone"
                             android:textSize="@dimen/_10dp" />
 
-                        <com.bondwithme.BondCorp.widget.NoScrollListView
+                        <com.madxstudio.co8.widget.NoScrollListView
                             android:id="@+id/tv_phone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                        </com.bondwithme.BondCorp.widget.NoScrollListView>
+                        </com.madxstudio.co8.widget.NoScrollListView>
                         <!--<TextView-->
                         <!--android:id="@+id/tv_phone"-->
                         <!--android:layout_width="wrap_content"-->

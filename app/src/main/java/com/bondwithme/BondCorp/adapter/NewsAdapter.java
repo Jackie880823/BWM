@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.NewsEntity;
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.NewsEntity;
+import com.madxstudio.co8.util.LogUtil;
 
 import java.util.List;
 

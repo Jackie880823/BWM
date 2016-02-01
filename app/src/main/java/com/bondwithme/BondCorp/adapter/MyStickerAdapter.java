@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.LocalStickerInfo;
-import com.bondwithme.BondCorp.ui.more.sticker.MyStickerActivity;
-import com.bondwithme.BondCorp.util.FileUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.LocalStickerInfo;
+import com.madxstudio.co8.ui.more.sticker.MyStickerActivity;
+import com.madxstudio.co8.util.FileUtil;
 import com.j256.ormlite.dao.Dao;
 
 import java.io.File;

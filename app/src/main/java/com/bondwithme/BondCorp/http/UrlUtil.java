@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.http;
+package com.madxstudio.co8.http;
 
 import com.google.gson.JsonObject;
 

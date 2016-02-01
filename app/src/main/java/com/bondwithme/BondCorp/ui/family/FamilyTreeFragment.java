@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.family;
+package com.madxstudio.co8.ui.family;
 
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,15 +9,15 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.RelationshipAdapter;
-import com.bondwithme.BondCorp.entity.FamilyMemberEntity;
-import com.bondwithme.BondCorp.entity.RelationshipEnum;
-import com.bondwithme.BondCorp.ui.BaseFragment;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.ui.OnFamilyItemClickListener;
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.RelationshipAdapter;
+import com.madxstudio.co8.entity.FamilyMemberEntity;
+import com.madxstudio.co8.entity.RelationshipEnum;
+import com.madxstudio.co8.ui.BaseFragment;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.OnFamilyItemClickListener;
+import com.madxstudio.co8.util.LogUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

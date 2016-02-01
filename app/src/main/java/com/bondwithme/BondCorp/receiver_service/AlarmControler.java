@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.receiver_service;
+package com.madxstudio.co8.receiver_service;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -8,10 +8,10 @@ import android.os.Bundle;
 
 public class AlarmControler {
 
-    public final static String FIVE_MINUTE_ACTION = "com.bondwithme.BondCorp.android.five_minute_action";
-    public final static String TWO_DAY_ACTION = "com.bondwithme.BondCorp.android.two_day_action";
-    public final static String THREE_DAY_ACTION = "com.bondwithme.BondCorp.android.three_day_action";
-    public final static String FIVE_DAY_ACTION = "com.bondwithme.BondCorp.android.five_day_action";
+    public final static String FIVE_MINUTE_ACTION = "com.madxstudio.co8.android.five_minute_action";
+    public final static String TWO_DAY_ACTION = "com.madxstudio.co8.android.two_day_action";
+    public final static String THREE_DAY_ACTION = "com.madxstudio.co8.android.three_day_action";
+    public final static String FIVE_DAY_ACTION = "com.madxstudio.co8.android.five_day_action";
     private static AlarmControler instance;
 
     private AlarmControler() {

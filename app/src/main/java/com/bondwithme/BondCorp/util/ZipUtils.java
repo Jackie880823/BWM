@@ -1,9 +1,9 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 
-import com.bondwithme.BondCorp.dao.LocalStickerInfoDao;
-import com.bondwithme.BondCorp.entity.LocalStickerInfo;
+import com.madxstudio.co8.dao.LocalStickerInfoDao;
+import com.madxstudio.co8.entity.LocalStickerInfo;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

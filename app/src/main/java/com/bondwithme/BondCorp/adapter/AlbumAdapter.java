@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.AlbumEntity;
-import com.bondwithme.BondCorp.entity.AlbumPhotoEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.ui.ViewOriginalPicesActivity;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.AlbumEntity;
+import com.madxstudio.co8.entity.AlbumPhotoEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.ViewOriginalPicesActivity;
 
 import java.util.HashMap;
 import java.util.List;

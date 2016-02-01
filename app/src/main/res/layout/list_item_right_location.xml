@@ -8,7 +8,7 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
-    <com.bondwithme.BondCorp.widget.CircularNetworkImage
+    <com.madxstudio.co8.widget.CircularNetworkImage
         android:id="@+id/right_iv"
         app:border="false"
         android:layout_width="50dp"

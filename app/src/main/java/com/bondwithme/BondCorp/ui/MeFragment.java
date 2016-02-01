@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,12 +15,12 @@ import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.PhotoEntity;
-import com.bondwithme.BondCorp.ui.more.ViewQRCodeActivity;
-import com.bondwithme.BondCorp.ui.wall.WallFragment;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.ui.more.ViewQRCodeActivity;
+import com.madxstudio.co8.ui.wall.WallFragment;
+import com.madxstudio.co8.widget.CircularNetworkImage;
 
 import java.io.File;
 import java.io.IOException;

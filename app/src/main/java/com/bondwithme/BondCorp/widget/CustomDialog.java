@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.app.Dialog;
 import android.content.Context;

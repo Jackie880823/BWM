@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 /**
  * Created by wing on 15/3/21.

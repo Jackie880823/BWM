@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.ContextMenu;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.util.LogUtil;
 
 /**
  * Created by quankun on 15/7/27.

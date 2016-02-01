@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,17 +12,17 @@ import android.widget.RelativeLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.EventAdapter;
-import com.bondwithme.BondCorp.entity.BirthdayEntity;
-import com.bondwithme.BondCorp.entity.EventEntity;
-import com.bondwithme.BondCorp.entity.UpdateEvent;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.util.PreferencesUtil;
-import com.bondwithme.BondCorp.widget.InteractivePopupWindow;
-import com.bondwithme.BondCorp.widget.MySwipeRefreshLayout;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.EventAdapter;
+import com.madxstudio.co8.entity.BirthdayEntity;
+import com.madxstudio.co8.entity.EventEntity;
+import com.madxstudio.co8.entity.UpdateEvent;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.PreferencesUtil;
+import com.madxstudio.co8.widget.InteractivePopupWindow;
+import com.madxstudio.co8.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -39,9 +39,9 @@ import de.greenrobot.event.EventBus;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.bondwithme.BondCorp.ui.EventFragment.OnFragmentInteractionListener} interface
+ * {@link com.madxstudio.co8.ui.EventFragment.OnFragmentInteractionListener} interface
  * to handle interaction events
- * Use the {@link com.bondwithme.BondCorp.ui.EventFragment#newInstance} factory method to
+ * Use the {@link com.madxstudio.co8.ui.EventFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class EventFragment extends BaseFragment<MainActivity> {
@@ -282,7 +282,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 //                            intent.putExtra("birthday_events", (Serializable) birthdayEntitys);
 //                            startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
                             //跳转生日界面
-                            Intent intent = new Intent(getActivity(), com.bondwithme.BondCorp.ui.more.BondAlert.BigDayActivity.class);
+                            Intent intent = new Intent(getActivity(), com.madxstudio.co8.ui.more.BondAlert.BigDayActivity.class);
                             startActivity(intent);
                         }
 

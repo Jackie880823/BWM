@@ -1,9 +1,9 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 
 /**

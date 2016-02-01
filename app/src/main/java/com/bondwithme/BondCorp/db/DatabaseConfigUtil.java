@@ -1,6 +1,6 @@
-package com.bondwithme.BondCorp.db;
+package com.madxstudio.co8.db;
 
-import com.bondwithme.BondCorp.entity.LocalStickerInfo;
+import com.madxstudio.co8.entity.LocalStickerInfo;
 import com.j256.ormlite.android.apptools.OrmLiteConfigUtil;
 
 public class DatabaseConfigUtil extends OrmLiteConfigUtil {

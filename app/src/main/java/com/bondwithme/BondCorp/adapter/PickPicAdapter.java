@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.widget.MyDialog;
 
 import java.util.List;
 import java.util.Map;

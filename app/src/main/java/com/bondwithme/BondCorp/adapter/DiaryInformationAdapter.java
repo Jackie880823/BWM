@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,14 +13,14 @@ import android.widget.ListView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.PhotoEntity;
-import com.bondwithme.BondCorp.ui.BaseFragment;
-import com.bondwithme.BondCorp.ui.wall.WallViewPicActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.UniversalImageLoaderUtil;
-import com.bondwithme.BondCorp.widget.FreedomSelectionTextView;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.ui.BaseFragment;
+import com.madxstudio.co8.ui.wall.WallViewPicActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
+import com.madxstudio.co8.widget.FreedomSelectionTextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

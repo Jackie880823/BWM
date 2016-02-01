@@ -1,6 +1,6 @@
-package com.bondwithme.BondCorp.interfaces;
+package com.madxstudio.co8.interfaces;
 
-import com.bondwithme.BondCorp.entity.ArchiveChatEntity;
+import com.madxstudio.co8.entity.ArchiveChatEntity;
 
 /**
  * Created by zhuweiping on 4/28/15.

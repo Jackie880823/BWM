@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -26,7 +26,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
-import com.bondwithme.BondCorp.entity.Point;
+import com.madxstudio.co8.entity.Point;
 
 /**
  * Created by chenupt@gmail.com on 2015/1/31.

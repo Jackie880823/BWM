@@ -12,12 +12,12 @@
         <!--android:gravity="center"-->
         <!--android:text="time" />-->
 
-    <com.bondwithme.BondCorp.widget.DatePicker
+    <com.madxstudio.co8.widget.DatePicker
         android:id="@+id/datePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <com.bondwithme.BondCorp.widget.TimePicker
+    <com.madxstudio.co8.widget.TimePicker
         android:id="@+id/timePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

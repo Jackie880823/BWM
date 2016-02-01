@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
 
-import com.bondwithme.BondCorp.util.SDKUtil;
+import com.madxstudio.co8.util.SDKUtil;
 
 /**
  * 懒加载fragment 基类

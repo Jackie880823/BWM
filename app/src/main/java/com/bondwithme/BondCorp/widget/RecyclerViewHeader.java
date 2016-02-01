@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

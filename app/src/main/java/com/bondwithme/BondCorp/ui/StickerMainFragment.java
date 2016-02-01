@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 
 import android.content.Context;
@@ -26,15 +26,15 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.StickerHorizontalRecyclerAdapter;
-import com.bondwithme.BondCorp.dao.LocalStickerInfoDao;
-import com.bondwithme.BondCorp.interfaces.StickerViewClickListener;
-import com.bondwithme.BondCorp.ui.more.sticker.StickerStoreActivity;
-import com.bondwithme.BondCorp.util.AnimatedGifDrawable;
-import com.bondwithme.BondCorp.util.AudioPlayUtils;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.widget.NoScrollGridView;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.StickerHorizontalRecyclerAdapter;
+import com.madxstudio.co8.dao.LocalStickerInfoDao;
+import com.madxstudio.co8.interfaces.StickerViewClickListener;
+import com.madxstudio.co8.ui.more.sticker.StickerStoreActivity;
+import com.madxstudio.co8.util.AnimatedGifDrawable;
+import com.madxstudio.co8.util.AudioPlayUtils;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.widget.NoScrollGridView;
 
 import java.io.File;
 import java.io.FileInputStream;

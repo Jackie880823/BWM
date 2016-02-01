@@ -1,9 +1,9 @@
-package com.bondwithme.BondCorp.interfaces;
+package com.madxstudio.co8.interfaces;
 
-import com.bondwithme.BondCorp.adapter.WallHolder;
-import com.bondwithme.BondCorp.entity.WallCommentEntity;
-import com.bondwithme.BondCorp.entity.WallEntity;
-import com.bondwithme.BondCorp.util.WallUtil;
+import com.madxstudio.co8.adapter.WallHolder;
+import com.madxstudio.co8.entity.WallCommentEntity;
+import com.madxstudio.co8.entity.WallEntity;
+import com.madxstudio.co8.util.WallUtil;
 
 /**
  * Wall内容各点击执行动作接口

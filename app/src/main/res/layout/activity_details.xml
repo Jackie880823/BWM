@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_text_color_while"
-    tools:context="com.bondwithme.BondCorp.ui.start.DetailsActivity"
+    tools:context="com.madxstudio.co8.ui.start.DetailsActivity"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <include
@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/ll_center"
             android:layout_below="@+id/fragment_main_top">
-                <com.bondwithme.BondCorp.widget.CircularImageView
+                <com.madxstudio.co8.widget.CircularImageView
                     android:id="@+id/civ_pic"
                     android:layout_width="@dimen/_100dp"
                     android:layout_height="@dimen/_100dp"

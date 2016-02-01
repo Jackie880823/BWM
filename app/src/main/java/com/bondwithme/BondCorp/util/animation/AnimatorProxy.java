@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util.animation;
+package com.madxstudio.co8.util.animation;
 
 import android.graphics.Camera;
 import android.graphics.Matrix;

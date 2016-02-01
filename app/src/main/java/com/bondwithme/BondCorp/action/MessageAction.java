@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.action;
+package com.madxstudio.co8.action;
 
 import android.content.Context;
 import android.os.Handler;
@@ -6,11 +6,11 @@ import android.text.TextUtils;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.MsgEntity;
-import com.bondwithme.BondCorp.ui.MessageChatActivity;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.util.NetworkUtil;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.MsgEntity;
+import com.madxstudio.co8.ui.MessageChatActivity;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.NetworkUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

@@ -1,11 +1,11 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bondwithme.BondCorp.util.LetterUtil;
+import com.madxstudio.co8.util.LetterUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

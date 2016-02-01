@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.zxing.decoding;
+package com.madxstudio.co8.zxing.decoding;
 
 /**
  * This class provides the constants to use when sending an Intent to Barcode Scanner.

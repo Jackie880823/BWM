@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -7,7 +7,7 @@ import android.webkit.WebView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

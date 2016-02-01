@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.WallEntity;
-import com.bondwithme.BondCorp.interfaces.WallViewClickListener;
-import com.bondwithme.BondCorp.ui.BaseFragment;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.WallEntity;
+import com.madxstudio.co8.interfaces.WallViewClickListener;
+import com.madxstudio.co8.ui.BaseFragment;
 
 import java.util.List;
 

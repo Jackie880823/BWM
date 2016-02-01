@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,17 +12,17 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.add.AddMembersActivity;
-import com.bondwithme.BondCorp.ui.family.FamilyActivity;
-import com.bondwithme.BondCorp.ui.more.AboutActivity;
-import com.bondwithme.BondCorp.ui.more.ArchiveActivity;
-import com.bondwithme.BondCorp.ui.more.MoreSettingActivity;
-import com.bondwithme.BondCorp.ui.more.sticker.StickerStoreActivity;
-import com.bondwithme.BondCorp.util.AppInfoUtil;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.widget.InteractivePopupWindow;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.add.AddMembersActivity;
+import com.madxstudio.co8.ui.family.FamilyActivity;
+import com.madxstudio.co8.ui.more.AboutActivity;
+import com.madxstudio.co8.ui.more.ArchiveActivity;
+import com.madxstudio.co8.ui.more.MoreSettingActivity;
+import com.madxstudio.co8.ui.more.sticker.StickerStoreActivity;
+import com.madxstudio.co8.util.AppInfoUtil;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.widget.InteractivePopupWindow;
 
 
 import org.json.JSONException;
@@ -31,9 +31,9 @@ import org.json.JSONObject;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.bondwithme.BondCorp.ui.MoreFragment.OnFragmentInteractionListener} interface
+ * {@link com.madxstudio.co8.ui.MoreFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link com.bondwithme.BondCorp.ui.MoreFragment#newInstance} factory method to
+ * Use the {@link com.madxstudio.co8.ui.MoreFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class MoreFragment extends BaseFragment<MainActivity> implements View.OnClickListener {

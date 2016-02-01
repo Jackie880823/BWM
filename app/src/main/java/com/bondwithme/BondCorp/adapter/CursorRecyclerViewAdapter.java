@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;/*
+package com.madxstudio.co8.adapter;/*
  * Copyright (C) 2014 skyfish.jy@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

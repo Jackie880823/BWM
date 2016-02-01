@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.more;
+package com.madxstudio.co8.ui.more;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.util.AppInfoUtil;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.util.AppInfoUtil;
+import com.madxstudio.co8.widget.MyDialog;
 
 public class MoreSettingActivity extends BaseActivity implements View.OnClickListener{
 

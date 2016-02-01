@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,7 +8,7 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 public class RoundProgressBarWidthNumber extends HorizontalProgressBarWithNumber {
     /**

@@ -16,7 +16,7 @@
  * Designed by ai
  */
 
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -48,7 +48,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 import java.util.ArrayList;
 
@@ -1112,24 +1112,24 @@ public class NumberPicker extends LinearLayout {
 	/**
 	 * Set the current value for the number picker.
 	 * <p>
-	 * If the argument is less than the {@link com.bondwithme.BondCorp.widget.NumberPicker#getMinValue()} and
-	 * {@link com.bondwithme.BondCorp.widget.NumberPicker#getWrapSelectorWheel()} is <code>false</code> the
-	 * current value is set to the {@link com.bondwithme.BondCorp.widget.NumberPicker#getMinValue()} value.
+	 * If the argument is less than the {@link com.madxstudio.co8.widget.NumberPicker#getMinValue()} and
+	 * {@link com.madxstudio.co8.widget.NumberPicker#getWrapSelectorWheel()} is <code>false</code> the
+	 * current value is set to the {@link com.madxstudio.co8.widget.NumberPicker#getMinValue()} value.
 	 * </p>
 	 * <p>
-	 * If the argument is less than the {@link com.bondwithme.BondCorp.widget.NumberPicker#getMinValue()} and
-	 * {@link com.bondwithme.BondCorp.widget.NumberPicker#getWrapSelectorWheel()} is <code>true</code> the
-	 * current value is set to the {@link com.bondwithme.BondCorp.widget.NumberPicker#getMaxValue()} value.
+	 * If the argument is less than the {@link com.madxstudio.co8.widget.NumberPicker#getMinValue()} and
+	 * {@link com.madxstudio.co8.widget.NumberPicker#getWrapSelectorWheel()} is <code>true</code> the
+	 * current value is set to the {@link com.madxstudio.co8.widget.NumberPicker#getMaxValue()} value.
 	 * </p>
 	 * <p>
-	 * If the argument is less than the {@link com.bondwithme.BondCorp.widget.NumberPicker#getMaxValue()} and
-	 * {@link com.bondwithme.BondCorp.widget.NumberPicker#getWrapSelectorWheel()} is <code>false</code> the
-	 * current value is set to the {@link com.bondwithme.BondCorp.widget.NumberPicker#getMaxValue()} value.
+	 * If the argument is less than the {@link com.madxstudio.co8.widget.NumberPicker#getMaxValue()} and
+	 * {@link com.madxstudio.co8.widget.NumberPicker#getWrapSelectorWheel()} is <code>false</code> the
+	 * current value is set to the {@link com.madxstudio.co8.widget.NumberPicker#getMaxValue()} value.
 	 * </p>
 	 * <p>
-	 * If the argument is less than the {@link com.bondwithme.BondCorp.widget.NumberPicker#getMaxValue()} and
-	 * {@link com.bondwithme.BondCorp.widget.NumberPicker#getWrapSelectorWheel()} is <code>true</code> the
-	 * current value is set to the {@link com.bondwithme.BondCorp.widget.NumberPicker#getMinValue()} value.
+	 * If the argument is less than the {@link com.madxstudio.co8.widget.NumberPicker#getMaxValue()} and
+	 * {@link com.madxstudio.co8.widget.NumberPicker#getWrapSelectorWheel()} is <code>true</code> the
+	 * current value is set to the {@link com.madxstudio.co8.widget.NumberPicker#getMinValue()} value.
 	 * </p>
 	 *
 	 * @param value
@@ -1234,8 +1234,8 @@ public class NumberPicker extends LinearLayout {
 
 	/**
 	 * Sets whether the selector wheel shown during flinging/scrolling should
-	 * wrap around the {@link com.bondwithme.BondCorp.widget.NumberPicker#getMinValue()} and
-	 * {@link com.bondwithme.BondCorp.widget.NumberPicker#getMaxValue()} values.
+	 * wrap around the {@link com.madxstudio.co8.widget.NumberPicker#getMinValue()} and
+	 * {@link com.madxstudio.co8.widget.NumberPicker#getMaxValue()} values.
 	 * <p>
 	 * By default if the range (max - min) is more than the number of items
 	 * shown on the selector wheel the selector wheel wrapping is enabled.

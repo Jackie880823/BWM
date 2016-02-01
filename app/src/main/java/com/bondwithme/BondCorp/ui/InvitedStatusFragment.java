@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.MyFragmentPagerAdapter;
-import com.bondwithme.BondCorp.util.animation.ViewHelper;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.MyFragmentPagerAdapter;
+import com.madxstudio.co8.util.animation.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;

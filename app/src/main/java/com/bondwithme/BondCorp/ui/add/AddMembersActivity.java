@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.add;
+package com.madxstudio.co8.ui.add;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,19 +16,19 @@ import android.widget.ImageView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.AddMembersAdapter;
-import com.bondwithme.BondCorp.entity.RecommendEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.FamilyProfileActivity;
-import com.bondwithme.BondCorp.ui.FamilyViewProfileActivity;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.ui.MeActivity;
-import com.bondwithme.BondCorp.zxing.activity.CaptureActivity;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.AddMembersAdapter;
+import com.madxstudio.co8.entity.RecommendEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.FamilyProfileActivity;
+import com.madxstudio.co8.ui.FamilyViewProfileActivity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.MeActivity;
+import com.madxstudio.co8.zxing.activity.CaptureActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

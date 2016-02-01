@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.os.Handler;
@@ -16,8 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.LetterBaseAdapter;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.LetterBaseAdapter;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -163,7 +163,7 @@ public class LetterListView extends FrameLayout
     }
     
     /**
-     * ������Ϣ {@link com.bondwithme.BondCorp.widget.LetterListView.LetterHandler#handleMessage(android.os.Message)}
+     * ������Ϣ {@link com.madxstudio.co8.widget.LetterListView.LetterHandler#handleMessage(android.os.Message)}
      *
      * @param msg ��Ϣ
      * @Description:
@@ -319,12 +319,12 @@ public class LetterListView extends FrameLayout
      */
     private static class LetterHandler extends Handler
     {
-        /** ������ {@link com.bondwithme.BondCorp.widget.LetterListView} **/
+        /** ������ {@link com.madxstudio.co8.widget.LetterListView} **/
         private SoftReference<LetterListView> srLetterListView;
         
         /**
          * ���췽��
-         * @param letterListView {@link com.bondwithme.BondCorp.widget.LetterListView}
+         * @param letterListView {@link com.madxstudio.co8.widget.LetterListView}
          */
         public LetterHandler(LetterListView letterListView)
         {

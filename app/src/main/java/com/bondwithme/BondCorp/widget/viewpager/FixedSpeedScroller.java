@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.widget.viewpager;
+package com.madxstudio.co8.widget.viewpager;
 
 import android.content.Context;
 import android.view.animation.Interpolator;

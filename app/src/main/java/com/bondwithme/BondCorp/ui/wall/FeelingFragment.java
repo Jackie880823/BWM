@@ -1,16 +1,16 @@
-package com.bondwithme.BondCorp.ui.wall;
+package com.madxstudio.co8.ui.wall;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.FeelingAdapter;
-import com.bondwithme.BondCorp.ui.BaseFragment;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.SortComparator;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.FeelingAdapter;
+import com.madxstudio.co8.ui.BaseFragment;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.SortComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;

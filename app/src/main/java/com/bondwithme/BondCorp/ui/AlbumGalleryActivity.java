@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -12,12 +12,12 @@ import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.AlbumGalleryAdapter;
-import com.bondwithme.BondCorp.entity.PhotoEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.AlbumGalleryAdapter;
+import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.util.MessageUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

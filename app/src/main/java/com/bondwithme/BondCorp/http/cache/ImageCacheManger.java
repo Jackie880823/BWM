@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.http.cache;
+package com.madxstudio.co8.http.cache;
 
 
 import android.app.ActivityManager;
@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.bondwithme.BondCorp.App;
+import com.madxstudio.co8.App;
 
 
 public class ImageCacheManger {

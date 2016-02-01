@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.ui.introduction;
+package com.madxstudio.co8.ui.introduction;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,8 +25,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.IntroductionEntity;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.IntroductionEntity;
 
 /**
  * Created 11/9/15.

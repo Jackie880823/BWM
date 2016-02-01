@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.zxing.decoding;
+package com.madxstudio.co8.zxing.decoding;
 
 import android.os.Handler;
 import android.os.Looper;
 
-import com.bondwithme.BondCorp.zxing.activity.CaptureActivity;
+import com.madxstudio.co8.zxing.activity.CaptureActivity;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;

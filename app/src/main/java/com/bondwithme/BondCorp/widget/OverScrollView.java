@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.os.Build;
@@ -13,7 +13,7 @@ import android.widget.ScrollView;
  */
 public class OverScrollView extends ScrollView {
     /**
-     * com.bondwithme.BondCorp/widget/OverScrollView.java
+     * com.madxstudio.co8/widget/OverScrollView.java
      * 滚动系数, 视图滚动距离与手指滑动距离的比值
      */
     private static final float ELASTICITY_COEFFICIENT = 0.25f;

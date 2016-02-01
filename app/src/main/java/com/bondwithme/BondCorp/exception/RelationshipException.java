@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.exception;
+package com.madxstudio.co8.exception;
 
 /**
  * Created by Jackie on 8/28/15.

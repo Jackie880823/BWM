@@ -1,14 +1,14 @@
-package com.bondwithme.BondCorp.ui.wall;
+package com.madxstudio.co8.ui.wall;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.util.WallUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.util.WallUtil;
 
 
 public class WallMembersOrGroupsActivity extends BaseActivity {

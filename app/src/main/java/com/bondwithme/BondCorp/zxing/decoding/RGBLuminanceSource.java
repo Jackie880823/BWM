@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.zxing.decoding;
+package com.madxstudio.co8.zxing.decoding;
 
 /*
  * Copyright 2009 ZXing authors

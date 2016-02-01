@@ -1,6 +1,6 @@
-package com.bondwithme.BondCorp.interfaces;
+package com.madxstudio.co8.interfaces;
 
-import com.bondwithme.BondCorp.entity.FaceBookUserEntity;
+import com.madxstudio.co8.entity.FaceBookUserEntity;
 
 /**
  * Created by christepherzhang on 15/7/16.

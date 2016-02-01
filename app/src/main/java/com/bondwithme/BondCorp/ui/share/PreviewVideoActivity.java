@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.share;
+package com.madxstudio.co8.ui.share;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -20,16 +20,16 @@ import android.widget.VideoView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.DownloadRequest;
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.entity.WallEntity;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.widget.NumberProgressBar;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.entity.WallEntity;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.widget.NumberProgressBar;
 import com.google.common.io.Files;
 
 import java.io.File;
@@ -51,7 +51,7 @@ public class PreviewVideoActivity extends BaseActivity implements MediaPlayer.On
     /**
      * 隐式启动本{@link Activity}的Action
      */
-    public static final String ACTION_PREVIEW_VIDEO_ACTIVITY = "com.bondwithme.BondCorp.ui.PreviewVideoActivity";
+    public static final String ACTION_PREVIEW_VIDEO_ACTIVITY = "com.madxstudio.co8.ui.PreviewVideoActivity";
     /**
      * 创建\上传本视频的用户id对应{@link WallEntity#getContent_creator_id()} 或 {@link UserEntity#getUser_id()}
      */

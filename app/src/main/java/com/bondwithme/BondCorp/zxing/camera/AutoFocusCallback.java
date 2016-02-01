@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.zxing.camera;
+package com.madxstudio.co8.zxing.camera;
 
 import android.hardware.Camera;
 import android.os.Handler;

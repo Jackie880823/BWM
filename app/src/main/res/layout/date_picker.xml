@@ -5,19 +5,19 @@
     android:gravity="center_vertical"
     android:orientation="horizontal" >
 
-    <com.bondwithme.BondCorp.widget.NumberPicker
+    <com.madxstudio.co8.widget.NumberPicker
         android:id="@+id/date_day" android:focusable="true" android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <com.bondwithme.BondCorp.widget.NumberPicker
+    <com.madxstudio.co8.widget.NumberPicker
         android:id="@+id/date_month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp" />
 
-    <com.bondwithme.BondCorp.widget.NumberPicker
+    <com.madxstudio.co8.widget.NumberPicker
         android:id="@+id/date_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

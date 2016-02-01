@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.bondwithme.BondCorp.Constant;
+import com.madxstudio.co8.Constant;
 
 /**
  * SharedPreferences工具适配

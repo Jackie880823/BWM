@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.more;
+package com.madxstudio.co8.ui.more;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -8,12 +8,12 @@ import android.widget.CompoundButton;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.util.MessageUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.util.MessageUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;

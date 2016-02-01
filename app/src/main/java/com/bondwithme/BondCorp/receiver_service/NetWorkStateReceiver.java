@@ -1,12 +1,12 @@
-package com.bondwithme.BondCorp.receiver_service;
+package com.madxstudio.co8.receiver_service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.bondwithme.BondCorp.interfaces.NetChangeObserver;
-import com.bondwithme.BondCorp.util.NetworkUtil;
+import com.madxstudio.co8.interfaces.NetChangeObserver;
+import com.madxstudio.co8.util.NetworkUtil;
 
 import java.util.ArrayList;
 

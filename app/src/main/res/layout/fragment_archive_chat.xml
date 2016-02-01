@@ -55,7 +55,7 @@
         android:paddingRight="@dimen/default_content_padding"
         android:paddingTop="@dimen/default_view_margin"
         android:layout_below="@+id/search_linear">
-        <com.bondwithme.BondCorp.widget.MySwipeRefreshLayout
+        <com.madxstudio.co8.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -68,7 +68,7 @@
                 android:scrollbars="vertical">
 
             </android.support.v7.widget.RecyclerView>
-        </com.bondwithme.BondCorp.widget.MySwipeRefreshLayout>
+        </com.madxstudio.co8.widget.MySwipeRefreshLayout>
 
     </RelativeLayout>
 

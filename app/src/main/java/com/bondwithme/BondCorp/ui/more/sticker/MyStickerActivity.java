@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.more.sticker;
+package com.madxstudio.co8.ui.more.sticker;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,14 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ScrollView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.MyStickerAdapter;
-import com.bondwithme.BondCorp.db.SQLiteHelperOrm;
-import com.bondwithme.BondCorp.entity.LocalStickerInfo;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.widget.FullyLinearLayoutManager;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.MyStickerAdapter;
+import com.madxstudio.co8.db.SQLiteHelperOrm;
+import com.madxstudio.co8.entity.LocalStickerInfo;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.widget.FullyLinearLayoutManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 

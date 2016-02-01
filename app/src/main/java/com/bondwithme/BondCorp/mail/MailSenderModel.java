@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.mail;
+package com.madxstudio.co8.mail;
 
 import java.io.File;
 import java.util.Properties;

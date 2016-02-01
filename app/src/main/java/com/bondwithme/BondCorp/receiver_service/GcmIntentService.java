@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.receiver_service;
+package com.madxstudio.co8.receiver_service;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.bondwithme.BondCorp.util.NotificationUtil;
+import com.madxstudio.co8.util.NotificationUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.json.JSONException;

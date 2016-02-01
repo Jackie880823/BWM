@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,7 +15,7 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 
 public class CircularNetworkImage extends NetworkImageView {

@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.NewsEntity;
-import com.bondwithme.BondCorp.ui.more.ViewUrlPicActivity;
-import com.bondwithme.BondCorp.ui.share.PreviewVideoActivity;
-import com.bondwithme.BondCorp.ui.wall.DiaryCommentActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.NewsEntity;
+import com.madxstudio.co8.ui.more.ViewUrlPicActivity;
+import com.madxstudio.co8.ui.share.PreviewVideoActivity;
+import com.madxstudio.co8.ui.wall.DiaryCommentActivity;
+import com.madxstudio.co8.util.LogUtil;
 
 /**
  * 用于显示news item，便于动态显示文本内容：展开（More）、收起（collapse），兼有播放视频的功能

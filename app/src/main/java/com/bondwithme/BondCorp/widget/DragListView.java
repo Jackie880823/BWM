@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,9 +20,9 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.DragListAdapter;
-import com.bondwithme.BondCorp.entity.DragItemInfo;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.DragListAdapter;
+import com.madxstudio.co8.entity.DragItemInfo;
 
 /**
  * 自定义可拖动Item排序ListView

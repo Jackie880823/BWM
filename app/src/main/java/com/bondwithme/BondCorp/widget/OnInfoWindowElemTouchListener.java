@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.view.MotionEvent;

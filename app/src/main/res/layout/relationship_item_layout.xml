@@ -37,7 +37,7 @@
             android:orientation="vertical">
 
 
-            <com.bondwithme.BondCorp.widget.CircularNetworkImage
+            <com.madxstudio.co8.widget.CircularNetworkImage
                 android:id="@+id/relationship_item_image"
                 android:layout_width="@dimen/_75dp"
                 android:layout_height="@dimen/_75dp"

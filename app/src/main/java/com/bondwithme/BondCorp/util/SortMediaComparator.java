@@ -1,6 +1,6 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
-import com.bondwithme.BondCorp.entity.MediaData;
+import com.madxstudio.co8.entity.MediaData;
 
 import java.util.Comparator;
 

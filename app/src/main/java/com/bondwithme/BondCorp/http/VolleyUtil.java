@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.http;
+package com.madxstudio.co8.http;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -14,7 +14,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
-import com.bondwithme.BondCorp.App;
+import com.madxstudio.co8.App;
 
 /**
  * @ClassName:  VolleyUtil

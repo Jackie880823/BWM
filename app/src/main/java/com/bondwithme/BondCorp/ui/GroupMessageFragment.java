@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,13 +20,13 @@ import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.MessageGroupFragmentAdapter;
-import com.bondwithme.BondCorp.entity.GroupMessageEntity;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.util.NetworkUtil;
-import com.bondwithme.BondCorp.widget.MySwipeRefreshLayout;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.MessageGroupFragmentAdapter;
+import com.madxstudio.co8.entity.GroupMessageEntity;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.NetworkUtil;
+import com.madxstudio.co8.widget.MySwipeRefreshLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;

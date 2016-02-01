@@ -23,7 +23,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
-                <com.bondwithme.BondCorp.widget.SquareLinnerLayout
+                <com.madxstudio.co8.widget.SquareLinnerLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
@@ -34,14 +34,14 @@
                             android:padding="2dp"
                             android:scaleType="fitXY"
                             android:background="@null"/>
-                </com.bondwithme.BondCorp.widget.SquareLinnerLayout>
+                </com.madxstudio.co8.widget.SquareLinnerLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
-                <com.bondwithme.BondCorp.widget.SquareLinnerLayout
+                <com.madxstudio.co8.widget.SquareLinnerLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
@@ -52,14 +52,14 @@
                             android:padding="2dp"
                             android:scaleType="fitXY"
                             android:background="@null"/>
-                </com.bondwithme.BondCorp.widget.SquareLinnerLayout>
+                </com.madxstudio.co8.widget.SquareLinnerLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
-                <com.bondwithme.BondCorp.widget.SquareLinnerLayout
+                <com.madxstudio.co8.widget.SquareLinnerLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
@@ -70,7 +70,7 @@
                             android:padding="2dp"
                             android:scaleType="fitXY"
                             android:background="@null"/>
-                </com.bondwithme.BondCorp.widget.SquareLinnerLayout>
+                </com.madxstudio.co8.widget.SquareLinnerLayout>
             </LinearLayout>
     </LinearLayout>
 
@@ -82,7 +82,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
-                <com.bondwithme.BondCorp.widget.SquareLinnerLayout
+                <com.madxstudio.co8.widget.SquareLinnerLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
@@ -93,14 +93,14 @@
                             android:padding="2dp"
                             android:scaleType="fitXY"
                             android:background="@null"/>
-                </com.bondwithme.BondCorp.widget.SquareLinnerLayout>
+                </com.madxstudio.co8.widget.SquareLinnerLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
-                <com.bondwithme.BondCorp.widget.SquareLinnerLayout
+                <com.madxstudio.co8.widget.SquareLinnerLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
@@ -111,14 +111,14 @@
                             android:padding="2dp"
                             android:scaleType="fitXY"
                             android:background="@null"/>
-                </com.bondwithme.BondCorp.widget.SquareLinnerLayout>
+                </com.madxstudio.co8.widget.SquareLinnerLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
-                <com.bondwithme.BondCorp.widget.SquareLinnerLayout
+                <com.madxstudio.co8.widget.SquareLinnerLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
@@ -129,7 +129,7 @@
                             android:padding="2dp"
                             android:scaleType="fitXY"
                             android:background="@null"/>
-                </com.bondwithme.BondCorp.widget.SquareLinnerLayout>
+                </com.madxstudio.co8.widget.SquareLinnerLayout>
             </LinearLayout>
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,14 +16,14 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.AlbumAdapter;
-import com.bondwithme.BondCorp.entity.AlbumEntity;
-import com.bondwithme.BondCorp.entity.AlbumPhotoEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.widget.PickerView;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.AlbumAdapter;
+import com.madxstudio.co8.entity.AlbumEntity;
+import com.madxstudio.co8.entity.AlbumPhotoEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.widget.PickerView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

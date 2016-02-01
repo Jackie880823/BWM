@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,9 +16,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.LetterBaseListAdapter;
-import com.bondwithme.BondCorp.widget.LetterListView;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.LetterBaseListAdapter;
+import com.madxstudio.co8.widget.LetterListView;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;

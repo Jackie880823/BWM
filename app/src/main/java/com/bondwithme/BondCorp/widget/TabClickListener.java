@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 /**
  * Created by chenupt@gmail.com on 2/28/15.

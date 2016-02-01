@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,13 +18,13 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.entity.WallCommentEntity;
-import com.bondwithme.BondCorp.entity.WallEntity;
-import com.bondwithme.BondCorp.interfaces.WallViewClickListener;
-import com.bondwithme.BondCorp.ui.MainActivity;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.entity.WallCommentEntity;
+import com.madxstudio.co8.entity.WallEntity;
+import com.madxstudio.co8.interfaces.WallViewClickListener;
+import com.madxstudio.co8.ui.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

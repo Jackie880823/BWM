@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,11 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.util.DensityUtil;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.PreferencesUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.util.DensityUtil;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.PreferencesUtil;
 
 import java.util.HashMap;
 import java.util.Map;

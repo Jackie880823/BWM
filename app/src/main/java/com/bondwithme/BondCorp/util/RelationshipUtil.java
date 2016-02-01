@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.exception.RelationshipException;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.exception.RelationshipException;
 
 import java.util.Arrays;
 import java.util.List;

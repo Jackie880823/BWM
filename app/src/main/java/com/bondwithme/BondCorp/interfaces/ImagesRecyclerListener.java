@@ -1,8 +1,8 @@
-package com.bondwithme.BondCorp.interfaces;
+package com.madxstudio.co8.interfaces;
 
-import com.bondwithme.BondCorp.adapter.HeadHolder;
-import com.bondwithme.BondCorp.adapter.VideoHolder;
-import com.bondwithme.BondCorp.entity.PushedPhotoEntity;
+import com.madxstudio.co8.adapter.HeadHolder;
+import com.madxstudio.co8.adapter.VideoHolder;
+import com.madxstudio.co8.entity.PushedPhotoEntity;
 
 /**
  * Created 10/23/15.

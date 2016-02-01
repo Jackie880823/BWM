@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,13 +16,13 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.http.UrlUtil;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.LocalImageLoader;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.LocalImageLoader;
+import com.madxstudio.co8.widget.CircularNetworkImage;
+import com.madxstudio.co8.widget.MyDialog;
 import com.material.widget.Dialog;
 
 import org.json.JSONException;

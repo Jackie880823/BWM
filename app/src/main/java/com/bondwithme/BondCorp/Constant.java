@@ -1,6 +1,6 @@
-package com.bondwithme.BondCorp;
+package com.madxstudio.co8;
 
-import com.bondwithme.BondCorp.util.FileUtil;
+import com.madxstudio.co8.util.FileUtil;
 
 /**
  * Created by wing on 15/1/29.

@@ -1,15 +1,15 @@
-package com.bondwithme.BondCorp.ui.more;
+package com.madxstudio.co8.ui.more;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.AboutUsActivity;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.ContactUsActivity;
-import com.bondwithme.BondCorp.ui.TermsActivity;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.AboutUsActivity;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.ContactUsActivity;
+import com.madxstudio.co8.ui.TermsActivity;
 
 /**
  * Created by heweidong on 15/8/26.

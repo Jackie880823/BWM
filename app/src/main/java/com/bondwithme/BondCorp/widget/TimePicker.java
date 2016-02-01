@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,8 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TextSwitcher;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.widget.NumberPicker.OnValueChangeListener;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.widget.NumberPicker.OnValueChangeListener;
 
 import java.util.Calendar;
 

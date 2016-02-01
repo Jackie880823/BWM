@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 /**
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)

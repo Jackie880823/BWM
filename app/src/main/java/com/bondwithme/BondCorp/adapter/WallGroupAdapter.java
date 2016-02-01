@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,13 +10,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.GroupEntity;
-import com.bondwithme.BondCorp.ui.MessageChatActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.GroupEntity;
+import com.madxstudio.co8.ui.MessageChatActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.widget.CircularNetworkImage;
+import com.madxstudio.co8.widget.MyDialog;
 
 import java.util.List;
 

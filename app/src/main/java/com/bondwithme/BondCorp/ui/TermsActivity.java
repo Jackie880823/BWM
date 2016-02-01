@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 import java.util.Locale;
 

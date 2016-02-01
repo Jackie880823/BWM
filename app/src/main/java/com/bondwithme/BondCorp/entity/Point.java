@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.entity;
+package com.madxstudio.co8.entity;
 
 /**
  * Created by chenupt@gmail.com on 2015/1/31.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.zxing.decoding;
+package com.madxstudio.co8.zxing.decoding;
 
 import android.app.Activity;
 

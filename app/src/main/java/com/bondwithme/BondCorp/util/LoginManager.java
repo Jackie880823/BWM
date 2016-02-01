@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.bondwithme.BondCorp.interfaces.LogInStateListener;
-import com.bondwithme.BondCorp.interfaces.LogOutStateListener;
+import com.madxstudio.co8.interfaces.LogInStateListener;
+import com.madxstudio.co8.interfaces.LogOutStateListener;
 
 /**
  * Created by christepherzhang on 15/7/16.

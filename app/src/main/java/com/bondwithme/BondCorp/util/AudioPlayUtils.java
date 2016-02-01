@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -6,7 +6,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 
-import com.bondwithme.BondCorp.App;
+import com.madxstudio.co8.App;
 
 import java.io.IOException;
 

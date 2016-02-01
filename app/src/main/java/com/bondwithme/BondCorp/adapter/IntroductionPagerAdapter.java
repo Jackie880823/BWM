@@ -1,10 +1,10 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.bondwithme.BondCorp.ui.introduction.IntroductionPagerManager;
+import com.madxstudio.co8.ui.introduction.IntroductionPagerManager;
 
 /**
  * Created 11/9/15.

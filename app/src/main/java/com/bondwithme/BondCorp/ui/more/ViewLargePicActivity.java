@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.more;
+package com.madxstudio.co8.ui.more;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.NewsHolder;
-import com.bondwithme.BondCorp.http.VolleyUtil;
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.NewsHolder;
+import com.madxstudio.co8.http.VolleyUtil;
+import com.madxstudio.co8.util.LogUtil;
 
 /**
  * Created by heweidong on 15/10/20.

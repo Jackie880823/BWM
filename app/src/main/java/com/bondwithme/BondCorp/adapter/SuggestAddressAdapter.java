@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.baidu.mapapi.search.sug.SuggestionResult;
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 import java.util.List;
 

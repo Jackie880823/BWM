@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.start;
+package com.madxstudio.co8.ui.start;
 
 
 import android.graphics.Typeface;
@@ -13,12 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.Tranck.MyAppsFlyer;
-import com.bondwithme.BondCorp.Tranck.MyPiwik;
-import com.bondwithme.BondCorp.util.PreferencesUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.Tranck.MyAppsFlyer;
+import com.madxstudio.co8.Tranck.MyPiwik;
+import com.madxstudio.co8.util.PreferencesUtil;
 
 public class StartActivity extends FragmentActivity implements View.OnClickListener {
 

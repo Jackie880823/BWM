@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,12 +13,12 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.PhotoEntity;
-import com.bondwithme.BondCorp.http.PicturesCacheUtil;
-import com.bondwithme.BondCorp.util.LocalImageLoader;
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.http.PicturesCacheUtil;
+import com.madxstudio.co8.util.LocalImageLoader;
+import com.madxstudio.co8.util.LogUtil;
 
 import java.util.List;
 

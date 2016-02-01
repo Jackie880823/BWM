@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,15 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.FamilyMemberEntity;
-import com.bondwithme.BondCorp.entity.RelationshipEnum;
-import com.bondwithme.BondCorp.http.VolleyUtil;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.ui.OnFamilyItemClickListener;
-import com.bondwithme.BondCorp.util.RelationshipUtil;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.FamilyMemberEntity;
+import com.madxstudio.co8.entity.RelationshipEnum;
+import com.madxstudio.co8.http.VolleyUtil;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.OnFamilyItemClickListener;
+import com.madxstudio.co8.util.RelationshipUtil;
+import com.madxstudio.co8.widget.CircularNetworkImage;
 
 import java.util.ArrayList;
 

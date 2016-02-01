@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.http.cache;
+package com.madxstudio.co8.http.cache;
 
 
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.disklrucache.DiskLruCache;
-import com.bondwithme.BondCorp.App;
+import com.madxstudio.co8.App;
 
 import java.io.File;
 import java.io.IOException;

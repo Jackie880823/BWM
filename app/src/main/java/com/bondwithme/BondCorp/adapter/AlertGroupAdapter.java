@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 
 import android.content.Context;
@@ -11,11 +11,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.AlertGroupEntity;
-import com.bondwithme.BondCorp.util.MyDateUtils;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.AlertGroupEntity;
+import com.madxstudio.co8.util.MyDateUtils;
+import com.madxstudio.co8.widget.CircularNetworkImage;
 
 import java.util.List;
 

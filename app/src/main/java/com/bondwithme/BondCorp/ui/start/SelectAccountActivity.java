@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.start;
+package com.madxstudio.co8.ui.start;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,11 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.SelectAccountAdapter;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.ui.BaseActivity;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.SelectAccountAdapter;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.ui.BaseActivity;
 
 import java.util.ArrayList;
 

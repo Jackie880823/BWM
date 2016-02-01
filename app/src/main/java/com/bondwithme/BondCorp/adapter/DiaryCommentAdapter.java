@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,22 +16,22 @@ import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.PhotoEntity;
-import com.bondwithme.BondCorp.entity.WallCommentEntity;
-import com.bondwithme.BondCorp.exception.StickerTypeException;
-import com.bondwithme.BondCorp.ui.BaseFragment;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.ui.ViewOriginalPicesActivity;
-import com.bondwithme.BondCorp.ui.wall.EditCommentActivity;
-import com.bondwithme.BondCorp.ui.wall.WallMembersOrGroupsActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MyDateUtils;
-import com.bondwithme.BondCorp.util.UniversalImageLoaderUtil;
-import com.bondwithme.BondCorp.util.WallUtil;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
-import com.bondwithme.BondCorp.widget.FreedomSelectionTextView;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.entity.WallCommentEntity;
+import com.madxstudio.co8.exception.StickerTypeException;
+import com.madxstudio.co8.ui.BaseFragment;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.ViewOriginalPicesActivity;
+import com.madxstudio.co8.ui.wall.EditCommentActivity;
+import com.madxstudio.co8.ui.wall.WallMembersOrGroupsActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MyDateUtils;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
+import com.madxstudio.co8.util.WallUtil;
+import com.madxstudio.co8.widget.CircularNetworkImage;
+import com.madxstudio.co8.widget.FreedomSelectionTextView;
 
 import java.util.ArrayList;
 import java.util.List;

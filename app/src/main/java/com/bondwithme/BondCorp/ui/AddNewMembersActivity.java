@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 public class AddNewMembersActivity extends BaseActivity {
 

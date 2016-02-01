@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.bondwithme.BondCorp.Constant;
+import com.madxstudio.co8.Constant;
 
 /**
  * Created by wing on 15/3/22.

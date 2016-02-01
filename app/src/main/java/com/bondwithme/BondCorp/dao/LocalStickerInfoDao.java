@@ -1,13 +1,13 @@
-package com.bondwithme.BondCorp.dao;
+package com.madxstudio.co8.dao;
 
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.db.SQLiteHelperOrm;
-import com.bondwithme.BondCorp.entity.LocalStickerInfo;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.ZipUtils;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.db.SQLiteHelperOrm;
+import com.madxstudio.co8.entity.LocalStickerInfo;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.ZipUtils;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 

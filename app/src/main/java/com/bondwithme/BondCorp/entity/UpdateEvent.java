@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.entity;
+package com.madxstudio.co8.entity;
 
 /**
  * Created by liangzemian on 15/11/26.

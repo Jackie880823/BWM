@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.wall.EditDiaryFragment;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.wall.EditDiaryFragment;
 
 import java.util.List;
 

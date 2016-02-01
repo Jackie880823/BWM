@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -10,7 +10,7 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 /**
  * Created on 9/16/15.

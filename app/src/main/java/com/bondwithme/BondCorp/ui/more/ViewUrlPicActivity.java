@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.more;
+package com.madxstudio.co8.ui.more;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,11 +10,11 @@ import android.widget.ImageView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.NewsHolder;
-import com.bondwithme.BondCorp.http.PicturesCacheUtil;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.util.LocalImageLoader;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.NewsHolder;
+import com.madxstudio.co8.http.PicturesCacheUtil;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.util.LocalImageLoader;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 

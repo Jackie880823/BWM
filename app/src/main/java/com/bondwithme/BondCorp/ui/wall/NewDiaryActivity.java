@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.wall;
+package com.madxstudio.co8.ui.wall;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,10 +7,10 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.util.LogUtil;
 
 /**
  * Created 10/20/15.

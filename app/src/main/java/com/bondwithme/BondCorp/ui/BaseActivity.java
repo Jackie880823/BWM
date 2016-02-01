@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,14 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.interfaces.IViewCommon;
-import com.bondwithme.BondCorp.interfaces.NetChangeObserver;
-import com.bondwithme.BondCorp.receiver_service.NetWorkStateReceiver;
-import com.bondwithme.BondCorp.util.NetworkUtil;
-import com.bondwithme.BondCorp.util.NotificationUtil;
-import com.bondwithme.BondCorp.util.UIUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.interfaces.IViewCommon;
+import com.madxstudio.co8.interfaces.NetChangeObserver;
+import com.madxstudio.co8.receiver_service.NetWorkStateReceiver;
+import com.madxstudio.co8.util.NetworkUtil;
+import com.madxstudio.co8.util.NotificationUtil;
+import com.madxstudio.co8.util.UIUtil;
 
 /**
  * activity基类

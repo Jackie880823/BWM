@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.entity;
+package com.madxstudio.co8.entity;
 
 import android.net.Uri;
 

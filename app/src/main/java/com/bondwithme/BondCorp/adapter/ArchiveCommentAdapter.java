@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,16 +16,16 @@ import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.ArchiveChatEntity;
-import com.bondwithme.BondCorp.entity.ArchiveCommentEntity;
-import com.bondwithme.BondCorp.interfaces.ArchiveChatViewClickListener;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.MyDateUtils;
-import com.bondwithme.BondCorp.util.NetworkUtil;
-import com.bondwithme.BondCorp.util.SDKUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.ArchiveChatEntity;
+import com.madxstudio.co8.entity.ArchiveCommentEntity;
+import com.madxstudio.co8.interfaces.ArchiveChatViewClickListener;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.MyDateUtils;
+import com.madxstudio.co8.util.NetworkUtil;
+import com.madxstudio.co8.util.SDKUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.interfaces;
+package com.madxstudio.co8.interfaces;
 
 import android.view.View;
 

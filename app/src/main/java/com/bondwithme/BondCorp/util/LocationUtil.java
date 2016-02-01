@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,10 +17,10 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.Map4BaiduActivity;
-import com.bondwithme.BondCorp.ui.Map4GoogleActivity;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.Map4BaiduActivity;
+import com.madxstudio.co8.ui.Map4GoogleActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -446,7 +446,7 @@ public class LocationUtil {
     }
 
     private static void openWebViewGoogle2baidu(final Context context, final double latitude, final double longitude) {
-        String url = String.format("http://api.map.baidu.com/geoconv/v1/?coords=%s,%s&mcode=%s&from=3&to=5&ak=%s", longitude, latitude, "E9:37:78:D3:36:04:44:E3:D3:51:84:CA:D3:17:57:07:5A:67:75:E2;com.bondwithme.BondCorp", context.getResources().getString(R.string.baidu_maps_key));
+        String url = String.format("http://api.map.baidu.com/geoconv/v1/?coords=%s,%s&mcode=%s&from=3&to=5&ak=%s", longitude, latitude, "E9:37:78:D3:36:04:44:E3:D3:51:84:CA:D3:17:57:07:5A:67:75:E2;com.madxstudio.co8", context.getResources().getString(R.string.baidu_maps_key));
         LogUtil.d(TAG, "0string============" + url);
         new HttpTools(context).get(url, null, TAG, new HttpCallback() {
             @Override

@@ -1,11 +1,11 @@
-package com.bondwithme.BondCorp.db;
+package com.madxstudio.co8.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.LocalStickerInfo;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.LocalStickerInfo;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;

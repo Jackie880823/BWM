@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.wall;
+package com.madxstudio.co8.ui.wall;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,18 +10,18 @@ import android.widget.AdapterView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.WallGroupAdapter;
-import com.bondwithme.BondCorp.adapter.WallMemberAdapter;
-import com.bondwithme.BondCorp.entity.GroupEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.entity.WallEntity;
-import com.bondwithme.BondCorp.ui.BaseFragment;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.util.WallUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.WallGroupAdapter;
+import com.madxstudio.co8.adapter.WallMemberAdapter;
+import com.madxstudio.co8.entity.GroupEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.entity.WallEntity;
+import com.madxstudio.co8.ui.BaseFragment;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.WallUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

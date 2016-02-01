@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.share;
+package com.madxstudio.co8.ui.share;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -22,18 +22,18 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.android.volley.Utils;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.LocalMediaAdapter;
-import com.bondwithme.BondCorp.entity.MediaData;
-import com.bondwithme.BondCorp.interfaces.SelectImageUirChangeListener;
-import com.bondwithme.BondCorp.ui.BaseFragment;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.util.SortMediaComparator;
-import com.bondwithme.BondCorp.widget.CustomGridView;
-import com.bondwithme.BondCorp.widget.DrawerArrowDrawable;
-import com.bondwithme.BondCorp.widget.NewtonCradleLoading;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.LocalMediaAdapter;
+import com.madxstudio.co8.entity.MediaData;
+import com.madxstudio.co8.interfaces.SelectImageUirChangeListener;
+import com.madxstudio.co8.ui.BaseFragment;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.SortMediaComparator;
+import com.madxstudio.co8.widget.CustomGridView;
+import com.madxstudio.co8.widget.DrawerArrowDrawable;
+import com.madxstudio.co8.widget.NewtonCradleLoading;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

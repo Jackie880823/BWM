@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.RewardsEntity;
-import com.bondwithme.BondCorp.ui.more.ViewUrlPicActivity;
-import com.bondwithme.BondCorp.ui.share.PreviewVideoActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.RewardsEntity;
+import com.madxstudio.co8.ui.more.ViewUrlPicActivity;
+import com.madxstudio.co8.ui.share.PreviewVideoActivity;
+import com.madxstudio.co8.util.LogUtil;
 
 import java.util.List;
 

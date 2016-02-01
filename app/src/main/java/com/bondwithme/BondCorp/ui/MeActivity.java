@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.wall.NewDiaryActivity;
-import com.bondwithme.BondCorp.ui.wall.WallFragment;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.wall.NewDiaryActivity;
+import com.madxstudio.co8.ui.wall.WallFragment;
 
 public class MeActivity extends BaseActivity implements MeFragment.MeFragmentListener {
     @Override

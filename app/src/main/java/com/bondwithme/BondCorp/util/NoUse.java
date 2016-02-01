@@ -1,8 +1,8 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 import java.util.Arrays;
 import java.util.List;

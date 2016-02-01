@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.family;
+package com.madxstudio.co8.ui.family;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -7,12 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.FamilyFragment;
-import com.bondwithme.BondCorp.ui.InviteMemberActivity;
-import com.bondwithme.BondCorp.ui.add.AddMembersActivity;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.FamilyFragment;
+import com.madxstudio.co8.ui.InviteMemberActivity;
+import com.madxstudio.co8.ui.add.AddMembersActivity;
+import com.madxstudio.co8.widget.MyDialog;
 import com.material.widget.Dialog;
 
 /**

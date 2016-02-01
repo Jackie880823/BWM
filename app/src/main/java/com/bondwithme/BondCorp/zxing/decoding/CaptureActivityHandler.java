@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.zxing.decoding;
+package com.madxstudio.co8.zxing.decoding;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,10 +25,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.zxing.activity.CaptureActivity;
-import com.bondwithme.BondCorp.zxing.camera.CameraManager;
-import com.bondwithme.BondCorp.zxing.view.ViewfinderResultPointCallback;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.zxing.activity.CaptureActivity;
+import com.madxstudio.co8.zxing.camera.CameraManager;
+import com.madxstudio.co8.zxing.view.ViewfinderResultPointCallback;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 

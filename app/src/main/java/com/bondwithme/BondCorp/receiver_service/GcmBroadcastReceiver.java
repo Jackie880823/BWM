@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.receiver_service;
+package com.madxstudio.co8.receiver_service;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.util.LocationUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.util.LocationUtil;
 
 /**
  * GCM推送接收器

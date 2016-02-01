@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +10,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.util.UIUtil;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.util.UIUtil;
+import com.madxstudio.co8.widget.CircularNetworkImage;
+import com.madxstudio.co8.widget.MyDialog;
 
 import java.util.List;
 

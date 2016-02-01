@@ -1,8 +1,8 @@
-package com.bondwithme.BondCorp.interfaces;
+package com.madxstudio.co8.interfaces;
 
 import android.support.annotation.Nullable;
 
-import com.bondwithme.BondCorp.entity.WallEntity;
+import com.madxstudio.co8.entity.WallEntity;
 
 /**
  * Created 15/12/16.

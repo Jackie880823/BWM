@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.AlertEventEntity;
-import com.bondwithme.BondCorp.ui.EventDetailActivity;
-import com.bondwithme.BondCorp.util.MyDateUtils;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.AlertEventEntity;
+import com.madxstudio.co8.ui.EventDetailActivity;
+import com.madxstudio.co8.util.MyDateUtils;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -30,17 +30,17 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.PlaceAutocompleteAdapter;
-import com.bondwithme.BondCorp.task.PlacesDisplayTask;
-import com.bondwithme.BondCorp.util.LocationUtil;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.util.SDKUtil;
-import com.bondwithme.BondCorp.util.UIUtil;
-import com.bondwithme.BondCorp.widget.MapWrapperLayout;
-import com.bondwithme.BondCorp.widget.OnInfoWindowElemTouchListener;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.PlaceAutocompleteAdapter;
+import com.madxstudio.co8.task.PlacesDisplayTask;
+import com.madxstudio.co8.util.LocationUtil;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.SDKUtil;
+import com.madxstudio.co8.util.UIUtil;
+import com.madxstudio.co8.widget.MapWrapperLayout;
+import com.madxstudio.co8.widget.OnInfoWindowElemTouchListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;

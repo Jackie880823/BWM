@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,9 +32,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.WallUtil;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.WallUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

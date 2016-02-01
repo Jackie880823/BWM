@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Context;
 import android.net.Uri;
@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
 
 /**
  * Created by wing on 15/3/23.
@@ -41,7 +41,7 @@ public class ViewOriginalPicesActivity extends BaseFragmentActivity {
         Bundle bundle = new Bundle();
         //浏览单张图片的情况
         if (getIntent().getBooleanExtra(IS_DATA, false)) {
-            fragment = ViewOriginalPicesMainFragment.newInstance((java.util.List<com.bondwithme.BondCorp.entity.PhotoEntity>) getIntent().getSerializableExtra("datas"));
+            fragment = ViewOriginalPicesMainFragment.newInstance((java.util.List<com.madxstudio.co8.entity.PhotoEntity>) getIntent().getSerializableExtra("datas"));
         } else {
             //多张图片的时候
             fragment = new ViewOriginalPicesMainFragment();

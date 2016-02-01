@@ -1,15 +1,15 @@
-package com.bondwithme.BondCorp;
+package com.madxstudio.co8;
 
 
 import android.content.Context;
 import android.os.Looper;
 
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.util.FileUtil;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.MessageUtil;
-import com.bondwithme.BondCorp.util.PreferencesUtil;
-import com.bondwithme.BondCorp.util.SystemUtil;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.util.FileUtil;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.PreferencesUtil;
+import com.madxstudio.co8.util.SystemUtil;
 
 import java.io.FileOutputStream;
 import java.io.PrintWriter;

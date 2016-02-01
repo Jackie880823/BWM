@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.adapter;
+package com.madxstudio.co8.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,15 +16,15 @@ import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.ArchiveChatEntity;
-import com.bondwithme.BondCorp.exception.StickerTypeException;
-import com.bondwithme.BondCorp.interfaces.ArchiveChatViewClickListener;
-import com.bondwithme.BondCorp.util.MyDateUtils;
-import com.bondwithme.BondCorp.util.NetworkUtil;
-import com.bondwithme.BondCorp.util.SDKUtil;
-import com.bondwithme.BondCorp.util.UniversalImageLoaderUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.ArchiveChatEntity;
+import com.madxstudio.co8.exception.StickerTypeException;
+import com.madxstudio.co8.interfaces.ArchiveChatViewClickListener;
+import com.madxstudio.co8.util.MyDateUtils;
+import com.madxstudio.co8.util.NetworkUtil;
+import com.madxstudio.co8.util.SDKUtil;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 
 import java.util.ArrayList;
 import java.util.List;

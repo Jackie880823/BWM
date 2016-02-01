@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.more;
+package com.madxstudio.co8.ui.more;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.more.Archive.GroupListActivity;
-import com.bondwithme.BondCorp.ui.more.Archive.PrivateListActivity;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.more.Archive.GroupListActivity;
+import com.madxstudio.co8.ui.more.Archive.PrivateListActivity;
 
 
 /**

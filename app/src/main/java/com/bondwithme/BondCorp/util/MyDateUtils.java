@@ -1,11 +1,11 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.content.Context;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 import java.sql.Timestamp;
 import java.text.ParseException;

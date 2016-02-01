@@ -14,7 +14,7 @@
         android:layout_marginBottom="@dimen/_10dp"
         android:layout_height="@dimen/_65dp">
 
-        <com.bondwithme.BondCorp.widget.CircularNetworkImage
+        <com.madxstudio.co8.widget.CircularNetworkImage
             android:id="@+id/message_private_icon_image"
             android:layout_width="@dimen/_60dp"
             android:layout_height="@dimen/_60dp"

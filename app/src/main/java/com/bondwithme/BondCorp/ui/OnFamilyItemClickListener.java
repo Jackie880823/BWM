@@ -1,8 +1,8 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.view.View;
 
-import com.bondwithme.BondCorp.entity.FamilyMemberEntity;
+import com.madxstudio.co8.entity.FamilyMemberEntity;
 
 /**
  *

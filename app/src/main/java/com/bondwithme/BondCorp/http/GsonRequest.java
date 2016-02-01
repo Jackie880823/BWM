@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.http;
+package com.madxstudio.co8.http;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;

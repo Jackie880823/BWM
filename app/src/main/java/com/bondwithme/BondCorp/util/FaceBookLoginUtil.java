@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.util;
+package com.madxstudio.co8.util;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.entity.FaceBookUserEntity;
-import com.bondwithme.BondCorp.interfaces.LogInStateListener;
-import com.bondwithme.BondCorp.interfaces.LogOutStateListener;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.FaceBookUserEntity;
+import com.madxstudio.co8.interfaces.LogInStateListener;
+import com.madxstudio.co8.interfaces.LogOutStateListener;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;

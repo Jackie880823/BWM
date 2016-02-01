@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -25,8 +25,8 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
 import com.google.gson.Gson;
 
 import org.json.JSONException;

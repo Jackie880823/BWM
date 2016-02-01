@@ -1,11 +1,11 @@
-package com.bondwithme.BondCorp.receiver_service;
+package com.madxstudio.co8.receiver_service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.bondwithme.BondCorp.util.NotificationUtil;
-import com.bondwithme.BondCorp.util.NotificationUtil.MessageType;
+import com.madxstudio.co8.util.NotificationUtil;
+import com.madxstudio.co8.util.NotificationUtil.MessageType;
 
 import org.json.JSONException;
 

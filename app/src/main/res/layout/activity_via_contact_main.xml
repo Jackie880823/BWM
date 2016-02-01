@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/default_text_color_while"
-    tools:context="com.bondwithme.BondCorp.ui.ViaContactMainActivity">
+    tools:context="com.madxstudio.co8.ui.ViaContactMainActivity">
 
     <include
         android:id="@+id/fragment_main_top"
@@ -121,10 +121,10 @@
                 android:layout_height="0.5dp"
                 android:background="#ccc" />
 
-                <com.bondwithme.BondCorp.widget.MyListViewForScroolView
+                <com.madxstudio.co8.widget.MyListViewForScroolView
                     android:id="@+id/lv"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></com.bondwithme.BondCorp.widget.MyListViewForScroolView>
+                    android:layout_height="match_parent"></com.madxstudio.co8.widget.MyListViewForScroolView>
 
             <View
                 android:layout_width="match_parent"

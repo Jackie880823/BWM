@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
@@ -30,7 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 import java.util.ArrayList;
 import java.util.List;

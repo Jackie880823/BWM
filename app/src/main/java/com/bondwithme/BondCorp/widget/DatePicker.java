@@ -1,13 +1,13 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.util.MyDateUtils;
-import com.bondwithme.BondCorp.widget.NumberPicker.OnValueChangeListener;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.util.MyDateUtils;
+import com.madxstudio.co8.widget.NumberPicker.OnValueChangeListener;
 
 import java.util.Calendar;
 

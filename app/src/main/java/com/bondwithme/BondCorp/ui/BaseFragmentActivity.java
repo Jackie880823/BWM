@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 
 /**
  * fragmentActivity 基类

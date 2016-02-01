@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -10,11 +10,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.RecommendAdapter;
-import com.bondwithme.BondCorp.exception.RelationshipException;
-import com.bondwithme.BondCorp.util.RelationshipUtil;
-import com.bondwithme.BondCorp.widget.MyDialog;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.RecommendAdapter;
+import com.madxstudio.co8.exception.RelationshipException;
+import com.madxstudio.co8.util.RelationshipUtil;
+import com.madxstudio.co8.widget.MyDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;

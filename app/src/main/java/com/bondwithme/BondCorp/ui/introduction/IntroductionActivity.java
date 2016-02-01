@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.introduction;
+package com.madxstudio.co8.ui.introduction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,19 +11,19 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.bondwithme.BondCorp.App;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.IntroductionPagerAdapter;
-import com.bondwithme.BondCorp.entity.AppTokenEntity;
-import com.bondwithme.BondCorp.entity.IntroductionEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.ui.start.StartActivity;
-import com.bondwithme.BondCorp.util.LogUtil;
-import com.bondwithme.BondCorp.util.PreferencesUtil;
-import com.bondwithme.BondCorp.widget.SpringIndicator;
-import com.bondwithme.BondCorp.widget.viewpager.ScrollerViewPager;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.IntroductionPagerAdapter;
+import com.madxstudio.co8.entity.AppTokenEntity;
+import com.madxstudio.co8.entity.IntroductionEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.start.StartActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.PreferencesUtil;
+import com.madxstudio.co8.widget.SpringIndicator;
+import com.madxstudio.co8.widget.viewpager.ScrollerViewPager;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 

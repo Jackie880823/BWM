@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.widget;
+package com.madxstudio.co8.widget;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.R;
 import com.material.widget.Dialog;
 
 public class MyDialog extends Dialog {

@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui.add;
+package com.madxstudio.co8.ui.add;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,14 +15,14 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.AddInviteMembersAdapter;
-import com.bondwithme.BondCorp.entity.ContactDetailEntity;
-import com.bondwithme.BondCorp.ui.BaseActivity;
-import com.bondwithme.BondCorp.ui.MainActivity;
-import com.bondwithme.BondCorp.ui.RelationshipActivity;
-import com.bondwithme.BondCorp.util.RelationshipUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.AddInviteMembersAdapter;
+import com.madxstudio.co8.entity.ContactDetailEntity;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.RelationshipActivity;
+import com.madxstudio.co8.util.RelationshipUtil;
 import com.google.gson.Gson;
 import com.material.widget.PaperButton;
 

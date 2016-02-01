@@ -1,6 +1,6 @@
 
 
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,12 +12,12 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.InvitedUserEditAdapter;
-import com.bondwithme.BondCorp.entity.GroupEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.http.UrlUtil;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.InvitedUserEditAdapter;
+import com.madxstudio.co8.entity.GroupEntity;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.http.UrlUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.bondwithme.BondCorp.ui.InvitedTabFragment.OnFragmentInteractionListener} interface
+ * {@link com.madxstudio.co8.ui.InvitedTabFragment.OnFragmentInteractionListener} interface
  * to handle interaction events
  * Use the {@link InvitedTabFragment#newInstance} factory method to
  * create an instance of this fragment.

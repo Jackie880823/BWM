@@ -1,4 +1,4 @@
-package com.bondwithme.BondCorp.ui;
+package com.madxstudio.co8.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondCorp.Constant;
-import com.bondwithme.BondCorp.R;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +18,7 @@ import org.json.JSONObject;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.bondwithme.BondCorp.ui.BondAlertFragment.OnFragmentInteractionListener} interface
+ * {@link com.madxstudio.co8.ui.BondAlertFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link BondAlertFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -197,7 +197,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     }
 
     private void goBigDay() {
-        Intent intent = new Intent(getActivity(), com.bondwithme.BondCorp.ui.more.BondAlert.BigDayActivity.class);
+        Intent intent = new Intent(getActivity(), com.madxstudio.co8.ui.more.BondAlert.BigDayActivity.class);
         startActivity(intent);
     }
 
