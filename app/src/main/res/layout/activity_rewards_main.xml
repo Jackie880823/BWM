@@ -40,6 +40,14 @@
                             android:layout_height="@dimen/_180dp"
                             android:scaleType="fitXY"
                             />
+                        <ImageView
+                            android:id="@+id/iv_no_general_reward"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_180dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/no_reward_banner_bunny"
+                            android:visibility="invisible"
+                            />
 
                         <RelativeLayout
                             android:id="@+id/rl_reward_info"
@@ -97,7 +105,8 @@
                             android:layout_height="wrap_content"
                             android:text=""
                             android:gravity="center"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold"
+                            android:textSize="@dimen/text_medium_size"/>
 
                         <TextView
                             android:id="@+id/tv_reward_point_description_2"
@@ -113,7 +122,8 @@
                             android:layout_height="wrap_content"
                             android:text=""
                             android:gravity="center"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold"
+                            android:textSize="@dimen/text_medium_size"/>
 
                         <TextView
                             android:id="@+id/tv_add_member_for_point"
@@ -167,7 +177,7 @@
                             android:id="@+id/tv_pts"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="pts"
+                            android:text="@string/text_pts"
                             android:layout_marginTop="@dimen/_20dp"
                             android:layout_marginLeft="@dimen/_4dp"
                             android:layout_alignParentRight="true"
@@ -199,7 +209,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_toRightOf="@+id/tv_count_invited"
-                                    android:text=" members invited"/>
+                                    android:text="@string/members_invited"/>
 
                                 <View
                                     android:id="@+id/spit_line"
@@ -219,7 +229,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_toRightOf="@+id/tv_count_pending"
-                                    android:text=" members pending"/>
+                                    android:text="@string/members_pending"/>
                             </TableRow>
 
                         </TableLayout>
@@ -233,6 +243,15 @@
 
                 </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/iv_no_reward"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_180dp"
+                    android:scaleType="fitXY"
+                    android:layout_below="@+id/ll_top"
+                    android:src="@drawable/no_reward_banner_bunny"
+                    android:visibility="invisible"
+                    />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rvList"

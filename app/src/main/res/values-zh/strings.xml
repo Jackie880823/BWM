@@ -706,4 +706,22 @@
     <string name="title_edit_comment">编辑评论</string>
 
     <string name="login_via_facebook">登录于Facebook</string>
+    <string name="add_member_get_point"><u>立即获取更多奖励点数！</u></string>
+    <string name="point_accumulated"><u>累积的奖励点数</u></string>
+    <string name="reward_info">奖励详情</string>
+    <string name="expired">已过期</string>
+    <string name="my_rewards">我的奖励</string>
+    <string name="valid_till">有效日期至</string>
+    <string name="redeem">点击以兑换</string>
+    <string name="tap_copy">点击方框以复制</string>
+    <string name="points">点</string>
+    <string name="text_capital_points">点</string>
+    <string name="redemption_point">兑换点数</string>
+    <string name="copy_success">复制成功</string>
+    <string name="sure_redeem">您确定要用</string>
+    <string name="reward_point"> 个奖励点数兑换此优惠券吗?</string>
+    <string name="fully_redeemed">已全部兑换</string>
+    <string name="text_pts">分</string>
+    <string name="members_invited">个好友请求</string>
+    <string name="members_pending">个等待通过</string>
 </resources>

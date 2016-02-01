@@ -724,5 +724,9 @@
     <string name="copy_success">Copy Successfully</string>
     <string name="sure_redeem">Are you sure you want to redeem this voucher with</string>
     <string name="reward_point"> Reward Points?</string>
+    <string name="fully_redeemed">Fully Redeemed</string>
+    <string name="text_pts">pts</string>
+    <string name="members_invited">members invited</string>
+    <string name="members_pending">members pending</string>
 
 </resources>

@@ -18,8 +18,6 @@
             android:scaleType="fitXY"
             />
 
-
-
         <RelativeLayout
             android:id="@+id/rl_count_down_time"
             android:layout_width="wrap_content"
@@ -203,7 +201,7 @@
             android:id="@+id/tv_fully_redeemed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fully Redeemed"
+            android:text="@string/fully_redeemed"
             style="@style/text_white_center"
             android:layout_centerInParent="true"
             android:textSize="@dimen/text_large_size"
