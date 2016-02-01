@@ -35,7 +35,6 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondCorp.App;
 import com.bondwithme.BondCorp.Constant;
 import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.EditDiaryAdapter;
 import com.bondwithme.BondCorp.adapter.HeadHolder;
 import com.bondwithme.BondCorp.adapter.NewsFragmentAdapter;
 import com.bondwithme.BondCorp.adapter.VideoHolder;
@@ -44,7 +43,6 @@ import com.bondwithme.BondCorp.entity.MediaData;
 import com.bondwithme.BondCorp.entity.NewsEntity;
 import com.bondwithme.BondCorp.entity.PushedPhotoEntity;
 import com.bondwithme.BondCorp.entity.PutNewsEntity;
-import com.bondwithme.BondCorp.entity.UserEntity;
 import com.bondwithme.BondCorp.http.PicturesCacheUtil;
 import com.bondwithme.BondCorp.http.UrlUtil;
 import com.bondwithme.BondCorp.interfaces.ImagesRecyclerListener;
@@ -160,13 +158,13 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
 
     public static WriteNewsFragment newInstance(String... params) {
 
-        return createInstance(new WriteNewsFragment());
+        return createInstance(new WriteNewsFragment(),params);
     }
 
-    public WriteNewsFragment() {
-        super();
-        // Required empty public constructor
-    }
+//    public WriteNewsFragment() {
+//        super();
+//        // Required empty public constructor
+//    }
 
     @Override
     public void setLayoutId() {
@@ -187,6 +185,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         }
 
         mContext=getActivity();
+        gson = new Gson();
         isEdit = !TextUtils.isEmpty(contentGroupId);
         rl_category = getViewById(R.id.rl_category);
         category_tv = getViewById(R.id.category_tv);
@@ -422,8 +421,8 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
     public void requestData() {
         if (isEdit) {
             if (entity == null) {
-                UserEntity userEntity = (UserEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
-                if (userEntity != null) {
+                NewsEntity newsEntity = (NewsEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
+                if (newsEntity != null) {
                     return;
                 }
             }
@@ -1062,8 +1061,8 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         LogUtil.d(TAG, "getPhotoCaptionByPosition& position = " + position);
         if (position < mAdapter.getItemCount()) {
             RecyclerView.ViewHolder holder = rvImages.findViewHolderForLayoutPosition(position);
-            if (holder != null && holder instanceof EditDiaryAdapter.ImageHolder) {
-                return ((EditDiaryAdapter.ImageHolder) holder).wevContent.getRelText();
+            if (holder != null && holder instanceof NewsFragmentAdapter.ImageHolder) {
+                return ((NewsFragmentAdapter.ImageHolder) holder).wevContent.getRelText();
             } else {
                 if (holder == null) {
                     LogUtil.e(TAG, "getPhotoCaptionByPosition& get holder is null");
@@ -1079,6 +1078,14 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         return result;
     }
 
+    /**
+     * 上传照片
+     * @param path
+     * @param contentId
+     * @param index
+     * @param multiple
+     * @throws FileNotFoundException
+     */
     private void submitPic(String path, String contentId, int index, boolean multiple) throws FileNotFoundException {
         File f = new File(path);
         if (!f.exists()) {
@@ -1124,9 +1131,6 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
             longitudeDesc = "";
         }
 
-        /**
-         *
-         */
 
         PutNewsEntity putNewsEntity = new PutNewsEntity();
         putNewsEntity.setNew_photo("0");
@@ -1141,6 +1145,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         putNewsEntity.setPhoto_max(String.valueOf(photoEntities.size() - 1));
         putNewsEntity.setCategory_id(categoryId);
         putNewsEntity.setContent_title(titleDesc.getText().toString());
+        putNewsEntity.setDofeel_code("");
         if (!Uri.EMPTY.equals(videoUri)) {
             putNewsEntity.setNew_video("1");
         } else {
@@ -1158,6 +1163,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         if (!localEntities.isEmpty()) {
             putNewsEntity.setNew_photo("1");
         }
+
 
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = String.format(Constant.API_PUT_NEWS, entity.getContent_id());

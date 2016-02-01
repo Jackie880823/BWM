@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.HttpTools;
@@ -23,6 +24,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondCorp.Constant;
 import com.bondwithme.BondCorp.R;
 import com.bondwithme.BondCorp.entity.NewsEntity;
+import com.bondwithme.BondCorp.entity.WallEntity;
 import com.bondwithme.BondCorp.http.UrlUtil;
 import com.bondwithme.BondCorp.http.VolleyUtil;
 import com.bondwithme.BondCorp.ui.BaseFragment;
@@ -31,6 +33,8 @@ import com.bondwithme.BondCorp.ui.WriteNewsActivity;
 import com.bondwithme.BondCorp.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondCorp.ui.wall.DiaryCommentActivity;
 import com.bondwithme.BondCorp.ui.wall.WallViewPicActivity;
+import com.bondwithme.BondCorp.util.LocationUtil;
+import com.bondwithme.BondCorp.util.LogUtil;
 import com.bondwithme.BondCorp.util.MyDateUtils;
 
 import java.lang.reflect.Field;
@@ -91,6 +95,26 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * 网络图片父亲视图
      */
     public View llNewsImage;
+    /**
+     * 评论数
+     */
+    private TextView newsCommentMember;
+    /**
+     * 点赞数
+     */
+    private TextView newsGoodMember;
+    /**
+     * 显示地址信息的布局
+     */
+    private LinearLayout llLocation;
+    /**
+     * 显示地图标，可点击跳转至地图
+     */
+    private ImageView ivLocation;
+    /**
+     * 显示地址名称，可点击跳转至地图
+     */
+    private TextView tvLocation;
     private static final String accountUserId = MainActivity.getUser().getUser_id();
     private BaseFragment fragment;
 
@@ -121,6 +145,13 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         new_good_job_linear = itemView.findViewById(R.id.new_comment_linear);
         btnOption = (ImageButton) itemView.findViewById(R.id.btn_option);
 
+        newsGoodMember = (TextView) itemView.findViewById(R.id.new_good_job);
+        newsCommentMember = (TextView) itemView.findViewById(R.id.new_comment);
+
+        llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
+        ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
+        tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
+
         changeTextDisplay(isDisplayMore);
 
         ivPic.setOnClickListener(this);
@@ -137,7 +168,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
 
     //news content包括title，date，image，video_thumbnail，content_text
-    public void setContent(NewsEntity newsEntity, Context mContext,int position) {
+    public void setContent(NewsEntity newsEntity, final Context mContext, int position) {
         this.position = position;
         tvCategoryName.setText(newsEntity.getCategory_name());
         tvTitle.setText(newsEntity.getContent_title());
@@ -146,6 +177,12 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, newsEntity.getContent_creation_date()));
         tvUser.setText("Posted by: "+newsEntity.getUser_given_name());
         tvContent.setText(newsEntity.getText_description());
+        if(Integer.valueOf(newsEntity.getComment_count()).intValue() > 0){
+            newsCommentMember.setText(newsEntity.getComment_count());
+        }
+        if(Integer.valueOf(newsEntity.getLove_count()).intValue() > 0){
+            newsGoodMember.setText(newsEntity.getLove_count());
+        }
 
         if ((!accountUserId.equals(this.newsEntity.getUser_id()) && (Integer.valueOf(newsEntity.getPhoto_count()) <= 0 && TextUtils.isEmpty(newsEntity.getVideo_filename())))) {
             // 不是当前用户：没有图片也没有视频都不需要显更多功能按钮
@@ -185,25 +222,52 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 ibtnVideo.setVisibility(View.GONE);
                 VolleyUtil.initNetworkImageView(mContext, ivPic, String.format(Constant.API_GET_PIC, Constant.Module_preview, newsEntity.getUser_id(), newsEntity.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             }
+
         }
-//        imageUrl = newsEntity.getImage();
-//        videoUrl = newsEntity.getVideo();
-//        if (!TextUtils.isEmpty(imageUrl)) {
-//            //display pic
-//            ivPic.setVisibility(View.VISIBLE);
-//            BitmapTools.getInstance(mContext).display(ivPic, newsEntity.getImage());
-//            ibtnVideo.setVisibility(View.INVISIBLE);
-//        } else if (!TextUtils.isEmpty(videoUrl)) {
-//            ivPic.setVisibility(View.VISIBLE);
-//            BitmapTools.getInstance(mContext).display(ivPic, newsEntity.getVideo_thumbnail());
-//            ibtnVideo.setVisibility(View.VISIBLE);
-//        } else if (TextUtils.isEmpty(imageUrl) && TextUtils.isEmpty(videoUrl)) {
-//            ivPic.setVisibility(View.GONE);
-//            ibtnVideo.setVisibility(View.GONE);
-//        }
+
+        String locationName = this.newsEntity.getLoc_name();
+        if (TextUtils.isEmpty(locationName) || TextUtils.isEmpty(this.newsEntity.getLoc_latitude()) || TextUtils.isEmpty(this.newsEntity.getLoc_longitude())) {
+            llLocation.setVisibility(View.GONE);
+        } else {
+            llLocation.setVisibility(View.VISIBLE);
+            tvLocation.setText(locationName);
+            llLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoLocationSetting(mContext, NewsHolder.this.newsEntity);
+                }
+            });
+            tvLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoLocationSetting(mContext, NewsHolder.this.newsEntity);
+                }
+            });
+            ivLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoLocationSetting(mContext, NewsHolder.this.newsEntity);
+                }
+            });
+        }
 
 
     }
+
+    /**
+     * 跳至地图
+     *
+     * @param context 资源
+     * @param entity    {@link WallEntity}
+     */
+    private void gotoLocationSetting(Context context, NewsEntity entity) {
+        if (TextUtils.isEmpty(entity.getLoc_latitude()) || TextUtils.isEmpty(entity.getLoc_longitude())) {
+            return;
+        }
+
+        LocationUtil.goNavigation(context, Double.valueOf(entity.getLoc_latitude()), Double.valueOf(entity.getLoc_longitude()), entity.getLoc_type());
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -238,11 +302,11 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
             case R.id.new_comment_linear://评论
                 Intent intent;
                 intent = new Intent(mContext, DiaryCommentActivity.class);
-//                intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
-//                intent.putExtra(Constant.CONTENT_ID, wallEntity.getContent_id());
-//                intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
-//                intent.putExtra(Constant.AGREE_COUNT, wallEntity.getLove_count());
-//                intent.putExtra(Constant.POSITION, position);
+                intent.putExtra(Constant.CONTENT_GROUP_ID, newsEntity.getContent_group_id());
+                intent.putExtra(Constant.CONTENT_ID, newsEntity.getContent_id());
+                intent.putExtra(Constant.GROUP_ID, newsEntity.getGroup_id());
+                intent.putExtra(Constant.AGREE_COUNT, newsEntity.getLove_count());
+                intent.putExtra(Constant.POSITION, position);
                 ((Activity) mContext).startActivityForResult(intent, Constant.INTENT_UPDATE_NEWS);
                 break;
             case R.id.new_good_job_linear://赞
@@ -292,6 +356,8 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
 
     private void editDiaryAction() {
+        LogUtil.d(TAG, "onBindViewHolder" + "Content_group_id=======2" + newsEntity.getContent_group_id());
+
         Intent intent;
         intent = new Intent(mContext, WriteNewsActivity.class);
         intent.putExtra(Constant.WALL_ENTITY, newsEntity);

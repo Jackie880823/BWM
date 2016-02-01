@@ -1,9 +1,11 @@
 package com.bondwithme.BondCorp.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
+import com.bondwithme.BondCorp.Constant;
 import com.bondwithme.BondCorp.R;
 
 /**
@@ -11,6 +13,7 @@ import com.bondwithme.BondCorp.R;
  */
 public class WriteNewsActivity extends BaseActivity {
     private boolean banBack;
+    private String content_group_id;
 
     @Override
     protected void initBottomBar() {
@@ -54,7 +57,10 @@ public class WriteNewsActivity extends BaseActivity {
 
     @Override
     protected Fragment getFragment() {
-        return WriteNewsFragment.newInstance();
+        Intent intent = getIntent();
+        content_group_id = intent.getStringExtra(Constant.CONTENT_GROUP_ID);
+        String group_id = intent.getStringExtra(Constant.GROUP_ID);
+        return WriteNewsFragment.newInstance(content_group_id, group_id);
     }
 
     @Override

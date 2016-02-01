@@ -50,6 +50,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
     public void onBindViewHolder(final NewsHolder holder, int position) {
         final NewsEntity news = data.get(position);
         LogUtil.d(TAG, "onBindViewHolder" + "isVisibleOfTvMore=======" + news.isVisibleOfTvMore());
+        LogUtil.d(TAG, "onBindViewHolder" + "Content_group_id=======1" + news.getContent_group_id());
         holder.setNewsEntity(news);
         if(!news.isVisibleOfTvMore()){
             holder.setSwitchVisibility(View.GONE);

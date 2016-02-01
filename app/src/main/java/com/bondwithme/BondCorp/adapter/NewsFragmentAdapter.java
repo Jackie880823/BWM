@@ -117,7 +117,7 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<ViewHolder>{
             //如果是照片
             ImageHolder imageHolder = (ImageHolder) holder;
             final PushedPhotoEntity entity = mEntities.get(position - 1);
-//            imageHolder.setCaption(entity.getPhoto_caption());
+            imageHolder.setCaption(entity.getPhoto_caption());
             Uri uri = Uri.EMPTY;
             if (entity instanceof DiaryPhotoEntity) {
                 uri = ((DiaryPhotoEntity) entity).getUri();
@@ -179,7 +179,8 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<ViewHolder>{
 //        }
 //    }
 
-    class ImageHolder extends ViewHolder{
+
+    public class ImageHolder extends ViewHolder{
         private ImageView ivDelete;
         public ImageView ivDisplay;
         public WallEditView wevContent;

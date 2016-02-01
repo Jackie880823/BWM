@@ -117,6 +117,33 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
+        <LinearLayout
+            android:id="@+id/ll_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_default_selector_bg"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_5dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_location"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:background="@drawable/btn_default_selector_bg"
+                android:scaleType="centerInside"
+                android:src="@drawable/location" />
+
+            <TextView
+                android:id="@+id/tv_location"
+                style="@style/text_dark_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_default_selector_bg"
+                android:text="@string/text_location"
+                android:textSize="@dimen/text_small_size" />
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
