@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.util;
+package com.madxstudio.co8.util;
 
 /**
  * Created by christepherzhang on 16/1/21.
