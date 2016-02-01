@@ -75,6 +75,12 @@ public class MyViewProfileActivity extends BaseActivity {
     private TextView etEmail;
     private EditText etPhone;
     private EditText etRegion;
+    private EditText et_position;
+    private EditText et_department;
+    private EditText et_internal_phone;
+    private UserEntity userEntity;
+    private boolean isPreloadedUser;
+
     private TextView tvChange;
     private NetworkImageView imProfileImages;
     private NetworkImageView imQrImages;
@@ -134,11 +140,12 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     private boolean banBack;
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            if(event.getAction() == KeyEvent.ACTION_DOWN) {
-                banBack =  backCheck();
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                banBack = backCheck();
             }
             return banBack ? banBack : super.dispatchKeyEvent(event);
         }
@@ -154,14 +161,15 @@ public class MyViewProfileActivity extends BaseActivity {
             return false;
         }
     }
+
     @Override
     protected void titleRightEvent() {
-        if(!isEit){
+        if (!isEit) {
             rightButton.setImageResource(R.drawable.ok_normal);
             tvChange.setVisibility(View.VISIBLE);
-            ableEdit(true,RlView);
+            ableEdit(true, RlView);
             isEit = true;
-        }else {
+        } else {
             update();
         }
     }
@@ -176,18 +184,18 @@ public class MyViewProfileActivity extends BaseActivity {
         }
     }
 
-    private void update(){
+    private void update() {
 
         if (mCropImagedUri != null) {
             uploadImage();
 
         }
-        if(mBackdropImagedUri != null){
+        if (mBackdropImagedUri != null) {
             uploadBackdropImage();
         }
 
         //如果没有跟新图片
-        if(mBackdropImagedUri == null && mCropImagedUri == null){
+        if (mBackdropImagedUri == null && mCropImagedUri == null) {
             if (isProfileChanged()) {
                 updateProfile();
 
@@ -198,15 +206,22 @@ public class MyViewProfileActivity extends BaseActivity {
 
     }
 
-    private void ableEdit(boolean isEit,ViewGroup viewGroup){
-        if(viewGroup == null)return;
+    private void ableEdit(boolean isEit, ViewGroup viewGroup) {
+        if (viewGroup == null) return;
 
-        for(int i = 0; i < viewGroup.getChildCount(); i++){
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View view = viewGroup.getChildAt(i);
-            if(view instanceof EditText){
+            if (view instanceof EditText) {
                 view.setFocusable(isEit);
                 view.setFocusableInTouchMode(isEit);
-            }else if(view instanceof ViewGroup){
+                if (isPreloadedUser && isEit) {
+                    if (view.getId() == R.id.et_position || view.getId() == R.id.et_department
+                            || view.getId() == R.id.et_internal_phone) {
+                        view.setFocusable(false);
+                        view.setFocusableInTouchMode(false);
+                    }
+                }
+            } else if (view instanceof ViewGroup) {
                 this.ableEdit(isEit, (ViewGroup) view);
             }
         }
@@ -242,7 +257,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private int isHeaderChanged() {
         if (mCropImagedUri != null) {
             return 1;
-        }else if(mBackdropImagedUri != null){
+        } else if (mBackdropImagedUri != null) {
             return 2;
         }
         return 0;
@@ -250,29 +265,29 @@ public class MyViewProfileActivity extends BaseActivity {
 
 
     private boolean isProfileChanged() {
-        if (!TextUtils.isEmpty(etFirstName.getText().toString().trim()) && !etFirstName.getText().toString().trim().equals(MainActivity.getUser().getUser_given_name())) {
+        if (!TextUtils.isEmpty(etFirstName.getText().toString().trim()) && !etFirstName.getText().toString().trim().equals(userEntity.getUser_given_name())) {
             return true;
         } else {
             if (TextUtils.isEmpty(etFirstName.getText().toString().trim())) {
                 return true;
             }
         }
-        if (!TextUtils.isEmpty(etLastName.getText().toString().trim()) && !etLastName.getText().toString().trim().equals(MainActivity.getUser().getUser_surname())) {
+        if (!TextUtils.isEmpty(etLastName.getText().toString().trim()) && !etLastName.getText().toString().trim().equals(userEntity.getUser_surname())) {
             return true;
         } else {
             if (TextUtils.isEmpty(etLastName.getText().toString().trim())) {
                 return true;
             }
         }
-        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()) && !strDOB.equals(MainActivity.getUser().getUser_dob())) {
+        if (!TextUtils.isEmpty(userEntity.getUser_dob()) && !strDOB.equals(userEntity.getUser_dob())) {
             return true;
         } else {
-            if (!TextUtils.isEmpty(strDOB) && !strDOB.equals(MainActivity.getUser().getUser_dob())) {
+            if (!TextUtils.isEmpty(strDOB) && !strDOB.equals(userEntity.getUser_dob())) {
                 return true;
             }
         }
         //性别简写
-        String simpleSex = MainActivity.getUser().getUser_gender();
+        String simpleSex = userEntity.getUser_gender();
         String tempSex = tvGender.getText().toString().trim();
         String simpleRealitySex = null;
         //实际显示性别转换成简写
@@ -284,10 +299,10 @@ public class MyViewProfileActivity extends BaseActivity {
         if (!simpleSex.equals(simpleRealitySex)) {
             return true;
         }
-        if (MainActivity.getUser()!=null&&!etEmail.getText().toString().trim().equals(MainActivity.getUser().getUser_email())) {
+        if (userEntity != null && !etEmail.getText().toString().trim().equals(userEntity.getUser_email())) {
             return true;
         }
-        if (!etRegion.getText().toString().trim().equals(MainActivity.getUser().getUser_location_name())) {
+        if (!etRegion.getText().toString().trim().equals(userEntity.getUser_location_name())) {
             return true;
         }
         return false;
@@ -307,15 +322,18 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
+        userEntity = MainActivity.getUser();
+        if (!TextUtils.isEmpty(userEntity.getOrganisation())) {
+            isPreloadedUser = true;
+        }
 //        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         mContext = this;
         TAG = mContext.getClass().getSimpleName();
-        profileBackgroundId =  getIntent().getIntExtra("profile_image_id",0);
+        profileBackgroundId = getIntent().getIntExtra("profile_image_id", 0);
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
         RlView = (RelativeLayout) findViewById(R.id.rl_view);
-        llResetPassword = (LinearLayout)getViewById(R.id.ll_reset_password);
+        llResetPassword = (LinearLayout) getViewById(R.id.ll_reset_password);
 
         etFirstName = getViewById(R.id.et_first_name);
         etLastName = getViewById(R.id.et_last_name);
@@ -327,46 +345,49 @@ public class MyViewProfileActivity extends BaseActivity {
         etEmail = getViewById(R.id.et_email);
         etPhone = getViewById(R.id.et_phone);
         etRegion = getViewById(R.id.et_region);
+        et_position = getViewById(R.id.et_position);
+        et_department = getViewById(R.id.et_department);
+        et_internal_phone = getViewById(R.id.et_internal_phone);
         tvChange = getViewById(R.id.tv_change_text);
         imProfileImages = getViewById(R.id.iv_profile_images);
         imQrImages = getViewById(R.id.iv_profile_qr);
         vProgress = getViewById(R.id.rl_progress);
 
-        headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
-        backdropHeadUrl = String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id());
-        qrUrl = String.format(Constant.API_GET_PROFILE_QR, MainActivity.getUser().getUser_id());
+        headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id());
+        backdropHeadUrl = String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id());
+        qrUrl = String.format(Constant.API_GET_PROFILE_QR, userEntity.getUser_id());
 
         mBitmapTools = BitmapTools.getInstance(this);
         mBackdropBitmapTools = BitmapTools.getInstance(this);
         mQrBitmapTools = BitmapTools.getInstance(this);
-//        VolleyUtil.initNetworkImageView(this, imProfileImages, String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id()), 0, 0);
+//        VolleyUtil.initNetworkImageView(this, imProfileImages, String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id()), 0, 0);
         mBitmapTools.display(cniMain, headUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
-        mBackdropBitmapTools.display(imProfileImages,backdropHeadUrl,profileBackgroundId,profileBackgroundId);
-        mQrBitmapTools.display(imQrImages,qrUrl,R.drawable.qrcode_button,R.drawable.qrcode_button);
-        etFirstName.setText(MainActivity.getUser().getUser_given_name());
-        etLastName.setText(MainActivity.getUser().getUser_surname());
-        tvTitle.setText(MainActivity.getUser().getUser_given_name());
+        mBackdropBitmapTools.display(imProfileImages, backdropHeadUrl, profileBackgroundId, profileBackgroundId);
+        mQrBitmapTools.display(imQrImages, qrUrl, R.drawable.qrcode_button, R.drawable.qrcode_button);
+        etFirstName.setText(userEntity.getUser_given_name());
+        etLastName.setText(userEntity.getUser_surname());
+        tvTitle.setText(userEntity.getUser_given_name());
 
-//        tvAge.setText(MainActivity.getUser().getUser_dob());//需要做处理，年转为岁数
+//        tvAge.setText(userEntity.getUser_dob());//需要做处理，年转为岁数
         //1990-09-10   1990年
-        strDOB = MainActivity.getUser().getUser_dob();
-        LogUtil.d(TAG,"strDOB==="+strDOB);
+        strDOB = userEntity.getUser_dob();
+        LogUtil.d(TAG, "strDOB===" + strDOB);
         setTvBirthday(strDOB);
 
-        if ("F".equals(MainActivity.getUser().getUser_gender())) {
+        if ("F".equals(userEntity.getUser_gender())) {
             tvGender.setText(getResources().getString(R.string.text_female));
-        } else if ("M".equals(MainActivity.getUser().getUser_gender())) {
+        } else if ("M".equals(userEntity.getUser_gender())) {
             tvGender.setText(getResources().getString(R.string.text_male));
         } else {
             tvGender.setText(null);
         }
 
-        etEmail.setText(MainActivity.getUser().getUser_email());
-        if (MainActivity.getUser().getUser_phone().length() > 0){
-            etPhone.setText("+" + MainActivity.getUser().getUser_country_code() + " " + MainActivity.getUser().getUser_phone());
+        etEmail.setText(userEntity.getUser_email());
+        if (userEntity.getUser_phone().length() > 0) {
+            etPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone());
         }
         String[] countryArray = getResources().getStringArray(R.array.country_code);
-        String userCountryCode = MainActivity.getUser().getUser_country_code().trim();
+        String userCountryCode = userEntity.getUser_country_code().trim();
         if (countryArray != null) {
             for (String string : countryArray) {
                 if (string.indexOf(" ") != -1) {
@@ -378,9 +399,15 @@ public class MyViewProfileActivity extends BaseActivity {
                 }
             }
         }
-        etRegion.setText(MainActivity.getUser().getUser_location_name());
+        etRegion.setText(userEntity.getUser_location_name());
 //        etRegion.setKeyListener(null);
-        String dofeel_code = MainActivity.getUser().getDofeel_code();
+        et_position.setText(userEntity.getPosition());
+        et_department.setText(userEntity.getDepartment());
+        List<String> phoneExtList = userEntity.getInt_phone_ext();
+        if (phoneExtList != null && phoneExtList.size() > 0) {
+            et_internal_phone.setText(phoneExtList.get(0));
+        }
+        String dofeel_code = userEntity.getDofeel_code();
         if (!TextUtils.isEmpty(dofeel_code)) {
             try {
                 String filePath = "";
@@ -399,7 +426,7 @@ public class MyViewProfileActivity extends BaseActivity {
         rlGender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isEit)return;
+                if (!isEit) return;
 
                 showSelectDialog();
             }
@@ -415,10 +442,10 @@ public class MyViewProfileActivity extends BaseActivity {
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isEit)return;
+                if (!isEit) return;
 
                 headOrBackdropImage = 1;
-                showCameraAlbum(REQUEST_HEAD_PHOTO,cniMain.getWidth(),cniMain.getHeight());
+                showCameraAlbum(REQUEST_HEAD_PHOTO, cniMain.getWidth(), cniMain.getHeight());
 
             }
         });
@@ -426,7 +453,7 @@ public class MyViewProfileActivity extends BaseActivity {
         rlBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isEit)return;
+                if (!isEit) return;
 
                 showDateTimePicker();
             }
@@ -434,20 +461,20 @@ public class MyViewProfileActivity extends BaseActivity {
         imProfileImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isEit)return;
+                if (!isEit) return;
 
                 headOrBackdropImage = 2;
-                showCameraAlbum(REQUEST_PROFILE_PHOTO,imProfileImages.getWidth(),imProfileImages.getHeight());
+                showCameraAlbum(REQUEST_PROFILE_PHOTO, imProfileImages.getWidth(), imProfileImages.getHeight());
 
             }
         });
 
-        ableEdit(false,RlView);
+        ableEdit(false, RlView);
     }
 
     //设置生日
     private void setTvBirthday(String strDOB) {
-        if (strDOB != null && !strDOB.equals("0000-00-00")){
+        if (strDOB != null && !strDOB.equals("0000-00-00")) {
             Date date = null;
             try {
 //                date = new SimpleDateFormat("yyyy-MM-dd").parse(strDOB);
@@ -456,17 +483,17 @@ public class MyViewProfileActivity extends BaseActivity {
                 e.printStackTrace();
             }
             //不同语言设置不同日期显示
-            if (Locale.getDefault().toString().equals("zh_CN")){
+            if (Locale.getDefault().toString().equals("zh_CN")) {
 //            tvBirthday.setText(date.getYear()+"年" + date.getMonth() + "月" + date.getDay() + "日");
 //                DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
                 DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
                 String time = dateFormat.format(date).toString();
-                LogUtil.i("Profile_time",time);
-                String birthday = time.substring(5,time.length());
-                String YearBirthday = time.substring(0,5);
+                LogUtil.i("Profile_time", time);
+                String birthday = time.substring(5, time.length());
+                String YearBirthday = time.substring(0, 5);
                 tvBirthday.setText(birthday);
                 tvYearBirthday.setText(YearBirthday);
-            }else {
+            } else {
                 int year = date.getYear() + 1900;
 //                tvBirthday.setText(date.getDate() + " " + this.getResources().getStringArray(R.array.months)[date.getMonth()]);
                 tvBirthday.setText(date.getDate() + " " + MyDateUtils.getMonthNameArray(false)[date.getMonth()]);
@@ -499,7 +526,7 @@ public class MyViewProfileActivity extends BaseActivity {
         }
         RequestInfo requestInfo = new RequestInfo();
 
-        HashMap<String, String> jsonParams = new HashMap<String, String>();
+        HashMap<String, String> jsonParams = new HashMap<>();
         jsonParams.put("user_surname", etLastName.getText().toString());
         jsonParams.put("user_given_name", etFirstName.getText().toString());
         jsonParams.put("user_gender", userGender);
@@ -507,9 +534,14 @@ public class MyViewProfileActivity extends BaseActivity {
         jsonParams.put("user_email", etEmail.getText().toString());
         jsonParams.put("user_location_name", etRegion.getText().toString());
 
+        if (isPreloadedUser) {
+            jsonParams.put("department", et_position.getText().toString());
+            jsonParams.put("position", et_department.getText().toString());
+//            jsonParams.put("int_phone_ext","[\""+ et_internal_phone.getText().toString()+"\"]");
+        }
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-        requestInfo.url = String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id());
+        requestInfo.url = String.format(Constant.API_UPDATE_MY_PROFILE, userEntity.getUser_id());
         requestInfo.jsonParam = jsonParamsString;
 
         new HttpTools(MyViewProfileActivity.this).put(requestInfo, TAG, new HttpCallback() {
@@ -517,7 +549,7 @@ public class MyViewProfileActivity extends BaseActivity {
             public void onStart() {
                 isUploadName = true;
                 isUploadNameSuccess = false;
-                if(vProgress.getVisibility() == View.GONE){
+                if (vProgress.getVisibility() == View.GONE) {
                     vProgress.setVisibility(View.VISIBLE);
                 }
             }
@@ -598,8 +630,8 @@ public class MyViewProfileActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
-    private  void showCameraAlbum(final int requestMember,final int photoWidth, final int photoHeight) {
-        LogUtil.i("photoWidth*photoHeight_1",photoWidth+"*"+photoHeight);
+    private void showCameraAlbum(final int requestMember, final int photoWidth, final int photoHeight) {
+        LogUtil.i("photoWidth*photoHeight_1", photoWidth + "*" + photoHeight);
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_camera_album, null);
         showCameraAlbum = new MyDialog(this, null, selectIntention);
@@ -616,7 +648,7 @@ public class MyViewProfileActivity extends BaseActivity {
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, photoWidth);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, photoHeight);
-                if(headOrBackdropImage == 2){
+                if (headOrBackdropImage == 2) {
                     intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
                     intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
                     intent.putExtra(PickAndCropPictureActivity.CACHE_PIC_NAME, "_background");
@@ -633,7 +665,7 @@ public class MyViewProfileActivity extends BaseActivity {
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, photoWidth);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, photoHeight);
-                if(headOrBackdropImage == 2){
+                if (headOrBackdropImage == 2) {
                     intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
                     intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
                     intent.putExtra(PickAndCropPictureActivity.CACHE_PIC_NAME, "_background");
@@ -668,7 +700,7 @@ public class MyViewProfileActivity extends BaseActivity {
                                 options.inPreferredConfig = Bitmap.Config.RGB_565;
                                 photo = BitmapFactory.decodeStream(MyViewProfileActivity.this.getContentResolver().openInputStream(mCropImagedUri), null, options);
                                 if (photo != null) {
-                                    setPicToView(cniMain,photo);
+                                    setPicToView(cniMain, photo);
                                 }
                             }
                         } catch (FileNotFoundException e) {
@@ -688,7 +720,7 @@ public class MyViewProfileActivity extends BaseActivity {
                                 options.inPreferredConfig = Bitmap.Config.RGB_565;
                                 photo = BitmapFactory.decodeStream(MyViewProfileActivity.this.getContentResolver().openInputStream(mBackdropImagedUri), null, options);
                                 if (photo != null) {
-                                    setPicToView(imProfileImages,photo);
+                                    setPicToView(imProfileImages, photo);
                                 }
                             }
                         } catch (FileNotFoundException e) {
@@ -708,7 +740,7 @@ public class MyViewProfileActivity extends BaseActivity {
      *
      * @param photo
      */
-    private <T extends ImageView>void setPicToView(T view,Bitmap photo) {
+    private <T extends ImageView> void setPicToView(T view, Bitmap photo) {
         if (photo != null) {
             view.setImageBitmap(photo);
         }
@@ -728,10 +760,10 @@ public class MyViewProfileActivity extends BaseActivity {
 
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
-        params.put("fileName", "UploadPersonalPicture" + MainActivity.getUser().getUser_id());
+        params.put("fileName", "UploadPersonalPicture" + userEntity.getUser_id());
         params.put("mimeType", "image/png");
         params.put("file", file);
-        params.put("user_id", MainActivity.getUser().getUser_id());
+        params.put("user_id", userEntity.getUser_id());
 
 
         new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, TAG, new HttpCallback() {
@@ -770,7 +802,7 @@ public class MyViewProfileActivity extends BaseActivity {
                         intent = new Intent();
                         intent.putExtra("head_pic", Uri.fromFile(file));
                         setResult(RESULT_OK, intent);
-                        if(!isUploadName){
+                        if (!isUploadName) {
                             updateProfile();
                         }
                     }
@@ -796,7 +828,7 @@ public class MyViewProfileActivity extends BaseActivity {
         });
     }
 
-    private void uploadBackdropImage(){
+    private void uploadBackdropImage() {
         if (mBackdropImagedUri == null) {
             return;
         }
@@ -810,14 +842,14 @@ public class MyViewProfileActivity extends BaseActivity {
 
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
-        params.put("fileName", "UploadProfilePicture" + MainActivity.getUser().getUser_id());
+        params.put("fileName", "UploadProfilePicture" + userEntity.getUser_id());
         params.put("mimeType", "image/png");
         params.put("file", file);
-        params.put("user_id", MainActivity.getUser().getUser_id());
+        params.put("user_id", userEntity.getUser_id());
         new HttpTools(this).upload(Constant.API_POST_PIC_PROFILE, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
-                if(vProgress.getVisibility() == View.GONE){
+                if (vProgress.getVisibility() == View.GONE) {
                     vProgress.setVisibility(View.VISIBLE);
                 }
 
@@ -853,7 +885,7 @@ public class MyViewProfileActivity extends BaseActivity {
                         intent = new Intent();
                         intent.putExtra("background_pic", Uri.fromFile(file));
                         setResult(RESULT_OK, intent);
-                        if(!isUploadName){
+                        if (!isUploadName) {
                             updateProfile();
                         }
                     }
@@ -880,15 +912,15 @@ public class MyViewProfileActivity extends BaseActivity {
 
     }
 
-    private void laterFinish(){
+    private void laterFinish() {
         Boolean uploadFinish;
-        if(mCropImagedUri == null && mBackdropImagedUri == null){
+        if (mCropImagedUri == null && mBackdropImagedUri == null) {
             uploadFinish = true;
-        }else {
+        } else {
             uploadFinish = false;
         }
 
-        if(uploadFinish == true && isUploadNameSuccess){
+        if (uploadFinish == true && isUploadNameSuccess) {
             vProgress.setVisibility(View.GONE);
             finish();
         }

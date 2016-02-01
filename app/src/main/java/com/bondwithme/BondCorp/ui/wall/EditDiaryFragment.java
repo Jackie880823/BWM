@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -22,9 +24,12 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -76,13 +81,18 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * Created 10/20/15.
@@ -154,7 +164,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private double longitude;
     private Gson gson;
 
-    private boolean allRange = false;
+    private String allRange = "2";
 
     /**
      * TAG的用户列表
@@ -177,7 +187,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private List<String> deleteVideo = new ArrayList<>();
 
     private EditDiaryAdapter mAdapter;
-
+    private PopupWindow onlyPopupWindow;
     /**
      * 视频Uri
      */
@@ -347,7 +357,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         }
                     }
 
-                    allRange = String.valueOf(1).equals(wall.getContent_group_public());
+                    allRange = wall.getContent_group_public();
                     switchPrivacy(allRange);
 
                     String videoName = wall.getVideo_filename();
@@ -559,7 +569,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                        if (onlyPopupWindow != null && onlyPopupWindow.isShowing()) {
+                            onlyPopupWindow.dismiss();
+                        }
                     }
 
                     @Override
@@ -660,10 +672,18 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         } else if (!photoEntities.isEmpty()) {
             clearVideo();
         }
-
         rvImages.setAdapter(mAdapter);
-
         tvPrivacy = getViewById(R.id.tv_privacy);
+        if (TextUtils.isEmpty(MainActivity.getUser().getOrganisation())) {
+            Drawable drawable = getResources().getDrawable(R.drawable.privacy_lock);
+            tvPrivacy.setText(R.string.text_only_me);
+            Drawable[] drawables = tvPrivacy.getCompoundDrawables();
+            if (drawable != null) {
+                drawable.setBounds(drawables[1].getBounds());
+            }
+            allRange = "0";
+            tvPrivacy.setCompoundDrawables(null, drawable, null, null);
+        }
 
         // 选择图片的点击监听
         getViewById(R.id.tv_camera).setOnClickListener(this);
@@ -801,7 +821,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             }
         }
 
-        allRange = draftPreferences.getBoolean(PREFERENCE_KEY_CONTENT_GROUP_PUBLIC, allRange);
+        allRange = draftPreferences.getString(PREFERENCE_KEY_CONTENT_GROUP_PUBLIC, allRange);
         switchPrivacy(allRange);
 
         String members = draftPreferences.getString(PREFERENCE_KEY_TAG_MEMBERS, "");
@@ -856,16 +876,19 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
     }
 
-    private void switchPrivacy(boolean allRange) {
+    private void switchPrivacy(String string) {
         Resources resources = getResources();
         Drawable drawable;
-
-        if (allRange) {
+        allRange = string;
+        if ("2".equals(allRange)) {
+            drawable = resources.getDrawable(R.drawable.workspace_management_icon);
+            tvPrivacy.setText(R.string.text_orgin_workspace);
+        } else if ("1".equals(allRange)) {
             drawable = resources.getDrawable(R.drawable.privacy_open);
             tvPrivacy.setText(R.string.text_all_member);
         } else {
             drawable = resources.getDrawable(R.drawable.privacy_lock);
-            tvPrivacy.setText(R.string.text_only_me);
+            tvPrivacy.setText(R.string.text_only_me);//0Only Me, 1- All Members , 2-Organisation
         }
         Drawable[] drawables = tvPrivacy.getCompoundDrawables();
         if (drawable != null) {
@@ -939,7 +962,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         editor.putString(PREFERENCE_KEY_DO_FEEL_CODE, selectFeelingPath);
         editor.putInt(PREFERENCE_KEY_CHECK_ITEM_INDEX, checkItemIndex);
-        editor.putBoolean(PREFERENCE_KEY_CONTENT_GROUP_PUBLIC, allRange);
+        editor.putString(PREFERENCE_KEY_CONTENT_GROUP_PUBLIC, allRange);
 
         editor.putString(PREFERENCE_KEY_TAG_MEMBERS, gson.toJson(at_members_data));
         editor.putString(PREFERENCE_KEY_TAG_GROUPS, gson.toJson(at_groups_data));
@@ -1124,6 +1147,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     @Override
     public void onClick(View v) {
+        if (onlyPopupWindow != null && onlyPopupWindow.isShowing()) {
+            onlyPopupWindow.dismiss();
+        }
         switch (v.getId()) {
             case R.id.tv_camera:// 打开相册
                 boolean needAlert;
@@ -1183,8 +1209,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 if (isEdit) {
                     isUpate = true;
                 }
-                allRange = !allRange;
-                switchPrivacy(allRange);
+                showPopuWindow();
                 break;
 
             case R.id.delete_video_view:
@@ -1203,6 +1228,55 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 }
                 break;
         }
+    }
+
+    private void showPopuWindow() {
+        final View popView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.popuwindow_workspace_create, null);
+        onlyPopupWindow = new PopupWindow(popView, AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT);
+        onlyPopupWindow.setBackgroundDrawable(new ColorDrawable(0));
+        TextView ivMe = (TextView) popView.findViewById(R.id.tv_only_me);
+        TextView ivAll = (TextView) popView.findViewById(R.id.tv_all_member);
+        TextView ivOrg = (TextView) popView.findViewById(R.id.tv_organisation);
+        View linear_organisation = popView.findViewById(R.id.tv_organisation);
+        if (TextUtils.isEmpty(MainActivity.getUser().getOrganisation())) {
+            linear_organisation.setVisibility(View.GONE);
+        } else {
+            linear_organisation.setVisibility(View.VISIBLE);
+        }
+        ivMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onlyPopupWindow.dismiss();
+                switchPrivacy("0");
+                onlyPopupWindow = null;
+            }
+        });
+        ivAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onlyPopupWindow.dismiss();
+                switchPrivacy("1");
+                onlyPopupWindow = null;
+            }
+        });
+        ivOrg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onlyPopupWindow.dismiss();
+                switchPrivacy("2");
+                onlyPopupWindow = null;
+            }
+        });
+        int[] arrayOfInt = new int[2];
+        //获取点击按钮的坐标
+        View view = getViewById(R.id.option_bar);
+        view.getLocationOnScreen(arrayOfInt);
+        int x = arrayOfInt[0];
+        int y = arrayOfInt[1];
+        popView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int popupWidth = popView.getMeasuredWidth();
+        int popupHeight = popView.getMeasuredHeight();
+        onlyPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, x - popupWidth, y - popupHeight);
     }
 
     /**
@@ -1310,6 +1384,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (rlProgress.getVisibility() == View.VISIBLE) {
             return;
         }
+        if (onlyPopupWindow != null && onlyPopupWindow.isShowing()) {
+            onlyPopupWindow.dismiss();
+        }
 
         Log.i(TAG, "submitWall&");
         // 隐藏键盘
@@ -1386,7 +1463,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
         params.put("sticker_type", "");
         params.put("group_ind_type", "2");
-        params.put("content_group_public", (allRange ? "1" : "0"));
+        params.put("content_group_public", allRange);
 
         if (photoEntities.isEmpty()) {
             params.put("upload_photo", "0");
@@ -1396,6 +1473,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         params.put("tag_group", gson.toJson(setGetGroupIds(at_groups_data)));
         params.put("tag_member", gson.toJson(setGetMembersIds(at_members_data)));
+        params.put("tag_member", gson.toJson(setGetMembersIds(at_members_data)));
+        params.put("organisation", MainActivity.getUser().getOrganisation());
+
         String url;
         url = Constant.API_WALL_TEXT_POST;
         callBack.setLinkType(CallBack.LINK_TYPE_SUBMIT_WALL);
@@ -1444,7 +1524,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         entity.setDelete_video(deleteVideo);
         entity.setTag_group(setGetGroupIds(at_groups_data));
         entity.setTag_member(setGetMembersIds(at_members_data));
-        entity.setContent_group_public(allRange ? String.valueOf(1) : String.valueOf(0));
+        entity.setContent_group_public(allRange);
         entity.setPhoto_max(String.valueOf(photoEntities.size() - 1));
 
         if (!Uri.EMPTY.equals(videoUri)) {

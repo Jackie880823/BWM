@@ -729,4 +729,5 @@
     <string name="text_meeting_end_time">Meeting End Date &amp; Time must be later than Start Date &amp; Time</string>
     <string name="text_choose_start_time">Please Select Start Date &amp; Time</string>
     <string name="text_org_chart">Org Chart</string>
+    <string name="text_orgin_workspace">Organisation</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.bondwithme.BondCorp.ui;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,11 +9,14 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -29,6 +33,7 @@ import com.bondwithme.BondCorp.util.LogUtil;
 import com.bondwithme.BondCorp.util.MessageUtil;
 import com.bondwithme.BondCorp.util.MyDateUtils;
 import com.bondwithme.BondCorp.widget.CircularNetworkImage;
+import com.bondwithme.BondCorp.widget.NoScrollListView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -52,7 +57,7 @@ import java.util.Random;
 /**
  * Created by liangzemian on 15/12/8.
  */
-public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileActivity>{
+public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileActivity> {
     private final static String TAG = "FamilyViewProfileFragment";
     private String useId;//本人Id，这个将来是全局变量
     private String memberId;//本人的memberId
@@ -68,7 +73,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     TextView tvName1;
     TextView tvId1;
 
-    TextView tvPhone;
+    private NoScrollListView tvPhone;
     TextView tvFirstName;
     TextView tvLastName;
     //    TextView tvAge;
@@ -88,6 +93,12 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private View rlRegion;
     private View rlPhone;
     private View flMember;
+    private View rl_position;
+    private View rl_department;
+    private View rl_et_internal_phone;
+    private TextView et_position;
+    private TextView et_department;
+    private NoScrollListView et_internal_phone;
     private Button btAddMember;
     private Button btMessage;
     private int[] array;
@@ -100,13 +111,14 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
     UserEntity userEntity = new UserEntity();
 
-    public static FamilyViewProfileFragment newInstance(){
+    public static FamilyViewProfileFragment newInstance() {
         return createInstance(new FamilyViewProfileFragment());
     }
 
-    public FamilyViewProfileFragment(){
+    public FamilyViewProfileFragment() {
         super();
     }
+
     @Override
     public void setLayoutId() {
         this.layoutId = R.layout.activity_family_view_profile;
@@ -118,68 +130,76 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     }
 
 
-    Handler handler = new Handler() {
-        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
+        public boolean handleMessage(Message message) {
+            switch (message.what) {
                 case GET_USER_ENTITY:
-                    userEntity = (UserEntity) msg.obj;
-                    if(userEntity == null)return;
+                    userEntity = (UserEntity) message.obj;
+                    if (userEntity != null) {
+                        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+                        VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id()), 0, 0);
+                        rlFirstName.setVisibility(View.VISIBLE);
+                        rlListName.setVisibility(View.VISIBLE);
+                        setDatePrivacy(userEntity.getDob_date_flag(), rlBirthday);
+                        setDatePrivacy(userEntity.getDob_year_flag(), rlYearBirthday);
+                        setDatePrivacy(userEntity.getGender_flag(), rlGender);
+                        setDatePrivacy(userEntity.getEmail_flag(), rlEmail);
+                        setDatePrivacy(userEntity.getLocation_flag(), rlRegion);
+                        setDatePrivacy(userEntity.getMember_flag(), rlPhone);
+                        showMessageButton();
 
-                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
-                    VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE,  userEntity.getUser_id()), 0, 0);
+                        tvFirstName.setText(userEntity.getUser_given_name());
+                        tvLastName.setText(userEntity.getUser_surname());
+//                    if (userEntity.getUser_phone_number().size() > 0) {
+//                        tvPhone.setText("+" + userEntity.getUser_phone_number().get(0));
+//                    }
+                        et_position.setText(userEntity.getPosition());
+                        et_department.setText(userEntity.getDepartment());
+                        if (userEntity.getInt_phone_ext() != null && userEntity.getInt_phone_ext().size() > 0) {
+                            rl_et_internal_phone.setVisibility(View.VISIBLE);
+                            ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, userEntity.getInt_phone_ext());
+                            et_internal_phone.setAdapter(adapter);
+                        } else {
+                            rl_et_internal_phone.setVisibility(View.GONE);
+                        }
+                        if (userEntity.getUser_phone_number() != null && userEntity.getUser_phone_number().size() > 0) {
+                            ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, userEntity.getUser_phone_number());
+                            tvPhone.setAdapter(adapter);
+                        }
 
-                    rlFirstName.setVisibility(View.VISIBLE);
-                    rlListName.setVisibility(View.VISIBLE);
-                    setDatePrivacy(userEntity.getDob_date_flag(),rlBirthday);
-                    setDatePrivacy(userEntity.getDob_year_flag(),rlYearBirthday);
-                    setDatePrivacy(userEntity.getGender_flag(),rlGender);
-                    setDatePrivacy(userEntity.getEmail_flag(),rlEmail);
-                    setDatePrivacy(userEntity.getLocation_flag(),rlRegion);
-                    setDatePrivacy(userEntity.getMember_flag(),rlPhone);
-                    showMessageButton();
-
-                    tvFirstName.setText(userEntity.getUser_given_name());
-                    tvLastName.setText(userEntity.getUser_surname());
-                    if(userEntity.getUser_phone_number().size() >0){
-                      tvPhone.setText("+" + userEntity.getUser_phone_number().get(0));
-                    }
-                    String strDOB = userEntity.getUser_dob();
-                    LogUtil.d("TAG", "strDOB===" + strDOB);
-                    setTvBirthday(strDOB);
-                    if ("F".equals(userEntity.getUser_gender())) {
-                        /**
-                         * begin QK
-                         */
-                        tvGender.setText(stFemale);
-                    } else if ("M".equals(userEntity.getUser_gender())) {
-                        tvGender.setText(stMale);
-                        /**
-                         * end
-                         */
-                    }
-                    tvEmail.setText(userEntity.getUser_email());
-                    tvRegion.setText(userEntity.getUser_location_name());
-                    String dofeel_code = userEntity.getDofeel_code();
-                    if (!TextUtils.isEmpty(dofeel_code)) {
-                        try {
-                            String filePath = "";
-                            if (dofeel_code.indexOf("_") != -1) {
-                                filePath = dofeel_code.replaceAll("_", File.separator);
+                        String strDOB = userEntity.getUser_dob();
+                        LogUtil.d("TAG", "strDOB===" + strDOB);
+                        setTvBirthday(strDOB);
+                        if ("F".equals(userEntity.getUser_gender())) {
+                            tvGender.setText(stFemale);
+                        } else if ("M".equals(userEntity.getUser_gender())) {
+                            tvGender.setText(stMale);
+                        }
+                        tvEmail.setText(userEntity.getUser_email());
+                        tvRegion.setText(userEntity.getUser_location_name());
+                        String dofeel_code = userEntity.getDofeel_code();
+                        if (!TextUtils.isEmpty(dofeel_code)) {
+                            try {
+                                String filePath = "";
+                                if (dofeel_code.indexOf("_") != -1) {
+                                    filePath = dofeel_code.replaceAll("_", File.separator);
+                                }
+                                InputStream is = getParentActivity().getAssets().open(filePath);
+                                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                                ivBottomLeft.setImageBitmap(bitmap);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                            InputStream is = getParentActivity().getAssets().open(filePath);
-                            Bitmap bitmap = BitmapFactory.decodeStream(is);
-                            ivBottomLeft.setImageBitmap(bitmap);
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
                     }
                     break;
             }
+
+            return false;
         }
-    };
+    });
+
     @Override
     public void initView() {
         userEntity = (UserEntity) getParentActivity().getIntent().getExtras().getSerializable("userEntity");
@@ -187,7 +207,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         memberId = getParentActivity().getIntent().getStringExtra("member_id");
         bwmId = getParentActivity().getIntent().getStringExtra("bwm_id");
 
-        profileBackgroundId = getParentActivity().getIntent().getIntExtra("profile_image_id",6);
+        profileBackgroundId = getParentActivity().getIntent().getIntExtra("profile_image_id", 6);
         cniMain = getViewById(R.id.cni_main);
         networkImageView = getViewById(R.id.iv_profile_images);
         ivBottomLeft = getViewById(R.id.civ_left);
@@ -219,13 +239,19 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         flMember = getViewById(R.id.fl_member);
         btAddMember = getViewById(R.id.btn_add_member);
         btMessage = getViewById(R.id.btn_message);
+        rl_position = getViewById(R.id.rl_position);
+        rl_department = getViewById(R.id.rl_department);
+        rl_et_internal_phone = getViewById(R.id.rl_et_internal_phone);
+        et_position = getViewById(R.id.et_position);
+        et_department = getViewById(R.id.et_department);
+        et_internal_phone = getViewById(R.id.et_internal_phone);
 
         stFemale = getResources().getString(R.string.text_female);
         stMale = getResources().getString(R.string.text_male);
 
-        if(profileBackgroundId == 6){
-            array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
-                    R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
+        if (profileBackgroundId == 6) {
+            array = new int[]{R.drawable.profile_background_0, R.drawable.profile_background_1, R.drawable.profile_background_2,
+                    R.drawable.profile_background_3, R.drawable.profile_background_4, R.drawable.profile_background_5};
             profileBackgroundId = randomImageId(array);
         }
 
@@ -243,7 +269,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             public void onClick(View v) {
                 Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
 //                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                if(userEntity != null) {
+                if (userEntity != null) {
                     intent2.putExtra("type", 0);
                     //如果上个页面没有groupId或者groupName
                     intent2.putExtra("groupId", userEntity.getGroup_id());
@@ -256,7 +282,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(userEntity == null)return;
+                if (userEntity == null) return;
                 Intent intent = new Intent(getParentActivity(), ViewOriginalPicesActivity.class);
                 ArrayList<PhotoEntity> datas = new ArrayList();
                 PhotoEntity peData = new PhotoEntity();
@@ -273,26 +299,43 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             }
         });
 
-        if(userEntity != null){
+        if (userEntity != null) {
             VolleyUtil.initNetworkImageView(getParentActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
-            VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE,  userEntity.getUser_id()), profileBackgroundId, profileBackgroundId);
+            VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id()), profileBackgroundId, profileBackgroundId);
             memberFlag = userEntity.getMember_flag();
 
             showMessageButton();
             rlFirstName.setVisibility(View.VISIBLE);
             rlListName.setVisibility(View.VISIBLE);
-            setDatePrivacy(userEntity.getDob_date_flag(),rlBirthday);
-            setDatePrivacy(userEntity.getDob_year_flag(),rlYearBirthday);
-            setDatePrivacy(userEntity.getGender_flag(),rlGender);
-            setDatePrivacy(userEntity.getEmail_flag(),rlEmail);
-            setDatePrivacy(userEntity.getLocation_flag(),rlRegion);
-            setDatePrivacy(userEntity.getMember_flag(),rlPhone);
-
+            setDatePrivacy(userEntity.getDob_date_flag(), rlBirthday);
+            setDatePrivacy(userEntity.getDob_year_flag(), rlYearBirthday);
+            setDatePrivacy(userEntity.getGender_flag(), rlGender);
+            setDatePrivacy(userEntity.getEmail_flag(), rlEmail);
+            setDatePrivacy(userEntity.getLocation_flag(), rlRegion);
+            setDatePrivacy(userEntity.getMember_flag(), rlPhone);
+            et_position.setText(userEntity.getPosition());
+            et_department.setText(userEntity.getDepartment());
+            if (userEntity.getInt_phone_ext() != null && userEntity.getInt_phone_ext().size() > 0) {
+                rl_et_internal_phone.setVisibility(View.VISIBLE);
+                for (int i = 0; i < userEntity.getInt_phone_ext().size(); i++) {
+                    userEntity.getInt_phone_ext().set(i, "+" + userEntity.getInt_phone_ext().get(i));
+                }
+                ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.array_list_item, R.id.tv_phone, userEntity.getInt_phone_ext());
+                et_internal_phone.setAdapter(adapter);
+            } else {
+                rl_et_internal_phone.setVisibility(View.GONE);
+            }
             tvName1.setText(userEntity.getUser_given_name());
-            tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
-            if(userEntity.getUser_phone_number().size() > 0){
-//                tvPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone_number().get(0));
-                tvPhone.setText("+" + userEntity.getUser_phone_number().get(0));
+            tvId1.setText(getResources().getString(R.string.app_name) + " ID: " + userEntity.getDis_bondwithme_id());
+//            if (userEntity.getUser_phone_number().size() > 0) {
+//     tvPhone.setText("+" + userEntity.getUser_phone_number().get(0));
+//            }
+            if (userEntity.getUser_phone_number() != null && userEntity.getUser_phone_number().size() > 0) {
+                for (int i = 0; i < userEntity.getUser_phone_number().size(); i++) {
+                    userEntity.getUser_phone_number().set(i, "+" + userEntity.getUser_phone_number().get(i));
+                }
+                ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.array_list_item, R.id.tv_phone, userEntity.getUser_phone_number());
+                tvPhone.setAdapter(adapter);
             }
             tvFirstName.setText(userEntity.getUser_given_name());
             tvLastName.setText(userEntity.getUser_surname());
@@ -302,15 +345,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             setTvBirthday(strDOB);
 
             if ("F".equals(userEntity.getUser_gender())) {
-                /**
-                 * begin QK
-                 */
                 tvGender.setText(stFemale);
             } else if ("M".equals(userEntity.getUser_gender())) {
                 tvGender.setText(stMale);
-                /**
-                 * end
-                 */
             }
 
             tvEmail.setText(userEntity.getUser_email());
@@ -329,15 +366,13 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     e.printStackTrace();
                 }
             }
-        }else {
+        } else {
             networkImageView.setDefaultImageResId(profileBackgroundId);
         }
-
-
     }
 
     private void setTvBirthday(String strDOB) {
-        if (strDOB != null && !strDOB.equals("0000-00-00")){
+        if (strDOB != null && !strDOB.equals("0000-00-00")) {
             Date date = null;
             try {
                 date = new SimpleDateFormat("yyyy-MM-dd").parse(strDOB);
@@ -345,27 +380,23 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 e.printStackTrace();
             }
             //不同语言设置不同日期显示
-            if (Locale.getDefault().toString().equals("zh_CN")){
-//                tvBirthday.setText(date.getMonth() + "月" + date.getDay() + "日");
+//            if (Locale.getDefault().toString().equals("zh_CN")) {
 //                DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-//                tvBirthday.setText(dateFormat.format(date));
-                DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-                String time = dateFormat.format(date).toString();
-                LogUtil.i("Profile_time",time);
-                String birthday = time.substring(5,time.length());
-                String YearBirthday = time.substring(0,5);
-                tvBirthday.setText(birthday);
-                tvYearBirthday.setText(YearBirthday);
-            }else {
-//                tvBirthday.setText(this.getResources().getStringArray(R.array.months)[date.getMonth()] + " " + date.getDate());
-                int year = date.getYear() + 1900;
-                tvBirthday.setText(date.getDate() + " " + MyDateUtils.getMonthNameArray(false)[date.getMonth()]);
-                tvYearBirthday.setText(String.valueOf(year));
-            }
+//                String time = dateFormat.format(date).toString();
+//                LogUtil.i("Profile_time", time);
+//                String birthday = time.substring(5, time.length());
+//                String YearBirthday = time.substring(0, 5);
+//                tvBirthday.setText(birthday);
+//                tvYearBirthday.setText(YearBirthday);
+//            } else {
+            int year = date.getYear() + 1900;
+            tvBirthday.setText(date.getDate() + " " + MyDateUtils.getMonthNameArray(false)[date.getMonth()]);
+            tvYearBirthday.setText(String.valueOf(year));
+//            }
         }
     }
 
-    private void setDatePrivacy(String dateFlag,View view){
+    private void setDatePrivacy(String dateFlag, View view) {
         switch (dateFlag) {
             case "0":
                 view.setVisibility(View.GONE);
@@ -405,21 +436,22 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     }
 
 
-    private void showMessageButton(){
-        if((bwmId != null || memberId != null) && !useId.equals(userEntity.getUser_id())){
+    private void showMessageButton() {
+        if ((bwmId != null || memberId != null) && !useId.equals(userEntity.getUser_id())) {
             flMember.setVisibility(View.VISIBLE);
-            if("0".equals(userEntity.getMember_flag())){
+            if ("0".equals(userEntity.getMember_flag())) {
                 //如果不是好友
                 btAddMember.setVisibility(View.VISIBLE);
-            }else if("1".equals(userEntity.getMember_flag())){
+            } else if ("1".equals(userEntity.getMember_flag())) {
                 //如果是好友
 //                            btMessage.setVisibility(View.VISIBLE);
             }
-            LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-            layoutParam.setMargins(0,0,0, DensityUtil.dip2px(getParentActivity(), 50));
+            LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+            layoutParam.setMargins(0, 0, 0, DensityUtil.dip2px(getParentActivity(), 50));
             rlPhone.setLayoutParams(layoutParam);
         }
     }
+
     private void addUser(final String relationShip) {
 
         HashMap<String, String> params = new HashMap<String, String>();
@@ -445,10 +477,10 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     JSONObject jsonObject = new JSONObject(response);
                     if ("Success".equals(jsonObject.getString("response_status"))) {
                         getParentActivity().setResult(getActivity().RESULT_OK);
-                        MessageUtil.showMessage(getContext(),getResources().getString(R.string.text_success_add_member));
+                        MessageUtil.showMessage(getContext(), getResources().getString(R.string.text_success_add_member));
                         // finish();
                     } else {
-                        MessageUtil.showMessage(getContext(),getResources().getString(R.string.text_fail_add_member));
+                        MessageUtil.showMessage(getContext(), getResources().getString(R.string.text_fail_add_member));
                     }
 
                 } catch (JSONException e) {
@@ -477,9 +509,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK){
-            switch (requestCode)
-            {
+        if (resultCode == getActivity().RESULT_OK) {
+            switch (requestCode) {
                 case CHOOSE_RELATION_CODE:
                     userEntity.setTree_type_name(data.getStringExtra("relationship"));
                     addUser(userEntity.getTree_type_name());
@@ -492,12 +523,12 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
     @Override
     public void requestData() {
-        if(userEntity == null){
+        if (userEntity == null) {
             HashMap<String, String> jsonParams = new HashMap<>();
             jsonParams.put("user_id", useId);
-            if(memberId != null){
+            if (memberId != null) {
                 jsonParams.put("member_id", memberId);
-            }else {
+            } else {
                 jsonParams.put("bwm_id", bwmId);
             }
 
@@ -535,7 +566,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
                 @Override
                 public void onError(Exception e) {
-                    MessageUtil.showMessage(getContext(),getResources().getString(R.string.text_error));
+                    MessageUtil.showMessage(getContext(), getResources().getString(R.string.text_error));
                 }
 
                 @Override
@@ -553,7 +584,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     }
 
     //获取一个背景图的随机id
-    public int randomImageId(int[] array){
+    public int randomImageId(int[] array) {
         int result = new Random().nextInt(5);
         return array[result];
     }

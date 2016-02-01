@@ -445,4 +445,7 @@ public class Constant {
 
     public static final String API_GET_PROFILE_QR = API_SERVER + "/bondwithme/index.php/api/photo_profile/%s/fid/qr";
 
+    public static final String API_GOOD_JOB_MEMBER = API_SERVER + "/bondwithme/index.php/api/goodjob";//goodjob用户
+    public static final String API_UPDATE_GOOD_JOB = API_SERVER + "/bondwithme/index.php/api/goodjob/%s";//消除好友的goodjob
+
 }

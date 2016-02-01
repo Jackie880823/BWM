@@ -245,7 +245,7 @@ public class MissListActivity extends BaseActivity {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("member_id", member_id);
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
-        requestInfo.url = String.format(Constant.API_UPDATE_MISS, MainActivity.getUser().getUser_id());
+        requestInfo.url = String.format(Constant.API_UPDATE_GOOD_JOB, MainActivity.getUser().getUser_id());
 
         new HttpTools(this).put(requestInfo, this, new HttpCallback() {
             @Override

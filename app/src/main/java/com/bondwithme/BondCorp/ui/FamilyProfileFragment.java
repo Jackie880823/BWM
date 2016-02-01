@@ -142,19 +142,19 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         netQrImageView = getViewById(R.id.iv_profile_qr);
         rvToQR = getViewById(R.id.rl_to_qr);
 
-        array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
-                R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
+        array = new int[]{R.drawable.profile_background_0, R.drawable.profile_background_1, R.drawable.profile_background_2,
+                R.drawable.profile_background_3, R.drawable.profile_background_4, R.drawable.profile_background_5};
         profileBackgroundId = randomImageId(array);
-        if(memberId != null){
+        if (memberId != null) {
             VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
             VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
             VolleyUtil.initNetworkImageView(getActivity(), netQrImageView, String.format(Constant.API_GET_PROFILE_QR, memberId), R.drawable.qrcode_button, R.drawable.qrcode_button);
         }
 
 //        tvName1.setText(groupName);
-        if(userEntity == null){
+        if (userEntity == null) {
             vProgress.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             memberId = userEntity.getUser_id();
             groupId = userEntity.getGroup_id();
             groupName = userEntity.getUser_given_name();
@@ -208,8 +208,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rvToQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (userEntity != null)
-                {
+                if (userEntity != null) {
                     Intent toQRIntent = new Intent(getActivity(), ViewQRCodeActivity.class);
                     toQRIntent.putExtra("userEntity", userEntity);
                     startActivity(toQRIntent);
@@ -225,7 +224,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                     //用户详情界面
                     Intent intent1 = new Intent(getActivity(), FamilyViewProfileActivity.class);
                     intent1.putExtra("userEntity", userEntity);
-                    intent1.putExtra("profile_image_id",profileBackgroundId);
+                    intent1.putExtra("profile_image_id", profileBackgroundId);
 //                    intent1.putExtra("bwm_id","8000105652");
                     startActivity(intent1);
                 }
@@ -238,7 +237,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 //聊天界面
                 Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
 //                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                if(userEntity != null) {
+                if (userEntity != null) {
                     intent2.putExtra("type", 0);
                     //如果上个页面没有groupId或者groupName
                     intent2.putExtra("groupId", userEntity.getGroup_id());
@@ -267,7 +266,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlPathRelationship.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (userEntity != null ) {
+                if (userEntity != null) {
                     //关系界面
                     Intent intent = new Intent(getActivity(), PathRelationshipActivity.class);
                     intent.putExtra("member_id", memberId);
@@ -306,10 +305,10 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
-                if(v.getId() == getParentActivity().rightButton.getId()){
+                if (v.getId() == getParentActivity().rightButton.getId()) {
                     Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
 //                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    if(userEntity != null) {
+                    if (userEntity != null) {
                         intent2.putExtra("type", 0);
                         //如果上个页面没有groupId或者groupName
                         intent2.putExtra("groupId", userEntity.getGroup_id());
@@ -342,16 +341,16 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             switch (msg.what) {
                 case GET_USER_ENTITY:
                     userEntity = (UserEntity) msg.obj;
-                    if(TextUtils.isEmpty(groupId)){
+                    if (TextUtils.isEmpty(groupId)) {
                         VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
                     }
-                    if(TextUtils.isEmpty(groupName)){
+                    if (TextUtils.isEmpty(groupName)) {
                         tvName1.setText(userEntity.getUser_login_id());
                         getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
                     }
 //                    tvName1.setText(userEntity.getUser_login_id());
                     tvId1.setText(userEntity.getDis_bondwithme_id());
-                    if(TextUtils.isEmpty(getDofeelCode)){
+                    if (TextUtils.isEmpty(getDofeelCode)) {
                         getDofeelCode = userEntity.getDofeel_code();
                     }
                     if (!TextUtils.isEmpty(getDofeelCode)) {
@@ -373,14 +372,12 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     };
 
 
-
-
     private void getHasMiss() {
         HashMap<String, String> params = new HashMap<>();
         params.put("from_user_id", MainActivity.getUser().getUser_id());
         params.put("to_user_id", memberId);
         params.put("to_user_fullname", userEntity.getUser_given_name());
-        new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params, Tag, new HttpCallback() {
+        new HttpTools(getActivity()).post(Constant.API_GOOD_JOB_MEMBER, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -393,13 +390,11 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             public void onResult(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    if (-1 != jsonObject.getString("message").indexOf("already")) {
+                    if (-1 != jsonObject.optString("message", "").indexOf("already")) {
                         MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
                     } else {
                         MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
-
                     }
-
                 } catch (JSONException e) {
                     MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
                     e.printStackTrace();
@@ -427,10 +422,8 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK)
-        {
-            switch (requestCode)
-            {
+        if (resultCode == getActivity().RESULT_OK) {
+            switch (requestCode) {
                 case GO_RELATIONSHIP_CHANGE:
                     userEntity.setTree_type_name(data.getStringExtra("relationship"));
                     break;
@@ -443,7 +436,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     @Override
     public void requestData() {
-        if(userEntity != null)return;
+        if (userEntity != null) return;
 
         HashMap<String, String> jsonParams = new HashMap<>();
         jsonParams.put("user_id", useId);
@@ -451,7 +444,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
         HashMap<String, String> params = new HashMap<>();
         params.put("condition", jsonParamsString);
-        LogUtil.w("requestData_","user_id="+useId+"member_id="+memberId);
+        LogUtil.w("requestData_", "user_id=" + useId + "member_id=" + memberId);
         String url = UrlUtil.generateUrl(Constant.API_MEMBER_PROFILE_DETAIL, params);
 
         new HttpTools(getActivity()).get(url, params, Tag, new HttpCallback() {
@@ -469,7 +462,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-                LogUtil.e("response====",response+"");
+                LogUtil.e("response====", response + "");
                 List<UserEntity> data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
                 if ((data != null) && (data.size() > 0)) {
@@ -505,7 +498,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     }
 
     //获取一个背景图的随机id
-    public int randomImageId(int[] array){
+    public int randomImageId(int[] array) {
         int result = new Random().nextInt(5);
         return array[result];
     }

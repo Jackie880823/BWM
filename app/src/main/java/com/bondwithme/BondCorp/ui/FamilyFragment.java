@@ -75,7 +75,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
     private ViewPager pager;
     private TextView message_member_tv;
     private TextView message_group_tv;
-//    private Dialog showSelectDialog;
+    //    private Dialog showSelectDialog;
     private Context mContext;
     private boolean isMemberRefresh, isGroupRefresh;
     /**
@@ -102,10 +102,10 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
     private FamilyGroupAdapter groupAdapter;
     public static String FAMILY_TREE = "family_treely_tree\";\n" +
             "    public static final String FAMILY_PARENT ";
-    public static final String FAMILY_PARENT = "parent";
-    public static final String FAMILY_CHILDREN = "children";
-    public static final String FAMILY_SIBLING = "sibling";
-    public static final String FAMILY_SPOUSE = "spouse";
+    public static final String FAMILY_PARENT = "Supervisor";
+    public static final String FAMILY_CHILDREN = "Subordinate";
+    public static final String FAMILY_SIBLING = "Colleague";
+    //    public static final String FAMILY_SPOUSE = "spouse";
     public static String FAMILY_MORE_MEMBER = "Everyone";
     public static String FAMILY_HIDE_MEMBER = "MyFamily";
 
@@ -121,7 +121,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
     private String MemeberSearch;
     private String GroupSearch;
     private boolean isopen;
-    public InteractivePopupWindow popupWindow,popupWindowAddPhoto;
+    public InteractivePopupWindow popupWindow, popupWindowAddPhoto;
     private String popTestSt;
 
     List<FamilyMemberEntity> opendate = new LinkedList<>();
@@ -170,8 +170,8 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
                             //成员的关系
                             String tree_type = memberEntity.getTree_type();
 //                            Log.i("tree_type===", memberEntity.getTree_type());
-                            if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
-                                    || FAMILY_SIBLING.equals(tree_type) || FAMILY_SPOUSE.equals(tree_type)) {
+                            if (FAMILY_PARENT.equalsIgnoreCase(tree_type) || FAMILY_CHILDREN.equalsIgnoreCase(tree_type)
+                                    || FAMILY_SIBLING.equalsIgnoreCase(tree_type)) {
                                 memberList.add(memberEntity);
                             }
                             moreMemberList.add(memberEntity);
@@ -213,8 +213,8 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
 //                        opendate.add(0,member);
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
                             String tree_type = memberEntity.getTree_type();
-                            if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
-                                    || FAMILY_SIBLING.equals(tree_type) || FAMILY_SPOUSE.equals(tree_type)) {
+                            if (FAMILY_PARENT.equalsIgnoreCase(tree_type) || FAMILY_CHILDREN.equalsIgnoreCase(tree_type)
+                                    || FAMILY_SIBLING.equalsIgnoreCase(tree_type)) {
                                 memberList.add(memberEntity);
                             }
                             moreMemberList.add(memberEntity);
@@ -247,14 +247,14 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
 //                    }
                     break;
                 case GET_DELAY_RIGHT:
-                     popupWindow = new InteractivePopupWindow(getParentActivity(),getParentActivity().rightButton,popTestSt,0);
-                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                         @Override
-                         public void popDismiss() {
-                             PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_MEMBER, true);
-                             newPopAddPhoto();
-                         }
-                     });
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popTestSt, 0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_MEMBER, true);
+                            newPopAddPhoto();
+                        }
+                    });
                     popupWindow.showPopupWindow(true);
                     break;
 
@@ -330,22 +330,23 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
             }
         });
 
-        popTestSt  = mContext.getResources().getString(R.string.text_tip_add_member);
+        popTestSt = mContext.getResources().getString(R.string.text_tip_add_member);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
-    private void newPopAddPhoto(){
-        InteractivePopupWindow popupWindowAddPhoto = new InteractivePopupWindow(getParentActivity(),getParentActivity().bottom,getParentActivity().getResources().getString(R.string.text_tip_add_photo),1) ;
+    private void newPopAddPhoto() {
+        InteractivePopupWindow popupWindowAddPhoto = new InteractivePopupWindow(getParentActivity(), getParentActivity().bottom, getParentActivity().getResources().getString(R.string.text_tip_add_photo), 1);
         popupWindowAddPhoto.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
             @Override
             public void popDismiss() {
-                PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,true);
+                PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO, true);
 
             }
         });
         popupWindowAddPhoto.showPopupWindowUp();
 
     }
+
     //搜索
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
@@ -461,7 +462,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
 
     }
 
-    public void onceAdd(String ActionUserId){
+    public void onceAdd(String ActionUserId) {
 //        vProgress.setVisibility(View.VISIBLE);
 //        Intent intent = new Intent(getActivity(), AddMemberWorkFlow.class);
 //        intent.putExtra("from", MainActivity.getUser().getUser_id());
@@ -591,7 +592,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
         memberRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
         emptyMemberLinear = (RelativeLayout) userView.findViewById(R.id.family_empty_linear);
         emptyMemberIv = (ImageView) userView.findViewById(R.id.family_memeber_image_empty);
-        emptyMemberTv =  userView.findViewById(R.id.family_memeber_text_empty);
+        emptyMemberTv = userView.findViewById(R.id.family_memeber_text_empty);
         userGridView.setAdapter(memberAdapter);
         userIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -632,7 +633,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
                 } else {
                     if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
                         //不是好友,提示等待接收
-                        if(showSelectDialog != null && showSelectDialog.isShowing()){
+                        if (showSelectDialog != null && showSelectDialog.isShowing()) {
                             return;
                         }
                         showNoFriendDialog(familyMemberEntity);
@@ -649,7 +650,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
                         }
                         Intent intent = new Intent(getActivity(), FamilyProfileActivity.class);
                         intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
-                        intent.putExtra(UserEntity.EXTRA_GROUP_ID,familyMemberEntity.getGroup_id());
+                        intent.putExtra(UserEntity.EXTRA_GROUP_ID, familyMemberEntity.getGroup_id());
                         intent.putExtra(UserEntity.EXTRA_GROUP_NAME, familyMemberEntity.getUser_given_name());
 
 //                        intent.putExtra("relationship",familyMemberEntity.getTree_type_name());
@@ -789,7 +790,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
 
     @Override
     public void onStart() {
-        Log.i("onStart===","onStart");
+        Log.i("onStart===", "onStart");
         super.onStart();
         getData();
     }
@@ -799,7 +800,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("member_id", member_id);
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
-        requestInfo.url = String.format(Constant.API_UPDATE_MISS, MainActivity.getUser().getUser_id());
+        requestInfo.url = String.format(Constant.API_UPDATE_GOOD_JOB, MainActivity.getUser().getUser_id());
 //        new Thread() {
 //            @Override
 //            public void run() {
@@ -817,7 +818,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
             public void onResult(String string) {
                 try {
                     JSONObject jsonObject = new JSONObject(string);
-                    if ("200".equals(jsonObject.getString("response_status_code"))) {
+                    if ("200".equals(jsonObject.optString("response_status_code", ""))) {
                         Toast.makeText(getActivity(), getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
@@ -1224,12 +1225,12 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("F_requestCode====",requestCode+"");
-        Log.i("F_resultCode====",resultCode+"");
+        Log.i("F_requestCode====", requestCode + "");
+        Log.i("F_resultCode====", resultCode + "");
         switch (requestCode) {
             case 1:
                 if (resultCode == -1) {
-                    if(groupEntityList != null){
+                    if (groupEntityList != null) {
                         groupAdapter.clearBitmap(groupEntityList);
                         groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
                         groupListView.setAdapter(groupAdapter);
@@ -1243,7 +1244,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
                 if (resultCode == getActivity().RESULT_OK) {
                     vProgress.setVisibility(View.GONE);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                }else {
+                } else {
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_canceled);
                 }
                 break;
