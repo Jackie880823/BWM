@@ -303,13 +303,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     rlProgress.setVisibility(View.GONE);
                     // 得到纬度
                     String strLatitude = wall.getLoc_latitude();
-                    if (!TextUtils.isEmpty(strLatitude)) {
+                    if (!TextUtils.isEmpty(strLatitude) && MyDateUtils.isDouble(strLatitude)) {
                         latitude = Double.valueOf(strLatitude);
                     }
                     // 得到经度
                     String strLongitude = wall.getLoc_longitude();
-                    if (!TextUtils.isEmpty(strLongitude)) {
-                        longitude = Double.valueOf(strLatitude);
+                    if (!TextUtils.isEmpty(strLongitude) && MyDateUtils.isDouble(strLongitude)) {
+                        longitude = Double.valueOf(strLongitude);
                     }
                     loc_type = wall.getLoc_type();
                     // 地名
@@ -747,18 +747,34 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     private void addVideoFromActivityResult(Intent data) {
         clearPhotos();
+
         mAdapter.notifyDataSetChanged();
         videoUri = data.getData();
-        MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
-        metadataRetriever.setDataSource(getActivity(), videoUri);
-        duration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        metadataRetriever.release();
-        if (!Uri.EMPTY.equals(videoUri) && ivDisplay != null) {
-            ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
-            tvDuration.setText(MyDateUtils.formatDuration(duration));
+
+        // 如果videoUri不是空的Uir则取得视频相关信息并显示
+        if (!Uri.EMPTY.equals(videoUri)) {
+            // 获取视频的元数据信息
+            MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
+            metadataRetriever.setDataSource(getActivity(), videoUri);
+            duration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            // 使用之后需要释放资源
+            metadataRetriever.release();
+
+            // 数据上传需要使用以秒为单位，取出的时长已精确到毫秒，所以需要转换为秒。
+            if (duration != null && !TextUtils.isEmpty(duration)) {
+                duration = String.valueOf(Long.valueOf(duration) / 1000L);
+            }
+
+            if (ivDisplay != null) {
+                // 取出视频的一帧画面显示在ivDisplay控件上
+                ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
+                // 显示视频的时长
+                tvDuration.setText(MyDateUtils.formatDuration(duration));
+            }
+
+            LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
+            LogUtil.i(TAG, "addVideoFromActivityResult& videoDuration: " + duration);
         }
-        LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
-        LogUtil.i(TAG, "addVideoFromActivityResult& videoDuration: " + duration);
     }
 
     /**
@@ -771,7 +787,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void onResume() {
         super.onResume();
         if (MainActivity.IS_INTERACTIVE_USE &&
-                !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
+                !PreferencesUtil.getValue(App.getContextInstance(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
             mHandler.sendEmptyMessage(GET_DELAY);
         }
@@ -999,7 +1015,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 // 进入编辑确定Wall是更新了
                 isUpate = true;
             } else {
-                // 没有退出编辑不用保存蓝草稿
+                // 没有退出编辑不用保存草稿
                 if (draftPreferences != null) {
                     draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).apply();
                 }

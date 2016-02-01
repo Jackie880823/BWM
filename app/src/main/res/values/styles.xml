@@ -101,6 +101,11 @@
         <item name="android:layout_height">60dp</item>
     </style>
 
+    <style name="text_white_center">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/default_text_color_while</item>
+    </style>
+
 
     <style name="split_line_default">
         <item name="android:layout_width">match_parent</item>

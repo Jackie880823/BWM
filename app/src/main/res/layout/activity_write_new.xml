@@ -141,7 +141,7 @@
 
 
         <TextView
-            android:id="@+id/tv_feeling"
+            android:id="@+id/tv_album"
             android:layout_width="0dp"
             android:layout_height="@dimen/default_user_head_width_height"
             android:layout_marginTop="@dimen/default_view_margin"

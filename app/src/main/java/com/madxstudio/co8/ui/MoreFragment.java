@@ -24,7 +24,6 @@ import com.madxstudio.co8.util.AppInfoUtil;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.widget.InteractivePopupWindow;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

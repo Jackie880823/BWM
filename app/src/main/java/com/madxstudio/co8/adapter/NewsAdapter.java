@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.NewsEntity;
+import com.madxstudio.co8.ui.BaseFragment;
 import com.madxstudio.co8.util.LogUtil;
 
 import java.util.List;
@@ -18,11 +19,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
     private int contentDisplayStatus = 0;//默认未展开
     private final int defaultMaxLineCount = 5;
     private String TAG = "NewsAdapter";
-
+    private BaseFragment fragment;
 
     public NewsAdapter(Context context, List<NewsEntity> data) {
         mContext = context;
         this.data = data;
+    }
+
+    public NewsAdapter(BaseFragment fragment,Context context, List<NewsEntity> data) {
+        mContext = context;
+        this.data = data;
+        this.fragment = fragment;
     }
 
     @Override
@@ -30,7 +37,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
         LogUtil.d(TAG,"onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_item, parent, false);
         // ViewHolder参数一定要是Item的Root节点.
-        return new NewsHolder(view,mContext);
+        return new NewsHolder(fragment,view,mContext);
     }
 
     public void add(List<NewsEntity> newData) {
@@ -43,11 +50,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
     public void onBindViewHolder(final NewsHolder holder, int position) {
         final NewsEntity news = data.get(position);
         LogUtil.d(TAG, "onBindViewHolder" + "isVisibleOfTvMore=======" + news.isVisibleOfTvMore());
+        LogUtil.d(TAG, "onBindViewHolder" + "Content_group_id=======1" + news.getContent_group_id());
         holder.setNewsEntity(news);
         if(!news.isVisibleOfTvMore()){
             holder.setSwitchVisibility(View.GONE);
         }
-        holder.setContent(news,mContext);
+        holder.setContent(news,mContext,position);
     }
 
 

@@ -58,9 +58,11 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
             if (oldVersion < 3) {
 //                Dao<LocalStickerInfo, Integer> recordItemDao = getDao(LocalStickerInfo.class);
 //                recordItemDao.executeRaw("ALTER TABLE `sticker_info` ADD COLUMN defaultSticker VARCHAR default '0';");
+//                if exists(select * from syscolumns where id=object_id('sticker_info') and name='defaultSticker')
+//                db.execSQL("if col_length('sticker_info', 'defaultSticker') is null ALTER TABLE `sticker_info` ADD COLUMN defaultSticker VARCHAR default '0';");
                 db.execSQL("ALTER TABLE `sticker_info` ADD COLUMN defaultSticker VARCHAR default '0';");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

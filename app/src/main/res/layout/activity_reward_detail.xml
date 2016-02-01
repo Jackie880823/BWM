@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        >
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_8dp"
+                android:orientation="vertical">
+
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/iv_reward"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_180dp"
+                    android:scaleType="fitXY"/>
+                
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/tab_color_press4"
+                    android:layout_marginBottom="@dimen/_8dp"
+                    android:padding="@dimen/_8dp">
+                    
+                    <TextView
+                        android:id="@+id/tv_reward_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/tv_reward_pts"
+                        android:text="@string/valid_till"/>
+
+                    <TextView
+                        android:id="@+id/tv_redemption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:textSize="@dimen/text_medium_size"
+                        android:text="@string/redemption_point"/>
+                    <TextView
+                        android:id="@+id/tv_reward_pts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/tv_redemption"
+                        android:textSize="@dimen/text_medium_size"
+                        android:textColor="@color/default_text_color_while"/>
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <Button
+                    android:id="@+id/tv_redeem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/ll_change_password"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginLeft="@dimen/_20dp"
+                    android:layout_marginRight="@dimen/_20dp"
+                    android:layout_marginBottom="@dimen/_10dp"
+                    android:text="@string/redeem"
+                    android:textSize="@dimen/text_large_size"/>
+            </LinearLayout>
+
+
+
+    </ScrollView>
+
+</LinearLayout>

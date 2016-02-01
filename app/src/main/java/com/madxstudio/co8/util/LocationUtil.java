@@ -260,6 +260,8 @@ public class LocationUtil {
 
                 }
             });
+        }else{
+            mGoogleServiceCheckTaskListener.googleServiceCheckFinished(false);
         }
     }
 

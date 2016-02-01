@@ -99,7 +99,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
         tvId1.setText(MainActivity.getUser().getDis_bondwithme_id());
         if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
         {
-            tvLoginId.setText(MainActivity.getUser().getUser_login_type());
+            tvLoginId.setText(getResources().getString(R.string.login_via_facebook));
         }else {
             tvLoginId.setText(MainActivity.getUser().getUser_login_id());
         }

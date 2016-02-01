@@ -428,7 +428,6 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             JSONObject jsonObject = new JSONObject(response);
                             List<PrivateMessageEntity> userList = gson.fromJson(jsonObject.getString("member"), new TypeToken<ArrayList<PrivateMessageEntity>>() {
                             }.getType());
-
                             String totalUnread = jsonObject.optString("memberUnread", "");//私聊的消息总共有多少未读"groupUnread","memberUnread","totalUnread"
                             Map<String, Object> map = new HashMap<>();
                             map.put(MESSAGE_DATA, userList);

@@ -38,7 +38,7 @@ public class LetterListView extends FrameLayout
     private final int MSG_HIDE_LETTER = 0x0;
     
     /** ��ĸ�б�Ŀ�� **/
-    private final int LETTER_LIST_VIEW_WIDTH = 50;//TODO ������д����,����һ���ı����ȽϺ�
+    private final int LETTER_LIST_VIEW_WIDTH = 80;//TODO ������д����,����һ���ı����ȽϺ�
     
     /** �����б� **/
     private ListView mListView;
@@ -120,6 +120,7 @@ public class LetterListView extends FrameLayout
             mAdapter = adapter;
             mListView.setAdapter(mAdapter);
         }
+
     }
     
     /**
@@ -138,9 +139,11 @@ public class LetterListView extends FrameLayout
     protected void onSizeChanged(int w, int h, int oldw, int oldh)
     {
         super.onSizeChanged(w, h, oldw, oldh);
-        
+
         mLetterAdapter = new LetterAdapter(h-getPaddingTop()-getPaddingBottom());
         mLetterListView.setAdapter(mLetterAdapter);
+
+
     }
 
     /**
@@ -182,6 +185,10 @@ public class LetterListView extends FrameLayout
         @Override
         public boolean onTouch(View v, MotionEvent event)
         {
+            if (mAdapter == null)
+            {
+                return false;
+            }
             int height = (int)event.getY() - v.getTop();
             
             int position = mLetterAdapter.getTouchPoistion(height);
@@ -227,7 +234,7 @@ public class LetterListView extends FrameLayout
          */
         public LetterAdapter(int height)
         {
-            if(mAdapter.hideLetterNotMatch())
+            if(mAdapter != null && mAdapter.hideLetterNotMatch())
             {
                 List<Character> list = new ArrayList<Character>();
                 char[] allArray = LETTER_STR.toCharArray();

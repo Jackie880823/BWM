@@ -103,6 +103,8 @@ public class Constant {
     /**
      * for api
      */
+//    public static final String API_SERVER = "http://m.bondwith.me";
+//    public static final int TRACKER_SITE_ID = 5;//dev
     public static final String API_SERVER = App.getContextInstance().getString(R.string.api_server);
     public static final int TRACKER_SITE_ID = Integer.valueOf(App.getContextInstance().getString(R.string.tracker_site_id));//dev
 
@@ -445,6 +447,16 @@ public class Constant {
 
     public static final String API_GET_PROFILE_QR = API_SERVER + "/bondwithme/index.php/api/photo_profile/%s/fid/qr";
 
+    //新的rewards
+    public static final String API_GET_My_REWARD = API_SERVER + "/bondwithme/index.php/api/myRewardList/%s";
+    public static final String API_GET_REWARD_LIST = API_SERVER + "/bondwithme/index.php/api/rewardList/%s";
+    public static final String API_POST_REWARD_CODE = API_SERVER +"/bondwithme/index.php/api/redeemReward";
+
+    //news
+    public static final String API_GET_NEWS_LIST = API_SERVER+"/bondwithme/index.php/api/news";
+    public static final String API_POST_NEWS = API_SERVER +"/bondwithme/index.php/api/news";
+    public static final String API_GET_NEWS_DETAIL = API_SERVER +"/bondwithme/index.php/api/news";
+    public static final String API_PUT_NEWS = API_SERVER +"/bondwithme/index.php/api/updateContent/%s";
     public static final String API_GOOD_JOB_MEMBER = API_SERVER + "/bondwithme/index.php/api/goodjob";//goodjob用户
     public static final String API_UPDATE_GOOD_JOB = API_SERVER + "/bondwithme/index.php/api/goodjob/%s";//消除好友的goodjob
 

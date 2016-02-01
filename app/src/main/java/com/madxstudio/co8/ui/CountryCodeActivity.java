@@ -2,6 +2,8 @@ package com.madxstudio.co8.ui;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -84,123 +86,117 @@ public class CountryCodeActivity extends BaseActivity {
     TestAdapter ataaa2;
     Boolean isSearch = false;
 
+    Handler handler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    ataaa = new TestAdapter();
+                    letterListView.setAdapter(ataaa);
+
+                    etSearch.addTextChangedListener(new TextWatcher() {
+
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                            if (TextUtils.isEmpty(etSearch.getText())) {
+                                isSearch = false;
+                                letterListView.setAdapter(ataaa);
+                            } else {
+                                List<NameValuePair> dataList = new ArrayList<NameValuePair>();
+
+                                for (int i = 0; i < dataArray.length; i++) {
+                                    if (dataArray[i].toLowerCase().startsWith(etSearch.getText().toString().toLowerCase())) {
+                                        NameValuePair pair = new BasicNameValuePair(String.valueOf(i), dataArray[i]);
+                                        dataList.add(pair);
+                                    }
+                                }
+
+                                ataaa2 = new TestAdapter(dataList);
+                                letterListView.setAdapter(ataaa2);
+                                isSearch = true;
+                            }
+
+
+                        }
+                    });
+
+                    letterListView.setOnItemClickListener(new OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                                long arg3) {
+
+                            if (isSearch) {
+                                if (ataaa2.getItemViewType(arg2) == 1) {
+                                    String text = ataaa2.list.get(arg2).getValue().trim();
+                                    String code = text.substring(text.lastIndexOf(" ") + 1, text.length());
+                                    String reg = "[a-zA-Z]";
+                                    boolean isCract = code.matches(reg);
+                                    if (!isCract) {
+                                        Intent intent = new Intent();
+                                        intent.putExtra(COUNTRY, text.substring(0, text.lastIndexOf(" ") + 1));
+                                        intent.putExtra(CODE, code);
+                                        setResult(RESULT_OK, intent);
+                                        finish();
+                                    }
+                                }
+                            } else {
+                                if (ataaa.getItemViewType(arg2) == 1) {
+                                    String text = ataaa.list.get(arg2).getValue().trim();
+                                    String code = text.substring(text.lastIndexOf(" ") + 1, text.length());
+                                    String reg = "[a-zA-Z]";
+                                    boolean isCract = code.matches(reg);
+                                    if (!isCract) {
+                                        Intent intent = new Intent();
+                                        intent.putExtra(COUNTRY, text.substring(0, text.lastIndexOf(" ") + 1));
+                                        intent.putExtra(CODE, code);
+                                        setResult(RESULT_OK, intent);
+                                        finish();
+                                    }
+                                }
+                            }
+
+                        }
+
+                    });
+
+                    break;
+            }
+        }
+    };
+
+    LetterListView letterListView;
+    EditText etSearch;
+    TestAdapter ataaa;
+
     @Override
     public void initView() {
 
+        letterListView = (LetterListView) findViewById(R.id.letterListView);
+        etSearch = (EditText) findViewById(R.id.et_search);
 
-        dataArray = getResources().getStringArray(R.array.country_code);
-        Arrays.sort(dataArray, new ComparatorPinYin());
-        final LetterListView letterListView = (LetterListView) findViewById(R.id.letterListView);
-
-        final EditText etSearch = (EditText) findViewById(R.id.et_search);
-
-        final TestAdapter ataaa = new TestAdapter();
-        letterListView.setAdapter(ataaa);
-
-        etSearch.addTextChangedListener(new TextWatcher() {
-
+        new Thread(new Runnable() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            public void run() {
+                dataArray = getResources().getStringArray(R.array.country_code);
+                Arrays.sort(dataArray, new ComparatorPinYin());
+                handler.sendEmptyMessage(1);
             }
+        }).start();
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                if (TextUtils.isEmpty(etSearch.getText())) {
-                    isSearch = false;
-                    letterListView.setAdapter(ataaa);
-                } else {
-                    List<NameValuePair> dataList = new ArrayList<NameValuePair>();
-
-                    for (int i = 0; i < dataArray.length; i++) {
-                        if (dataArray[i].toLowerCase().startsWith(etSearch.getText().toString().toLowerCase())) {
-                            NameValuePair pair = new BasicNameValuePair(String.valueOf(i), dataArray[i]);
-                            dataList.add(pair);
-                        }
-                    }
-
-                    ataaa2 = new TestAdapter(dataList);
-                    letterListView.setAdapter(ataaa2);
-                    isSearch = true;
-                }
-
-
-            }
-        });
-
-/*        //创建一个ArrayAdapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line,dataArray);
-        //获取AutoCompleteTextView对象
-        AutoCompleteTextView autoComplete = (AutoCompleteTextView) findViewById(R.id.et_search);
-        //将AutoCompleteTextView与ArrayAdapter进行绑定
-        autoComplete.setAdapter(adapter);
-        //设置AutoCompleteTextView输入1个字符就进行提示
-        autoComplete.setThreshold(1);
-
-        autoComplete.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String text = ((TextView)view).getText().toString();
-                String code = text.substring(text.lastIndexOf(" ")+1,text.length());
-                Log.i("", "2----"+text.substring(text.lastIndexOf(" ")+1,text.length()));
-                String reg = "[a-zA-Z]";
-                boolean isCract = code.matches(reg);
-                if(!isCract)
-                {
-                    Intent intent = new Intent();
-                    intent.putExtra("code", code);
-                    setResult(RESULT_OK,intent);
-                    finish();
-                }
-            }
-        });*/
-
-        letterListView.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                                    long arg3) {
-
-                if (isSearch) {
-                    if (ataaa2.getItemViewType(arg2) == 1) {
-                        String text = ataaa2.list.get(arg2).getValue().trim();
-                        String code = text.substring(text.lastIndexOf(" ") + 1, text.length());
-                        String reg = "[a-zA-Z]";
-                        boolean isCract = code.matches(reg);
-                        if (!isCract) {
-                            Intent intent = new Intent();
-                            intent.putExtra(COUNTRY,text.substring(0,text.lastIndexOf(" ") + 1));
-                            intent.putExtra(CODE, code);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    }
-                } else {
-                    if (ataaa.getItemViewType(arg2) == 1) {
-                        String text = ataaa.list.get(arg2).getValue().trim();
-                        String code = text.substring(text.lastIndexOf(" ") + 1, text.length());
-                        String reg = "[a-zA-Z]";
-                        boolean isCract = code.matches(reg);
-                        if (!isCract) {
-                            Intent intent = new Intent();
-                            intent.putExtra(COUNTRY, text.substring(0,text.lastIndexOf(" ") + 1));
-                            intent.putExtra(CODE, code);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    }
-                }
-
-            }
-
-        });
     }
 
     @Override

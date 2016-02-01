@@ -186,7 +186,17 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onResume() {
+        if (isNeedRefersh) {
+            isNeedRefersh = false;
+            Intent reintent = getIntent();
+            finish();
+            startActivity(reintent);
+        }
+
         super.onResume();
+//        if(currentTabEnum!=null){
+//            changeTitleColor();
+//        }
         int newJumpIndex = getIntent().getIntExtra(JUMP_INDEX, -1);
         /**新的跳转，以区分旧的，避免第一次启动重复set tab*/
         if (newJumpIndex != -1 && newJumpIndex != jumpIndex && currentTabEnum.ordinal() != newJumpIndex) {
@@ -198,10 +208,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 f.getRetainInstance();
             }
         }
-//        if(currentTabEnum!=null){
-//            changeTitleColor();
-//        }
-
 
         //提示异常反馈
         if (PreferencesUtil.getValue(this, Constant.APP_CRASH, false)) {
@@ -480,6 +486,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         if (getUser().isShow_tip()) {
             IS_INTERACTIVE_USE = true;
         }
+//        IS_INTERACTIVE_USE = false;
         LogUtil.d(TAG, "isFirstLogin=========" + isFirstLogin + "======IS_FIRST_LOGIN======" + IS_FIRST_LOGIN);
         if (isFirstLogin) {
             new Thread() {
@@ -599,7 +606,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         }
         if (App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_BIGDAY).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MISS).size() != 0
-                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_NEWS).size() != 0
+                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_OTHER).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MEMBER).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_GROUP).size() != 0
                 ) {
@@ -886,6 +893,11 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+//            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
+//                if (App.isBackground()) {
+//                    isNeedRefersh = true;
+//                }
+//            }
             if (intent.getAction().equals(ACTION_REFRESH_RED_POINT_4_FIMILY)) {
                 disableRedPoint(TabEnum.family, true);
             }
