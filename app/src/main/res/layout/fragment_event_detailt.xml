@@ -4,7 +4,7 @@
     android:orientation="vertical">
 
     <!--
-    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com.bondwithme.BondCorp/widget/SendCommentView.java
+    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com.madxstudio.co8/widget/SendCommentView.java
     -->
     <!-- 隐藏的选项 -->
     <RelativeLayout
@@ -130,7 +130,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.bondwithme.BondCorp.widget.MySwipeRefreshLayout
+            <com.madxstudio.co8.widget.MySwipeRefreshLayout
                 android:id="@+id/swipe_archive_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -142,7 +142,7 @@
                     android:layout_below="@+id/top_event"
                     android:scrollbars="vertical">
                 </android.support.v7.widget.RecyclerView>
-            </com.bondwithme.BondCorp.widget.MySwipeRefreshLayout>
+            </com.madxstudio.co8.widget.MySwipeRefreshLayout>
         </RelativeLayout>
 
         <!--<RelativeLayout-->
@@ -154,7 +154,7 @@
         <!--</RelativeLayout>-->
     </RelativeLayout>
 
-    <com.bondwithme.BondCorp.widget.SendComment
+    <com.madxstudio.co8.widget.SendComment
         android:id="@+id/send_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

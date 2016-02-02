@@ -9,10 +9,8 @@
     <string name="tracker_site_id" translatable="false">3</string>
     <!--map -->
 
-    <string name="baidu_maps_key"  templateMergeStrategy="preserve" translatable="false">wCMAL35nTjiyqcpkey7THYjI</string>
-    <string name="baidu_maps_key_debug" templateMergeStrategy="preserve" translatable="false">9VDuucmYXbhGjLnRzwXf1ic8</string>
-
-    <string name="jackie_baidu_maps_key_debug" templateMergeStrategy="preserve" translatable="false">enlyKkq5ewHyq4V9kDgGYOYA</string>
+    <string name="baidu_maps_key"  templateMergeStrategy="preserve" translatable="false">WZjbKazu9s809IUasAFpzGMG</string>
+    <string name="baidu_maps_key_debug" templateMergeStrategy="preserve" translatable="false">bHFc88qaS2V6lzS7mSiysctX</string>
 
 
     <!-- 坐标转换 -->
@@ -20,7 +18,7 @@
 
 
     <!-- push -->
-    <string name="jiguang_api_key" templateMergeStrategy="preserve" translatable="false">da06bcbcd8d9b31f7af4061a</string>
+    <string name="jiguang_api_key" templateMergeStrategy="preserve" translatable="false">9c6a096d679b7c0942a28b11</string>
 
-    <string name="facebook_app_id" translatable="false">1655238261362116</string>
+    <string name="facebook_app_id" translatable="false">754119724720994</string>
 </resources>

@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true" />
 
-    <com.bondwithme.BondCorp.widget.NumberProgressBar
+    <com.madxstudio.co8.widget.NumberProgressBar
         android:id="@+id/download_progress"
         style="@style/NumberProgressBar_Default"
         android:layout_width="match_parent"

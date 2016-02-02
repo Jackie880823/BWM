@@ -34,7 +34,7 @@
         </RelativeLayout>
 
 
-    <com.bondwithme.BondCorp.widget.DragListView
+    <com.madxstudio.co8.widget.DragListView
         android:id="@+id/dlv_sticker_sort"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

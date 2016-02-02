@@ -9,7 +9,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.bondwithme.BondCorp.widget.ViewPagerFixed
+        <com.madxstudio.co8.widget.ViewPagerFixed
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/view_paper"
             android:layout_width="match_parent"

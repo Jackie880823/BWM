@@ -11,7 +11,7 @@
 
     tools:context="com.example.christepherzhang.myapplication.CreateGroupDialogActivity">
 
-    <com.bondwithme.BondCorp.widget.CircularImageView
+    <com.madxstudio.co8.widget.CircularImageView
         android:layout_width="@dimen/_120dp"
         android:layout_height="@dimen/_120dp"
         android:id="@+id/creategroup_imageview"

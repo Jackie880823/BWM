@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bondwithme.BondCorp"
+    package="com.madxstudio.co8"
     android:installLocation="auto">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -49,10 +49,10 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <permission
-        android:name="com.bondwithme.BondCorp.permission.C2D_MESSAGE"
+        android:name="com.madxstudio.co8.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.bondwithme.BondCorp.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.madxstudio.co8.permission.C2D_MESSAGE" />
     <!-- if we wants to keep the device from sleeping. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -62,10 +62,10 @@
 
     <!-- jiguang push -->
     <permission
-        android:name="com.bondwithme.BondCorp.permission.JPUSH_MESSAGE"
+        android:name="com.madxstudio.co8.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.bondwithme.BondCorp.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="com.madxstudio.co8.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <!-- <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" /> -->
@@ -93,7 +93,7 @@
     <!-- &lt;!&ndash;<screen android:screenSize="xlarge" android:screenDensity="mdpi"/>&ndash;&gt; -->
     <!-- </compatible-screens> -->
     <application
-        android:name="com.bondwithme.BondCorp.App"
+        android:name="com.madxstudio.co8.App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -137,17 +137,17 @@
 
         <!-- gcm receiver -->
         <receiver
-            android:name="com.bondwithme.BondCorp.receiver_service.GcmBroadcastReceiver"
+            android:name="com.madxstudio.co8.receiver_service.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
-                <category android:name="com.bondwithme.BondCorp" />
+                <category android:name="com.madxstudio.co8" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name="com.bondwithme.BondCorp.receiver_service.GcmIntentService"
+            android:name="com.madxstudio.co8.receiver_service.GcmIntentService"
             android:enabled="true">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -155,7 +155,7 @@
         </service>
 
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.TransitionActivity"
+            android:name="com.madxstudio.co8.ui.start.TransitionActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -166,10 +166,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bondwithme.BondCorp.ui.introduction.IntroductionActivity"
+            android:name="com.madxstudio.co8.ui.introduction.IntroductionActivity"
             android:configChanges="keyboardHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.StartActivity"
+            android:name="com.madxstudio.co8.ui.start.StartActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
@@ -177,45 +177,45 @@
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
         <!-- android:launchMode="singleInstance"  此Activity的单例模式慎，会与其它Activity完全独立使用不同的上下文资源，有导致资源、数据无法传递的危险 -->
         <activity
-            android:name="com.bondwithme.BondCorp.ui.MainActivity"
+            android:name="com.madxstudio.co8.ui.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.EventDetailActivity"
+            android:name="com.madxstudio.co8.ui.EventDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.EventNewActivity"
+            android:name="com.madxstudio.co8.ui.EventNewActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.wall.DiaryInformationActivity"
+            android:name="com.madxstudio.co8.ui.wall.DiaryInformationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.wall.DiaryCommentActivity"
+            android:name="com.madxstudio.co8.ui.wall.DiaryCommentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.wall.EditCommentActivity"
+            android:name="com.madxstudio.co8.ui.wall.EditCommentActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.wall.FeelingActivity"
+            android:name="com.madxstudio.co8.ui.wall.FeelingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.wall.NewDiaryActivity"
+            android:name="com.madxstudio.co8.ui.wall.NewDiaryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.wall.WallMembersOrGroupsActivity"
+            android:name="com.madxstudio.co8.ui.wall.WallMembersOrGroupsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.share.SelectPhotosActivity"
+            android:name="com.madxstudio.co8.ui.share.SelectPhotosActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -227,11 +227,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bondwithme.BondCorp.ui.Map4GoogleActivity"
+            android:name="com.madxstudio.co8.ui.Map4GoogleActivity"
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.Map4BaiduActivity"
+            android:name="com.madxstudio.co8.ui.Map4BaiduActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
@@ -242,226 +242,226 @@
         <!-- android:windowSoftInputMode="adjustResize" -->
         <!-- /> -->
         <activity
-            android:name="com.bondwithme.BondCorp.ui.InvitedStatusActivity"
+            android:name="com.madxstudio.co8.ui.InvitedStatusActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.EventEditActivity"
+            android:name="com.madxstudio.co8.ui.EventEditActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.InvitedEditActivity"
+            android:name="com.madxstudio.co8.ui.InvitedEditActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.ViewOriginalPicesActivity"
+            android:name="com.madxstudio.co8.ui.ViewOriginalPicesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:noHistory="true"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.BondAlertActivity"
+            android:name="com.madxstudio.co8.ui.BondAlertActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.ContactUsActivity"
+            android:name="com.madxstudio.co8.ui.ContactUsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.AboutActivity"
+            android:name="com.madxstudio.co8.ui.more.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.AboutUsActivity"
+            android:name="com.madxstudio.co8.ui.AboutUsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.SettingActivity"
+            android:name="com.madxstudio.co8.ui.more.SettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.RewardsActivity"
+            android:name="com.madxstudio.co8.ui.more.RewardsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.ViewLargePicActivity"
+            android:name="com.madxstudio.co8.ui.more.ViewLargePicActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <!-- More StickerStore相关的Activity -->
 
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.sticker.StickerStoreActivity"
+            android:name="com.madxstudio.co8.ui.more.sticker.StickerStoreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.sticker.MyStickerActivity"
+            android:name="com.madxstudio.co8.ui.more.sticker.MyStickerActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.sticker.StickerDetailActivity"
+            android:name="com.madxstudio.co8.ui.more.sticker.StickerDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.sticker.StickerSortActivity"
+            android:name="com.madxstudio.co8.ui.more.sticker.StickerSortActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.TellAFriendsActivity"
+            android:name="com.madxstudio.co8.ui.TellAFriendsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.MissListActivity"
+            android:name="com.madxstudio.co8.ui.MissListActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.NewsActivity"
+            android:name="com.madxstudio.co8.ui.NewsActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.RecommendActivity"
+            android:name="com.madxstudio.co8.ui.RecommendActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.AlertEventActivity"
+            android:name="com.madxstudio.co8.ui.AlertEventActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.AlertWallActivity"
+            android:name="com.madxstudio.co8.ui.AlertWallActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.NewsInfoActivity"
+            android:name="com.madxstudio.co8.ui.NewsInfoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.AddMemberWorkFlow"
+            android:name="com.madxstudio.co8.ui.AddMemberWorkFlow"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.BondAlert.BigDayActivity"
+            android:name="com.madxstudio.co8.ui.more.BondAlert.BigDayActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.MemberActivity"
+            android:name="com.madxstudio.co8.ui.MemberActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.AlertGroupActivity"
+            android:name="com.madxstudio.co8.ui.AlertGroupActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
 
         <!-- christopher -->
 
         <activity
-            android:name="com.bondwithme.BondCorp.ui.CreateGroupActivity"
+            android:name="com.madxstudio.co8.ui.CreateGroupActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.CreateGroupDialogActivity"
+            android:name="com.madxstudio.co8.ui.CreateGroupDialogActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.GroupSettingActivity"
+            android:name="com.madxstudio.co8.ui.GroupSettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.GroupNameSettingActivity"
+            android:name="com.madxstudio.co8.ui.GroupNameSettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.CountryCodeActivity"
+            android:name="com.madxstudio.co8.ui.CountryCodeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.PersonalPictureActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.FamilyProfileActivity"
+            android:name="com.madxstudio.co8.ui.FamilyProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.MyViewProfileActivity"
+            android:name="com.madxstudio.co8.ui.MyViewProfileActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.MeActivity"
+            android:name="com.madxstudio.co8.ui.MeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.FamilyViewProfileActivity"
+            android:name="com.madxstudio.co8.ui.FamilyViewProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.AddNewMembersActivity"
+            android:name="com.madxstudio.co8.ui.AddNewMembersActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.ViaContactMainActivity"
+            android:name="com.madxstudio.co8.ui.ViaContactMainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.ViaIdNameActivity"
+            android:name="com.madxstudio.co8.ui.ViaIdNameActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.ProfileResetPasswordActivity"
+            android:name="com.madxstudio.co8.ui.ProfileResetPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.RelationshipActivity"
+            android:name="com.madxstudio.co8.ui.RelationshipActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.TermsActivity"
+            android:name="com.madxstudio.co8.ui.TermsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.AlbumGalleryActivity"
+            android:name="com.madxstudio.co8.ui.AlbumGalleryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.PathRelationshipActivity"
+            android:name="com.madxstudio.co8.ui.PathRelationshipActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.MessageChatActivity"
+            android:name="com.madxstudio.co8.ui.MessageChatActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.family.FamilyActivity"
+            android:name="com.madxstudio.co8.ui.family.FamilyActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.WriteNewsActivity"
+            android:name="com.madxstudio.co8.ui.WriteNewsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.ArchiveActivity"
+            android:name="com.madxstudio.co8.ui.more.ArchiveActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.Archive.GroupListActivity"
+            android:name="com.madxstudio.co8.ui.more.Archive.GroupListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.Archive.PrivateListActivity"
+            android:name="com.madxstudio.co8.ui.more.Archive.PrivateListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.Archive.ArchiveGroupChatActivity"
+            android:name="com.madxstudio.co8.ui.more.Archive.ArchiveGroupChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.Archive.ArchivePrivateChatActivity"
+            android:name="com.madxstudio.co8.ui.more.Archive.ArchivePrivateChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.Archive.ArchiveGroupCommentActivity"
+            android:name="com.madxstudio.co8.ui.more.Archive.ArchiveGroupCommentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.Archive.ArchivePrivateCommentActivity"
+            android:name="com.madxstudio.co8.ui.more.Archive.ArchivePrivateCommentActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.bondwithme.BondCorp.ui.more.MoreSettingActivity" />
+        <activity android:name="com.madxstudio.co8.ui.more.MoreSettingActivity" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.AutoAcceptActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.bondwithme.BondCorp.ui.more.BirthdayAlertActivity"
+            android:name="com.madxstudio.co8.ui.more.AutoAcceptActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.GroupPrivacyActivity"
+            android:name="com.madxstudio.co8.ui.more.BirthdayAlertActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.InviteMemberActivity"
+            android:name="com.madxstudio.co8.ui.more.GroupPrivacyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.madxstudio.co8.ui.InviteMemberActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.AlbumActivity"
+            android:name="com.madxstudio.co8.ui.AlbumActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.AlbumDetailActivity"
+            android:name="com.madxstudio.co8.ui.AlbumDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.ViewPDFActivity"
+            android:name="com.madxstudio.co8.ui.ViewPDFActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
@@ -475,7 +475,7 @@
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.bondwithme.BondCorp" />
+                <category android:name="com.madxstudio.co8" />
             </intent-filter>
         </activity>
         <!-- Required  SDK核心功能 -->
@@ -504,7 +504,7 @@
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
                 <!-- Required  显示通知栏 -->
-                <category android:name="com.bondwithme.BondCorp" />
+                <category android:name="com.madxstudio.co8" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -523,7 +523,7 @@
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
         <!-- 极光自定义的广播接收器 -->
         <receiver
-            android:name="com.bondwithme.BondCorp.receiver_service.JiGuangBroadcastReceiver"
+            android:name="com.madxstudio.co8.receiver_service.JiGuangBroadcastReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION" />
@@ -539,7 +539,7 @@
                 <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="com.bondwithme.BondCorp" />
+                <category android:name="com.madxstudio.co8" />
             </intent-filter>
         </receiver>
 
@@ -555,7 +555,7 @@
 
 
         <!-- 全局网络状态监听广播接收器 -->
-        <receiver android:name="com.bondwithme.BondCorp.receiver_service.NetWorkStateReceiver">
+        <receiver android:name="com.madxstudio.co8.receiver_service.NetWorkStateReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED"> -->
@@ -563,34 +563,34 @@
         </receiver>
 
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.LogInUsernameActivity"
+            android:name="com.madxstudio.co8.ui.start.LogInUsernameActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.VerificationActivity"
+            android:name="com.madxstudio.co8.ui.start.VerificationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.DetailsActivity"
+            android:name="com.madxstudio.co8.ui.start.DetailsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.SignUpUsernameActivity"
+            android:name="com.madxstudio.co8.ui.start.SignUpUsernameActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.ForgotPasswordActivity"
+            android:name="com.madxstudio.co8.ui.start.ForgotPasswordActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.SignUpSuccessfulActivity"
+            android:name="com.madxstudio.co8.ui.start.SignUpSuccessfulActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.SelectAccountActivity"
+            android:name="com.madxstudio.co8.ui.start.SelectAccountActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.ResetPasswordActivity"
+            android:name="com.madxstudio.co8.ui.start.ResetPasswordActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.ResetPasswordSuccessfulActivity"
+            android:name="com.madxstudio.co8.ui.start.ResetPasswordSuccessfulActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
@@ -603,38 +603,38 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.start.ThirdPartyVerifyPhoneActivity"
+            android:name="com.madxstudio.co8.ui.start.ThirdPartyVerifyPhoneActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.PickAndCropPictureActivity"
+            android:name="com.madxstudio.co8.ui.PickAndCropPictureActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.CrashActivity"
+            android:name="com.madxstudio.co8.ui.CrashActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:noHistory="true" />
-        <activity android:name="com.bondwithme.BondCorp.ui.share.PreviewVideoActivity">
+        <activity android:name="com.madxstudio.co8.ui.share.PreviewVideoActivity">
             <intent-filter>
-                <action android:name="com.bondwithme.BondCorp.ui.PreviewVideoActivity" />
+                <action android:name="com.madxstudio.co8.ui.PreviewVideoActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.bondwithme.BondCorp.ui.family.FamilyTreeActivity"
+            android:name="com.madxstudio.co8.ui.family.FamilyTreeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.share.RecorderVideoActivity"
+            android:name="com.madxstudio.co8.ui.share.RecorderVideoActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.bondwithme.BondCorp.RECORDER_VIDEO" />
+                <action android:name="com.madxstudio.co8.RECORDER_VIDEO" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <service android:name="com.bondwithme.BondCorp.receiver_service.ReportIntentService">
+        <service android:name="com.madxstudio.co8.receiver_service.ReportIntentService">
             <intent-filter>
                 <action android:name="com.service.reportService" />
             </intent-filter>
@@ -667,47 +667,47 @@
         </receiver>
 
         <activity
-            android:name="com.bondwithme.BondCorp.ui.wall.WallViewPicActivity"
+            android:name="com.madxstudio.co8.ui.wall.WallViewPicActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.wall.WallEditCaptionActivity"
+            android:name="com.madxstudio.co8.ui.wall.WallEditCaptionActivity"
             android:theme="@android:style/Theme.Translucent"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.ViewUrlPicActivity"
+            android:name="com.madxstudio.co8.ui.more.ViewUrlPicActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.add.AddMembersActivity"
+            android:name="com.madxstudio.co8.ui.add.AddMembersActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.add.AddContactMembersActivity"
+            android:name="com.madxstudio.co8.ui.add.AddContactMembersActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.bondwithme.BondCorp.ui.add.AddInviteMembersActivity"
+            android:name="com.madxstudio.co8.ui.add.AddInviteMembersActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name="com.bondwithme.BondCorp.ui.more.ViewQRCodeActivity"
+            android:name="com.madxstudio.co8.ui.more.ViewQRCodeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.bondwithme.BondCorp.zxing.activity.CaptureActivity"
+            android:name="com.madxstudio.co8.zxing.activity.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden"></activity>
 
-        <receiver android:name="com.bondwithme.BondCorp.receiver_service.AlarmReceiver">
+        <receiver android:name="com.madxstudio.co8.receiver_service.AlarmReceiver">
             <intent-filter>
-                <action android:name="com.bondwithme.BondCorp.android.five_minute_action" />
-                <action android:name="com.bondwithme.BondCorp.android.two_day_action" />
-                <action android:name="com.bondwithme.BondCorp.android.three_day_action" />
-                <action android:name="com.bondwithme.BondCorp.android.five_day_action" />
+                <action android:name="com.madxstudio.co8.android.five_minute_action" />
+                <action android:name="com.madxstudio.co8.android.two_day_action" />
+                <action android:name="com.madxstudio.co8.android.three_day_action" />
+                <action android:name="com.madxstudio.co8.android.five_day_action" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

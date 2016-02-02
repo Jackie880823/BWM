@@ -5,31 +5,31 @@
     android:gravity="center"
     android:orientation="horizontal">
 
-    <com.bondwithme.BondCorp.widget.CradleBall
+    <com.madxstudio.co8.widget.CradleBall
         android:id="@+id/ball_one"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_gravity="center" />
 
-    <com.bondwithme.BondCorp.widget.CradleBall
+    <com.madxstudio.co8.widget.CradleBall
         android:id="@+id/ball_two"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_gravity="center" />
 
-    <com.bondwithme.BondCorp.widget.CradleBall
+    <com.madxstudio.co8.widget.CradleBall
         android:id="@+id/ball_three"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_gravity="center" />
 
-    <com.bondwithme.BondCorp.widget.CradleBall
+    <com.madxstudio.co8.widget.CradleBall
         android:id="@+id/ball_four"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_gravity="center" />
 
-    <com.bondwithme.BondCorp.widget.CradleBall
+    <com.madxstudio.co8.widget.CradleBall
         android:id="@+id/ball_five"
         android:layout_width="15dp"
         android:layout_height="15dp"

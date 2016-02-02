@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center">
 
-    <com.bondwithme.BondCorp.widget.PickerView
+    <com.madxstudio.co8.widget.PickerView
         android:id="@+id/select_year_picker_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_200dp"

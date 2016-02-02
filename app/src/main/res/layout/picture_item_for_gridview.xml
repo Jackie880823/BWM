@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.bondwithme.BondCorp.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.madxstudio.co8.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -20,7 +20,7 @@
         android:scaleType="centerInside"
         android:src="@drawable/x_delete_icon" />
 
-</com.bondwithme.BondCorp.widget.SquareRelativeLayout>
+</com.madxstudio.co8.widget.SquareRelativeLayout>
 
 
 
