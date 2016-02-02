@@ -220,6 +220,11 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         getData(0);
         getDataGroup(0);
     }
@@ -341,6 +346,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                 intent.putExtra("type", 1);
                 intent.putExtra("groupId", messageGroupAdapter.getmGroupList().get(arg2).getGroup_id());
                 intent.putExtra("titleName", messageGroupAdapter.getmGroupList().get(arg2).getGroup_name());
+                intent.putExtra(Constant.GROUP_DEFAULT, messageGroupAdapter.getmGroupList().get(arg2).getGroup_default());
                 arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);//服务器会消除。本地直接直接消除。
                 messageGroupAdapter.getmGroupList().get(arg2).setUnread("0");
                 startActivity(intent);

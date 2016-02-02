@@ -261,8 +261,6 @@ public class AddMembersActivity extends BaseActivity{
                         intent.putExtra("member_id", memberId);
                         startActivity(intent);
                     }
-
-
                 }
             }
 
@@ -300,9 +298,8 @@ public class AddMembersActivity extends BaseActivity{
             public void onResult(String string) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-                data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {
-                }.getType());
-
+//                data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {
+//                }.getType());
                 adapter = new AddMembersAdapter(AddMembersActivity.this, data);
                 rv.setAdapter(adapter);
 

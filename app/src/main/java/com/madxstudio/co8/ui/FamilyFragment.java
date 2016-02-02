@@ -746,6 +746,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
                 intent.putExtra("type", 1);
                 intent.putExtra("groupId", groupAdapter.getGroupList().get(arg2).getGroup_id());
                 intent.putExtra("titleName", groupAdapter.getGroupList().get(arg2).getGroup_name());
+                intent.putExtra(Constant.GROUP_DEFAULT, groupAdapter.getGroupList().get(arg2).getGroup_default());
                 startActivityForResult(intent, 1);
 //                startActivityForResult(intent,1);
             }
@@ -789,9 +790,8 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
     }
 
     @Override
-    public void onStart() {
-        Log.i("onStart===", "onStart");
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         getData();
     }
 

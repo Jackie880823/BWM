@@ -73,6 +73,7 @@ public class GroupSettingActivity extends BaseActivity {
     private String groupId;//当前群Id
     private String groupName;//当前群名字
     private String groupOwnerId;
+    private String groupDefault;
     private Gson gson;
     private final static int GET_MEMBERS = 2;
     private final static int SET_GROUP_PIC_NAME = 3;
@@ -84,7 +85,7 @@ public class GroupSettingActivity extends BaseActivity {
     private String groupData = null;
     private List<FamilyGroupEntity> familyGroupEntityList;
     private int type;//0  其他界面打开，1是Archive打开
-
+    private boolean isGroupDefault;
     String headUrl;
     BitmapTools mBitmapTools;
 
@@ -97,6 +98,7 @@ public class GroupSettingActivity extends BaseActivity {
     protected void initBottomBar() {
 
     }
+
     //    @Override
 //    public void finish() {
 //        Intent intent = new Intent();
@@ -111,7 +113,6 @@ public class GroupSettingActivity extends BaseActivity {
         setResult(RESULT_CANCELED, intent);
         finish();
     }
-
 
 
     @Override
@@ -148,6 +149,10 @@ public class GroupSettingActivity extends BaseActivity {
         groupId = getIntent().getStringExtra("groupId");
         groupName = getIntent().getStringExtra("groupName");
         type = getIntent().getIntExtra("groupType", 0);
+        groupDefault = getIntent().getStringExtra(Constant.GROUP_DEFAULT);
+        if ("1".equalsIgnoreCase(groupDefault)) {
+            isGroupDefault = true;
+        }
         llSetting = getViewById(R.id.ll_setting);
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_group_name);
@@ -162,7 +167,10 @@ public class GroupSettingActivity extends BaseActivity {
         groupEntity.setGroup_name(groupName);
         familyGroupEntityList.add(groupEntity);
         gson = new Gson();
-
+        getIsGroupDefault();
+        if (isGroupDefault) {
+            btnLeaveGroup.setVisibility(View.GONE);
+        }
         mBitmapTools = BitmapTools.getInstance(mContext);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
         VolleyUtil.initNetworkImageView(this, cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
@@ -200,7 +208,7 @@ public class GroupSettingActivity extends BaseActivity {
         llSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isAdmin) {
+                if (isGroupDefault || isAdmin) {
                     Intent intent = new Intent(GroupSettingActivity.this, GroupNameSettingActivity.class);
                     intent.putExtra("groupId", groupId);
                     intent.putExtra("groupName", tvName.getText().toString());
@@ -215,7 +223,7 @@ public class GroupSettingActivity extends BaseActivity {
         lvMembers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(type == 1){
+                if (type == 1) {
                     return;
                 }
                 if (isAdmin) {
@@ -225,9 +233,17 @@ public class GroupSettingActivity extends BaseActivity {
                         //群主点击群成员
                         //判断AddedFlag值
                         if ("0".equals(userList.get(position).getAdded_flag())) {
-                            showAdminDialog0(position);
+                            if (isGroupDefault) {
+                                showNonAdminDialog0(position);
+                            } else {
+                                showAdminDialog0(position);
+                            }
                         } else if ("1".equals(userList.get(position).getAdded_flag())) {
-                            showAdminDialog1(position);
+                            if (isGroupDefault) {
+                                showNonAdminDialog1(position);
+                            } else {
+                                showAdminDialog1(position);
+                            }
 //                            showNoFriendDialog();
                         }
 
@@ -274,7 +290,7 @@ public class GroupSettingActivity extends BaseActivity {
             }
         });
 
-        if(type == 1){
+        if (type == 1) {
             btnLeaveGroup.setVisibility(View.GONE);
         }
     }
@@ -329,6 +345,52 @@ public class GroupSettingActivity extends BaseActivity {
 
     }
 
+    private void getIsGroupDefault() {
+        String url = String.format(Constant.API_GET_GROUP_DEFAULT, groupId);
+        new HttpTools(GroupSettingActivity.this).get(url, null, Tag, new HttpCallback() {
+
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String string) {
+                try {//[{"group_name":"MAD","group_owner_id":"31","group_individual":"0","group_type":"0","group_photo":"","group_default":"1"}]
+                    JSONObject json = new JSONObject(string);
+                    String group_default = json.optString("group_default");
+                    if ("1".equalsIgnoreCase(group_default)) {
+                        isGroupDefault = true;
+                        btnLeaveGroup.setVisibility(View.GONE);
+                        rightButton.setVisibility(View.INVISIBLE);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
     public void getMembersList() {
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("group_id", groupId);
@@ -338,7 +400,7 @@ public class GroupSettingActivity extends BaseActivity {
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_GROUP_MEMBERS, params);
 
-        new HttpTools(GroupSettingActivity.this).get(url, null,Tag, new HttpCallback() {
+        new HttpTools(GroupSettingActivity.this).get(url, null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -430,25 +492,33 @@ public class GroupSettingActivity extends BaseActivity {
 //            mBitmapTools = new BitmapTools(mContext);
 //            headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id());
 //            mBitmapTools.display(viewHolder.cniMain,headUrl,R.drawable.network_image_default, R.drawable.network_image_default);
-            BitmapTools.getInstance(mContext).display( viewHolder.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+            BitmapTools.getInstance(mContext).display(viewHolder.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
             if (userEntity.getUser_id().equals(userEntity.getGroup_owner_id())) {
                 viewHolder.tvName.setText(userEntity.getUser_given_name());
-                viewHolder.tvAdmin.setVisibility(View.VISIBLE);
+                if (isGroupDefault) {
+                    viewHolder.tvAdmin.setVisibility(View.GONE);
+                } else {
+                    viewHolder.tvAdmin.setVisibility(View.VISIBLE);
+                }
                 viewHolder.ivWaitting.setVisibility(View.GONE);
                 groupOwnerId = userEntity.getGroup_owner_id();
                 if (MainActivity.getUser().getUser_id().equals(userEntity.getGroup_owner_id()) && type == 0) {
                     isAdmin = true;
-                    rightButton.setVisibility(View.VISIBLE);
+                    if (isGroupDefault) {
+                        rightButton.setVisibility(View.INVISIBLE);
+                    } else {
+                        rightButton.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     rightButton.setVisibility(View.INVISIBLE);
                 }
             } else {
                 viewHolder.tvName.setText(userEntity.getUser_given_name());
             }
-            if(type ==1 ){
+            if (type == 1) {
                 viewHolder.ivWaitting.setVisibility(View.INVISIBLE);
-            }else {
+            } else {
                 if ("1".equals(userEntity.getJoin_group())) {
                     viewHolder.ivWaitting.setImageResource(R.drawable.existing_user);
                 } else {
@@ -464,7 +534,6 @@ public class GroupSettingActivity extends BaseActivity {
             CircularNetworkImage cniMain;
             TextView tvName;
             TextView tvAdmin;
-
             ImageView ivWaitting;
         }
     }
@@ -548,8 +617,8 @@ public class GroupSettingActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent1 = new Intent(GroupSettingActivity.this, FamilyProfileActivity.class);
                 intent1.putExtra(UserEntity.EXTRA_MEMBER_ID, userList.get(position).getUser_id());
-                intent1.putExtra(UserEntity.EXTRA_GROUP_ID,userList.get(position).getGroup_id());
-                intent1.putExtra(UserEntity.EXTRA_GROUP_NAME,userList.get(position).getUser_given_name());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_ID, userList.get(position).getGroup_id());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_NAME, userList.get(position).getUser_given_name());
                 startActivity(intent1);
                 showAdminDialog1.dismiss();
             }
@@ -602,7 +671,7 @@ public class GroupSettingActivity extends BaseActivity {
                 final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                 requestInfo.url = String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId);
                 requestInfo.jsonParam = jsonParamsString;
-                new HttpTools(GroupSettingActivity.this).put(requestInfo,Tag, new HttpCallback() {
+                new HttpTools(GroupSettingActivity.this).put(requestInfo, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -674,8 +743,8 @@ public class GroupSettingActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent1 = new Intent(GroupSettingActivity.this, FamilyProfileActivity.class);
                 intent1.putExtra(UserEntity.EXTRA_MEMBER_ID, userList.get(position).getUser_id());
-                intent1.putExtra(UserEntity.EXTRA_GROUP_ID,userList.get(position).getGroup_id());
-                intent1.putExtra(UserEntity.EXTRA_GROUP_NAME,userList.get(position).getUser_given_name());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_ID, userList.get(position).getGroup_id());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_NAME, userList.get(position).getUser_given_name());
                 startActivity(intent1);
                 showNonAdminDialog1.dismiss();
             }
@@ -750,7 +819,7 @@ public class GroupSettingActivity extends BaseActivity {
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("group_list", groupIdList);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
-        new HttpTools(mContext).get(url, null,Tag, new HttpCallback() {
+        new HttpTools(mContext).get(url, null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -847,8 +916,8 @@ public class GroupSettingActivity extends BaseActivity {
                     String newGroupName = data.getStringExtra("groupName");
                     String groupid = data.getStringExtra("groupid");
                     Intent intent = new Intent();
-                    intent.putExtra("groupName",newGroupName);
-                    intent.putExtra("groupid",groupid);
+                    intent.putExtra("groupName", newGroupName);
+                    intent.putExtra("groupid", groupid);
                     setResult(RESULT_OK, intent);
                     finish();
 //                    tvName.setText(data.getStringExtra("groupName"));
@@ -883,7 +952,7 @@ public class GroupSettingActivity extends BaseActivity {
         params.put("query_on", "addGroupMember");
         params.put("group_members", strGroupMembers);
 
-        new HttpTools(GroupSettingActivity.this).post(Constant.API_GROUP_ADD_MEMBERS, params,Tag, new HttpCallback() {
+        new HttpTools(GroupSettingActivity.this).post(Constant.API_GROUP_ADD_MEMBERS, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -956,7 +1025,7 @@ public class GroupSettingActivity extends BaseActivity {
                 requestInfo.url = String.format(Constant.API_LEAVE_GROUP, groupId);
                 requestInfo.jsonParam = jsonParamsString;
 
-                new HttpTools(GroupSettingActivity.this).put(requestInfo,Tag, new HttpCallback() {
+                new HttpTools(GroupSettingActivity.this).put(requestInfo, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -1024,7 +1093,7 @@ public class GroupSettingActivity extends BaseActivity {
     public void getMemberType(final int position) {
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = String.format(Constant.API_GET_MEMBER_TYPE, MainActivity.getUser().getUser_id(), userList.get(position).getUser_id());
-        new HttpTools(this).get(requestInfo,Tag, new HttpCallback() {
+        new HttpTools(this).get(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1090,7 +1159,7 @@ public class GroupSettingActivity extends BaseActivity {
         params.put("action_type", response_type);
         params.put("user_relationship_name", response_relationship);
 
-        new HttpTools(this).post(Constant.API_SET_RELATIONSHIP, params,Tag, new HttpCallback() {
+        new HttpTools(this).post(Constant.API_SET_RELATIONSHIP, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 

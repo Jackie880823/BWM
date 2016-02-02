@@ -114,6 +114,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     String groups;
     private String Spmemeber_date;
     private String users_date;
+    private Long endMeetingTime;
 
     private static final int MAX_COUNT = 300;
 
@@ -376,6 +377,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         if (!TextUtils.isEmpty(date_desc.getText().toString().trim())) {
             return true;
         }
+        if (!TextUtils.isEmpty(date_end_desc.getText())) {
+            return true;
+        }
         if (users_date != null) {
             String userDate = users_date.trim().replaceAll("\\[([^\\]]*)\\]", "$1");
             if (!TextUtils.isEmpty(userDate.trim())) {
@@ -403,6 +407,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         content = PreferencesUtil.getValue(getParentActivity(), "content", "").toString();
         location = PreferencesUtil.getValue(getParentActivity(), "location", "").toString();
         date = PreferencesUtil.getValue(getParentActivity().getApplicationContext(), "date", 0L);
+        endMeetingTime = PreferencesUtil.getValue(getParentActivity().getApplicationContext(), "endMeetingTime", 0L);
         stlatitude = PreferencesUtil.getValue(getParentActivity(), "latitude", "-1000");
         stlongitude = PreferencesUtil.getValue(getParentActivity(), "longitude", "-1000");
         latitude = Double.valueOf(stlatitude).doubleValue();
@@ -515,6 +520,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("text_description", event_desc.getText().toString());
             params.put("user_id", MainActivity.getUser().getUser_id());
             params.put("event_member", gson.toJson(setGetMembersIds(userList)));
+            params.put("group_end_date", mEevent.getGroup_end_date());
             requestInfo.putAllParams(params);
 
             new HttpTools(getActivity()).post(requestInfo, Tag, new HttpCallback() {
@@ -587,6 +593,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
 
         }
+        if (endMeetingTime != null && endMeetingTime != 0L) {
+            date_end_desc.setText(MyDateUtils.getEventLocalDateStringFromLocal(getParentActivity(), endMeetingTime));
+            mEevent.setGroup_end_date(MyDateUtils.getUTCDateString4DefaultFromLocal(endMeetingTime));
+        }
         if (!TextUtils.isEmpty(members)) {
             members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
             }.getType());
@@ -612,6 +622,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         PreferencesUtil.saveValue(getParentActivity(), "content", "");
         PreferencesUtil.saveValue(getParentActivity(), "location", "");
         PreferencesUtil.saveValue(getParentActivity(), "date", 0L);
+        PreferencesUtil.saveValue(getParentActivity(), "endMeetingTime", 0L);
         PreferencesUtil.saveValue(getParentActivity(), "members_data", "");
         PreferencesUtil.saveValue(getParentActivity(), "Groups_date", "");
         PreferencesUtil.saveValue(getParentActivity(), "users_date", "");
@@ -721,11 +732,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     }
                     if (!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "content", event_desc.getText().toString());
-
                     }
                     if (!TextUtils.isEmpty(position_name.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "location", position_name.getText().toString());
-
                     }
                     if (userList.size() > 0) {
                         Gson gson = new Gson();
@@ -758,18 +767,17 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         //        MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis())
         //        Long ltime =  (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
         //如果有时间缓存
-        if (mEevent.getGroup_event_date() != null) {
-            Timestamp ts = Timestamp.valueOf(mEevent.getGroup_event_date());
+        if (mEevent.getGroup_end_date() != null) {
+            Timestamp ts = Timestamp.valueOf(mEevent.getGroup_end_date());
             calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
             datePicker.setCalendar(calendar);
             timePicker.setCalendar(calendar);
-        } else if (date != null && date != 0L) {
-
-            Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
+        } else if (endMeetingTime != null && endMeetingTime != 0L) {
+            Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(endMeetingTime));
             calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
             datePicker.setCalendar(calendar);
             timePicker.setCalendar(calendar);
-            mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
+            mEevent.setGroup_end_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
         }
         //日历dialog
         pickEndDateTimeDialog = new MyDialog(getParentActivity(), getString(R.string.title_pick_date_time), dateTimePicker);
@@ -793,18 +801,18 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 }
                 //把时间储存到缓存
                 if (mCalendar != null) {
-                    PreferencesUtil.saveValue(getParentActivity(), "date", mCalendar.getTimeInMillis());
+                    PreferencesUtil.saveValue(getParentActivity(), "endMeetingTime", mCalendar.getTimeInMillis());
                 }
                 //将日历的时间转化成字符串
-                long endMeetingTime = mCalendar.getTimeInMillis();
+                endMeetingTime = mCalendar.getTimeInMillis();
                 String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
-                mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
                 //将日历的时间显示出来
                 if (endMeetingTime - startMeetingTime <= 0) {
                     MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
                 } else {
                     pickEndDateTimeDialog.dismiss();
                     date_end_desc.setText(dateDesc);
+                    mEevent.setGroup_end_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
                 }
             }
         });
@@ -835,7 +843,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             datePicker.setCalendar(calendar);
             timePicker.setCalendar(calendar);
         } else if (date != null && date != 0L) {
-
             Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
             calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
             datePicker.setCalendar(calendar);
@@ -981,7 +988,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             MessageUtil.showMessage(getParentActivity(), R.string.alert_text_date_null);
             return false;
         }
-
         if (mCalendar == null) {
             if (MyDateUtils.isBeforeDate(MyDateUtils.dateString2Timestamp(MyDateUtils.getLocalDateString4DefaultFromUTC(mEevent.getGroup_event_date())).getTime())) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);

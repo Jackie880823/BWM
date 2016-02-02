@@ -38,8 +38,10 @@ import com.madxstudio.co8.widget.DatePicker;
 import com.madxstudio.co8.widget.MyDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.material.widget.Dialog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -214,7 +216,7 @@ public class MyViewProfileActivity extends BaseActivity {
             if (view instanceof EditText) {
                 view.setFocusable(isEit);
                 view.setFocusableInTouchMode(isEit);
-                if (isPreloadedUser && isEit) {
+                if (!isPreloadedUser && isEit) {
                     if (view.getId() == R.id.et_position || view.getId() == R.id.et_department
                             || view.getId() == R.id.et_internal_phone) {
                         view.setFocusable(false);
@@ -305,6 +307,17 @@ public class MyViewProfileActivity extends BaseActivity {
         if (!etRegion.getText().toString().trim().equals(userEntity.getUser_location_name())) {
             return true;
         }
+        if (isPreloadedUser) {
+            if (!et_department.getText().toString().trim().equals(userEntity.getDepartment())) {
+                return true;
+            }
+            if (!et_position.getText().toString().trim().equals(userEntity.getPosition())) {
+                return true;
+            }
+            if (!et_internal_phone.getText().toString().trim().equals(userEntity.getInt_phone_ext())) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -323,7 +336,7 @@ public class MyViewProfileActivity extends BaseActivity {
     @Override
     public void initView() {
         userEntity = MainActivity.getUser();
-        if (!TextUtils.isEmpty(userEntity.getOrganisation())) {
+        if (TextUtils.isEmpty(userEntity.getOrganisation())) {
             isPreloadedUser = true;
         }
 //        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
@@ -537,10 +550,13 @@ public class MyViewProfileActivity extends BaseActivity {
         if (isPreloadedUser) {
             jsonParams.put("department", et_position.getText().toString());
             jsonParams.put("position", et_department.getText().toString());
-//            jsonParams.put("int_phone_ext","[\""+ et_internal_phone.getText().toString()+"\"]");
+//            jsonParams.put("int_phone_ext", "[\"" + et_internal_phone.getText().toString() + "\"]");
         }
-        final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-
+        String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+        if (isPreloadedUser) {
+            jsonParamsString = jsonParamsString.substring(0, jsonParamsString.length() - 1);
+            jsonParamsString = jsonParamsString + ",\"int_phone_ext\":[\"" + et_internal_phone.getText().toString() + "\"]}";
+        }
         requestInfo.url = String.format(Constant.API_UPDATE_MY_PROFILE, userEntity.getUser_id());
         requestInfo.jsonParam = jsonParamsString;
 

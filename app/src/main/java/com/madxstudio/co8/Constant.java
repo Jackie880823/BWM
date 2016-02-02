@@ -88,6 +88,8 @@ public class Constant {
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
 
 
+    public static final String GROUP_DEFAULT = "group_default";
+
     /**
      * 与心情相关
      */
@@ -365,6 +367,7 @@ public class Constant {
     public static final String FAIL = "Fail";
     public static final String TYPE = "type";
 
+    public static final String FILE_PATH_NAME="CO8";
 
     /**
      * about wall, user extra
@@ -460,4 +463,5 @@ public class Constant {
     public static final String API_GOOD_JOB_MEMBER = API_SERVER + "/bondwithme/index.php/api/goodjob";//goodjob用户
     public static final String API_UPDATE_GOOD_JOB = API_SERVER + "/bondwithme/index.php/api/goodjob/%s";//消除好友的goodjob
 
+    public static final String API_GET_GROUP_DEFAULT = API_SERVER + "/bondwithme/index.php/api/groupInfo/%s";
 }

@@ -569,9 +569,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        if (onlyPopupWindow != null && onlyPopupWindow.isShowing()) {
-                            onlyPopupWindow.dismiss();
-                        }
                     }
 
                     @Override
@@ -677,10 +674,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (TextUtils.isEmpty(MainActivity.getUser().getOrganisation())) {
             Drawable drawable = getResources().getDrawable(R.drawable.privacy_lock);
             tvPrivacy.setText(R.string.text_only_me);
-            Drawable[] drawables = tvPrivacy.getCompoundDrawables();
-            if (drawable != null) {
-                drawable.setBounds(drawables[1].getBounds());
-            }
+//            Drawable[] drawables = tvPrivacy.getCompoundDrawables();
+//            if (drawable != null) {
+//                drawable.setBounds(drawables[1].getBounds());
+//            }
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());//必须设置图片大小，否则不显示
             allRange = "0";
             tvPrivacy.setCompoundDrawables(null, drawable, null, null);
         }
@@ -1163,9 +1161,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     @Override
     public void onClick(View v) {
-        if (onlyPopupWindow != null && onlyPopupWindow.isShowing()) {
-            onlyPopupWindow.dismiss();
-        }
         switch (v.getId()) {
             case R.id.tv_camera:// 打开相册
                 boolean needAlert;
@@ -1225,7 +1220,23 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 if (isEdit) {
                     isUpate = true;
                 }
-                showPopuWindow();
+                if (onlyPopupWindow != null && onlyPopupWindow.isShowing()) {
+                    onlyPopupWindow.dismiss();
+                } else {
+                    UIUtil.hideKeyboard(getParentActivity(), wevContent);
+                    InputMethodManager input = (InputMethodManager) getParentActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (input.isActive()) {
+                        input.hideSoftInputFromWindow(wevContent.getWindowToken(), 0);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                showPopuWindow();
+                            }
+                        }, 100);
+                    } else {
+                        showPopuWindow();
+                    }
+                }
                 break;
 
             case R.id.delete_video_view:
@@ -1254,6 +1265,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         TextView ivAll = (TextView) popView.findViewById(R.id.tv_all_member);
         TextView ivOrg = (TextView) popView.findViewById(R.id.tv_organisation);
         View linear_organisation = popView.findViewById(R.id.tv_organisation);
+        onlyPopupWindow.setOutsideTouchable(true);
         if (TextUtils.isEmpty(MainActivity.getUser().getOrganisation())) {
             linear_organisation.setVisibility(View.GONE);
         } else {
@@ -1287,12 +1299,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         //获取点击按钮的坐标
         View view = getViewById(R.id.option_bar);
         view.getLocationOnScreen(arrayOfInt);
-        int x = arrayOfInt[0];
         int y = arrayOfInt[1];
         popView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int popupWidth = popView.getMeasuredWidth();
         int popupHeight = popView.getMeasuredHeight();
-        onlyPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, x - popupWidth, y - popupHeight);
+        onlyPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, view.getMeasuredWidth() - popupWidth, y - popupHeight);
     }
 
     /**
@@ -1399,9 +1410,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void submitWall() {
         if (rlProgress.getVisibility() == View.VISIBLE) {
             return;
-        }
-        if (onlyPopupWindow != null && onlyPopupWindow.isShowing()) {
-            onlyPopupWindow.dismiss();
         }
 
         Log.i(TAG, "submitWall&");

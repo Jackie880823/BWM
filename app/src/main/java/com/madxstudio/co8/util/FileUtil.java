@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
 import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.ui.MainActivity;
 
 import java.io.File;
@@ -42,7 +43,7 @@ public class FileUtil {
         if (isOutPath) {
             if (path == null) {
                 if (hasSDCard()) { // SD card
-                    path = new File(getSDCardPath() + File.separator + "BondWithMe");
+                    path = new File(getSDCardPath() + File.separator + Constant.FILE_PATH_NAME);
                     path.mkdir();
                 } else {
                     path = Environment.getDataDirectory();

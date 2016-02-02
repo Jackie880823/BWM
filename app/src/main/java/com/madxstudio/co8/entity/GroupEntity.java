@@ -12,6 +12,15 @@ public class GroupEntity implements Serializable{
     private String group_active_date;   //"2015-01-21 12:59:21",
     private String unread;              //"2",
     private String group_flag;
+    private String group_default;
+
+    public String getGroup_default() {
+        return group_default;
+    }
+
+    public void setGroup_default(String group_default) {
+        this.group_default = group_default;
+    }
 
     public String getUser_given_name() {
         return user_given_name;
