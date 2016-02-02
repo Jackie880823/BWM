@@ -140,7 +140,9 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         super.initTitleBar();
         rightButton.setVisibility(View.INVISIBLE);
         leftButton.setVisibility(View.INVISIBLE);
-        changeTitleColor(R.color.btn_gradient_color_green_normal);
+        changeTitleColor(R.color.btn_bg_color_login_normal);
+        tvTitle.setTextColor(getResources().getColor(R.color.login_text_bg_color));
+        leftButton.setImageResource(R.drawable.co8_back_button);
     }
 
     @Override

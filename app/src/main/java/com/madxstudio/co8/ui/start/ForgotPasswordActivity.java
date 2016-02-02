@@ -33,7 +33,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class ForgotPasswordActivity extends BaseActivity implements View.OnClickListener, EditText.OnEditorActionListener{
+public class ForgotPasswordActivity extends BaseActivity implements View.OnClickListener, EditText.OnEditorActionListener {
 
     private final static String TAG = ForgotPasswordActivity.class.getSimpleName();
     private final static String CHECK_GET_CODE = TAG + "_CHECK_GET_CODE";
@@ -53,7 +53,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
-//    private TextView tvCountryCode;
+    //    private TextView tvCountryCode;
     private EditText tvStartCountryCode;
     private EditText etPhoneNumber;
     private PaperButton brNext;
@@ -64,13 +64,11 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
 
     private boolean blnChooseCountryCode;//通过选择获得的国家区号。如果用户手动修改。把国家名称改回原始状态。这是用来判断的
 
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case HANDRLER_SUCCESS_GET_CODE:
                     goVerification();
                     break;
@@ -122,7 +120,9 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setVisibility(View.INVISIBLE);
-        changeTitleColor(R.color.btn_bg_color_green_normal);
+        changeTitleColor(R.color.btn_bg_color_login_normal);
+        leftButton.setImageResource(R.drawable.co8_back_button);
+        tvTitle.setTextColor(getResources().getColor(R.color.login_text_bg_color));
     }
 
     @Override
@@ -212,11 +212,9 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode)
-        {
+        switch (requestCode) {
             case GET_COUNTRY_CODE:
-                if (resultCode == RESULT_OK)
-                {
+                if (resultCode == RESULT_OK) {
                     blnChooseCountryCode = true;
                     tvCountry.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
 //                    tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
@@ -232,8 +230,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.rl_country_code:
                 startActivityForResult(new Intent(this, CountryCodeActivity.class), GET_COUNTRY_CODE);
                 break;
@@ -259,16 +256,14 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE)
-        {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
             doGetVerification();
             return true;
         }
         return false;
     }
 
-    private void doGetVerification()
-    {
+    private void doGetVerification() {
         if (!NetworkUtil.isNetworkConnected(this)) {
             Toast.makeText(this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             return;
@@ -277,8 +272,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
         strCountryCode = tvStartCountryCode.getText().toString();
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
 
-        if (checkAll())
-        {
+        if (checkAll()) {
             doingHttpChangeUI();
 
             HashMap<String, String> params = new HashMap<>();
@@ -300,16 +294,11 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
                 public void onResult(String response) {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        if (Constant.SUCCESS.equals(jsonObject.getString("response_status")))
-                        {
+                        if (Constant.SUCCESS.equals(jsonObject.getString("response_status"))) {
                             handler.sendEmptyMessage(HANDRLER_SUCCESS_GET_CODE);
-                        }
-                        else
-                        {
-                            if (Constant.FAIL.equals(jsonObject.getString("response_status")))
-                            {
-                                switch (jsonObject.getString("response_message"))
-                                {
+                        } else {
+                            if (Constant.FAIL.equals(jsonObject.getString("response_status"))) {
+                                switch (jsonObject.getString("response_message")) {
                                     case RM_PHONE_NUMBERNOT_FOUND:
                                         handler.sendEmptyMessage(HANDRLER_RM_PHONE_NUMBERNOT_FOUND);
                                         break;
@@ -348,24 +337,16 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
 
                 }
             });
-        }
-        else
-        {
-            if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
-            {
+        } else {
+            if (TextUtils.isEmpty(tvStartCountryCode.getText().toString())) {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
 
-            if (TextUtils.isEmpty(etPhoneNumber.getText().toString()))
-            {
+            if (TextUtils.isEmpty(etPhoneNumber.getText().toString())) {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         }
@@ -383,7 +364,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
     }
 
     private boolean checkAll() {
-        return ( !MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber) );
+        return (!MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber));
     }
 
     private void goVerification() {

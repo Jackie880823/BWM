@@ -48,6 +48,9 @@
     <color name="btn_text_color_press_gray">#A6A6A6</color>
 
     <color name="btn_bg_color_green_normal">#32E500</color>
+    <color name="btn_bg_color_co8"> #FFFF47</color>
+    <color name="btn_bg_color_login_normal"> #24518A</color>
+    <color name="login_text_bg_color">#FFFFFF</color>
     <color name="btn_bg_color_red_normal">#FF5833</color>
     <color name="btn_bg_color_gray_normal">#989898</color>
 

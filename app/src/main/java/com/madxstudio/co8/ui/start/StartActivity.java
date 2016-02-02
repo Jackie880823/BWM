@@ -108,7 +108,7 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
     public void setLook(String string) {
         switch (string) {
             case SHOW_SIGN_UP:
-                tvSignUp.setTextColor(getResources().getColor(R.color.default_text_color_dark));
+                tvSignUp.setTextColor(getResources().getColor(R.color.btn_bg_color_co8));
                 tvSignUp.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 ivSignUp.setVisibility(View.VISIBLE);
                 tvLogIn.setTextColor(getResources().getColor(R.color.default_text_color_while));
@@ -117,7 +117,7 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
                 break;
 
             case SHOW_LOG_IN:
-                tvLogIn.setTextColor(getResources().getColor(R.color.default_text_color_dark));
+                tvLogIn.setTextColor(getResources().getColor(R.color.btn_bg_color_co8));
                 tvLogIn.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 ivLogIn.setVisibility(View.VISIBLE);
                 tvSignUp.setTextColor(getResources().getColor(R.color.default_text_color_while));
