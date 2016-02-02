@@ -216,7 +216,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                 if(v.getId() == getParentActivity().rightButton.getId()){
                     submitWall();
                 }else if(v.getId() == getParentActivity().leftButton.getId()){
-
+                    backCheck();
                 }
                 return true;
             }
@@ -412,10 +412,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
      * @return
      */
     public boolean backCheck() {
-       if (popupwindow != null && popupwindow.isShowing()) {
-        popupwindow.dismiss();
-        return true;
-    } else if (rlProgress != null && rlProgress.getVisibility() == View.VISIBLE) {
+       if (rlProgress != null && rlProgress.getVisibility() == View.VISIBLE) {
         MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
         return true;
     }
@@ -427,41 +424,8 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         // 是修改正已经发表的日志，不需要保存草稿
         LogUtil.i(TAG, "backCheck& tasks size: ");
         return false;
-    } else {
-        String text_content = wevContent.getRelText();
-        if (draftPreferences == null) {
-            draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        }
-        SharedPreferences.Editor editor = draftPreferences.edit();
-        if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)) {
-            // 没有需要上传的内容
-            editor.clear().apply();
-            return false;
-        }
-
-        // 提示是否将内容保存到草稿
-//        myDialog = new MyDialog(getActivity(), "", getActivity().getString(R.string.text_dialog_save_draft));
-//        myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                myDialog.dismiss();
-//                saveDraft();
-//                getActivity().finish();
-//            }
-//        });
-//        myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                myDialog.dismiss();
-//                getActivity().finish();
-//            }
-//        });
-//        if (!myDialog.isShowing()) {
-//            myDialog.show();
-//        }
-
-        return true;
     }
+        return false;
     }
 
     @Override
