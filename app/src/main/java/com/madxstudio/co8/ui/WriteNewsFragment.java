@@ -481,6 +481,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         }
     }
 
+    private final static int INTENT_REQUEST_ACTIVITY = 103;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
@@ -499,6 +500,14 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                     ArrayList<Uri> pickUris2 = new ArrayList<>();
                     pickUris2.add(uri);
                     addDataAndNotify(pickUris2);
+                    break;
+                case INTENT_REQUEST_ACTIVITY:
+                    if(data != null){
+                        long durationTime = data.getLongExtra(MediaData.EXTRA_VIDEO_DURATION, 0);
+                        if(durationTime > 0L){
+                            addVideoFromActivityResult(data);
+                        }
+                    }
                     break;
                 case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
                     if (data != null) {
@@ -739,12 +748,9 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
             public void onClick(View v) {
                 // Modify start by Jackie, Use custom recorder
                 Intent mIntent = new Intent(MediaData.ACTION_RECORDER_VIDEO);
-//                        Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 // Modify end by Jackie
                 mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.9);//画质0.5
-                //mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60000);//60s
-//                        mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 45 * 1024 * 1024l);
-                startActivityForResult(mIntent, Constant.INTENT_REQUEST_HEAD_CAMERA);//CAMERA_ACTIVITY = 1
+                startActivityForResult(mIntent, INTENT_REQUEST_ACTIVITY);//CAMERA_ACTIVITY = 1
                 showSelectDialog.dismiss();
             }
         });
