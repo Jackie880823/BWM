@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/default_view_margin">
 
-        <com.bondwithme.BondCorp.widget.CircularNetworkImage
+        <com.madxstudio.co8.widget.CircularNetworkImage
             android:id="@+id/owner_head"
             android:layout_width="@dimen/default_user_head_width_height"
             android:layout_height="@dimen/default_user_head_width_height"

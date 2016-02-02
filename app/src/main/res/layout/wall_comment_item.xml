@@ -63,7 +63,7 @@
         android:layout_marginTop="@dimen/default_content_padding"
         android:orientation="horizontal">
 
-        <com.bondwithme.BondCorp.widget.CircularNetworkImage
+        <com.madxstudio.co8.widget.CircularNetworkImage
             android:id="@+id/civ_comment_owner_head"
             android:layout_width="60dp"
             android:layout_height="60dp"/>
@@ -115,7 +115,7 @@
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"/>
 
-            <com.bondwithme.BondCorp.widget.FreedomSelectionTextView
+            <com.madxstudio.co8.widget.FreedomSelectionTextView
                 android:id="@+id/tv_comment_content"
                 style="@style/text_dark_default"
                 android:autoLink="web"

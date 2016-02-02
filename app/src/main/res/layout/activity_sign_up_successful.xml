@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="@color/btn_gradient_color_green_normal"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.bondwithme.BondCorp.ui.start.SignUpSuccessfulActivity">
+    tools:context="com.madxstudio.co8.ui.start.SignUpSuccessfulActivity">
 
         <LinearLayout
             android:layout_width="match_parent"

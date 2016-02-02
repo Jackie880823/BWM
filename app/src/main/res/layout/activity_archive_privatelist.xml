@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <com.bondwithme.BondCorp.widget.MySwipeRefreshLayout
+    <com.madxstudio.co8.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </com.bondwithme.BondCorp.widget.MySwipeRefreshLayout>
+    </com.madxstudio.co8.widget.MySwipeRefreshLayout>
     <RelativeLayout
         android:id="@+id/not_archive"
         android:layout_width="match_parent"

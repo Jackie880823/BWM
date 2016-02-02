@@ -9,7 +9,7 @@
         android:layout_below="@id/my_family_linear"
         android:orientation="vertical">
 
-        <com.bondwithme.BondCorp.widget.MySwipeRefreshLayout
+        <com.madxstudio.co8.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:numColumns="3" />
-        </com.bondwithme.BondCorp.widget.MySwipeRefreshLayout>
+        </com.madxstudio.co8.widget.MySwipeRefreshLayout>
     </LinearLayout>
 
 

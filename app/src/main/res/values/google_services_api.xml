@@ -5,7 +5,7 @@
 
     <!--map -->
     <string name="google_maps_key_instructions" templateMergeStrategy="replace" translatable="false">
-        E9:81:9A:EF:5D:21:4C:E9:E6:87:31:2B:7C:B5:D9:A0:6D:36:54:8B;com.bondwithme.BondCorp
+        E9:81:9A:EF:5D:21:4C:E9:E6:87:31:2B:7C:B5:D9:A0:6D:36:54:8B;com.madxstudio.co8
 
         <!--
     TODO: Before you run your application, you need a Google Maps API key.
@@ -21,12 +21,11 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
     string in this file.
     --></string>
 
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDpTdBQK5pFyfijzfynDXYWjBLpkGm1g2M</string>
-    <string name="google_maps_jackie_key" templateMergeStrategy="preserve" translatable="false">AIzaSyC9O2X3BaluSLKYTS6SnpNH2wdIFFPFaGU</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDS-U6pCmB5CjSZjbNWSA56A_1ThrLT00A</string>
     <!--用于搜索-->
-    <string name="google_maps_place_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDT_b4XSfwPPIuTTugObeZFi2Wo9M1UBVM</string>
+    <string name="google_maps_place_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDS-U6pCmB5CjSZjbNWSA56A_1ThrLT00A</string>
 
 
     <!-- GCM -->
-    <string name="gcm_sender_id" templateMergeStrategy="preserve" translatable="false">102995201935</string>
+    <string name="gcm_sender_id" templateMergeStrategy="preserve" translatable="false">819779844259</string>
 </resources>

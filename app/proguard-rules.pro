@@ -157,11 +157,11 @@
 #In your case, that would be
 
 #entity
--dontwarn com.bondwithme.BondCorp.entity.**
--keep class com.bondwithme.BondCorp.entity.**
--keepclassmembers class com.bondwithme.BondCorp.entity.** { *; }
--keep class com.bondwithme.BondCorp.db.SQLiteHelperOrm
--keepclassmembers class com.bondwithme.BondCorp.db.SQLiteHelperOrm { *; }
+-dontwarn com.madxstudio.co8.entity.**
+-keep class com.madxstudio.co8.entity.**
+-keepclassmembers class com.madxstudio.co8.entity.** { *; }
+-keep class com.madxstudio.co8.db.SQLiteHelperOrm
+-keepclassmembers class com.madxstudio.co8.db.SQLiteHelperOrm { *; }
 -dontwarn com.artifex.mupdfdemo.**
 -keep class com.artifex.mupdfdemo.**
 -keepclassmembers class com.artifex.mupdfdemo.** { *; }

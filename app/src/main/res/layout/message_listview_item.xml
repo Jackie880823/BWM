@@ -16,7 +16,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                    <com.bondwithme.BondCorp.widget.CircularNetworkImage
+                    <com.madxstudio.co8.widget.CircularNetworkImage
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:layout_gravity="center"
@@ -84,55 +84,55 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="3dp">
-                    <com.bondwithme.BondCorp.widget.CircularNetworkImage
+                    <com.madxstudio.co8.widget.CircularNetworkImage
                         android:id="@+id/image1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         app:border="false"/>
-                    <com.bondwithme.BondCorp.widget.CircularNetworkImage
+                    <com.madxstudio.co8.widget.CircularNetworkImage
                         android:id="@+id/image2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:border="false"/>
 
-                    <com.bondwithme.BondCorp.widget.CircularNetworkImage
+                    <com.madxstudio.co8.widget.CircularNetworkImage
                         android:id="@+id/image3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:border="false"/>
 
-                    <com.bondwithme.BondCorp.widget.CircularNetworkImage
+                    <com.madxstudio.co8.widget.CircularNetworkImage
                         android:id="@+id/image4"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:border="false"/>
 
-                    <com.bondwithme.BondCorp.widget.CircularNetworkImage
+                    <com.madxstudio.co8.widget.CircularNetworkImage
                         android:id="@+id/image5"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:border="false"/>
 
-                    <com.bondwithme.BondCorp.widget.CircularNetworkImage
+                    <com.madxstudio.co8.widget.CircularNetworkImage
                         android:id="@+id/image6"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:border="false"/>
 
-                    <com.bondwithme.BondCorp.widget.CircularNetworkImage
+                    <com.madxstudio.co8.widget.CircularNetworkImage
                         android:id="@+id/image7"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:border="false"/>
 
-                    <com.bondwithme.BondCorp.widget.CircularNetworkImage
+                    <com.madxstudio.co8.widget.CircularNetworkImage
                         android:id="@+id/image8"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

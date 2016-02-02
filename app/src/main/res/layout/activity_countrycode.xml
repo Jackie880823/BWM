@@ -29,11 +29,11 @@
         android:inputType="textCapSentences"
         />
 
-    <com.bondwithme.BondCorp.widget.LetterListView
+    <com.madxstudio.co8.widget.LetterListView
         android:id="@+id/letterListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/et_search">
-    </com.bondwithme.BondCorp.widget.LetterListView>
+    </com.madxstudio.co8.widget.LetterListView>
 
 </RelativeLayout>

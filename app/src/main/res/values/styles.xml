@@ -1,4 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/com.bondwithme.BondCorp">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/com.madxstudio.co8">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -91,9 +91,9 @@
     </style>
 
     <style name="user_header_base">
-        <item name="com.bondwithme.BondCorp:border_color">@color/default_text_color_light</item>
-        <item name="com.bondwithme.BondCorp:border_width">1dp</item>
-        <item name="com.bondwithme.BondCorp:border">true</item>
+        <item name="com.madxstudio.co8:border_color">@color/default_text_color_light</item>
+        <item name="com.madxstudio.co8:border_width">1dp</item>
+        <item name="com.madxstudio.co8:border">true</item>
     </style>
 
     <style name="user_header_normal" parent="user_header_base">
@@ -425,8 +425,8 @@
 
     <style name="paper_button_style">
         <item name="android:layout_height">54dp</item>
-        <item name="com.bondwithme.BondCorp:paper_color">@color/tab_color_press4</item>
-        <item name="com.bondwithme.BondCorp:paper_text_color">@color/default_text_color_dark
+        <item name="com.madxstudio.co8:paper_color">@color/tab_color_press4</item>
+        <item name="com.madxstudio.co8:paper_text_color">@color/default_text_color_dark
         </item>
     </style>
 

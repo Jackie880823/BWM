@@ -38,7 +38,7 @@
         android:textSize="30sp"
         android:visibility="gone" />
 
-    <com.bondwithme.BondCorp.widget.MySwipeRefreshLayout
+    <com.madxstudio.co8.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
 
         </android.support.v7.widget.RecyclerView>
 
-    </com.bondwithme.BondCorp.widget.MySwipeRefreshLayout>
+    </com.madxstudio.co8.widget.MySwipeRefreshLayout>
 
     <include layout="@layout/progress_layout" />
 

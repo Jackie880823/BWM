@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/default_content_bg"
-    tools:context="com.bondwithme.BondCorp.ui.GroupSettingActivity">
+    tools:context="com.madxstudio.co8.ui.GroupSettingActivity">
 <!--        android:layout_margin="@dimen/default_content_padding"
 -->
     <include
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.bondwithme.BondCorp.widget.CircularNetworkImage
+            <com.madxstudio.co8.widget.CircularNetworkImage
                 android:id="@+id/cni_main"
                 android:layout_width="100dp"
                 android:layout_height="100dp"

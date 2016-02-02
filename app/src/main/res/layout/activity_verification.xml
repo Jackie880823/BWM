@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_text_color_while"
-    tools:context="com.bondwithme.BondCorp.ui.start.VerificationActivity"
+    tools:context="com.madxstudio.co8.ui.start.VerificationActivity"
     xmlns:app="http://schemas.android.com/apk/res-auto">
         <include
             android:id="@+id/fragment_main_top"
