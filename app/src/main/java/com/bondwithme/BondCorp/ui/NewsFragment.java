@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -132,6 +133,33 @@ public class NewsFragment extends BaseFragment<MainActivity> {
             switch (requestCode) {
                 case Constant.ACTION_NEWS_CREATE:
                     handler.sendEmptyMessage(Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
+                    break;
+                case Constant.INTENT_UPDATE_DIARY:
+                    if (data == null) {
+                        return;
+                    }
+                    List<NewsEntity> newsEntities = adapter.getData();
+
+                    int position = data.getIntExtra(Constant.POSITION, -1);
+                    LogUtil.d(TAG, "onActivityResult& position: " + position);
+
+                    if (position >= 0 && position < newsEntities.size()) {
+                        NewsEntity newsEntity;
+                        newsEntity = (NewsEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
+                        if (newsEntity != null) {
+                            newsEntities.set(position, newsEntity);
+                            adapter.notifyItemChanged(position);
+                        }
+
+                        String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
+                        if (!TextUtils.isEmpty(commentCount)) {
+                            newsEntity = newsEntities.get(position);
+                            if (!newsEntity.getComment_count().equals(commentCount)) {
+                                newsEntity.setComment_count(commentCount);
+                                adapter.notifyItemChanged(position);
+                            }
+                        }
+                    }
                     break;
             }
         }

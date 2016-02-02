@@ -45,6 +45,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
         notifyDataSetChanged();
     }
 
+    public List<NewsEntity> getData(){
+        return data;
+    }
+
 
     @Override
     public void onBindViewHolder(final NewsHolder holder, int position) {

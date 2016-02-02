@@ -1,7 +1,6 @@
 package com.bondwithme.BondCorp.adapter;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -307,7 +306,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 intent.putExtra(Constant.GROUP_ID, newsEntity.getGroup_id());
                 intent.putExtra(Constant.AGREE_COUNT, newsEntity.getLove_count());
                 intent.putExtra(Constant.POSITION, position);
-                ((Activity) mContext).startActivityForResult(intent, Constant.INTENT_UPDATE_NEWS);
+                fragment.startActivityForResult(intent, Constant.INTENT_UPDATE_DIARY);
                 break;
             case R.id.new_good_job_linear://赞
 
