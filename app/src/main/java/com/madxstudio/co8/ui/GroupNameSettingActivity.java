@@ -61,7 +61,7 @@ public class GroupNameSettingActivity extends BaseActivity {
     Boolean isUploadNameSuccess = false;
     Boolean isUploadImageSuccess = false;
 
-//    ProgressDialog progressDialog;
+    //    ProgressDialog progressDialog;
     private String TAG;
 
     String headUrl;
@@ -100,9 +100,9 @@ public class GroupNameSettingActivity extends BaseActivity {
 
     @Override
     protected void titleLeftEvent() {
-        if(isChange()){
+        if (isChange()) {
             showNoFriendDialog();
-        }else {
+        } else {
             super.titleLeftEvent();
         }
     }
@@ -150,9 +150,15 @@ public class GroupNameSettingActivity extends BaseActivity {
         groupName = getIntent().getStringExtra("groupName");
         etGroupName.setText(groupName);
 
+        boolean isGroupDefault = getIntent().getBooleanExtra(Constant.GROUP_DEFAULT, false);
+        if (isGroupDefault) {
+            etGroupName.setFocusable(false);
+            etGroupName.setFocusableInTouchMode(false);
+        }
+
         mBitmapTools = BitmapTools.getInstance(this);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
-        mBitmapTools.display(civGroupPic,headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
+        mBitmapTools.display(civGroupPic, headUrl, R.drawable.b2be_normal, R.drawable.b2be_normal);
 //        VolleyUtil.initNetworkImageView(this, civGroupPic, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
 
         civGroupPic.setOnClickListener(new View.OnClickListener() {
@@ -210,19 +216,20 @@ public class GroupNameSettingActivity extends BaseActivity {
         }
     }
 
-    private boolean isChange(){
-        if(!TextUtils.isEmpty(etGroupName.getText().toString().trim()) && !groupName.equals(etGroupName.getText().toString().trim())){
+    private boolean isChange() {
+        if (!TextUtils.isEmpty(etGroupName.getText().toString().trim()) && !groupName.equals(etGroupName.getText().toString().trim())) {
             return true;
-        }else {
-            if(TextUtils.isEmpty(etGroupName.getText().toString().trim())){
+        } else {
+            if (TextUtils.isEmpty(etGroupName.getText().toString().trim())) {
                 return true;
             }
         }
-        if(mCropImagedUri != null){
+        if (mCropImagedUri != null) {
             return true;
         }
         return false;
     }
+
     /**
      * 保存裁剪之后的图片数据
      *
@@ -279,7 +286,7 @@ public class GroupNameSettingActivity extends BaseActivity {
                         isUploadImageSuccess = true;
                         Intent intent = new Intent();
                         intent.putExtra("groupName", etGroupName.getText().toString());
-                        intent.putExtra("groupid",groupId);
+                        intent.putExtra("groupid", groupId);
                         setResult(RESULT_OK, intent);
 //                        progressDialog.dismiss();
                         finish();
@@ -400,9 +407,9 @@ public class GroupNameSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(GroupNameSettingActivity.this,PickAndCropPictureActivity.class);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM,PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH,civGroupPic.getWidth());
+                Intent intent = new Intent(GroupNameSettingActivity.this, PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, civGroupPic.getWidth());
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, civGroupPic.getHeight());
                 startActivityForResult(intent, REQUEST_PHOTO);
             }
@@ -412,9 +419,9 @@ public class GroupNameSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(GroupNameSettingActivity.this,PickAndCropPictureActivity.class);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM,PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH,civGroupPic.getWidth());
+                Intent intent = new Intent(GroupNameSettingActivity.this, PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, civGroupPic.getWidth());
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, civGroupPic.getHeight());
                 startActivityForResult(intent, REQUEST_PHOTO);
             }

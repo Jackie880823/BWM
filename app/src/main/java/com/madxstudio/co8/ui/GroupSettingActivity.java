@@ -150,7 +150,7 @@ public class GroupSettingActivity extends BaseActivity {
         groupName = getIntent().getStringExtra("groupName");
         type = getIntent().getIntExtra("groupType", 0);
         groupDefault = getIntent().getStringExtra(Constant.GROUP_DEFAULT);
-        if ("1".equalsIgnoreCase(groupDefault)) {
+        if ("1".equals(groupDefault)) {
             isGroupDefault = true;
         }
         llSetting = getViewById(R.id.ll_setting);
@@ -173,7 +173,7 @@ public class GroupSettingActivity extends BaseActivity {
         }
         mBitmapTools = BitmapTools.getInstance(mContext);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
-        VolleyUtil.initNetworkImageView(this, cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(this, cniMain, headUrl, R.drawable.b2be_normal, R.drawable.b2be_normal);
 //        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName.setText(groupName);
 
@@ -212,9 +212,8 @@ public class GroupSettingActivity extends BaseActivity {
                     Intent intent = new Intent(GroupSettingActivity.this, GroupNameSettingActivity.class);
                     intent.putExtra("groupId", groupId);
                     intent.putExtra("groupName", tvName.getText().toString());
+                    intent.putExtra(Constant.GROUP_DEFAULT, isGroupDefault);
                     startActivityForResult(intent, SET_GROUP_PIC_NAME);
-                } else {
-
                 }
             }
         });
