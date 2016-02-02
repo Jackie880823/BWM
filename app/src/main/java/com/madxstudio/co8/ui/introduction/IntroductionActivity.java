@@ -86,12 +86,12 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
 
         // 上一次启动的保存的版本号比需要显示介绍页的版本小或者是应用首次安装启动
 //        if (versionCode < SHOW_INTRODUCTION_VERSION || firstStart) { //
-        if (firstStart && !isLogin()) { //
-            initView();
-        } else {
+//        if (firstStart && !isLogin()) { //
+//            initView();
+//        } else {
             // 不需要显示介绍页，调用用跳转函数
             goMainOrSign();
-        }
+//        }
     }
 
     private void initView() {
