@@ -19,7 +19,7 @@
     <string name="search">Search</string>
     <string name="copy">Copy</string>
     <string name="strike_out">Strike-out</string>
-    <string name="delete">Delete</string>
+    <string name="popu_delete">Delete</string>
     <string name="highlight">Highlight</string>
     <string name="underline">Underline</string>
     <string name="edit_annotations">Edit annotations</string>

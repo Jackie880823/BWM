@@ -37,7 +37,7 @@
         android:layout_alignRight="@+id/video_view_iv"
         android:layout_alignTop="@+id/video_view_iv"
         android:background="@color/translucence_color"
-        android:contentDescription="@string/delete"
+        android:contentDescription="@string/popu_delete"
         android:scaleType="centerInside"
         android:src="@drawable/x_delete_icon" />
 
