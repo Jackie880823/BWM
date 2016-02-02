@@ -367,6 +367,7 @@ public class Constant {
     public static final String FAIL = "Fail";
     public static final String TYPE = "type";
 
+    public static final String FILE_PATH_NAME="CO8";
 
     /**
      * about wall, user extra
