@@ -9,6 +9,15 @@ public class FamilyGroupEntity implements Serializable {
     private String group_id;
     private String group_name; // group name
     private String friend_flag;
+    private String group_default;
+
+    public String getGroup_default() {
+        return group_default;
+    }
+
+    public void setGroup_default(String group_default) {
+        this.group_default = group_default;
+    }
 
     public String getGroup_name() {
         return group_name;

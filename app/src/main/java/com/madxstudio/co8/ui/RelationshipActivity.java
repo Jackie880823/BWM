@@ -1,6 +1,5 @@
 package com.madxstudio.co8.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -10,26 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-<<<<<<< HEAD:app/src/main/java/com/bondwithme/BondCorp/ui/RelationshipActivity.java
-import com.bondwithme.BondCorp.R;
-import com.bondwithme.BondCorp.adapter.RecommendAdapter;
-import com.bondwithme.BondCorp.entity.UserEntity;
-import com.bondwithme.BondCorp.exception.RelationshipException;
-import com.bondwithme.BondCorp.util.RelationshipUtil;
-import com.bondwithme.BondCorp.widget.CircularNetworkImage;
-import com.bondwithme.BondCorp.widget.MyDialog;
-=======
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.RecommendAdapter;
+import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.exception.RelationshipException;
 import com.madxstudio.co8.util.RelationshipUtil;
 import com.madxstudio.co8.widget.MyDialog;
->>>>>>> c912e3fdc8728d3798767179ec398b4cd70d5482:app/src/main/java/com/madxstudio/co8/ui/RelationshipActivity.java
 
 import java.util.ArrayList;
 import java.util.Arrays;

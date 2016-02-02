@@ -462,4 +462,5 @@ public class Constant {
     public static final String API_GOOD_JOB_MEMBER = API_SERVER + "/bondwithme/index.php/api/goodjob";//goodjob用户
     public static final String API_UPDATE_GOOD_JOB = API_SERVER + "/bondwithme/index.php/api/goodjob/%s";//消除好友的goodjob
 
+    public static final String API_GET_GROUP_DEFAULT = API_SERVER + "/bondwithme/index.php/api/groupInfo/%s";
 }

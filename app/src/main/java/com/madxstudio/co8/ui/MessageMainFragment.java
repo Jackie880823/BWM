@@ -220,6 +220,11 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         getData(0);
         getDataGroup(0);
     }

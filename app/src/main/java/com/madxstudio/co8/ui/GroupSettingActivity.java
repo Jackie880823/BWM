@@ -167,11 +167,10 @@ public class GroupSettingActivity extends BaseActivity {
         groupEntity.setGroup_name(groupName);
         familyGroupEntityList.add(groupEntity);
         gson = new Gson();
-
+        getIsGroupDefault();
         if (isGroupDefault) {
             btnLeaveGroup.setVisibility(View.GONE);
         }
-
         mBitmapTools = BitmapTools.getInstance(mContext);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
         VolleyUtil.initNetworkImageView(this, cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
@@ -344,6 +343,52 @@ public class GroupSettingActivity extends BaseActivity {
     @Override
     public void requestData() {
 
+    }
+
+    private void getIsGroupDefault() {
+        String url = String.format(Constant.API_GET_GROUP_DEFAULT, groupId);
+        new HttpTools(GroupSettingActivity.this).get(url, null, Tag, new HttpCallback() {
+
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String string) {
+                try {//[{"group_name":"MAD","group_owner_id":"31","group_individual":"0","group_type":"0","group_photo":"","group_default":"1"}]
+                    JSONObject json = new JSONObject(string);
+                    String group_default = json.optString("group_default");
+                    if ("1".equalsIgnoreCase(group_default)) {
+                        isGroupDefault = true;
+                        btnLeaveGroup.setVisibility(View.GONE);
+                        rightButton.setVisibility(View.INVISIBLE);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     public void getMembersList() {

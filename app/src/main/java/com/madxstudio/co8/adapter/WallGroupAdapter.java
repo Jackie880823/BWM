@@ -136,6 +136,7 @@ public class WallGroupAdapter extends RecyclerView.Adapter<WallGroupAdapter.MGIt
                         intent.putExtra("type", 1);
                         intent.putExtra("groupId", groupEntity.getGroup_id());
                         intent.putExtra("titleName", groupEntity.getGroup_name());
+                        intent.putExtra(Constant.GROUP_DEFAULT, groupEntity.getGroup_default());
                         mContext.startActivity(intent);
                     }
                 }
