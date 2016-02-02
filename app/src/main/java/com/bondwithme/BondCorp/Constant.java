@@ -88,6 +88,8 @@ public class Constant {
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
 
 
+    public static final String GROUP_DEFAULT = "group_default";
+
     /**
      * 与心情相关
      */

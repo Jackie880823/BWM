@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/_120dp"
     android:layout_height="match_parent"
+    android:background="#EAEAEA"
     android:orientation="vertical">
 
     <TextView
@@ -18,7 +19,8 @@
 
     <View
         style="@style/split_line_default"
-        android:layout_width="@dimen/_120dp" />
+        android:layout_width="@dimen/_120dp"
+        android:background="#C4C4C4" />
 
     <TextView
         android:id="@+id/tv_all_member"
@@ -40,7 +42,8 @@
 
         <View
             style="@style/split_line_default"
-            android:layout_width="@dimen/_120dp" />
+            android:layout_width="@dimen/_120dp"
+            android:background="#C4C4C4" />
 
         <TextView
             android:id="@+id/tv_organisation"

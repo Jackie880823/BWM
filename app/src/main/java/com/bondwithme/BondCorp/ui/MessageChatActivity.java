@@ -196,6 +196,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private PowerManager.WakeLock wakeLock;
     private SensorManager sensorManager;
     private HeadsetReceiver receiver;
+    private String groupDefault;
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -427,6 +428,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             } else {
                 intent.putExtra("groupName", titleName);
             }
+            intent.putExtra(Constant.GROUP_DEFAULT, groupDefault);
             startActivityForResult(intent, REQUEST_GET_GROUP_NAME);
         }
     }
@@ -475,6 +477,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         msgList = new ArrayList<>();
         groupId = getIntent().getStringExtra(MESSAGE_GROUP_ID);
         titleName = getIntent().getStringExtra(MESSAGE_TITLE_NAME);
+        groupDefault=getIntent().getStringExtra(Constant.GROUP_DEFAULT);
         mRecorder = new AudioMediaRecorder();
         setView();
         setAllListener();

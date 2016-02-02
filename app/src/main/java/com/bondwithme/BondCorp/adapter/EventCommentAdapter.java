@@ -170,6 +170,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             header.tvUserName.setText(detail.getUser_given_name());
             header.tvContent.setText(detail.getText_description());
             header.tvDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext, detail.getGroup_event_date()));
+            header.tvEndDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext, detail.getGroup_end_date()));
             header.TvLocation.setText(detail.getLoc_name());
             header.tvMaybe.setText(detail.getTotal_maybe());
             header.tvNotGoing.setText(detail.getTotal_no());
@@ -425,6 +426,10 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
          */
         private TextView tvDate;
         /**
+         * 日历
+         */
+        private TextView tvEndDate;
+        /**
          * 地址
          */
         private TextView TvLocation;
@@ -459,6 +464,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             eventMapCation = (NetworkImageView) itemView.findViewById(R.id.event_picture_4_location);
             tvContent = (FreedomSelectionTextView) itemView.findViewById(R.id.event_desc);
             tvDate = (TextView) itemView.findViewById(R.id.event_date);
+            tvEndDate= (TextView) itemView.findViewById(R.id.date_end_desc);
             TvLocation = (TextView) itemView.findViewById(R.id.location_desc);
             intentAll = (RelativeLayout) itemView.findViewById(R.id.btn_intent_all);
             intentAgree = (LinearLayout) itemView.findViewById(R.id.iv_intent_agree);

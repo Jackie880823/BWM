@@ -487,10 +487,15 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         if (!TextUtils.isEmpty(wallEntity.getContent_group_public())) {
             publicType = Integer.valueOf(wallEntity.getContent_group_public());
         }
-        //wing modified end 2015.08.13
+        //wing modified end 2015.08.13// 0- Only Me, 1- All Members , 2-Organisation
         if (publicType == 0) {
+            ivLock.setImageResource(R.drawable.lock_post);
+            ivLock.setVisibility(View.VISIBLE);
+        } else if (publicType == 2) {
+            ivLock.setImageResource(R.drawable.workspace_management_icon);
             ivLock.setVisibility(View.VISIBLE);
         } else {
+            ivLock.setImageResource(R.drawable.privacy_open);
             ivLock.setVisibility(View.GONE);
         }
         // 用户名

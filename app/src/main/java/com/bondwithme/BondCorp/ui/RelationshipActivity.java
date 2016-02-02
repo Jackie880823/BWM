@@ -1,19 +1,26 @@
 package com.bondwithme.BondCorp.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bondwithme.BondCorp.R;
 import com.bondwithme.BondCorp.adapter.RecommendAdapter;
+import com.bondwithme.BondCorp.entity.UserEntity;
 import com.bondwithme.BondCorp.exception.RelationshipException;
 import com.bondwithme.BondCorp.util.RelationshipUtil;
+import com.bondwithme.BondCorp.widget.CircularNetworkImage;
 import com.bondwithme.BondCorp.widget.MyDialog;
 
 import java.util.ArrayList;
@@ -88,7 +95,7 @@ public class RelationshipActivity extends BaseActivity {
         }
 
         intentFromRecommend = getIntent();
-        if (intentFromRecommend != null){
+        if (intentFromRecommend != null) {
             whichActivity = getIntent().getStringExtra(RecommendActivity.TAG);
         }
 
@@ -96,13 +103,13 @@ public class RelationshipActivity extends BaseActivity {
 
         lvRelationship = getViewById(R.id.lv_relationship);
 
-        lvRelationship.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,data));
+        lvRelationship.setAdapter(new RelationShipAdapter());
 
         lvRelationship.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (whichActivity != null && whichActivity.equals(RecommendAdapter.From_RecommendActivity)){
+                if (whichActivity != null && whichActivity.equals(RecommendAdapter.From_RecommendActivity)) {
                     showConfirmDialog(position);
                     return;
                 }
@@ -112,12 +119,52 @@ public class RelationshipActivity extends BaseActivity {
                 } catch (RelationshipException e) {
                     e.printStackTrace();
                 }
-                intent.putExtra("selectMemeber",position);  //下标
+                intent.putExtra("selectMemeber", position);  //下标
 
                 result = RESULT_OK;
                 finish();
             }
         });
+    }
+
+    class RelationShipAdapter extends BaseAdapter {
+        public RelationShipAdapter() {
+        }
+
+        @Override
+        public int getCount() {
+            if (data == null) {
+                return 0;
+            }
+            return data.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            if (data == null) {
+                return null;
+            }
+            return data.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = LayoutInflater.from(RelationshipActivity.this).inflate(R.layout.relationship_list_item, null);
+            UserEntity userEntity = MainActivity.getUser();
+            TextView tv = (TextView) view.findViewById(R.id.tv_relation);
+            tv.setText(data.get(position));
+            if (userEntity != null && !TextUtils.isEmpty(userEntity.getOrganisation())) {
+                if (position == 0 || position == 1 || position == 2) {
+                    tv.setVisibility(View.GONE);
+                }
+            }
+            return view;
+        }
     }
 
     private void showConfirmDialog(final int position) {
@@ -138,14 +185,14 @@ public class RelationshipActivity extends BaseActivity {
                 confirmDialog = new MyDialog(this, this.getString(R.string.text_tips_title), this.getString(R.string.text_confirm_relation) + relationship + " ?");
             }
         } else {
-            confirmDialog = new MyDialog(this, this.getString(R.string.text_tips_title), this.getString(R.string.text_confirm_relation)+" "+relationship + " ?");
+            confirmDialog = new MyDialog(this, this.getString(R.string.text_tips_title), this.getString(R.string.text_confirm_relation) + " " + relationship + " ?");
         }
 
         confirmDialog.setButtonAccept(this.getString(R.string.text_yes), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent.putExtra("relationship", data_Us.get(position));
-                intent.putExtra("selectMemeber",position);
+                intent.putExtra("selectMemeber", position);
                 result = RESULT_OK;
                 finish();
             }
@@ -158,7 +205,7 @@ public class RelationshipActivity extends BaseActivity {
             }
         });
 
-        if(confirmDialog != null && !confirmDialog.isShowing()) {
+        if (confirmDialog != null && !confirmDialog.isShowing()) {
             confirmDialog.show();
         }
     }
@@ -185,9 +232,9 @@ public class RelationshipActivity extends BaseActivity {
 
     }
 
-    private List<String> getData(){
-        String [] ralationArray=getResources().getStringArray(R.array.relationship_item);
-        for (int i=0;i<ralationArray.length;i++){
+    private List<String> getData() {
+        String[] ralationArray = getResources().getStringArray(R.array.relationship_item);
+        for (int i = 0; i < ralationArray.length; i++) {
             data.add(ralationArray[i]);
         }
         return data;

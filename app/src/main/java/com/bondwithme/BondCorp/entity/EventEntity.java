@@ -8,32 +8,42 @@ import java.util.List;
  */
 public class EventEntity implements Serializable {
 
-    private String group_id  ;
-    private String group_owner_id  ;
-    private String group_name  ;
-    private String content_group_id  ;
-    private String group_creation_date  ;
-    private String group_event_date  ;
-    private String group_event_status  ;
+    private String group_id;
+    private String group_owner_id;
+    private String group_name;
+    private String content_group_id;
+    private String group_creation_date;
+    private String group_event_date;
+    private String group_event_status;
     private String total_yes;
     private String total_no;
     private String total_maybe;
-    private String text_description  ;
-    private String loc_latitude  ;
-    private String loc_longitude  ;
-    /**坐标类型*/
+    private String text_description;
+    private String loc_latitude;
+    private String loc_longitude;
+    /**
+     * 坐标类型
+     */
     private String loc_type;
-    private String loc_name  ;
-    private String user_given_name  ;
-    private String group_event_timestamp  ;
-    private String content_creation_timestamp  ;
-    /**intent*/
-    private String group_member_response  ;
+    private String loc_name;
+    private String user_given_name;
+    private String group_event_timestamp;
+    private String content_creation_timestamp;
+    /**
+     * intent
+     */
+    private String group_member_response;
     private String group_new_post;
     private List<String> event_member;
+    private String group_end_date;
 
+    public String getGroup_end_date() {
+        return group_end_date;
+    }
 
-
+    public void setGroup_end_date(String group_end_date) {
+        this.group_end_date = group_end_date;
+    }
 
     public String getGroup_id() {
         return group_id;
