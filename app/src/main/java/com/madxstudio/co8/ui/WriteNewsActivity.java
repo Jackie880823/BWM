@@ -48,10 +48,15 @@ public class WriteNewsActivity extends BaseActivity {
     }
 
     @Override
+    protected void titleLeftEvent() {
+        if(commandlistener!=null)
+            commandlistener.execute(leftButton);
+    }
+
+    @Override
     protected void titleRightEvent() {
         if(commandlistener!=null)
             commandlistener.execute(rightButton);
-//            commandlistener.execute(rightTextButton);
 
     }
 

@@ -216,7 +216,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                 if(v.getId() == getParentActivity().rightButton.getId()){
                     submitWall();
                 }else if(v.getId() == getParentActivity().leftButton.getId()){
-
+                    backCheck();
                 }
                 return true;
             }
@@ -412,10 +412,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
      * @return
      */
     public boolean backCheck() {
-       if (popupwindow != null && popupwindow.isShowing()) {
-        popupwindow.dismiss();
-        return true;
-    } else if (rlProgress != null && rlProgress.getVisibility() == View.VISIBLE) {
+       if (rlProgress != null && rlProgress.getVisibility() == View.VISIBLE) {
         MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
         return true;
     }
@@ -427,41 +424,8 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         // 是修改正已经发表的日志，不需要保存草稿
         LogUtil.i(TAG, "backCheck& tasks size: ");
         return false;
-    } else {
-        String text_content = wevContent.getRelText();
-        if (draftPreferences == null) {
-            draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        }
-        SharedPreferences.Editor editor = draftPreferences.edit();
-        if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)) {
-            // 没有需要上传的内容
-            editor.clear().apply();
-            return false;
-        }
-
-        // 提示是否将内容保存到草稿
-//        myDialog = new MyDialog(getActivity(), "", getActivity().getString(R.string.text_dialog_save_draft));
-//        myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                myDialog.dismiss();
-//                saveDraft();
-//                getActivity().finish();
-//            }
-//        });
-//        myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                myDialog.dismiss();
-//                getActivity().finish();
-//            }
-//        });
-//        if (!myDialog.isShowing()) {
-//            myDialog.show();
-//        }
-
-        return true;
     }
+        return false;
     }
 
     @Override
@@ -517,6 +481,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         }
     }
 
+    private final static int INTENT_REQUEST_ACTIVITY = 103;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
@@ -535,6 +500,14 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                     ArrayList<Uri> pickUris2 = new ArrayList<>();
                     pickUris2.add(uri);
                     addDataAndNotify(pickUris2);
+                    break;
+                case INTENT_REQUEST_ACTIVITY:
+                    if(data != null){
+                        long durationTime = data.getLongExtra(MediaData.EXTRA_VIDEO_DURATION, 0);
+                        if(durationTime > 0L){
+                            addVideoFromActivityResult(data);
+                        }
+                    }
                     break;
                 case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
                     if (data != null) {
@@ -775,12 +748,9 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
             public void onClick(View v) {
                 // Modify start by Jackie, Use custom recorder
                 Intent mIntent = new Intent(MediaData.ACTION_RECORDER_VIDEO);
-//                        Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 // Modify end by Jackie
                 mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.9);//画质0.5
-                //mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60000);//60s
-//                        mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 45 * 1024 * 1024l);
-                startActivityForResult(mIntent, Constant.INTENT_REQUEST_HEAD_CAMERA);//CAMERA_ACTIVITY = 1
+                startActivityForResult(mIntent, INTENT_REQUEST_ACTIVITY);//CAMERA_ACTIVITY = 1
                 showSelectDialog.dismiss();
             }
         });

@@ -198,3 +198,6 @@
 -keepclassmembers class * extends de.greenrobot.event.util.ThrowableFailureEvent {
     <init>(java.lang.Throwable);
 }
+
+#小红点
+-keep class me.leolin.shortcutbadger.** {*;}
