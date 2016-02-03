@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,8 +23,10 @@ import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.NewsAdapter;
 import com.madxstudio.co8.entity.NewsEntity;
 import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.interfaces.NewsViewClickListener;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.widget.MyDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +36,7 @@ import java.util.Map;
 /**
  * Created by quankun on 16/1/22.
  */
-public class NewsFragment extends BaseFragment<MainActivity> {
+public class NewsFragment extends BaseFragment<MainActivity> implements NewsViewClickListener{
     private static final String TAG = "NewsFragment";
     View mProgressDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -240,6 +243,73 @@ public class NewsFragment extends BaseFragment<MainActivity> {
 
     private void initAdapter() {
         adapter = new NewsAdapter(this,getActivity(), data);
+        adapter.setPicClickListener(this);
         rvList.setAdapter(adapter);
+    }
+
+    @Override
+    public void remove(NewsEntity newsEntity) {
+        showDeleteDialog(newsEntity);
+    }
+
+    @Override
+    public void showLovedMember(String viewer_id, String refer_id, String type) {
+
+    }
+    MyDialog removeAlertDialog;
+    private void showDeleteDialog(final NewsEntity newsEntity){
+        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
+        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, newsEntity.getContent_group_id()), null);
+                new HttpTools(getActivity()).put(requestInfo, TAG, new HttpCallback() {
+                    @Override
+                    public void onStart() {
+                        mProgressDialog.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        mProgressDialog.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onResult(String string) {
+//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                        List<NewsEntity> data = adapter.getData();
+                        int index = data.indexOf(newsEntity);
+                        data.remove(newsEntity);
+                        adapter.notifyItemRemoved(index);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        mProgressDialog.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onCancelled() {
+
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+                removeAlertDialog.dismiss();
+            }
+        });
+        removeAlertDialog.setButtonCancel(getActivity().getString(R.string.text_dialog_cancel), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeAlertDialog.dismiss();
+            }
+        });
+        if (!removeAlertDialog.isShowing()) {
+            removeAlertDialog.show();
+        }
     }
 }

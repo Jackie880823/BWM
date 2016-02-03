@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.NewsEntity;
+import com.madxstudio.co8.interfaces.NewsViewClickListener;
 import com.madxstudio.co8.ui.BaseFragment;
 import com.madxstudio.co8.util.LogUtil;
 
@@ -49,23 +50,29 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
         return data;
     }
 
-
     @Override
     public void onBindViewHolder(final NewsHolder holder, int position) {
         final NewsEntity news = data.get(position);
         LogUtil.d(TAG, "onBindViewHolder" + "isVisibleOfTvMore=======" + news.isVisibleOfTvMore());
         LogUtil.d(TAG, "onBindViewHolder" + "Content_group_id=======1" + news.getContent_group_id());
         holder.setNewsEntity(news);
+        holder.setViewClickListener(mViewClickListener);
         if(!news.isVisibleOfTvMore()){
             holder.setSwitchVisibility(View.GONE);
         }
         holder.setContent(news,mContext,position);
     }
 
-
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public NewsViewClickListener mViewClickListener;
+
+    public void setPicClickListener(NewsViewClickListener viewClickListener) {
+        mViewClickListener = viewClickListener;
+
     }
 
 }

@@ -28,6 +28,7 @@ import com.madxstudio.co8.entity.NewsEntity;
 import com.madxstudio.co8.entity.WallEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.http.VolleyUtil;
+import com.madxstudio.co8.interfaces.NewsViewClickListener;
 import com.madxstudio.co8.ui.BaseFragment;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.ui.WriteNewsActivity;
@@ -121,10 +122,11 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * 点赞
      */
     private ImageButton ibAgree;
-    private static final String accountUserId = MainActivity.getUser().getUser_id();
+    private final String accountUserId;
     private BaseFragment fragment;
     private CallBack callBack = new CallBack();
     private HttpTools mHttpTools;
+    private NewsViewClickListener mViewClickListener;
 
     private String imageUrl;
     private String videoUrl;
@@ -132,11 +134,16 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private boolean isDisplayMore;
     private int defaultLineCount = 5;
 
+    public void setViewClickListener(NewsViewClickListener mViewClickListener) {
+        this.mViewClickListener = mViewClickListener;
+    }
+
     public NewsHolder(BaseFragment fragment,View itemView, Context mContext) {
         super(itemView);
         this.mContext = mContext;
         this.fragment = fragment;
 
+        accountUserId = MainActivity.getUser().getUser_id();
         mHttpTools = new HttpTools(mContext);
         tvCategoryName = (TextView) itemView.findViewById(R.id.news_category_name);
         tvTitle = (TextView) itemView.findViewById(R.id.news_title);
@@ -195,25 +202,24 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
             newsGoodMember.setText(newsEntity.getLove_count());
         }
 
-        if ((!accountUserId.equals(this.newsEntity.getUser_id()))) {
-            // 不是当前用户：不显更多功能按钮
-            btnOption.setVisibility(View.GONE);
-        } else {
+        if (accountUserId.equals(newsEntity.getUser_id())){
             btnOption.setVisibility(View.VISIBLE);
+        } else {
+            btnOption.setVisibility(View.GONE);
         }
 
-        if (TextUtils.isEmpty(this.newsEntity.getLove_id())) {
+        if (TextUtils.isEmpty(newsEntity.getLove_id())) {
             ibAgree.setImageResource(R.drawable.goodjob_nonclicked);
         } else {
             ibAgree.setImageResource(R.drawable.goodjob_clicked);
         }
 
-        if(TextUtils.isEmpty(this.newsEntity.getFile_id()) && TextUtils.isEmpty(newsEntity.getVideo_thumbnail())){
+        if(TextUtils.isEmpty(newsEntity.getFile_id()) && TextUtils.isEmpty(newsEntity.getVideo_thumbnail())){
             llNewsImage.setVisibility(View.GONE);
         }else {
             llNewsImage.setVisibility(View.VISIBLE);
 
-            if (!TextUtils.isEmpty(this.newsEntity.getVideo_thumbnail())) { // 有视频图片说这条Wall上传的是视频并有图片，显示视频图片
+            if (!TextUtils.isEmpty(newsEntity.getVideo_thumbnail())) { // 有视频图片说这条Wall上传的是视频并有图片，显示视频图片
                 String url = String.format(Constant.API_GET_VIDEO_THUMBNAIL, newsEntity.getContent_creator_id(), newsEntity.getVideo_thumbnail());
 //                LogUtil.i(TAG, "setContent& video_thumbnail: " + url);
                 ibtnVideo.setVisibility(View.VISIBLE);
@@ -243,7 +249,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         String locationName = this.newsEntity.getLoc_name();
-        if (TextUtils.isEmpty(locationName) || TextUtils.isEmpty(this.newsEntity.getLoc_latitude()) || TextUtils.isEmpty(this.newsEntity.getLoc_longitude())) {
+        if (TextUtils.isEmpty(locationName) || TextUtils.isEmpty(newsEntity.getLoc_latitude()) || TextUtils.isEmpty(newsEntity.getLoc_longitude())) {
             llLocation.setVisibility(View.GONE);
         } else {
             llLocation.setVisibility(View.VISIBLE);
@@ -360,7 +366,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         editDiaryAction();
                         break;
                     case R.id.menu_delete_this_post:
-//                        mViewClickListener.remove(newsEntity);
+                        mViewClickListener.remove(newsEntity);
                         break;
                 }
                 return true;
