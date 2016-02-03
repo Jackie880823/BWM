@@ -63,7 +63,7 @@ public class FamilyTreeActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
 
-        rightButton.setVisibility(View.VISIBLE);
+        rightButton.setVisibility(View.INVISIBLE);
         rightButton.setImageResource(R.drawable.pdf);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
