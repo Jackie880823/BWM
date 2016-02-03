@@ -115,6 +115,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private String Spmemeber_date;
     private String users_date;
     private Long endMeetingTime;
+    private boolean isChooseEndTime;
 
     private static final int MAX_COUNT = 300;
 
@@ -796,7 +797,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
 
                 if (MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
+                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.msg_date_not_befort_now));
                     return;
                 }
                 //把时间储存到缓存
@@ -810,6 +811,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 if (endMeetingTime - startMeetingTime <= 0) {
                     MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
                 } else {
+                    isChooseEndTime = true;
                     pickEndDateTimeDialog.dismiss();
                     date_end_desc.setText(dateDesc);
                     mEevent.setGroup_end_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
@@ -854,7 +856,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         pickDateTimeDialog.setButtonAccept(getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickDateTimeDialog.dismiss();
+
                 if (datePicker != null && timePicker != null) {
 
                 }
@@ -864,11 +866,16 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 mCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDay());
                 mCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHourOfDay());
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
-
-                if (MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
+                startMeetingTime = mCalendar.getTimeInMillis();
+                if (MyDateUtils.isBeforeDate(startMeetingTime)) {
+                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.msg_date_not_befort_now));
                     return;
                 }
+                if (endMeetingTime > 0 && endMeetingTime - startMeetingTime <= 0) {
+                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
+                    return;
+                }
+                pickDateTimeDialog.dismiss();
                 //把时间储存到缓存
                 if (mCalendar != null) {
                     PreferencesUtil.saveValue(getParentActivity(), "date", mCalendar.getTimeInMillis());
@@ -877,7 +884,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
                 mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
                 //将日历的时间显示出来
-                startMeetingTime = mCalendar.getTimeInMillis();
+
                 date_desc.setText(dateDesc);
             }
         });
@@ -999,6 +1006,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
                 return false;
             }
+        }
+        if (endMeetingTime <= startMeetingTime) {
+            MessageUtil.showMessage(getActivity(), R.string.text_meeting_end_time);
+            return false;
         }
 
         return true;

@@ -62,6 +62,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     private MyDialog pickDateTimeDialog;
     private MyDialog saveAlertDialog;
     private MyDialog pickEndDateTimeDialog;
+    private Long startData = 0L;
     private Long endData = 0L;
 
     public static EventEditFragment newInstance(String... params) {
@@ -147,7 +148,8 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         item_end_date.setOnClickListener(this);
         item_reminder.setOnClickListener(this);
         Timestamp ts = Timestamp.valueOf(mEevent.getGroup_event_date());
-        endData = ts.getTime() + TimeZone.getDefault().getRawOffset();
+        startData = ts.getTime() + TimeZone.getDefault().getRawOffset();
+        endData = Timestamp.valueOf(mEevent.getGroup_end_date()).getTime() + TimeZone.getDefault().getRawOffset();
         getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
@@ -493,8 +495,9 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 mCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDay());
                 mCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHourOfDay());
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
-                if (mCalendar.getTimeInMillis() <= endData) {
-                    MessageUtil.showMessage(getActivity(), R.string.text_meeting_end_time);
+                endData = mCalendar.getTimeInMillis();
+                if (endData <= startData) {
+                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
                     return;
                 }
                 pickEndDateTimeDialog.dismiss();
@@ -564,19 +567,22 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         pickDateTimeDialog.setButtonAccept(getString(R.string.text_dialog_accept), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickDateTimeDialog.dismiss();
                 mCalendar = Calendar.getInstance();
                 mCalendar.set(Calendar.YEAR, datePicker.getYear());
                 mCalendar.set(Calendar.MONTH, datePicker.getMonth());
                 mCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDay());
                 mCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHourOfDay());
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
-
-                if (MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
+                startData = mCalendar.getTimeInMillis();
+                if (MyDateUtils.isBeforeDate(startData)) {
+                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.msg_date_not_befort_now));
                     return;
                 }
-                endData = mCalendar.getTimeInMillis();
+                if (endData >= 0 && endData <= startData) {
+                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
+                    return;
+                }
+                pickDateTimeDialog.dismiss();
                 String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
                 //                Log.i("TimeDialog===",dateDesc);
                 mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
@@ -716,7 +722,10 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 return false;
             }
         }
-
+        if (endData <= startData) {
+            MessageUtil.showMessage(getActivity(), R.string.text_meeting_end_time);
+            return false;
+        }
         mEevent.setText_description(event_desc.getText().toString());
         mEevent.setGroup_name(event_title.getText().toString());
         return true;
