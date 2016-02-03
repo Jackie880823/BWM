@@ -1,9 +1,6 @@
 package com.madxstudio.co8.ui;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -23,8 +20,6 @@ import com.madxstudio.co8.receiver_service.NetWorkStateReceiver;
 import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.NotificationUtil;
 import com.madxstudio.co8.util.UIUtil;
-
-import me.leolin.shortcutbadger.ShortcutBadger;
 
 /**
  * activity基类
@@ -104,9 +99,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         //                .findViewById(android.R.id.content)).getChildAt(0);
         //        viewGroup.addView(setWaittingView());
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_LOCALE_CHANGED);
-        registerReceiver(mReceiver, filter);
     }
 
     public int getLayout() {
@@ -278,23 +270,22 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onDestroy() {
         super.onDestroy();
         NetWorkStateReceiver.unRegisterNetStateObserver(this);
-        unregisterReceiver(mReceiver);
     }
 
     @Override
     protected void onResume() {
-        if (isNeedRefersh&&!(this instanceof MainActivity)) {
-            Intent intent = getIntent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            finish();
-            startActivity(intent);
-
-//            isNeedRefersh = false;
-//            Intent reintent = getIntent();
+//        if (isNeedRefersh&&!(this instanceof MainActivity)) {
+//            Intent intent = getIntent();
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 //            finish();
-//            startActivity(reintent);
-            return;
-        }
+//            startActivity(intent);
+//
+////            isNeedRefersh = false;
+////            Intent reintent = getIntent();
+////            finish();
+////            startActivity(reintent);
+//            return;
+//        }
         super.onResume();
         AppsFlyerLib.onActivityResume(this);
         NotificationUtil.clearBadge(this);//重置应用图标上的数量
@@ -305,21 +296,5 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //            App.getContextInstance().clearNotificationMsgsByType((NotificationUtil.MessageType) getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
         }
     }
-
-    protected boolean isNeedRefersh;
-    /**
-     * 更新UI的广播接收器
-     */
-    BroadcastReceiver mReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
-                if (App.isBackground()) {
-                    isNeedRefersh = true;
-                }
-            }
-        }
-    };
 
 }

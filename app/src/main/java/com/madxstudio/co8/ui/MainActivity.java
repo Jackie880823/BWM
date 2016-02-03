@@ -186,13 +186,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onResume() {
-        if (isNeedRefersh) {
-            isNeedRefersh = false;
-            Intent reintent = getIntent();
-            finish();
-            startActivity(reintent);
-        }
-
         super.onResume();
 //        if(currentTabEnum!=null){
 //            changeTitleColor();
@@ -893,11 +886,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-//            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
-//                if (App.isBackground()) {
-//                    isNeedRefersh = true;
-//                }
-//            }
             if (intent.getAction().equals(ACTION_REFRESH_RED_POINT_4_FIMILY)) {
                 disableRedPoint(TabEnum.family, true);
             }

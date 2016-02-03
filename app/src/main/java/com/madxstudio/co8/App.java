@@ -131,6 +131,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
      */
     public static void userLoginSuccessed(Activity context, UserEntity user, AppTokenEntity tokenEntity) {
 
+        getContextInstance().finishAllActivitys();
         if(user!=null) {
             changeLoginedUser(user, tokenEntity);
             runAlarmTask(context, user);
@@ -385,9 +386,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public void exit(Activity context) {
-        if (context != null && !context.isFinishing()) {
-            context.finish();
-        }
+        finishAllActivitys();
 //        App.getContextInstance().finishAllActivitys();
         onTerminate();
     }
@@ -503,6 +502,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
+                finishAllActivitys();
                 HttpTools.getHeaders().put("X_BWM_APPLANG", Locale.getDefault().getLanguage());
             }
         }
