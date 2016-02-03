@@ -85,7 +85,7 @@
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines="5"
             android:minLines="5"
-            android:hint="Write your story here"
+            android:hint="@string/text_news_edit"
             android:textColor="@color/default_text_color_dark"
             android:textSize="@dimen/text_medium_size" />
 

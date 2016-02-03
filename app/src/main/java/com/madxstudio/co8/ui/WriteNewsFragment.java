@@ -216,7 +216,10 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                 if(v.getId() == getParentActivity().rightButton.getId()){
                     submitWall();
                 }else if(v.getId() == getParentActivity().leftButton.getId()){
-                    backCheck();
+                    if(!backCheck()){
+                        getParentActivity().finish();
+                    }
+
                 }
                 return true;
             }
