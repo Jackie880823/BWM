@@ -86,7 +86,7 @@
             android:layout_marginTop="@dimen/default_view_margin"
             android:layout_weight="1"
             android:drawablePadding="@dimen/new_diary_bottom_icon_and_text"
-            android:drawableTop="@drawable/privacy_lock"
+            android:drawableTop="@drawable/workspace_management_icon"
             android:gravity="center"
             android:text="@string/text_orgin_workspace"
             android:textColor="@color/btn_bg_color_gray_normal"
