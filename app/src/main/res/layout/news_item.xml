@@ -163,15 +163,24 @@
                     android:layout_centerVertical="true"
                     android:background="@null"
                     android:src="@drawable/goodjob_nonclicked"/>
-                <TextView
-                    android:id="@+id/new_good_job"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/fl_love"
                     android:layout_toRightOf="@id/iv_good"
-                    android:textSize="@dimen/_15dp"
-                    android:layout_marginLeft="@dimen/_8dp"
-                    android:layout_centerVertical="true"
-                    android:text="0" />
+                    android:layout_marginLeft="@dimen/_5dp"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true">
+                    <TextView
+                        android:id="@+id/new_good_job"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="@dimen/_15dp"
+                        android:layout_marginLeft="@dimen/_8dp"
+                        android:layout_centerVertical="true"
+                        android:text="0" />
+                </RelativeLayout>
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -188,16 +197,21 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:src="@drawable/btn_comment"/>
-                <TextView
-                    android:id="@+id/new_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <RelativeLayout
                     android:layout_toRightOf="@id/iv_new_comment"
-                    android:layout_marginLeft="@dimen/default_content_padding"
-                    android:textSize="@dimen/_15dp"
-                    android:layout_centerVertical="true"
-                    android:text="0" />
-
+                    android:layout_marginLeft="@dimen/_5dp"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true">
+                    <TextView
+                        android:id="@+id/new_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/default_content_padding"
+                        android:textSize="@dimen/_15dp"
+                        android:layout_centerVertical="true"
+                        android:text="0" />
+                    </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>

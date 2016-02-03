@@ -24,8 +24,10 @@ import com.madxstudio.co8.adapter.NewsAdapter;
 import com.madxstudio.co8.entity.NewsEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.interfaces.NewsViewClickListener;
+import com.madxstudio.co8.ui.wall.WallMembersOrGroupsActivity;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.WallUtil;
 import com.madxstudio.co8.widget.MyDialog;
 
 import java.util.ArrayList;
@@ -254,7 +256,12 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
 
     @Override
     public void showLovedMember(String viewer_id, String refer_id, String type) {
-
+        Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
+        intent.setAction(Constant.ACTION_SHOW_LOVED_USER);
+        intent.putExtra(WallUtil.GET_LOVE_LIST_VIEWER_ID, viewer_id);
+        intent.putExtra(WallUtil.GET_LOVE_LIST_REFER_ID, refer_id);
+        intent.putExtra(WallUtil.GET_LOVE_LIST_TYPE, type);
+        startActivity(intent);
     }
     MyDialog removeAlertDialog;
     private void showDeleteDialog(final NewsEntity newsEntity){
@@ -262,7 +269,9 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                LogUtil.d("delete=====标题",newsEntity.getContent_title());
+                LogUtil.d("delete=====作者",newsEntity.getUser_given_name());
+                LogUtil.d("delete=====useId",newsEntity.getUser_id());
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, newsEntity.getContent_group_id()), null);
                 new HttpTools(getActivity()).put(requestInfo, TAG, new HttpCallback() {
                     @Override

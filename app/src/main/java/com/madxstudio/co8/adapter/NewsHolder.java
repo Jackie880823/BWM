@@ -39,6 +39,7 @@ import com.madxstudio.co8.ui.wall.WallViewPicActivity;
 import com.madxstudio.co8.util.LocationUtil;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MyDateUtils;
+import com.madxstudio.co8.util.WallUtil;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -122,6 +123,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * 点赞
      */
     private ImageButton ibAgree;
+    private View flLove;
     private final String accountUserId;
     private BaseFragment fragment;
     private CallBack callBack = new CallBack();
@@ -168,6 +170,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
         ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
         tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
+        flLove = itemView.findViewById(R.id.fl_love);
 
         changeTextDisplay(isDisplayMore);
 
@@ -178,6 +181,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         new_good_job_linear.setOnClickListener(this);
         btnOption.setOnClickListener(this);
         ibAgree.setOnClickListener(this);
+        flLove.setOnClickListener(this);
     }
 
     public void setNewsEntity(NewsEntity newsEntity) {
@@ -345,6 +349,18 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     doLove(newsEntity, false);
                 } else {
                     doLove(newsEntity, true);
+                }
+                break;
+            case R.id.fl_love:
+                if (WallEntity.CONTENT_TYPE_ADS.equals(newsEntity.getContent_type())) {
+                    LogUtil.i(TAG, "is ADS can't show member");
+                } else {
+
+                    if (Integer.valueOf(newsEntity.getLove_count()) > 0) {
+                        if (mViewClickListener != null) {
+                            mViewClickListener.showLovedMember(accountUserId, newsEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+                        }
+                    }
                 }
                 break;
         }
