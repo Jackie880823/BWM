@@ -33,21 +33,21 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.madxstudio.co8.adapter.NewsFragmentAdapter;
-import com.madxstudio.co8.entity.PutNewsEntity;
 import com.google.gson.Gson;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.adapter.HeadHolder;
+import com.madxstudio.co8.adapter.NewsFragmentAdapter;
 import com.madxstudio.co8.adapter.VideoHolder;
+import com.madxstudio.co8.adapter.WriteNewHeadHolder;
 import com.madxstudio.co8.entity.DiaryPhotoEntity;
 import com.madxstudio.co8.entity.MediaData;
 import com.madxstudio.co8.entity.NewsEntity;
 import com.madxstudio.co8.entity.PushedPhotoEntity;
+import com.madxstudio.co8.entity.PutNewsEntity;
 import com.madxstudio.co8.http.PicturesCacheUtil;
 import com.madxstudio.co8.http.UrlUtil;
-import com.madxstudio.co8.interfaces.ImagesRecyclerListener;
+import com.madxstudio.co8.interfaces.ImagesNewsRecyclerListener;
 import com.madxstudio.co8.ui.share.PreviewVideoActivity;
 import com.madxstudio.co8.ui.share.SelectPhotosActivity;
 import com.madxstudio.co8.util.LocalImageLoader;
@@ -82,6 +82,9 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
     public static final String PREFERENCE_KEY_IS_SAVE = "IS_SAVE";
     private View rl_category;
     private MyDialog categoryDialog;
+    /**
+     * 新闻类型
+     */
     private TextView category_tv;
     private RecyclerView rvImages;
     private Context mContext;
@@ -191,10 +194,11 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         mContext=getActivity();
         gson = new Gson();
         isEdit = !TextUtils.isEmpty(contentGroupId);
-        rl_category = getViewById(R.id.rl_category);
-        category_tv = getViewById(R.id.category_tv);
+//        rl_category = getViewById(R.id.rl_category);
         rvImages = getViewById(R.id.rcv_post_photos);
-        titleDesc = getViewById(R.id.title_desc);
+
+//        category_tv = getViewById(R.id.category_tv);
+//        titleDesc = getViewById(R.id.title_desc);
 
         mHttpTools = new HttpTools(getContext());
 
@@ -202,7 +206,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rvImages.setLayoutManager(llm);
         mAdapter = new NewsFragmentAdapter(getContext(),photoEntities);
-        rl_category.setOnClickListener(this);
+//        rl_category.setOnClickListener(this);
 
         rlProgress = getViewById(R.id.rl_progress);
         rlProgress.setVisibility(View.GONE);
@@ -228,13 +232,22 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
 
         reminderArrayUs = getActivity().getResources().getStringArray(R.array.category_item);
         list = Arrays.asList(reminderArrayUs);
-        mAdapter.setListener(new ImagesRecyclerListener() {
+        mAdapter.setListener(new ImagesNewsRecyclerListener() {
             @Override
-            public void loadHeadView(HeadHolder headHolder) {
+            public void loadHeadView(WriteNewHeadHolder headHolder) {
                 headView = headHolder.itemView;
                 llLocation = (LinearLayout) headView.findViewById(R.id.ll_location);
                 llLocation.setOnClickListener(WriteNewsFragment.this);
                 tvLocationDesc = (TextView) headView.findViewById(R.id.location_desc);
+                category_tv = (TextView) headView.findViewById(R.id.category_tv);
+                titleDesc = (EditText) headView.findViewById(R.id.title_desc);
+                rl_category = headView.findViewById(R.id.rl_category);
+                rl_category.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showCateGoryDialog();
+                    }
+                });
                 wevContent = (WallEditView) headView.findViewById(R.id.diary_edit_content);
                 wevContent.setTextChangeListener(new WallEditView.TextChangeListener() {
                     int lastChange = CHANGE_MODE_NORMAL;
@@ -455,9 +468,9 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
     @Override
     public void onClick(View view) {
         switch ((view.getId())) {
-            case R.id.rl_category:
-                showCateGoryDialog();
-                break;
+//            case R.id.rl_category:
+//                showCateGoryDialog();
+//                break;
             case R.id.tv_camera:
 //                openPhotos();
                 openChooseDialog();

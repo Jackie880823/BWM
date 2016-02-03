@@ -16,12 +16,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.adapter.HeadHolder;
-import com.madxstudio.co8.adapter.VideoHolder;
 import com.madxstudio.co8.entity.DiaryPhotoEntity;
 import com.madxstudio.co8.entity.PhotoEntity;
 import com.madxstudio.co8.entity.PushedPhotoEntity;
-import com.madxstudio.co8.interfaces.ImagesRecyclerListener;
+import com.madxstudio.co8.interfaces.ImagesNewsRecyclerListener;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
@@ -47,8 +45,8 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<ViewHolder>{
     private Context mContext;
     private String userId = MainActivity.getUser().getUser_id();
 
-    private ImagesRecyclerListener listener;
-    public HeadHolder headHolder = null;
+    private ImagesNewsRecyclerListener listener;
+    public WriteNewHeadHolder headHolder = null;
     public VideoHolder videoHolder = null;
     private boolean isPhoto = true;
     private String request_url;
@@ -92,7 +90,7 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<ViewHolder>{
                 case VIEW_TYPE_HEAD:
                     if (headHolder == null) {
                         view = LayoutInflater.from(mContext).inflate(R.layout.edit_news_head,null);
-                        headHolder = new HeadHolder(view);
+                        headHolder = new WriteNewHeadHolder(view);
                     }
                     listener.loadHeadView(headHolder);
                     return headHolder;
@@ -113,7 +111,7 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<ViewHolder>{
     public void onBindViewHolder(ViewHolder holder, int position) {
         if(position == 0){
             //头部
-            HeadHolder headHolder = (HeadHolder) holder;
+            WriteNewHeadHolder headHolder = (WriteNewHeadHolder) holder;
 
         }else if(isPhoto){
             //如果是照片
@@ -165,7 +163,7 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<ViewHolder>{
         return isPhoto ? mEntities.size() + 1 : 2;
     }
 
-    public void setListener(ImagesRecyclerListener listener) {
+    public void setListener(ImagesNewsRecyclerListener listener) {
         this.listener = listener;
     }
 

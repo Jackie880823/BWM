@@ -12,6 +12,9 @@ import android.widget.ListView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.DiaryPhotoEntity;
@@ -19,14 +22,11 @@ import com.madxstudio.co8.entity.PhotoEntity;
 import com.madxstudio.co8.entity.PushedPhotoEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.VolleyUtil;
-import com.madxstudio.co8.interfaces.ImagesRecyclerListener;
+import com.madxstudio.co8.interfaces.ImagesNewsRecyclerListener;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.WallEditView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
@@ -46,7 +46,7 @@ public class WriteNewAdapter extends RecyclerView.Adapter<ViewHolder> {
     private static final int VIEW_TYPE_VIDEO = 100;
     public static final String TAG = WriteNewAdapter.class.getSimpleName();
 
-    private ImagesRecyclerListener listener;
+    private ImagesNewsRecyclerListener listener;
     private boolean isPhoto = true;
     private String userId = MainActivity.getUser().getUser_id();
     private Context context;
@@ -55,7 +55,7 @@ public class WriteNewAdapter extends RecyclerView.Adapter<ViewHolder> {
     private String request_url;
     private List<PhotoEntity> data = new ArrayList<>();
 
-    public HeadHolder headHolder = null;
+    public WriteNewHeadHolder headHolder = null;
     public VideoHolder videoHolder = null;
 
     public WriteNewAdapter(Context context, List<PushedPhotoEntity> entities) {
@@ -105,7 +105,7 @@ public class WriteNewAdapter extends RecyclerView.Adapter<ViewHolder> {
             case VIEW_TYPE_HEAD:
                 if (headHolder == null) {
                     view = LayoutInflater.from(context).inflate(R.layout.edit_diary_head, null);
-                    headHolder = new HeadHolder(view);
+                    headHolder = new WriteNewHeadHolder(view);
                 }
                 listener.loadHeadView(headHolder);
                 return headHolder;
@@ -292,7 +292,7 @@ public class WriteNewAdapter extends RecyclerView.Adapter<ViewHolder> {
         });
     }
 
-    public void setListener(ImagesRecyclerListener listener) {
+    public void setListener(ImagesNewsRecyclerListener listener) {
         this.listener = listener;
     }
 

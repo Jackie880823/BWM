@@ -167,7 +167,7 @@
                     android:id="@+id/fl_love"
                     android:layout_toRightOf="@id/iv_good"
                     android:layout_marginLeft="@dimen/_5dp"
-                    android:layout_width="@dimen/_20dp"
+                    android:layout_width="@dimen/_30dp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true">
                     <TextView
@@ -200,7 +200,7 @@
                 <RelativeLayout
                     android:layout_toRightOf="@id/iv_new_comment"
                     android:layout_marginLeft="@dimen/_5dp"
-                    android:layout_width="@dimen/_20dp"
+                    android:layout_width="@dimen/_30dp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true">
                     <TextView
