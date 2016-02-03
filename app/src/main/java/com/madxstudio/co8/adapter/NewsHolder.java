@@ -183,8 +183,8 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
             newsGoodMember.setText(newsEntity.getLove_count());
         }
 
-        if ((!accountUserId.equals(this.newsEntity.getUser_id()) && (Integer.valueOf(newsEntity.getPhoto_count()) <= 0 && TextUtils.isEmpty(newsEntity.getVideo_filename())))) {
-            // 不是当前用户：没有图片也没有视频都不需要显更多功能按钮
+        if ((!accountUserId.equals(this.newsEntity.getUser_id()))) {
+            // 不是当前用户：不显更多功能按钮
             btnOption.setVisibility(View.GONE);
         } else {
             btnOption.setVisibility(View.VISIBLE);
