@@ -217,6 +217,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                     submitWall();
                 }else if(v.getId() == getParentActivity().leftButton.getId()){
                     if(!backCheck()){
+                        UIUtil.hideKeyboard(getContext(), getActivity().getCurrentFocus());
                         getParentActivity().finish();
                     }
 
