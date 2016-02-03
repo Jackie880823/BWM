@@ -747,4 +747,6 @@
     <string name="text_choose_start_time">Please Select Start Date &amp; Time</string>
     <string name="text_org_chart">Org Chart</string>
     <string name="text_orgin_workspace">Organisation</string>
+
+    <string name="text_news_edit">Write your news here</string>
 </resources>
