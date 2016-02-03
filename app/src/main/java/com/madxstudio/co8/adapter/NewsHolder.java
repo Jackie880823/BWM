@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.madxstudio.co8.Constant;
@@ -31,6 +33,7 @@ import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.ui.WriteNewsActivity;
 import com.madxstudio.co8.ui.share.PreviewVideoActivity;
 import com.madxstudio.co8.ui.wall.DiaryCommentActivity;
+import com.madxstudio.co8.ui.wall.DiaryInformationFragment;
 import com.madxstudio.co8.ui.wall.WallViewPicActivity;
 import com.madxstudio.co8.util.LocationUtil;
 import com.madxstudio.co8.util.LogUtil;
@@ -114,8 +117,14 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * 显示地址名称，可点击跳转至地图
      */
     private TextView tvLocation;
+    /**
+     * 点赞
+     */
+    private ImageButton ibAgree;
     private static final String accountUserId = MainActivity.getUser().getUser_id();
     private BaseFragment fragment;
+    private CallBack callBack = new CallBack();
+    private HttpTools mHttpTools;
 
     private String imageUrl;
     private String videoUrl;
@@ -128,6 +137,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.mContext = mContext;
         this.fragment = fragment;
 
+        mHttpTools = new HttpTools(mContext);
         tvCategoryName = (TextView) itemView.findViewById(R.id.news_category_name);
         tvTitle = (TextView) itemView.findViewById(R.id.news_title);
         tvDate = (TextView) itemView.findViewById(R.id.news_date);
@@ -138,6 +148,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         ibtnVideo = (ImageView) itemView.findViewById(R.id.iv_video_top);
         tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
 
+        ibAgree = (ImageButton) itemView.findViewById(R.id.iv_good);
         tvContent = (TextView) itemView.findViewById(R.id.news_content);
         tvMoreOrCollapse = (TextView) itemView.findViewById(R.id.tv_more_or_collapse);
         new_comment_linear = itemView.findViewById(R.id.new_comment_linear);
@@ -159,6 +170,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         new_comment_linear.setOnClickListener(this);
         new_good_job_linear.setOnClickListener(this);
         btnOption.setOnClickListener(this);
+        ibAgree.setOnClickListener(this);
     }
 
     public void setNewsEntity(NewsEntity newsEntity) {
@@ -188,6 +200,12 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
             btnOption.setVisibility(View.GONE);
         } else {
             btnOption.setVisibility(View.VISIBLE);
+        }
+
+        if (TextUtils.isEmpty(this.newsEntity.getLove_id())) {
+            ibAgree.setImageResource(R.drawable.goodjob_nonclicked);
+        } else {
+            ibAgree.setImageResource(R.drawable.goodjob_clicked);
         }
 
         if(TextUtils.isEmpty(this.newsEntity.getFile_id()) && TextUtils.isEmpty(newsEntity.getVideo_thumbnail())){
@@ -309,11 +327,18 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 fragment.startActivityForResult(intent, Constant.INTENT_UPDATE_DIARY);
                 break;
             case R.id.new_good_job_linear://赞
-
                 break;
             case R.id.btn_option:
                 if (newsEntity != null) {
                     initItemMenu(v);
+                }
+                break;
+            case R.id.iv_good:
+                updateLovedView();
+                if (TextUtils.isEmpty(newsEntity.getLove_id())) {
+                    doLove(newsEntity, false);
+                } else {
+                    doLove(newsEntity, true);
                 }
                 break;
         }
@@ -404,6 +429,35 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     }
 
+    private void doLove(NewsEntity newsEntity, boolean love) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("content_id", newsEntity.getContent_id());
+        params.put("love", love ? "1" : "0");// 0-取消，1-赞
+        params.put("user_id", "" + accountUserId);
+        RequestInfo requestInfo = new RequestInfo(Constant.API_WALL_LOVE, params);
+        callBack.setLinkType(CallBack.LINK_TYPE_POST_LOVE);
+        mHttpTools.post(requestInfo, TAG, callBack);
+    }
+
+    private void updateLovedView() {
+        int count = Integer.valueOf(newsEntity.getLove_count());
+        int resId;
+
+        if (TextUtils.isEmpty(newsEntity.getLove_id())) {
+            count += 1;
+            resId = R.drawable.goodjob_clicked;
+            newsEntity.setLove_id(accountUserId);
+        } else {
+            count -= 1;
+            resId = R.drawable.goodjob_nonclicked;
+            newsEntity.setLove_id(null);
+        }
+
+        newsEntity.setLove_count(String.valueOf(count));
+        ibAgree.setImageResource(resId);
+        newsGoodMember.setText(String.format(newsGoodMember.getContext().getString(R.string.loves_count), count));
+    }
+
     private void changeTextDisplay(boolean isDisplayMore) {
         this.isDisplayMore = isDisplayMore;
 //        LogUtil.i(TAG, "isDisplayMore==========" + isDisplayMore);
@@ -441,6 +495,65 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
     }
+
+
+    class CallBack implements HttpCallback {
+        public static final int LINK_TYPE_SUBMIT_PICTURE = 2;
+        public static final int LINK_TYPE_POST_LOVE = 3;
+        public static final int LINK_TYPE_SAVE_PHOTOS = 4;
+        public static final int LINK_TYPE_SAVE_VIDEO = 5;
+        public static final int LINK_TYPE_PUT_PHOTO_MAX = 6;
+
+        private int linkType = LINK_TYPE_SUBMIT_PICTURE;
+
+        public void setLinkType(int linkType) {
+            this.linkType = linkType;
+        }
+
+        @Override
+        public void onStart() {
+            switch (linkType) {
+                case LINK_TYPE_POST_LOVE:
+                    if (fragment instanceof DiaryInformationFragment) {
+                        ((DiaryInformationFragment) fragment).setProgressVisibility(View.VISIBLE);
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onFinish() {
+
+        }
+
+        @Override
+        public void onResult(String string) {
+            switch (linkType) {
+                case LINK_TYPE_POST_LOVE:
+                    LogUtil.d(TAG, "onResult& LINK_TYPE_POST_LOVE");
+                    if (fragment instanceof DiaryInformationFragment) {
+                        ((DiaryInformationFragment) fragment).setResultOK(false);
+                        ((DiaryInformationFragment) fragment).setProgressVisibility(View.GONE);
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onError(Exception e) {
+
+        }
+
+        @Override
+        public void onCancelled() {
+
+        }
+
+        @Override
+        public void onLoading(long count, long current) {
+
+        }
+}
 
     /**
      * 设置收起开头的显示/隐藏
