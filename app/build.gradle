@@ -82,10 +82,11 @@ android {
         pt {
             // 显示Log
             buildConfigField "boolean", "LOG_DEBUG", "true"
-            minifyEnabled false
-            zipAlignEnabled false
-            shrinkResources false
-            signingConfig signingConfigs.debug
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     // 多渠道打包
