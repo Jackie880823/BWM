@@ -142,9 +142,10 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         netQrImageView = getViewById(R.id.iv_profile_qr);
         rvToQR = getViewById(R.id.rl_to_qr);
 
-        array = new int[]{R.drawable.profile_background_0, R.drawable.profile_background_1, R.drawable.profile_background_2,
-                R.drawable.profile_background_3, R.drawable.profile_background_4, R.drawable.profile_background_5};
-        profileBackgroundId = randomImageId(array);
+//        array = new int[]{R.drawable.profile_background_0, R.drawable.profile_background_1, R.drawable.profile_background_2,
+//                R.drawable.profile_background_3, R.drawable.profile_background_4, R.drawable.profile_background_5};
+//        profileBackgroundId = randomImageId(array);
+        profileBackgroundId = R.drawable.profile_background_0;
         if (memberId != null) {
             VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
             VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);

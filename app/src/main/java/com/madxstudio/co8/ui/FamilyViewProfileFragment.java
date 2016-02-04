@@ -1,27 +1,25 @@
 package com.madxstudio.co8.ui;
 
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.PhotoEntity;
@@ -34,9 +32,6 @@ import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyDateUtils;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 import com.madxstudio.co8.widget.NoScrollListView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,14 +39,12 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -207,7 +200,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         memberId = getParentActivity().getIntent().getStringExtra("member_id");
         bwmId = getParentActivity().getIntent().getStringExtra("bwm_id");
 
-        profileBackgroundId = getParentActivity().getIntent().getIntExtra("profile_image_id", 6);
+//        profileBackgroundId = getParentActivity().getIntent().getIntExtra("profile_image_id", 6);
         cniMain = getViewById(R.id.cni_main);
         networkImageView = getViewById(R.id.iv_profile_images);
         ivBottomLeft = getViewById(R.id.civ_left);
@@ -249,11 +242,12 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         stFemale = getResources().getString(R.string.text_female);
         stMale = getResources().getString(R.string.text_male);
 
-        if (profileBackgroundId == 6) {
-            array = new int[]{R.drawable.profile_background_0, R.drawable.profile_background_1, R.drawable.profile_background_2,
-                    R.drawable.profile_background_3, R.drawable.profile_background_4, R.drawable.profile_background_5};
-            profileBackgroundId = randomImageId(array);
-        }
+//        if (profileBackgroundId == 6) {
+//            array = new int[]{R.drawable.profile_background_0, R.drawable.profile_background_1, R.drawable.profile_background_2,
+//                    R.drawable.profile_background_3, R.drawable.profile_background_4, R.drawable.profile_background_5};
+//            profileBackgroundId = randomImageId(array);
+//        }
+            profileBackgroundId = R.drawable.profile_background_0;
 
         btAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
