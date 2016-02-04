@@ -716,20 +716,20 @@
     <string name="title_edit_comment">Edit Comment</string>
 
     <string name="login_via_facebook">Login via Facebook</string>
-    <string name="add_member_get_point"><u>Get more Reward Points now!</u></string>
-    <string name="point_accumulated"><u>Reward Point Accumulated</u></string>
-    <string name="reward_info">Reward Info</string>
-    <string name="expired">Expired</string>
-    <string name="my_rewards">My Rewards</string>
-    <string name="valid_till">Valid till</string>
-    <string name="redeem">Click to Redeem</string>
-    <string name="tap_copy">Tap the box to copy</string>
-    <string name="points">Points</string>
-    <string name="text_capital_points">POINTS</string>
-    <string name="redemption_point">REDEMPTION POINT</string>
-    <string name="copy_success">Copy Successfully</string>
-    <string name="sure_redeem">Are you sure you want to redeem this voucher with</string>
-    <string name="reward_point"> Reward Points?</string>
+    <!--<string name="add_member_get_point"><u>Get more Reward Points now!</u></string>-->
+    <!--<string name="point_accumulated"><u>Reward Point Accumulated</u></string>-->
+    <!--<string name="reward_info">Reward Info</string>-->
+    <!--<string name="expired">Expired</string>-->
+    <!--<string name="my_rewards">My Rewards</string>-->
+    <!--<string name="valid_till">Valid till</string>-->
+    <!--<string name="redeem">Click to Redeem</string>-->
+    <!--<string name="tap_copy">Tap the box to copy</string>-->
+    <!--<string name="points">Points</string>-->
+    <!--<string name="text_capital_points">POINTS</string>-->
+    <!--<string name="redemption_point">REDEMPTION POINT</string>-->
+    <!--<string name="copy_success">Copy Successfully</string>-->
+    <!--<string name="sure_redeem">Are you sure you want to redeem this voucher with</string>-->
+    <!--<string name="reward_point"> Reward Points?</string>-->
 
     <string name="text_profile_position">Position</string>
     <string name="text_profile_department">Department</string>
