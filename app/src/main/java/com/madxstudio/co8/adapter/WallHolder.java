@@ -202,6 +202,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private boolean needFull = false;
 
     private boolean isDetailed;
+    private View ll_love;
 
     private List<CompressBitmapTask> tasks = new ArrayList<>();
     private List<Uri> localPhotos = new ArrayList<>();
@@ -272,6 +273,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
         ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
         tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
+        ll_love=itemView.findViewById(R.id.ll_love);
 
         if (!isDetailed) { // 是列表要做文字内容切换
             switchContentShow(needFull);
@@ -282,10 +284,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         llComment.setOnClickListener(this);
         tvAgreeCount.setOnClickListener(this);
         //        tvLoveList.setOnClickListener(this);
-        ibAgree.setOnClickListener(this);
+//        ibAgree.setOnClickListener(this);
         btnOption.setOnClickListener(this);
         imWallsImages.setOnClickListener(this);
         tvSwitch.setOnClickListener(this);
+        ll_love.setOnClickListener(this);
     }
 
     /**
@@ -307,20 +310,19 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
             case R.id.tv_wall_agree_count:
             case R.id.tv_love_list:
-                if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
-                    LogUtil.i(TAG, "is ADS can't show member");
-                } else {
-
-                    if (Integer.valueOf(wallEntity.getLove_count()) > 0) {
-                        if (mViewClickListener != null) {
-                            mViewClickListener.showLovedMember(accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
-                        }
-                    }
-                }
+//                if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
+//                    LogUtil.i(TAG, "is ADS can't show member");
+//                } else {
+//
+//                    if (Integer.valueOf(wallEntity.getLove_count()) > 0) {
+//                        if (mViewClickListener != null) {
+//                            mViewClickListener.showLovedMember(accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+//                        }
+//                    }
+//                }
                 break;
 
             case R.id.ll_love:
-            case R.id.iv_love:
                 updateLovedView();
 
                 if (TextUtils.isEmpty(wallEntity.getLove_id())) {
@@ -335,6 +337,21 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 //                    check(position);
                 //                }
                 break;
+            case R.id.iv_love:
+//                updateLovedView();
+//
+//                if (TextUtils.isEmpty(wallEntity.getLove_id())) {
+//                    doLove(wallEntity, false);
+//                } else {
+//                    doLove(wallEntity, true);
+//                }
+//
+//                //判断是否已经有进行中的判断
+//                //                if(!runningList.contains(position)) {
+//                //                    runningList.add(position);
+//                //                    check(position);
+//                //                }
+//                break;
             case R.id.ll_comment: {
                 Intent intent;
                 intent = new Intent(context, DiaryCommentActivity.class);
