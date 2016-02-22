@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.appsflyer.AppsFlyerLib;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 显示应用的界面，只在第一次安装本应用没有且没有记录账号显示本界面，已有账号或不是第一次启动些应用则从此{@code Activity}跳转到{@link MainActivity}.<br/>
+ *
+ * <p/>
  * Created 11/5/15.
  *
  * @author Jackie
@@ -43,6 +46,8 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
      * 需要显示绍介的应用版，如果某个版本需要显示介绍可以修改当前常量与对应版本的versionCode一致，用于在
      * {@link #SHARED_PREFERENCES_VERSION}在首选项中的{@link #VERSION_CODE}的值比较，若当前常量大，
      * 无论应用是否为首次安装启动都将打开介绍页
+     *
+     * @deprecated 这个值目前还没有被使用
      */
     private static final int SHOW_INTRODUCTION_VERSION = 59;
     private static final String SHARED_PREFERENCES_VERSION = "SHARED_PREFERENCES_VERSION";
@@ -51,21 +56,7 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
     private SharedPreferences sharedPreferences;
 
     /**
-     * Called when the activity is starting.  This is where most initialization
-     * should go: calling {@link #setContentView(int)} to inflate the
-     * activity's UI, using {@link #findViewById} to programmatically interact
-     * with widgets in the UI, calling
-     * {@link #managedQuery(Uri, String[], String, String[], String)} to retrieve
-     * cursors for data being displayed, etc.
-     * <p/>
-     * <p>You can call {@link #finish} from within this function, in
-     * which case onDestroy() will be immediately called without any of the rest
-     * of the activity lifecycle ({@link #onStart}, {@link #onResume},
-     * {@link #onPause}, etc) executing.
-     * <p/>
-     * <p><em>Derived classes must call through to the super class's
-     * implementation of this method.  If they do not, an exception will be
-     * thrown.</em></p>
+     * Activity已经启动，在这里检测本应用是否是安装第一次开启（或更新前没有帐户记录）则初始化UI显示介绍页
      *
      * @param savedInstanceState If the activity is being re-initialized after
      *                           previously being shut down then this Bundle contains the data it most
@@ -82,14 +73,17 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_VERSION, Context.MODE_PRIVATE);
         int versionCode = sharedPreferences.getInt(VERSION_CODE, 0);
         LogUtil.d(TAG, "onCreate& preferences saved version code: " + versionCode);
+        // 获取是否为第一次启动的标识：如果没有保存值默认得到一个true的值，说明应用还没有启动过
         boolean firstStart = sharedPreferences.getBoolean(FIRST_START, true);
 
-        // 上一次启动的保存的版本号比需要显示介绍页的版本小或者是应用首次安装启动
-//        if (versionCode < SHOW_INTRODUCTION_VERSION || firstStart) { //
-        if (firstStart && !isLogin()) { //
+        // @TODO 上一次启动的保存的版本号比需要显示介绍页的版本小或者是应用首次安装启动,暂时没用，保留待以后可以能会使用这个判断
+        // if (versionCode < SHOW_INTRODUCTION_VERSION || firstStart) {
+
+        if (firstStart && !isLogin()) {
+            // 是第次安装且没有帐户登陆，
             initView();
         } else {
-            // 不需要显示介绍页，调用用跳转函数
+            // 不需要显示介绍页，调用用跳转到应用主页或登陆页函数
             goMainOrSign();
         }
     }
@@ -97,9 +91,12 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
     private void initView() {
         setContentView(R.layout.activity_introduction);
 
+        // 介绍页的布标管理器，管理布标显示的标题和页面内容
         IntroductionPagerManager manager = new IntroductionPagerManager();
         manager.addCommonFragment(IntroductionPagerItemFragment.class, getIntroductions(), getTitles());
         IntroductionPagerAdapter adapter = new IntroductionPagerAdapter(getSupportFragmentManager(), manager);
+
+        // ViewPager
         ScrollerViewPager vpIntroductions = (ScrollerViewPager) findViewById(R.id.introduction_view_paper);
         vpIntroductions.setAdapter(adapter);
         vpIntroductions.fixScrollSpeed();
@@ -108,6 +105,7 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         SpringIndicator springIndicator = (SpringIndicator) findViewById(R.id.indicator);
         springIndicator.setViewPager(vpIntroductions);
 
+        // 设置底部两个按钮的监听
         findViewById(R.id.btn_sign_up).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
     }
@@ -116,15 +114,26 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         return Lists.newArrayList("1", "2", "3", "4", "5");
     }
 
+    /**
+     * 获取介绍内容列表
+     * @return 返回介绍内容封装类的实例列表
+     */
     private List<IntroductionEntity> getIntroductions() {
-        ArrayList<IntroductionEntity> list = new ArrayList<>();
+        List<IntroductionEntity> list = new ArrayList<>();
+
+        // 获取介绍的文字描述
         String[] introductionStrings = getResources().getStringArray(R.array.introduction_descriptions);
+
         for (int i = 0; i < introductionStrings.length; i++) {
             IntroductionEntity entity = new IntroductionEntity();
+            // 介绍描述封装
             entity.setDescription(introductionStrings[i]);
+            // 介绍展示图片封装
             entity.setImagesResId(R.drawable.splash_page_01 + i);
+            // 将封装好的实例添加到列表
             list.add(entity);
         }
+
         return list;
     }
 
@@ -135,6 +144,7 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         if (isLogin()) {
             startActivity(new Intent(this, MainActivity.class));//这里是已经登录过的 唯一之路。
         } else {
+            // 没有登陆跳转到登陆页
             startActivity(new Intent(this, StartActivity.class));
         }
         finish();
@@ -144,7 +154,8 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
     /**
      * 判断是否已经登录过了
      *
-     * @return
+     * @return  {@code true}:   已经登陆<br/>
+     *          {@code false}:  没有登陆
      */
     public boolean isLogin() {
         UserEntity userEntity = App.getLoginedUser();
@@ -156,87 +167,6 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
             }
         }
         return false;
-    }
-
-    /**
-     * Called after {@link #onRestoreInstanceState}, {@link #onRestart}, or
-     * {@link #onPause}, for your activity to start interacting with the user.
-     * This is a good place to begin animations, open exclusive-access devices
-     * (such as the camera), etc.
-     * <p/>
-     * <p>Keep in mind that onResume is not the best indicator that your activity
-     * is visible to the user; a system window such as the keyguard may be in
-     * front.  Use {@link #onWindowFocusChanged} to know for certain that your
-     * activity is visible to the user (for example, to resume a game).
-     * <p/>
-     * <p><em>Derived classes must call through to the super class's
-     * implementation of this method.  If they do not, an exception will be
-     * thrown.</em></p>
-     *
-     * @see #onRestoreInstanceState
-     * @see #onRestart
-     * @see #onPostResume
-     * @see #onPause
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    /**
-     * Called when you are no longer visible to the user.  You will next
-     * receive either {@link #onRestart}, {@link #onDestroy}, or nothing,
-     * depending on later user activity.
-     * <p/>
-     * <p>Note that this method may never be called, in low memory situations
-     * where the system does not have enough memory to keep your activity's
-     * process running after its {@link #onPause} method is called.
-     * <p/>
-     * <p><em>Derived classes must call through to the super class's
-     * implementation of this method.  If they do not, an exception will be
-     * thrown.</em></p>
-     *
-     * @see #onRestart
-     * @see #onResume
-     * @see #onSaveInstanceState
-     * @see #onDestroy
-     */
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    /**
-     * Perform any final cleanup before an activity is destroyed.  This can
-     * happen either because the activity is finishing (someone called
-     * {@link #finish} on it, or because the system is temporarily destroying
-     * this instance of the activity to save space.  You can distinguish
-     * between these two scenarios with the {@link #isFinishing} method.
-     * <p/>
-     * <p><em>Note: do not count on this method being called as a place for
-     * saving data! For example, if an activity is editing data in a content
-     * provider, those edits should be committed in either {@link #onPause} or
-     * {@link #onSaveInstanceState}, not here.</em> This method is usually implemented to
-     * free resources like threads that are associated with an activity, so
-     * that a destroyed activity does not leave such things around while the
-     * rest of its application is still running.  There are situations where
-     * the system will simply kill the activity's hosting process without
-     * calling this method (or any others) in it, so it should not be used to
-     * do things that are intended to remain around after the process goes
-     * away.
-     * <p/>
-     * <p><em>Derived classes must call through to the super class's
-     * implementation of this method.  If they do not, an exception will be
-     * thrown.</em></p>
-     *
-     * @see #onPause
-     * @see #onStop
-     * @see #finish
-     * @see #isFinishing
-     */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     /**
@@ -256,12 +186,17 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         }
     }
 
+    /**
+     * 点击“Sing Up” 或 “Log In”按钮从这里跳转到跳转到注册或登陆页，{@code type}为传入的跳转类型{@link StartActivity#SHOW_SIGN_UP}或{@link StartActivity#SHOW_LOG_IN}
+     * @param type  {@linkplain StartActivity#SHOW_SIGN_UP}:    点击了{@link R.id#btn_sign_up}按钮传此值<br/>
+     *              - {@linkplain StartActivity#SHOW_LOG_IN}:     点击了{@link R.id#btn_login}按钮传此值<br/>
+     */
     private void goStartActivity(String type) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
         // 保存第一次启动标识为false
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(FIRST_START, false);
 
+        // 获取版本号并保存
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_PROVIDERS);
             LogUtil.d(TAG, "onCreate& package version Code: " + packageInfo.versionCode);
@@ -277,6 +212,19 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         Intent intent = new Intent(this, StartActivity.class);
         intent.putExtra(StartActivity.TYPE, type);
         startActivity(intent);
+
         finish();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppsFlyerLib.onActivityResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppsFlyerLib.onActivityPause(this);
     }
 }
