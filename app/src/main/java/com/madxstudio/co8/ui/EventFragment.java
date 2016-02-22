@@ -265,8 +265,8 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     JSONObject jsonArray = new JSONObject(response);
                     data = gson.fromJson(jsonArray.getString("event_list"), new TypeToken<ArrayList<EventEntity>>() {
                     }.getType());
-                    birthdayEvents = gson.fromJson(jsonArray.getString("birthday_alert"), new TypeToken<ArrayList<BirthdayEntity>>() {
-                    }.getType());
+//                    birthdayEvents = gson.fromJson(jsonArray.getString("birthday_alert"), new TypeToken<ArrayList<BirthdayEntity>>() {
+//                    }.getType());
                     currentPage = 1;
                     startIndex = data.size();
 //                    Log.i("startIndex=======================1", startIndex+"");
