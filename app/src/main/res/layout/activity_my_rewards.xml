@@ -25,6 +25,14 @@
         <include layout="@layout/progress_layout"/>
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_no_reward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/text_large_size"
+        android:visibility="invisible"/>
+
 
 
 </RelativeLayout>
