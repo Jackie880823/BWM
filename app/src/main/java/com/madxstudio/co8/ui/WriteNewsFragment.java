@@ -18,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -78,8 +79,24 @@ import java.util.Map;
  */
 public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implements View.OnClickListener {
     private static final String TAG = "WriteNewsFragment";
-    public static final String PREFERENCE_NAME = "SAVE_DRAFT";
+    public static final String PREFERENCE_NAME = "SAVE_NEWS_DRAFT";
     public static final String PREFERENCE_KEY_IS_SAVE = "IS_SAVE";
+    private static final String PREFERENCE_KEY_PIC_CONTENT = "PIC_CONTENT";
+    private static final String PREFERENCE_KEY_PIC_CAPTION = "PIC_CAPTION";
+    private static final String PREFERENCE_KEY_PIC_COUNT = "PIC_COUNT";
+    private static final String PREFERENCE_KEY_LOC_NAME = "LOC_NAME";
+    private static final String PREFERENCE_KEY_LOC_LONGITUDE = "LOC_LONGITUDE";
+    private static final String PREFERENCE_KEY_LOC_LATITUDE = "LOC_LATITUDE";
+    private static final String PREFERENCE_KEY_OLD_MEMBER_TEXT = "OLD_MEMBER_TEXT";
+    private static final String PREFERENCE_KEY_OLD_GROUP_TEXT = "OLD_GROUP_TEXT";
+    private static final String PREFERENCE_KEY_TEXT_CONTENT = "TEXT_CONTENT";
+    private static final String PREFERENCE_KEY_VIDEO_PATH = "VIDEO_PATH";
+    private static final String PREFERENCE_KEY_VIDEO_DURATION = "VIDEO_DURATION";
+
+    private static final String PREFERENCE_KEY_CATEGORY_ID = "CATEGORY_ID";
+    private static final String PREFERENCE_KEY_CATEGORY_NAME = "CATEGORY_NAME";
+    private static final String PREFERENCE_KEY_CATEGORY_TITLE = "CATEGORY_TITLE";
+
     private View rl_category;
     private MyDialog categoryDialog;
     /**
@@ -168,11 +185,6 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         return createInstance(new WriteNewsFragment(),params);
     }
 
-//    public WriteNewsFragment() {
-//        super();
-//        // Required empty public constructor
-//    }
-
     @Override
     public void setLayoutId() {
         this.layoutId = R.layout.activity_write_new;
@@ -194,20 +206,16 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         mContext=getActivity();
         gson = new Gson();
         isEdit = !TextUtils.isEmpty(contentGroupId);
-//        rl_category = getViewById(R.id.rl_category);
         rvImages = getViewById(R.id.rcv_post_photos);
-
-//        category_tv = getViewById(R.id.category_tv);
-//        titleDesc = getViewById(R.id.title_desc);
+        if (!isEdit) {
+            recoverList();
+        }
 
         mHttpTools = new HttpTools(getContext());
-
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rvImages.setLayoutManager(llm);
         mAdapter = new NewsFragmentAdapter(getContext(),photoEntities);
-//        rl_category.setOnClickListener(this);
-
         rlProgress = getViewById(R.id.rl_progress);
         rlProgress.setVisibility(View.GONE);
         getViewById(R.id.tv_camera).setOnClickListener(this);
@@ -322,7 +330,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                 LogUtil.d(TAG, "loadFinish");
                 if (!isEdit) {
                     try {
-//                        recoverDraft();//恢复草稿
+                        recoverDraft();//恢复草稿
                     } catch (Exception e) {
                         draftPreferences.edit().clear().apply();
                         e.printStackTrace();
@@ -441,8 +449,37 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         // 是修改正已经发表的日志，不需要保存草稿
         LogUtil.i(TAG, "backCheck& tasks size: ");
         return false;
-    }
-        return false;
+    }else {
+        if(draftPreferences == null){
+            draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME,Context.MODE_PRIVATE);
+        }
+        SharedPreferences.Editor editor = draftPreferences.edit();
+        if(TextUtils.isEmpty(wevContent.getRelText()) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)){
+            editor.clear().apply();
+            return false;
+        }
+        myDialog = new MyDialog(getActivity(), "", getActivity().getString(R.string.text_dialog_save_draft));
+        myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+                saveDraft();
+                getActivity().finish();
+            }
+        });
+        myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+                getActivity().finish();
+            }
+        });
+        if (!myDialog.isShowing()) {
+            myDialog.show();
+        }
+        return true;
+      }
+
     }
 
     @Override
@@ -1207,6 +1244,111 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         mHttpTools.put(requestInfo, TAG, callBack);
     }
 
+    /**
+     * 保存草稿
+     */
+    private void saveDraft() {
+        SharedPreferences.Editor editor = draftPreferences.edit();
+        if(!photoEntities.isEmpty()){
+            int i = 0;
+            for (PushedPhotoEntity entity : photoEntities){
+                if (entity instanceof DiaryPhotoEntity) {
+                    editor.putString(PREFERENCE_KEY_PIC_CONTENT + i, ((DiaryPhotoEntity) entity).getUri().toString());
+                    editor.putString(PREFERENCE_KEY_PIC_CAPTION + i, getPhotoCaptionByPosition(i + 1));
+                    LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CONTENT + i + ": " + ((DiaryPhotoEntity) entity).getUri().toString());
+                    LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CAPTION + i + ": " + entity.getPhoto_caption());
+                    i++;
+                }
+            }
+            editor.putInt(PREFERENCE_KEY_PIC_COUNT, i);
+        }else if(!Uri.EMPTY.equals(videoUri)){
+            editor.putString(PREFERENCE_KEY_VIDEO_PATH, videoUri.toString());
+            editor.putString(PREFERENCE_KEY_VIDEO_DURATION, duration);
+        }
 
+        editor.putString(PREFERENCE_KEY_LOC_NAME, tvLocationDesc.getText().toString());
+        editor.putFloat(PREFERENCE_KEY_LOC_LONGITUDE, (float) longitude);
+        editor.putFloat(PREFERENCE_KEY_LOC_LATITUDE, (float) latitude);
+
+        editor.putString(PREFERENCE_KEY_CATEGORY_ID,categoryId);
+        editor.putString(PREFERENCE_KEY_CATEGORY_NAME,category_tv.getText().toString());
+        editor.putString(PREFERENCE_KEY_CATEGORY_TITLE,titleDesc.getText().toString());
+
+        editor.putString(PREFERENCE_KEY_TEXT_CONTENT, wevContent.getText().toString());
+        editor.putString(PREFERENCE_KEY_OLD_MEMBER_TEXT, wevContent.getOldMemberText());
+        editor.putString(PREFERENCE_KEY_OLD_GROUP_TEXT, wevContent.getOldGroupText());
+
+        editor.putBoolean(PREFERENCE_KEY_IS_SAVE, true);
+
+        editor.apply();
+    }
+
+    /**
+     * 恢复草稿
+     */
+    private void recoverDraft(){
+        if (draftPreferences == null) {
+            draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        }
+        if (!draftPreferences.getBoolean(PREFERENCE_KEY_IS_SAVE, false)) {
+            return;
+        }
+        String locationDesc = draftPreferences.getString(PREFERENCE_KEY_LOC_NAME, "");
+        if (!TextUtils.isEmpty(locationDesc)) {
+            llLocation.setVisibility(View.VISIBLE);
+        } else {
+            llLocation.setVisibility(View.GONE);
+        }
+        tvLocationDesc.setText(locationDesc);
+        longitude = draftPreferences.getFloat(PREFERENCE_KEY_LOC_LONGITUDE, (float) longitude);
+        latitude = draftPreferences.getFloat(PREFERENCE_KEY_LOC_LATITUDE, (float) latitude);
+
+        categoryId = draftPreferences.getString(PREFERENCE_KEY_CATEGORY_ID,"");
+        category_tv.setText(draftPreferences.getString(PREFERENCE_KEY_CATEGORY_NAME,""));
+        titleDesc.setText(draftPreferences.getString(PREFERENCE_KEY_CATEGORY_TITLE,""));
+
+        wevContent.setOldMemberText(draftPreferences.getString(PREFERENCE_KEY_OLD_MEMBER_TEXT, wevContent.getOldMemberText()));
+        wevContent.setOldGroupText(draftPreferences.getString(PREFERENCE_KEY_OLD_GROUP_TEXT, wevContent.getOldGroupText()));
+        wevContent.setText(draftPreferences.getString(PREFERENCE_KEY_TEXT_CONTENT, wevContent.getRelText()));
+        // 恢复了草稿，清除保存
+        draftPreferences.edit().clear().apply();
+    }
+
+    /**
+     * 恢复照片视频
+     */
+    private void recoverList() {
+        if (draftPreferences == null) {
+            draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        }
+        if (!draftPreferences.getBoolean(PREFERENCE_KEY_IS_SAVE, false)) {
+            return;
+        }
+        int picCount = draftPreferences.getInt(PREFERENCE_KEY_PIC_COUNT, 0);
+        if (picCount > 0) {
+            for (int i = 0; i < picCount; i++) {
+                String strUri = draftPreferences.getString(PREFERENCE_KEY_PIC_CONTENT + i, "");
+                String strCaption = draftPreferences.getString(PREFERENCE_KEY_PIC_CAPTION + i, "");
+                LogUtil.i(TAG, "recoverDraft& uri: " + strUri);
+                if (!TextUtils.isEmpty(strUri)) {
+                    Uri uri = Uri.parse(strUri);
+                    imageUris.add(uri);
+                    DiaryPhotoEntity diaryPhotoEntity = new DiaryPhotoEntity();
+                    diaryPhotoEntity.setUri(uri);
+                    diaryPhotoEntity.setPhoto_caption(strCaption);
+                    localEntities.add(diaryPhotoEntity);
+                }
+            }
+            photoEntities.addAll(localEntities);
+        } else {
+            String videoUriStr = draftPreferences.getString(PREFERENCE_KEY_VIDEO_PATH, "");
+
+            Log.i(TAG, "recoverDraft& videoUri: " + videoUriStr);
+            if (!TextUtils.isEmpty(videoUriStr)) {
+                videoUri = Uri.parse(videoUriStr);
+                duration = draftPreferences.getString(PREFERENCE_KEY_VIDEO_DURATION, "");
+            }
+        }
+    }
 
 }
