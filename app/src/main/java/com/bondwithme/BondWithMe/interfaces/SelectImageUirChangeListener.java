@@ -5,6 +5,7 @@ package com.bondwithme.BondWithMe.interfaces;
  */
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import com.bondwithme.BondWithMe.adapter.LocalMediaAdapter;
 import com.bondwithme.BondWithMe.entity.MediaData;
@@ -48,7 +49,7 @@ public interface SelectImageUirChangeListener {
      */
     void onDrawerClose(Drawable drawable);
 
-    void onLoadedMedia(List<MediaData> data, LocalMediaAdapter adapter);
+    void onLoadedMedia(List<MediaData> data, @NonNull LocalMediaAdapter adapter);
 
     /**
      * @param mediaData
