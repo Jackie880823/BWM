@@ -106,15 +106,15 @@ public class CreateGroupDialogActivity extends BaseActivity {
     @Override
     protected void titleRightEvent() {
         if (TextUtils.isEmpty(etGroupName.getText())) {
-                    Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_input_your_group_name), Toast.LENGTH_SHORT).show();
-                } else {
-                    if (TextUtils.isEmpty(groupMembers) || "[]".equals(groupMembers)) {
-                    } else {
-                        rightButton.setEnabled(false);
-                        uploadImage();
-                    }
+            Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_input_your_group_name), Toast.LENGTH_SHORT).show();
+        } else {
+            if (TextUtils.isEmpty(groupMembers) || "[]".equals(groupMembers)) {
+            } else {
+                rightButton.setEnabled(false);
+                uploadImage();
+            }
 
-                }
+        }
     }
 
     @Override
@@ -125,14 +125,14 @@ public class CreateGroupDialogActivity extends BaseActivity {
     }
 
     private void backToLastPage() {
-        for (UserEntity eventEntity : selectUserEntityList){
-            Log.i("selectUserEntityList===",eventEntity.getUser_id());
+        for (UserEntity eventEntity : selectUserEntityList) {
+            Log.i("selectUserEntityList===", eventEntity.getUser_id());
         }
         Intent intent = new Intent(mContext, InviteMemberActivity.class);
         String selectMemberData = new Gson().toJson(selectUserEntityList);
 //        Log.i("selectUserEntityList====",new Gson().toJson(selectUserEntityList));
 
-        Log.i("selectUserEntityList_bakc",selectUserEntityList.size()+"");
+        Log.i("selectUserEntityList_bakc", selectUserEntityList.size() + "");
         intent.putExtra("members_data", selectMemberData);
         intent.putExtra("type", 0);
 //        if (selectGroupEntityList.size() > 0) {
@@ -187,7 +187,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
         selectUserList.clear();
         selectUserEntityList.clear();
         String members_data = data.getStringExtra("members_data");
-        Log.i("members_data====",members_data+"");
+        Log.i("members_data====", members_data + "");
         if (members_data != null) {
             List<UserEntity> userEntityList = new GsonBuilder().create().fromJson(members_data, new TypeToken<ArrayList<UserEntity>>() {
             }.getType());
@@ -210,8 +210,8 @@ public class CreateGroupDialogActivity extends BaseActivity {
             Log.i("selectUserEntityList====2", selectUserEntityList.size() + "");
         }
 
-        if(flagEntityList != null && flagEntityList.size() > 0){
-            Log.i("flagEntityList====2",flagEntityList.size()+"");
+        if (flagEntityList != null && flagEntityList.size() > 0) {
+            Log.i("flagEntityList====2", flagEntityList.size() + "");
             for (UserEntity user : flagEntityList) {
                 selectUserList.add(user.getUser_id());
                 selectUserEntityList.add(user);
@@ -275,16 +275,19 @@ public class CreateGroupDialogActivity extends BaseActivity {
     }
 
     private void uploadImage() {
-        if (mCropImagedUri == null) {
-            Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_choose_your_group_picture), Toast.LENGTH_SHORT).show();
-            rightButton.setEnabled(true);
-            return;
+//        if (mCropImagedUri == null) {
+//            Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_choose_your_group_picture), Toast.LENGTH_SHORT).show();
+//            rightButton.setEnabled(true);
+//            return;
+//        }
+        File f = null;
+        if (mCropImagedUri != null) {
+            f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
         }
-        File f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
-        if (!f.exists()) {
-            rightButton.setEnabled(true);
-            return;
-        }
+//        if (!f.exists()) {
+//            rightButton.setEnabled(true);
+//            return;
+//        }
 //        progressDialog.setCanceledOnTouchOutside(false);
 //        progressDialog.show();
         Map<String, Object> params = new HashMap<>();
@@ -292,7 +295,9 @@ public class CreateGroupDialogActivity extends BaseActivity {
         String fileName = MD5Util.string2MD5(System.currentTimeMillis() + "");
         params.put("fileName", fileName);
         params.put("mimeType", "image/png");
-        params.put("file", f);
+        if (f != null && f.exists()) {
+            params.put("file", f);
+        }
         params.put("group_owner_id", MainActivity.getUser().getUser_id());
         params.put("group_name", etGroupName.getText().toString());
         params.put("query_on", "createGroup");
@@ -301,14 +306,14 @@ public class CreateGroupDialogActivity extends BaseActivity {
         new HttpTools(this).upload(Constant.API_CREATE_GROUP, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
-                if(vProgress != null){
+                if (vProgress != null) {
                     vProgress.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void onFinish() {
-                if(vProgress != null){
+                if (vProgress != null) {
                     vProgress.setVisibility(View.GONE);
                 }
             }
@@ -384,9 +389,9 @@ public class CreateGroupDialogActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(CreateGroupDialogActivity.this,PickAndCropPictureActivity.class);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM,PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH,ivGroupPic.getWidth());
+                Intent intent = new Intent(CreateGroupDialogActivity.this, PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, ivGroupPic.getWidth());
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, ivGroupPic.getHeight());
                 startActivityForResult(intent, REQUEST_PHOTO);
             }
@@ -401,9 +406,9 @@ public class CreateGroupDialogActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(CreateGroupDialogActivity.this,PickAndCropPictureActivity.class);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM,PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH,ivGroupPic.getWidth());
+                Intent intent = new Intent(CreateGroupDialogActivity.this, PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, ivGroupPic.getWidth());
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, ivGroupPic.getHeight());
                 startActivityForResult(intent, REQUEST_PHOTO);
             }
@@ -434,11 +439,11 @@ public class CreateGroupDialogActivity extends BaseActivity {
                     for (UserEntity user : userEntityList) {
 //                        selectUserList.add(user.getUser_id());
                         //如果双方不是好友
-                        if(user.getAdded_flag().equals("0")){
+                        if (user.getAdded_flag().equals("0")) {
                             flagEntityList.add(user);
                             selectUserList.add(user.getUser_id());
                         }
-                        if(user.getAdded_flag().equals("1")){
+                        if (user.getAdded_flag().equals("1")) {
                             addedEntityList.add(user);
                             selectUserList.add(user.getUser_id());
                         }
@@ -504,7 +509,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
         });
     }
 
-        MyDialog myDialog = null;
+    MyDialog myDialog = null;
 
     private void ask4Confirm() {
 
@@ -559,7 +564,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
                 Gson gson = gsonb.create();
                 List<UserEntity> userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
-                Log.i("getMembersList",userList.size()+"");
+                Log.i("getMembersList", userList.size() + "");
                 if (userList != null && userList.size() > 0) {
                     Message.obtain(handler, GET_DATA, userList).sendToTarget();
                 }
@@ -589,19 +594,19 @@ public class CreateGroupDialogActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if(myDialog!=null)
+        if (myDialog != null)
             myDialog.dismiss();
         super.onDestroy();
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            if(event.getAction() == KeyEvent.ACTION_DOWN) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 ask4Confirm();
             }
             return true;
-        }else{
+        } else {
             return super.dispatchKeyEvent(event);
         }
     }
