@@ -72,7 +72,6 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
     @Override
     public RelationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LinearLayout layout = new LinearLayout(context);
-        int padding = context.getResources().getDimensionPixelOffset(R.dimen.default_content_padding);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
         layout.setLayoutParams(params);
         layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -119,6 +118,11 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         }
 
         showData(userEntities, holder);
+
+        if (position != 0) {
+            int padding = context.getResources().getDimensionPixelOffset(R.dimen._20dp);
+            holder.itemView.setPadding(padding, holder.itemView.getPaddingTop(), holder.itemView.getPaddingRight(), holder.itemView.getBottom());
+        }
     }
 
     private void checkArrow(RelationHolder holder, int position) {
@@ -144,9 +148,9 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
     private void addViews(RelationHolder holder, int count, int position) {
         for(int i = 0; i < count; i++) {
             View child = LayoutInflater.from(context).inflate(R.layout.relationship_item_layout, null);
-            if(type == RelationshipEnum.sibling) {
-                child.findViewById(R.id.relationship_item_content).setBackgroundResource(R.color.family_tree_relationship_sibling_background_color);
-            }
+//            if(type == RelationshipEnum.sibling) {
+//                child.findViewById(R.id.relationship_item_content).setBackgroundResource(R.color.family_tree_relationship_sibling_background_color);
+//            }
             child.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -218,6 +222,9 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
             this.itemView = itemView;
         }
 
+        public T getItemView() {
+            return itemView;
+        }
 
         /**
          * Returns the number of children in the group.
@@ -253,11 +260,12 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
                 }
             });
             View nullView = child.findViewById(R.id.null_image_view);
-            if(show) {
-                nullView.setVisibility(View.VISIBLE);
-            } else {
-                nullView.setVisibility(View.GONE);
-            }
+//            if(show) {
+//                nullView.setVisibility(View.VISIBLE);
+//            } else {
+//                nullView.setVisibility(View.GONE);
+//            }
+            nullView.setVisibility(View.GONE);
             itemView.addView(child);
         }
 
