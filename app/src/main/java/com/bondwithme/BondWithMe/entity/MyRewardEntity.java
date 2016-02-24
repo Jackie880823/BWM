@@ -31,6 +31,15 @@ public class MyRewardEntity implements Serializable {
     private String expired_flag;
     private String merchant_name;
     private String voucher_sys_due;
+    private String description_1;
+
+    public String getDescription_1() {
+        return description_1;
+    }
+
+    public void setDescription_1(String description_1) {
+        this.description_1 = description_1;
+    }
 
     public String getExpired_flag() {
         return expired_flag;

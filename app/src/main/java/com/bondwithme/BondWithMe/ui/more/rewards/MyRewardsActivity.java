@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -31,6 +32,7 @@ public class MyRewardsActivity extends BaseActivity {
     private final String TAG = getClass().getSimpleName();
     public final static String MY_REWARD_CODE = "my_reward_code";
     private LinearLayoutManager llm;
+    private TextView tvNoData;
     private RecyclerView rvList;
     private View vProgress;
     private MyRewardAdapter adapter;
@@ -75,6 +77,7 @@ public class MyRewardsActivity extends BaseActivity {
         vProgress = getViewById(R.id.rl_progress);
         llm = new LinearLayoutManager(this);
         rvList = getViewById(R.id.rvList);
+        tvNoData = getViewById(R.id.tv_no_reward);
         rvList.setHasFixedSize(true);
         rvList.setLayoutManager(llm);
 
@@ -113,6 +116,13 @@ public class MyRewardsActivity extends BaseActivity {
                 Gson gson = new GsonBuilder().create();
                 data = gson.fromJson(string,new TypeToken<ArrayList<MyRewardEntity>>(){}.getType());
                 initAdapter();
+                //no my reward;
+                if (!data.isEmpty()){
+                    tvNoData.setVisibility(View.GONE);
+                }else {
+                    tvNoData.setVisibility(View.VISIBLE);
+                    tvNoData.setText(getResources().getString(R.string.text_no_rewards));
+                }
             }
 
             @Override
