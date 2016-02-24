@@ -23,6 +23,7 @@ import com.madxstudio.co8.R;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.CountryCodeActivity;
 import com.madxstudio.co8.util.CountryCodeUtil;
+import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MD5Util;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.util.NetworkUtil;
@@ -338,6 +339,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
         }
     }
 
+
     /**
      * 功能：网络请求
      */
@@ -353,8 +355,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
 
-        if( (checkAll()))//检查输入，提取出来。
-        {
+        if( (checkAll())){
             doingSignUpChangeUI();
 
             HashMap<String, String> params = new HashMap<>();
@@ -376,6 +377,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
                 @Override
                 public void onResult(String response) {
 
+                    LogUtil.e(SignUpUsernameActivity.class.getName(),"response====="+response);
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (Constant.SUCCESS.equals(jsonObject.getString("response_status"))) {

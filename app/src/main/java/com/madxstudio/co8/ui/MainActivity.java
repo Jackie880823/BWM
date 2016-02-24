@@ -369,8 +369,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private void bondDatas(JSONObject jsonObject) throws JSONException {
         checkDataAndBond2View(TabEnum.wall, jsonObject.getString("wall"));
         checkDataAndBond2View(TabEnum.event, jsonObject.getString("event"));
-        checkDataAndBond2View(TabEnum.family, jsonObject.getString("miss"));
-
+        checkDataAndBond2View(TabEnum.family, jsonObject.getString("news"));
+        checkDataAndBond2View(TabEnum.chat, jsonObject.getString("message"));
         checkDataAndBond2View(TabEnum.more, jsonObject.getString("miss"));
         checkDataAndBond2View(TabEnum.more, jsonObject.getString("bigDay"));
         checkDataAndBond2View(TabEnum.more, jsonObject.getString("group"));
@@ -834,16 +834,16 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         int action = cancel ? View.GONE : View.VISIBLE;
         switch (tab) {
             case family:
-                red_point_1.setVisibility(action);
-                break;
-            case chat:
-                red_point_2.setVisibility(action);
-                break;
-            case wall:
                 red_point_3.setVisibility(action);
                 break;
-            case event:
+            case chat:
                 red_point_4.setVisibility(action);
+                break;
+            case wall:
+                red_point_1.setVisibility(action);
+                break;
+            case event:
+                red_point_2.setVisibility(action);
                 break;
             case more:
                 red_point_5.setVisibility(action);

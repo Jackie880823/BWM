@@ -191,30 +191,31 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_content_padding"
-            android:layout_marginRight="@dimen/default_content_padding"
-            android:paddingBottom="@dimen/default_content_padding"
-            android:paddingTop="@dimen/default_content_padding">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/ll_love"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true">
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:paddingBottom="@dimen/default_content_padding"
+                android:paddingTop="@dimen/default_content_padding"
+                android:paddingRight="@dimen/default_content_padding">
 
                 <ImageButton
                     android:id="@+id/iv_love"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:background="@null" />
+                    android:background="@drawable/goodjob_clicked" />
 
                 <TextView
                     android:id="@+id/tv_wall_agree_count"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/_8dp" />
+                    android:layout_marginLeft="@dimen/_8dp"
+                    android:text="1"/>
 
                 <TextView
                     android:id="@+id/tv_love_list"
@@ -236,7 +237,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true">
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:paddingRight="@dimen/default_content_padding"
+                android:paddingBottom="@dimen/default_content_padding"
+                android:paddingTop="@dimen/default_content_padding">
 
                 <ImageButton
                     android:id="@+id/iv_comment"
@@ -250,7 +255,8 @@
                     android:id="@+id/tv_wall_relay_count"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/_8dp" />
+                    android:layout_marginLeft="@dimen/_8dp"
+                    android:text="1"/>
 
                 <TextView
                     style="@style/text_light_default"

@@ -304,7 +304,6 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public static void initToken(String user_login_id, AppTokenEntity tokenEntity) {
         if (tokenEntity != null) {
             Map<String, String> headers = new HashMap<String, String>();
-            headers.put("Charset", "UTF-8");
             headers.put("X_BWM_TOKEN", tokenEntity.getUser_token());
             headers.put("X_BWM_USERLOGINID", user_login_id);
             headers.put("X_BWM_DEVID", AppInfoUtil.getDeviceUUID(appContext));

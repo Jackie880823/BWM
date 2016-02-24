@@ -218,7 +218,8 @@ public class MyViewProfileActivity extends BaseActivity {
                 view.setFocusableInTouchMode(isEit);
                 if (!isPreloadedUser && isEit) {
                     if (view.getId() == R.id.et_position || view.getId() == R.id.et_department
-                            || view.getId() == R.id.et_internal_phone) {
+                            || view.getId() == R.id.et_internal_phone
+                            || view.getId() == R.id.et_region || view.getId() == R.id.et_email) {
                         view.setFocusable(false);
                         view.setFocusableInTouchMode(false);
                     }
@@ -546,7 +547,6 @@ public class MyViewProfileActivity extends BaseActivity {
         jsonParams.put("user_dob", strDOB);
         jsonParams.put("user_email", etEmail.getText().toString());
         jsonParams.put("user_location_name", etRegion.getText().toString());
-
         if (isPreloadedUser) {
             jsonParams.put("department", et_position.getText().toString());
             jsonParams.put("position", et_department.getText().toString());

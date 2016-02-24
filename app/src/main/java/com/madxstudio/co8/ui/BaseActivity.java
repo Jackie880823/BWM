@@ -1,6 +1,8 @@
 package com.madxstudio.co8.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -295,6 +297,15 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
             App.clearAllNotificationMsgs();
 //            App.getContextInstance().clearNotificationMsgsByType((NotificationUtil.MessageType) getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
         }
+    }
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config = new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config, res.getDisplayMetrics());
+        return res;
     }
 
 }

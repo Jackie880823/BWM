@@ -53,6 +53,7 @@ public class HttpTools {
     }
 
     public static Map<String, String> getHeaders() {
+        headers.put("Charset", "UTF-8");
         return HttpTools.headers;
     }
 

@@ -108,7 +108,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     Calendar calendar;
 
     private String locationName;
-    private long startMeetingTime = 0;
+    private Long startMeetingTime = 0L;
 
     String members;
     String groups;
@@ -779,6 +779,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             datePicker.setCalendar(calendar);
             timePicker.setCalendar(calendar);
             mEevent.setGroup_end_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
+        } else if (startMeetingTime != null && startMeetingTime != 0L) {
+            Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(startMeetingTime));
+            calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
+            datePicker.setCalendar(calendar);
+            timePicker.setCalendar(calendar);
+            mEevent.setGroup_end_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis() + 1000 * 60));
         }
         //日历dialog
         pickEndDateTimeDialog = new MyDialog(getParentActivity(), getString(R.string.title_pick_date_time), dateTimePicker);
@@ -795,9 +801,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 mCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDay());
                 mCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHourOfDay());
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
-
-                if (MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.msg_date_not_befort_now));
+                endMeetingTime = mCalendar.getTimeInMillis();
+                if (endMeetingTime / 1000 / 60 - startMeetingTime / 1000 / 60 <= 0) {
+                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
                     return;
                 }
                 //把时间储存到缓存
@@ -805,17 +811,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     PreferencesUtil.saveValue(getParentActivity(), "endMeetingTime", mCalendar.getTimeInMillis());
                 }
                 //将日历的时间转化成字符串
-                endMeetingTime = mCalendar.getTimeInMillis();
                 String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
                 //将日历的时间显示出来
-                if (endMeetingTime - startMeetingTime <= 0) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
-                } else {
-                    isChooseEndTime = true;
-                    pickEndDateTimeDialog.dismiss();
-                    date_end_desc.setText(dateDesc);
-                    mEevent.setGroup_end_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
-                }
+                isChooseEndTime = true;
+                pickEndDateTimeDialog.dismiss();
+                date_end_desc.setText(dateDesc);
+                mEevent.setGroup_end_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
             }
         });
         pickEndDateTimeDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
@@ -871,7 +872,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.msg_date_not_befort_now));
                     return;
                 }
-                if (endMeetingTime > 0 && endMeetingTime - startMeetingTime <= 0) {
+                if (endMeetingTime > 0 && endMeetingTime / 1000 / 60 - startMeetingTime / 1000 / 60 <= 0) {
                     MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
                     return;
                 }
@@ -1007,7 +1008,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 return false;
             }
         }
-        if (endMeetingTime <= startMeetingTime) {
+        if (endMeetingTime / 1000 / 60 <= startMeetingTime / 1000 / 60) {
             MessageUtil.showMessage(getActivity(), R.string.text_meeting_end_time);
             return false;
         }

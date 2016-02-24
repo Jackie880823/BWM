@@ -83,9 +83,10 @@ public class MeFragment extends BaseFragment<MeActivity> {
         rlWallPosting = getViewById(R.id.rl_wall_posting);
         rlViewQRCode = getViewById(R.id.rl_view_qr);
 
-        array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
-                R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
-        profileBackgroundId = randomImageId(array);
+//        array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
+//                R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
+//        profileBackgroundId = randomImageId(array);
+        profileBackgroundId = R.drawable.profile_background_0;
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
         BitmapTools.getInstance(getActivity()).display(cniMain, headUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);

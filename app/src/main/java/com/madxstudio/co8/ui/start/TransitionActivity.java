@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
+import com.facebook.FacebookSdk;
+import com.google.gson.Gson;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
@@ -16,8 +18,6 @@ import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.ui.introduction.IntroductionActivity;
 import com.madxstudio.co8.util.PreferencesUtil;
-import com.facebook.FacebookSdk;
-import com.google.gson.Gson;
 
 /**
  * Created by wing on 15/8/3.
@@ -61,6 +61,7 @@ public class TransitionActivity extends Activity {
 
             }
         }).start();
+
     }
 
     /**
