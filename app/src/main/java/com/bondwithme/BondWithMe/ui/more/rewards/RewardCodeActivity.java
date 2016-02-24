@@ -33,6 +33,7 @@ public class RewardCodeActivity extends BaseActivity {
     private TextView tvDesc;
     private TextView tvRewardDate;
     private TextView tvRewardPoint;
+    private TextView tvRewardTitle;
     private LinearLayout llCode;
     private String titleName;
     private String strCode;
@@ -83,13 +84,15 @@ public class RewardCodeActivity extends BaseActivity {
         llCode = getViewById(R.id.ll_code);
         tvRewardDate = getViewById(R.id.tv_reward_date);
         tvRewardPoint = getViewById(R.id.tv_reward_pts);
+        tvRewardTitle = getViewById(R.id.tv_reward_title);
 
         if (generalRewardEntity != null ){
             LogUtil.d(TAG,"generalRewardEntity");
             titleName = generalRewardEntity.getMerchant_name();
             BitmapTools.getInstance(this).display(iv,generalRewardEntity.getImage(),R.drawable.network_image_default, R.drawable.network_image_default);
             tvCode.setText(generalRewardEntity.getCode());
-            tvDesc.setText(generalRewardEntity.getDescription());
+            tvRewardTitle.setText(generalRewardEntity.getDescription());
+            tvDesc.setText(generalRewardEntity.getDescription_1());
             tvRewardDate.setText(getString(R.string.valid_till) + " " +generalRewardEntity.getVoucher_due());
             tvRewardPoint.setText(generalRewardEntity.getPoint() + " " +getString(R.string.text_capital_points));
         }
@@ -99,7 +102,8 @@ public class RewardCodeActivity extends BaseActivity {
             titleName = rewardEntity.getMerchant_name();
             BitmapTools.getInstance(this).display(iv,rewardEntity.getImage(),R.drawable.network_image_default, R.drawable.network_image_default);
             tvCode.setText(intent.getStringExtra(RewardDetailActivity.REWARD_CODE));
-            tvDesc.setText(rewardEntity.getDescription());
+            tvRewardTitle.setText(rewardEntity.getDescription());
+            tvDesc.setText(rewardEntity.getDescription_1());
             tvRewardDate.setText(getString(R.string.valid_till) + " " +rewardEntity.getVoucher_due());
             tvRewardPoint.setText(rewardEntity.getPoint() + " " +getString(R.string.text_capital_points));
         }
@@ -109,7 +113,8 @@ public class RewardCodeActivity extends BaseActivity {
             titleName = myRewardEntity.getMerchant_name();
             BitmapTools.getInstance(this).display(iv,myRewardEntity.getImage(),R.drawable.network_image_default, R.drawable.network_image_default);
             tvCode.setText(myRewardEntity.getCode());
-            tvDesc.setText(myRewardEntity.getDescription());
+            tvRewardTitle.setText(myRewardEntity.getDescription());
+            tvDesc.setText(myRewardEntity.getDescription_1());
             tvRewardDate.setText(getString(R.string.valid_till) + " " +myRewardEntity.getVoucher_due());
             tvRewardPoint.setText(myRewardEntity.getPoint() + " " +getString(R.string.text_capital_points));
         }

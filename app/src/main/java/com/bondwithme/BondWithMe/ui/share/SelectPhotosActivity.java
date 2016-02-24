@@ -194,7 +194,7 @@ public class SelectPhotosActivity extends BaseActivity {
         }
 
         @Override
-        public void onLoadedMedia(List<MediaData> data, LocalMediaAdapter adapter) {
+        public void onLoadedMedia(List<MediaData> data, @NonNull LocalMediaAdapter adapter) {
             for (MediaData mediaData : mSelectedImages) {
                 if (!data.contains(mediaData)) {
                     data.add(0, mediaData);

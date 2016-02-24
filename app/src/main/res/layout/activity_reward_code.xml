@@ -96,6 +96,13 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tv_reward_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:padding="@dimen/_8dp"/>
+
+                <TextView
                     android:id="@+id/tv_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -137,7 +137,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             loading.stop();
             loading.setVisibility(View.GONE);
 
-            selectImageUirListener.onLoadedMedia(mMediaUris.get(getContext().getString(R.string.text_all)), localMediaAdapter);
+            if (localMediaAdapter != null) {
+                selectImageUirListener.onLoadedMedia(mMediaUris.get(getContext().getString(R.string.text_all)), localMediaAdapter);
+            }
         }
     };
 
@@ -307,6 +309,18 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 }
             }
         });
+
+
+        localMediaAdapter = new LocalMediaAdapter(getActivity(), mImageUriList);
+        localMediaAdapter.setCheckBoxVisible(multi);
+        localMediaAdapter.setDeleteMediaListListener(new LocalMediaAdapter.DeleteMediaListListener() {
+            @Override
+            public void deleteList(List<MediaData> list) {
+                LogUtil.d(TAG, "deleteList: curLoaderPosition = " + curLoaderPosition);
+                loadLocalMediaOrder(curLoaderPosition);
+            }
+        });
+        mGvShowPhotos.setAdapter(localMediaAdapter);
     }
 
     /**
@@ -624,23 +638,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             }
 
             LogUtil.i(TAG, "mImageUriList size = " + mImageUriList.size() + "; bucket " + bucket);
-            if (localMediaAdapter == null) {
-                localMediaAdapter = new LocalMediaAdapter(getActivity(), mImageUriList);
-                localMediaAdapter.setCheckBoxVisible(multi);
-                localMediaAdapter.setSelectedImages(mSelectedImageUris);
-                localMediaAdapter.setListener(selectImageUirListener);
-                localMediaAdapter.setDeleteMediaListListener(new LocalMediaAdapter.DeleteMediaListListener() {
-                    @Override
-                    public void deleteList(List<MediaData> list) {
-                        LogUtil.d(TAG, "deleteList: curLoaderPosition = " + curLoaderPosition);
-                        loadLocalMediaOrder(curLoaderPosition);
-                    }
-                });
-                mGvShowPhotos.setAdapter(localMediaAdapter);
-            } else {
-                localMediaAdapter.setData(mImageUriList);
-                localMediaAdapter.notifyDataSetChanged();
-            }
+
+            localMediaAdapter.setData(mImageUriList);
+            localMediaAdapter.notifyDataSetChanged();
+            localMediaAdapter.setSelectedImages(mSelectedImageUris);
+
             mGvShowPhotos.setSelection(0);
             mDrawerList.setSelection(index);
         } else {

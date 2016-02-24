@@ -270,6 +270,7 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
                     int index = entities.size();
                     entities.addAll(data);
                     notifyItemRangeInserted(index, data.size());
+                    listener.loadRemotePhotoed();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
