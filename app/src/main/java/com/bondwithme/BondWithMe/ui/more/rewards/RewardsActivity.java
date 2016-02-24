@@ -144,9 +144,10 @@ public class RewardsActivity extends BaseActivity {
 
                 }
             });
-        }else {
-            ivNoReward.setVisibility(View.VISIBLE);
         }
+//        else {
+//            ivNoReward.setVisibility(View.VISIBLE);
+//        }
 
     }
 
