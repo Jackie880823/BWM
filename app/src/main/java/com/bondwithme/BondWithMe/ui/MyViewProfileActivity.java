@@ -622,6 +622,7 @@ public class MyViewProfileActivity extends BaseActivity {
                     intent.putExtra(PickAndCropPictureActivity.CACHE_PIC_NAME, "_background");
                 }
                 startActivityForResult(intent, requestMember);
+
             }
         });
 

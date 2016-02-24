@@ -8,7 +8,6 @@ import android.provider.MediaStore;
 
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
-import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.soundcloud.android.crop.Crop;
 
@@ -182,20 +181,35 @@ public class PickAndCropPictureActivity extends Activity {
 //            return;
 //        }
 //
-////        /**
-////         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
-////         */
-////        int degree = LocalImageLoader.readPictureDegree(path);
-////
-////        if (fromPhoto && degree != 0) {
-////
+//        /**
+//         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
+//         */
+//        int degree = LocalImageLoader.readPictureDegree(path);
+//
+//        if (fromPhoto && degree != 0) {
+//            InputStream is = null;
+//            try {
+//                int sampleSize = LocalImageLoader.caculateInSampleSize(getContentResolver(), uri);
+//                is = getContentResolver().openInputStream(uri);
+//                BitmapFactory.Options option = new BitmapFactory.Options();
+//                option.inSampleSize = sampleSize;
+//                RotateBitmap rotateBitmap = new RotateBitmap(BitmapFactory.decodeStream(is, null, option), degree);
+////                PicturesCacheUtil.saveToFile(path,rotateBitmap);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (OutOfMemoryError e) {
+//                e.printStackTrace();
+//            } finally {
+//                FileUtil.closeSilently(is);
+//            }
+//
 ////            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(this, uri);
 ////            //            /**
 ////            //             * 把图片旋转为正的方向
 ////            //             */
 ////            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
 ////            PicturesCacheUtil.saveToFile(path, bitmap);
-////        }
+//        }
 //
 //        Intent intent = new Intent("com.android.camera.action.CROP");
 //
@@ -230,11 +244,11 @@ public class PickAndCropPictureActivity extends Activity {
             if (uri == null || uri.getPath() == null) {
                 return;
             }
-            String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
-            Uri source = Uri.fromFile(new File(path));
+//            String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
+//            Uri source = Uri.fromFile(new File(path));
             File f = PicturesCacheUtil.getCachePicFileByName(this, headCache,true);
             mCropImagedUri = Uri.fromFile(f);
-
-            Crop.of(source, mCropImagedUri).withAspect(picAspectWidth,picAspectHeight).start(this, REQUEST_PIC_FINAL);
+//            Crop.of(uri, mCropImagedUri).asSquare().start(this,REQUEST_PIC_FINAL);
+            Crop.of(uri, mCropImagedUri).withAspect(picAspectWidth, picAspectHeight).start(this, REQUEST_PIC_FINAL);
     }
 }
