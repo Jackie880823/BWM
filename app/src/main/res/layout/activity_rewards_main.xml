@@ -114,6 +114,7 @@
                             android:layout_height="wrap_content"
                             android:text=""
                             android:gravity="center"
+                            android:textSize="@dimen/text_medium_size"
                             />
 
                         <TextView
@@ -191,25 +192,34 @@
                         <TableLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:stretchColumns="0,1,3,4"
+                            android:stretchColumns="0,2"
                             android:layout_marginTop="@dimen/_48dp">
 
                             <TableRow
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
-                                <TextView
-                                    android:id="@+id/tv_count_invited"
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:textColor="@color/default_text_color_dark"/>
+                                    android:gravity="center">
+                                    <TextView
+                                        android:id="@+id/tv_count_invited"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:gravity="center"
+                                        android:layout_marginRight="@dimen/_4dp"
+                                        android:textColor="@color/default_text_color_blue"/>
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@+id/tv_count_invited"
-                                    android:text="@string/members_invited"/>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_toRightOf="@+id/tv_count_invited"
+                                        android:text="@string/members_invited"/>
+                                </LinearLayout>
+
+
 
                                 <View
                                     android:id="@+id/spit_line"
@@ -218,18 +228,30 @@
                                     android:layout_height="@dimen/_18dp"
                                     android:background="@color/tab_color_press4"/>
 
-                                <TextView
-                                    android:id="@+id/tv_count_pending"
+
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@+id/spit_line"
-                                    android:gravity="center"
-                                    android:textColor="@color/default_text_color_dark"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_toRightOf="@+id/tv_count_pending"
-                                    android:text="@string/members_pending"/>
+                                    android:gravity="center">
+
+                                    <TextView
+                                        android:id="@+id/tv_count_pending"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_toRightOf="@+id/spit_line"
+                                        android:text=""
+                                        android:gravity="center"
+                                        android:layout_marginRight="@dimen/_4dp"
+                                        android:textColor="@color/default_text_color_blue"/>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_toRightOf="@+id/tv_count_pending"
+                                        android:text="@string/members_pending"/>
+
+                                </LinearLayout>
+
+
                             </TableRow>
 
                         </TableLayout>

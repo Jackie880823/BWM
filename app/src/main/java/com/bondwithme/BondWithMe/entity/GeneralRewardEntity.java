@@ -37,6 +37,16 @@ public class GeneralRewardEntity implements Serializable {
     private String timestamp_left;
     private String merchant_name;
 
+    public String getDescription_1() {
+        return description_1;
+    }
+
+    public void setDescription_1(String description_1) {
+        this.description_1 = description_1;
+    }
+
+    private String description_1;
+
     public String getTimestamp_left() {
         return timestamp_left;
     }
