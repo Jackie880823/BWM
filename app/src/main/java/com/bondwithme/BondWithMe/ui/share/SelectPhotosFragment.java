@@ -638,8 +638,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             LogUtil.i(TAG, "mImageUriList size = " + mImageUriList.size() + "; bucket " + bucket);
 
             localMediaAdapter.setData(mImageUriList);
-            localMediaAdapter.notifyDataSetChanged();
             localMediaAdapter.setSelectedImages(mSelectedImageUris);
+            localMediaAdapter.notifyDataSetChanged();
+
+            localMediaAdapter.setListener(selectImageUirListener);
 
             mGvShowPhotos.setSelection(0);
             mDrawerList.setSelection(index);
