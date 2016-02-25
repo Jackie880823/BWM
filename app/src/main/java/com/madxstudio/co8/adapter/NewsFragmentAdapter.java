@@ -138,6 +138,9 @@ public class NewsFragmentAdapter extends RecyclerView.Adapter<ViewHolder>{
             });
             ((ImageHolder) holder).setTag(entity);
         }
+        if (getItemCount() > 0) {
+            listener.loadFinish();
+        }
 
     }
 
