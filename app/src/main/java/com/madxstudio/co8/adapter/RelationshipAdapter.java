@@ -2,7 +2,6 @@ package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.madxstudio.co8.entity.RelationshipEnum;
 import com.madxstudio.co8.http.VolleyUtil;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.ui.OnFamilyItemClickListener;
-import com.madxstudio.co8.util.RelationshipUtil;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 
 import java.util.ArrayList;
@@ -152,7 +150,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
 
                 }
             });
-            holder.addView(child);
+            holder.addView(child, position != 0);
         }
     }
 
@@ -237,9 +235,10 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
          * {@link LinearLayout#dispatchDraw(android.graphics.Canvas)} or any related method.</p>
          *
          * @param child the child view to add
+         * @param show
          * @see LinearLayout#generateDefaultLayoutParams()
          */
-        public void addView(View child) {
+        public void addView(View child, boolean show) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
             child.setLayoutParams(params);
             child.setOnClickListener(new View.OnClickListener() {
@@ -252,7 +251,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
                 }
             });
             View nullView = child.findViewById(R.id.null_image_view);
-            if(itemView.getChildCount() == 0) {
+            if(show && itemView.getChildCount() == 0) {
                 nullView.setVisibility(View.VISIBLE);
             } else {
                 nullView.setVisibility(View.GONE);
