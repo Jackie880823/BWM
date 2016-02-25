@@ -2,4 +2,5 @@
 <resources>
     <string name="api_server" translatable="false">http://pt.bondwith.me</string>
     <string name="tracker_site_id" translatable="false">4</string>
+    <string name="server" translatable="false">pt</string>
 </resources>

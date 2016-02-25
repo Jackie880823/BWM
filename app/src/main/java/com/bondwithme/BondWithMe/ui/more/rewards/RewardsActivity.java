@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -221,8 +222,8 @@ public class RewardsActivity extends BaseActivity {
             tvRewardPointDesc2.setText(rewardPointEntity.getDescription_2());
             tvRewardPointDesc3.setText(rewardPointEntity.getDescription_3());
             tvUserPoint.setText(rewardPointEntity.getUser_point());
-            tvCountInvited.setText(rewardPointEntity.getInvited());
-            tvCountPending.setText(rewardPointEntity.getPending());
+            tvCountInvited.setText(Html.fromHtml(String.format(getString(R.string.members_invited), rewardPointEntity.getInvited())));
+            tvCountPending.setText(Html.fromHtml(String.format(getString(R.string.members_pending), rewardPointEntity.getPending())));
         }
     }
 

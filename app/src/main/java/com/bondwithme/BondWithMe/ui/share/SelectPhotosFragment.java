@@ -157,8 +157,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     public SelectPhotosFragment() {
         super();
-        mSelectedImageUris = weakReference.get();
-        weakReference = null;
+        if(weakReference!=null) {
+            mSelectedImageUris = weakReference.get();
+            weakReference = null;
+        }
     }
 
     public static SelectPhotosFragment newInstance(List<MediaData> selectUris, String... params) {
@@ -638,8 +640,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             LogUtil.i(TAG, "mImageUriList size = " + mImageUriList.size() + "; bucket " + bucket);
 
             localMediaAdapter.setData(mImageUriList);
-            localMediaAdapter.notifyDataSetChanged();
             localMediaAdapter.setSelectedImages(mSelectedImageUris);
+            localMediaAdapter.notifyDataSetChanged();
+
+            localMediaAdapter.setListener(selectImageUirListener);
 
             mGvShowPhotos.setSelection(0);
             mDrawerList.setSelection(index);

@@ -4,18 +4,24 @@ package com.bondwithme.BondWithMe.util;
  * Created by wing on 15/3/22.
  */
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 
+import java.io.Closeable;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +31,8 @@ import java.util.List;
 
 public class FileUtil {
 
+    private static final String SCHEME_FILE = "file";
+    private static final String SCHEME_CONTENT = "content";
     private static File path;
     private final static String CACHE_DIR_NAME = File.separator + "cache";
     public final static String BANNER_DIR_NAME = File.separator + "banner";
@@ -134,20 +142,95 @@ public class FileUtil {
      * @return
      */
     public static String getRealPathFromURI(Context context, Uri contentURI) {
-        String result;
-        String[] proj = {MediaStore.Images.ImageColumns.DATA};
-        Cursor cursor = context.getContentResolver().query(contentURI, proj, null, null, null);
-        if (cursor == null) { // Source is Dropbox or other similar local file path
-            result = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }
-
-        return String.format(result, "utf-8");
+//        String result;
+//        String[] proj = {MediaStore.Images.ImageColumns.DATA};
+//        Cursor cursor = context.getContentResolver().query(contentURI, proj, null, null, null);
+//        if (cursor == null) { // Source is Dropbox or other similar local file path
+//            result = contentURI.getPath();
+//        } else {
+//            cursor.moveToFirst();
+//            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+//            result = cursor.getString(idx);
+//            cursor.close();
+//        }
+//
+//        return String.format(result, "utf-8");
+        return getFromMediaUri(context,context.getContentResolver(),contentURI).getPath();
     }
+
+    @Nullable
+    public static File getFromMediaUri(Context context, ContentResolver resolver, Uri uri) {
+        if (uri == null) return null;
+
+        if (SCHEME_FILE.equals(uri.getScheme())) {
+            return new File(uri.getPath());
+        } else if (SCHEME_CONTENT.equals(uri.getScheme())) {
+            final String[] filePathColumn = { MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME };
+            Cursor cursor = null;
+            try {
+                cursor = resolver.query(uri, filePathColumn, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    final int columnIndex = (uri.toString().startsWith("content://com.google.android.gallery3d")) ?
+                            cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME) :
+                            cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
+                    // Picasa images on API 13+
+                    if (columnIndex != -1) {
+                        String filePath = cursor.getString(columnIndex);
+                        if (!TextUtils.isEmpty(filePath)) {
+                            return new File(filePath);
+                        }
+                    }
+                }
+            } catch (IllegalArgumentException e) {
+                // Google Drive images
+                return getFromMediaUriPfd(context, resolver, uri);
+            } catch (SecurityException ignored) {
+                // Nothing we can do
+            } finally {
+                if (cursor != null) cursor.close();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private static File getFromMediaUriPfd(Context context, ContentResolver resolver, Uri uri) {
+        if (uri == null) return null;
+
+        FileInputStream input = null;
+        FileOutputStream output = null;
+        try {
+            ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "r");
+            FileDescriptor fd = pfd.getFileDescriptor();
+            input = new FileInputStream(fd);
+
+            String tempFilename = getTempFilename(context);
+            output = new FileOutputStream(tempFilename);
+
+            int read;
+            byte[] bytes = new byte[4096];
+            while ((read = input.read(bytes)) != -1) {
+                output.write(bytes, 0, read);
+            }
+            return new File(tempFilename);
+        } catch (IOException ignored) {
+            // Nothing we can do
+        } finally {
+            closeSilently(input);
+            closeSilently(output);
+        }
+        return null;
+    }
+
+    public static void closeSilently(@Nullable Closeable c) {
+        if (c == null) return;
+        try {
+            c.close();
+        } catch (Throwable t) {
+            // Do nothing
+        }
+    }
+
 
     /***
      * clear the app cache create when photo handling,not app all cache
@@ -338,6 +421,11 @@ public class FileUtil {
             sourceChannel.close();
             destChannel.close();
         }
+    }
+
+    private static String getTempFilename(Context context) throws IOException {
+        File outputFile = File.createTempFile("image", "tmp", getSaveRootPath(context, true));
+        return outputFile.getAbsolutePath();
     }
 
 }

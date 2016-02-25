@@ -26,7 +26,6 @@ import com.bondwithme.BondWithMe.adapter.WallHolder;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
-import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
@@ -467,8 +466,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
 
-        vProgress.setVisibility(View.GONE);
-
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Constant.INTENT_UPDATE_DIARY: { // 更新了评论
@@ -528,9 +525,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         ArrayList<Uri> pickUris;
                         pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
                         if (pickUris != null && !pickUris.isEmpty()) {
-                            if (vProgress != null) {
-                                vProgress.setVisibility(View.VISIBLE);
-                            }
                             holder.setLocalPhotos(pickUris);
                         }
                     }
