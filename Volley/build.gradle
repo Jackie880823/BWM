@@ -15,10 +15,11 @@ buildscript {
 }
 apply plugin: 'com.android.library'
 android {
-    compileSdkVersion 21
+    compileSdkVersion 23
     buildToolsVersion "21.1.2"
+    useLibrary "org.apache.http.legacy"
     defaultConfig {
-        targetSdkVersion 21
+        targetSdkVersion 23
     }
     productFlavors {
     }

@@ -186,13 +186,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onResume() {
-        if (isNeedRefersh) {
-            isNeedRefersh = false;
-            Intent reintent = getIntent();
-            finish();
-            startActivity(reintent);
-        }
-
         super.onResume();
 //        if(currentTabEnum!=null){
 //            changeTitleColor();

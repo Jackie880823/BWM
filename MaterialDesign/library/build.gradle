@@ -1,13 +1,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 23
     buildToolsVersion "21.0.0"
 
     defaultConfig {
         applicationId "me.drakeet.materialdialog"
         minSdkVersion 8
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 8
         versionName "1.2.2"
     }

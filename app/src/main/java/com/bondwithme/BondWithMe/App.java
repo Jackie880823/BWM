@@ -503,6 +503,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
+                AppControler.getAppControler().finishAllActivity();
                 HttpTools.getHeaders().put("X_BWM_APPLANG", Locale.getDefault().getLanguage());
             }
         }
@@ -595,4 +596,5 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         //初始推送api
         PushApi.initPushApi(getContextInstance(), googleAvailable);
     }
+
 }

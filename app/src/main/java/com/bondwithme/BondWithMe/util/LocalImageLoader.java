@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -19,6 +20,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.opengl.GLES10;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -39,7 +41,8 @@ import java.io.InputStream;
 public class LocalImageLoader {
 
     private static final String TAG = LocalImageLoader.class.getSimpleName();
-
+    private static final int SIZE_DEFAULT = 2048;
+    private static final int SIZE_LIMIT = 4096;
     /**
      * max upload file size
      */
@@ -386,18 +389,53 @@ public class LocalImageLoader {
      *
      * @return
      */
-    public final static int caculateInSampleSize(Options options, int rqsW, int rqsH) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-        if (rqsW == 0 || rqsH == 0)
-            return 1;
-        if (height > rqsH || width > rqsW) {
-            final int heightRatio = Math.round((float) height / (float) rqsH);
-            final int widthRatio = Math.round((float) width / (float) rqsW);
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+    public final static int caculateInSampleSize(ContentResolver contentResolver,Uri bitmapUri) {
+//    public final static int caculateInSampleSize(Resolver resolver,Options options, int rqsW, int rqsH) {
+//        final int height = options.outHeight;
+//        final int width = options.outWidth;
+//        int inSampleSize = 1;
+//        if (rqsW == 0 || rqsH == 0)
+//            return 1;
+//        if (height > rqsH || width > rqsW) {
+//            final int heightRatio = Math.round((float) height / (float) rqsH);
+//            final int widthRatio = Math.round((float) width / (float) rqsW);
+//            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+//        }
+//        return inSampleSize;
+        InputStream is = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        try {
+            is = contentResolver.openInputStream(bitmapUri);
+            BitmapFactory.decodeStream(is, null, options); // Just get image size
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            FileUtil.closeSilently(is);
         }
-        return inSampleSize;
+
+        int maxSize = getMaxImageSize();
+        int sampleSize = 1;
+        while (options.outHeight / sampleSize > maxSize || options.outWidth / sampleSize > maxSize) {
+            sampleSize = sampleSize << 1;
+        }
+        return sampleSize;
+    }
+
+    private static int getMaxImageSize() {
+        int textureLimit = getMaxTextureSize();
+        if (textureLimit == 0) {
+            return SIZE_DEFAULT;
+        } else {
+            return Math.min(textureLimit, SIZE_LIMIT);
+        }
+    }
+
+    private static int getMaxTextureSize() {
+        // The OpenGL texture size is the maximum size that can be drawn in an ImageView
+        int[] maxSize = new int[1];
+        GLES10.glGetIntegerv(GLES10.GL_MAX_TEXTURE_SIZE, maxSize, 0);
+        return maxSize[0];
     }
 
     /**
@@ -406,13 +444,15 @@ public class LocalImageLoader {
      * @param path bitmap source path
      * @return Bitmap {@link Bitmap}
      */
-    public final static Bitmap compressBitmap(String path, int rqsW, int rqsH) {
+    public final static Bitmap compressBitmap(Context context,String path, int rqsW, int rqsH) {
         final Options options = new Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
-        options.inSampleSize = caculateInSampleSize(options, rqsW, rqsH);
+        options.inSampleSize = caculateInSampleSize(context.getContentResolver(),Uri.parse(path));
+//        options.inSampleSize = caculateInSampleSize(options, rqsW, rqsH);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(path, options);
+
     }
 
     /**
@@ -452,7 +492,7 @@ public class LocalImageLoader {
     public final static String compressBitmap(Context context, String srcPath, int rqsW, int rqsH, boolean isDelSrc) {
 
         Bitmap bitmap;
-        bitmap = compressBitmap(srcPath, rqsW, rqsH);
+        bitmap = compressBitmap(context,srcPath, rqsW, rqsH);
         return getPath(context, srcPath, isDelSrc, bitmap);
     }
 
@@ -753,7 +793,7 @@ public class LocalImageLoader {
                 ImageSize imageSize = new ImageSize(640, 480);
                 bitmap = ImageLoader.getInstance().loadImageSync(uri.toString(), imageSize);
                 if (bitmap == null) {
-                    bitmap = compressBitmap(FileUtil.getRealPathFromURI(context, uri), 640, 480);
+                    bitmap = compressBitmap(context,FileUtil.getRealPathFromURI(context, uri), 640, 480);
                 }
                 int degree = readPictureDegree(uri.toString());
                 try {
