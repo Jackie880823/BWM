@@ -5,8 +5,9 @@ def releaseTime() {
 }
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "23"
+    useLibrary "org.apache.http.legacy"
 
     dexOptions {
         javaMaxHeapSize "2048M"
@@ -15,10 +16,11 @@ android {
 
 
     defaultConfig {
+        applicationId "com.madxstudio.co8"
         minSdkVersion 16
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 62   //TODO
-        versionName "1.0.0" //TODO
+        versionName "2.3.0" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -72,7 +74,7 @@ android {
                 def outputFile = output.outputFile
                 if (outputFile != null && outputFile.name.endsWith('.apk')) {
                     // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
-                    def fileName = "co8_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                    def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
                     output.outputFile = new File(outputFile.parent, fileName)
                 }
             }
@@ -81,11 +83,11 @@ android {
         pt {
             // 显示Log
             buildConfigField "boolean", "LOG_DEBUG", "true"
-            minifyEnabled false
-            zipAlignEnabled false
-            shrinkResources false
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
     // 多渠道打包
@@ -128,7 +130,7 @@ android {
 //                javaexec {
 ////                    println "Triggering customer build for flavor " + flavor.name
 ////                    classpath += files("libs/my-jarfile.jar")
-//                    main = "com.madxstudio.co8.db.DatabaseConfigUtil"
+//                    main = "com.bondwithme.BondWithMe.db.DatabaseConfigUtil"
 ////                    args flavor.name, variant.versionName
 //                }
 ////                println "Done building customer for flavor " + flavor.name
@@ -151,7 +153,7 @@ dependencies {
     compile project(':mupdflibrary')
     compile project(':MaterialWidget')
     compile project(':facebook')
-    compile project(':ImageCrop')
+//    compile project(':ImageCrop')
     //    compile 'com.android.support:gridlayout-v7:21.0.3'
     /** 第三方图片处理库  */
     compile('org.apache.httpcomponents:httpmime:4.5') {
@@ -161,13 +163,13 @@ dependencies {
     }
     compile project(':piwik_sdk')
     //for 突破65535的限制
-    compile 'com.android.support:multidex:1.0.+'
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:support-annotations:22.2.1'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:support-v4:22.2.1'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
-    compile 'com.android.support:cardview-v7:22.2.1'
+    compile 'com.android.support:multidex:1.0.+'
+    compile 'com.android.support:support-annotations:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.google.android.gms:play-services:8.3.0'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
@@ -175,4 +177,5 @@ dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'me.leolin:ShortcutBadger:1.1.3@aar'
+    compile 'com.soundcloud.android:android-crop:1.0.1@aar'
 }
