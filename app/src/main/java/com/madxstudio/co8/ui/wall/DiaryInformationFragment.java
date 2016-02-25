@@ -164,7 +164,6 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
-        vProgress.setVisibility(View.GONE);
 
         if (Activity.RESULT_OK == resultCode) {
             switch (requestCode) {
@@ -173,7 +172,6 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                         ArrayList<Uri> pickUris;
                         pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
                         if (pickUris != null && !pickUris.isEmpty()) {
-                            setProgressVisibility(View.VISIBLE);
                             holder.setLocalPhotos(pickUris);
                         }
                     }
