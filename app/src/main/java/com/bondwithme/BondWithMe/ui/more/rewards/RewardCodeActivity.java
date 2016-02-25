@@ -34,6 +34,7 @@ public class RewardCodeActivity extends BaseActivity {
     private TextView tvRewardDate;
     private TextView tvRewardPoint;
     private TextView tvRewardTitle;
+    private TextView tvRedemption;
     private LinearLayout llCode;
     private String titleName;
     private String strCode;
@@ -85,6 +86,7 @@ public class RewardCodeActivity extends BaseActivity {
         tvRewardDate = getViewById(R.id.tv_reward_date);
         tvRewardPoint = getViewById(R.id.tv_reward_pts);
         tvRewardTitle = getViewById(R.id.tv_reward_title);
+        tvRedemption = getViewById(R.id.tv_redemption);
 
         if (generalRewardEntity != null ){
             LogUtil.d(TAG,"generalRewardEntity");
@@ -94,7 +96,9 @@ public class RewardCodeActivity extends BaseActivity {
             tvRewardTitle.setText(generalRewardEntity.getDescription());
             tvDesc.setText(generalRewardEntity.getDescription_1());
             tvRewardDate.setText(getString(R.string.valid_till) + " " +generalRewardEntity.getVoucher_due());
-            tvRewardPoint.setText(generalRewardEntity.getPoint() + " " +getString(R.string.text_capital_points));
+//            tvRewardPoint.setText(generalRewardEntity.getPoint() + " " +getString(R.string.text_capital_points));
+            tvRewardPoint.setVisibility(View.INVISIBLE);
+            tvRedemption.setVisibility(View.INVISIBLE);
         }
 
         if (rewardEntity != null ){
