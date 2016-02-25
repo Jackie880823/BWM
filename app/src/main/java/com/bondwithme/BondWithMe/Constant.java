@@ -442,4 +442,7 @@ public class Constant {
 
     public static final String API_GET_PROFILE_QR = API_SERVER + "/bondwithme/index.php/api/photo_profile/%s/fid/qr";
 
+    public static final String API_CHECK_HAS_PENDING_REQUEST = API_SERVER + "/bondwithme/index.php/api/pendingMember/%s";
+    public static final String API_REJECT_PENDING_MEMBER = API_SERVER + "/bondwithme/index.php/api/rejectPendingMember/%s";
+
 }

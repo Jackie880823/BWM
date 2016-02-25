@@ -186,8 +186,8 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
     public void addMember(UserEntity user) {
         operaUserId = user.getUser_id();
         Intent intent = new Intent(getActivity(), AddMemberWorkFlow.class);
-        intent.putExtra("from", MainActivity.getUser().getUser_id());
-        intent.putExtra("to", operaUserId);
+        intent.putExtra(AddMemberWorkFlow.FLAG_FROM, MainActivity.getUser().getUser_id());
+        intent.putExtra(AddMemberWorkFlow.FLAG_TO, operaUserId);
         startActivityForResult(intent, ADD_MEMBER);
     }
 

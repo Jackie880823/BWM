@@ -144,8 +144,8 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
                                 public void onClick(View v) {
                                     // 同意添加好友跳转至添加好友界面
                                     Intent intent = new Intent(mContext, AddMemberWorkFlow.class);
-                                    intent.putExtra("from", MainActivity.getUser().getUser_id());
-                                    intent.putExtra("to", userEntity.getUser_id());
+                                    intent.putExtra(AddMemberWorkFlow.FLAG_FROM, MainActivity.getUser().getUser_id());
+                                    intent.putExtra(AddMemberWorkFlow.FLAG_TO, userEntity.getUser_id());
                                     mFragment.startActivityForResult(intent, 10);
                                     myDialog.dismiss();
                                 }
