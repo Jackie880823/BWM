@@ -751,4 +751,5 @@
     <string name="text_news_edit">Write your news here</string>
     <string name="text_expired_code">Invalid or expired code. Please try again.</string>
     <string name="text_wrong_pwd_name">Wrong username or password. Please try again.</string>
+    <string name="text_valid_email">Please enter valid email format.</string>
 </resources>
