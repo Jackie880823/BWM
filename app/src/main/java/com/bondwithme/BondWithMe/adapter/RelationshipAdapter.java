@@ -153,7 +153,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
 
                 }
             });
-            holder.addView(child, i == 0 && position != 0);
+            holder.addView(child);
         }
     }
 
@@ -240,7 +240,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
          * @param child the child view to add
          * @see LinearLayout#generateDefaultLayoutParams()
          */
-        public void addView(View child, boolean show) {
+        public void addView(View child) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
             child.setLayoutParams(params);
             child.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +253,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
                 }
             });
             View nullView = child.findViewById(R.id.null_image_view);
-            if(show) {
+            if(itemView.getChildCount() == 0) {
                 nullView.setVisibility(View.VISIBLE);
             } else {
                 nullView.setVisibility(View.GONE);
