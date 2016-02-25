@@ -326,9 +326,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 updateLovedView();
 
                 if (TextUtils.isEmpty(wallEntity.getLove_id())) {
-                    doLove(wallEntity, false);
+                    clickLove(wallEntity, false);
                 } else {
-                    doLove(wallEntity, true);
+                    clickLove(wallEntity, true);
                 }
 
                 //判断是否已经有进行中的判断
@@ -468,7 +468,13 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tvAgreeCount.setText(String.format(tvAgreeCount.getContext().getString(R.string.loves_count), count));
     }
 
-    private void doLove(WallEntity wallEntity, boolean love) {
+    /**
+     * 点赞
+     *
+     * @param wallEntity
+     * @param love
+     */
+    private void clickLove(WallEntity wallEntity, boolean love) {
         HashMap<String, String> params = new HashMap<>();
         params.put("content_id", wallEntity.getContent_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
@@ -479,6 +485,13 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     }
 
+    /**
+     * Diary内容显示
+     *
+     * @param wallEntity
+     * @param position
+     * @param context
+     */
     public void setContent(WallEntity wallEntity, int position, final Context context) {
 
         this.wallEntity = wallEntity;
@@ -761,7 +774,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                                 @Override
                                 public void onClick(View v) {
                                     myDialog.dismiss();
-                                    editDiaryAction();
+                                    editDiaryAction(null);
                                 }
                             });
 
@@ -788,7 +801,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         }
                         break;
                     case R.id.menu_edit_this_post:
-                        editDiaryAction();
+                        editDiaryAction(null);
                         break;
                     case R.id.menu_delete_this_post:
                         mViewClickListener.remove(wallEntity);
@@ -821,9 +834,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //        popupMenu.showAsDropDown(v,0,0);
     }
 
-    private void editDiaryAction() {
-        Intent intent;
-        intent = new Intent(context, NewDiaryActivity.class);
+    private void editDiaryAction(Intent intent) {
+        if (intent == null) {
+            intent = new Intent(context, NewDiaryActivity.class);
+        }
+
         intent.putExtra(Constant.WALL_ENTITY, wallEntity);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
@@ -905,24 +920,26 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO);
     }
 
-    public void setLocalPhotos(@NonNull List<Uri> localPhotos) {
+    public void setLocalPhotos(@NonNull ArrayList<Uri> localPhotos) {
         this.localPhotos = localPhotos;
         if (!localPhotos.isEmpty()) {
-
-            int max;
-            String maxPhoto = wallEntity.getPhoto_max();
-            if (TextUtils.isEmpty(maxPhoto)) {
-                max = localPhotos.size() - 1;
-            } else {
-                max = Integer.valueOf(maxPhoto) + localPhotos.size() - 1;
-            }
-            Map<String, String> params = new HashMap<>();
-            params.put(Constant.PARAM_PHOTO_MAX, String.valueOf(max));
-            RequestInfo requestInfo = new RequestInfo();
-            requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
-            requestInfo.url = String.format(Constant.API_PUT_PHOTO_MAX, wallEntity.getContent_id());
-            callBack.setLinkType(CallBack.LINK_TYPE_PUT_PHOTO_MAX);
-            mHttpTools.put(requestInfo, PUT_PHOTO_MAX, callBack);
+            Intent intent = new Intent(context, NewDiaryActivity.class);
+            intent.putParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR, localPhotos);
+            editDiaryAction(intent);
+//            int max;
+//            String maxPhoto = wallEntity.getPhoto_max();
+//            if (TextUtils.isEmpty(maxPhoto)) {
+//                max = localPhotos.size() - 1;
+//            } else {
+//                max = Integer.valueOf(maxPhoto) + localPhotos.size() - 1;
+//            }
+//            Map<String, String> params = new HashMap<>();
+//            params.put(Constant.PARAM_PHOTO_MAX, String.valueOf(max));
+//            RequestInfo requestInfo = new RequestInfo();
+//            requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+//            requestInfo.url = String.format(Constant.API_PUT_PHOTO_MAX, wallEntity.getContent_id());
+//            callBack.setLinkType(CallBack.LINK_TYPE_PUT_PHOTO_MAX);
+//            mHttpTools.put(requestInfo, PUT_PHOTO_MAX, callBack);
         }
     }
 

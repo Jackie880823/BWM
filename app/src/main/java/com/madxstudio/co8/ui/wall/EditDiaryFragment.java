@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -19,6 +18,7 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -39,6 +39,8 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
@@ -74,25 +76,18 @@ import com.madxstudio.co8.util.WallUtil;
 import com.madxstudio.co8.widget.InteractivePopupWindow;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.WallEditView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifImageView;
 
 /**
  * Created 10/20/15.
@@ -156,7 +151,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     private CallBack callBack = new CallBack();
     private boolean isEdit = false;
-    private boolean isUpate = false;
+    private boolean isUpdate = false;
 
     private String contentGroupId;
 
@@ -373,7 +368,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                             params.put("condition", UrlUtil.mapToJsonstring(condition));
                             String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
                             mAdapter.setRequest_url(url);
+                        } else if (isEdit) {
+                            isUpdate = true;
+                            loadLocationPhoto(getActivity().getIntent());
                         }
+
                     } else {
                         mAdapter.setIsPhoto(false);
                     }
@@ -648,6 +647,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     deletePhoto.add(photo.getPhoto_id());
                 }
 
+            }
+
+            @Override
+            public void loadRemotePhotoed() {
+                isUpdate = true;
+                loadLocationPhoto(getActivity().getIntent());
             }
 
             @Override
@@ -1011,7 +1016,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (resultCode == Activity.RESULT_OK) {
             if (isEdit) {
                 // 进入编辑确定Wall是更新了
-                isUpate = true;
+                isUpdate = true;
             } else {
                 // 没有退出编辑不用保存草稿
                 if (draftPreferences != null) {
@@ -1060,12 +1065,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                             LogUtil.i(TAG, "onActivityResult& play video uri: " + data.getData());
                             addVideoFromActivityResult(data);
                         } else {
-                            clearVideo();
-                            ArrayList<Uri> pickUris;
-                            pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
-                            imageUris.clear();
-                            imageUris.addAll(pickUris);
-                            addDataAndNotify(pickUris);
+                            loadLocationPhoto(data);
                         }
                     }
                     break;
@@ -1096,6 +1096,22 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
     /**
+     * 加载本地图片
+     *
+     * @param data
+     */
+    private void loadLocationPhoto(@NonNull Intent data) {
+        ArrayList<Uri> pickUris;
+        pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
+        if (pickUris != null) {
+            clearVideo();
+            imageUris.clear();
+            imageUris.addAll(pickUris);
+            addDataAndNotify(pickUris);
+        }
+    }
+
+    /**
      * Called when the fragment is no longer in use.  This is called
      * after {@link #onStop()} and before {@link #onDetach()}.
      */
@@ -1119,8 +1135,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             entity.setUri(uri);
             localEntities.add(entity);
         }
+        int index = photoEntities.size();
         photoEntities.addAll(localEntities);
         mAdapter.notifyDataSetChanged();
+        rvImages.scrollToPosition(index);
     }
 
 
@@ -1218,7 +1236,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 break;
             case R.id.tv_privacy:
                 if (isEdit) {
-                    isUpate = true;
+                    isUpdate = true;
                 }
                 if (onlyPopupWindow != null && onlyPopupWindow.isShowing()) {
                     onlyPopupWindow.dismiss();
@@ -1240,7 +1258,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 break;
 
             case R.id.delete_video_view:
-                isUpate = isEdit;
+                isUpdate = isEdit;
                 clearVideo();
                 mAdapter.notifyItemRemoved(1);
                 break;
@@ -1513,7 +1531,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void putWall() {
         String text_content = wevContent.getRelText();
 
-        if (!isUpate && (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri))) {
+        if (!isUpdate && (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri))) {
             // 没文字、没图片、没视频不能上传日记
             MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
             return;

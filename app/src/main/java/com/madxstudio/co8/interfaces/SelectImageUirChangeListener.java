@@ -5,6 +5,7 @@ package com.madxstudio.co8.interfaces;
  */
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import com.madxstudio.co8.adapter.LocalMediaAdapter;
 import com.madxstudio.co8.entity.MediaData;
@@ -48,7 +49,7 @@ public interface SelectImageUirChangeListener {
      */
     void onDrawerClose(Drawable drawable);
 
-    void onLoadedMedia(List<MediaData> data, LocalMediaAdapter adapter);
+    void onLoadedMedia(List<MediaData> data, @NonNull LocalMediaAdapter adapter);
 
     /**
      * @param mediaData
