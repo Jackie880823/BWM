@@ -53,7 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VerificationActivity extends BaseActivity implements EditText.OnEditorActionListener, View.OnClickListener{
+public class VerificationActivity extends BaseActivity implements EditText.OnEditorActionListener, View.OnClickListener {
 
     private final static String TAG = VerificationActivity.class.getSimpleName();
     private final static String CHECK_GET_CODE = TAG + "_CHECK_GET_CODE";
@@ -82,8 +82,6 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     private final static int HANDLE_FAIL_FORGOT_VERIFY_CODE = 0xc2;
 
 
-
-
     private TextView tvPhoneNumber;
     private EditText etCode;
     private TextView tvTime;
@@ -107,13 +105,11 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     //验证码出错怎么处理三种情况
     //http进入catch error怎么处理
     //TODO
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 //以下再次获取验证码回调
                 case HANDLE_SUCCESS_RESEND_CODE:
                     timeCount.start();
@@ -122,7 +118,6 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 case HANDLE_UNDEFINE_WRONG_RESEND_CODE:
                     goBackAgain();
                     break;
-
 
 
                 //以下验证且创建用户出现的各种情况回调
@@ -142,6 +137,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 case HANDLE_FAIL_VERIFY:
 //                    goBackAgain();
                     //验证码错误
+                    MessageUtil.getInstance(VerificationActivity.this).showShortToast(getString(R.string.text_expired_code));
                     etCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     break;
 
@@ -149,8 +145,6 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                     //facebook 用户创建成功
                     goMainActivityByFacebook();
                     break;
-
-
 
 
                 //以下忘记密码验证回调
@@ -161,7 +155,6 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 case HANDLE_FAIL_FORGOT_VERIFY_CODE:
                     etCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     break;
-
 
 
                 //http
@@ -180,12 +173,12 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     };
 
 
-
     class TimeCount extends CountDownTimer {
         public TimeCount(long millisInFuture, long countDownInterval) {
             //参数依次为总时长,和计时的时间间隔
             super(millisInFuture, countDownInterval);
         }
+
         @Override
         public void onFinish() {
             //计时完毕时触发
@@ -193,8 +186,9 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
             tvTime.setTextColor(getResources().getColor(R.color.default_text_color_blue));
             tvTime.setClickable(true);
         }
+
         @Override
-        public void onTick(long millisUntilFinished){
+        public void onTick(long millisUntilFinished) {
             //计时过程显示
             tvTime.setText(String.format(getResources().getString(R.string.text_start_verification_time_prompt), millisUntilFinished / 1000));
             tvTime.setTextColor(getResources().getColor(R.color.default_text_color_light));
@@ -275,13 +269,11 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         });
     }
 
-    private void getData()
-    {
+    private void getData() {
         Intent intent = getIntent();
         type = intent.getStringExtra(Constant.TYPE);
 
-        switch (type)
-        {
+        switch (type) {
             //怎么优化这种界面传递参数。好麻烦。
             case Constant.TYPE_PHONE:
                 strLogId = intent.getStringExtra("user_login_id");
@@ -327,8 +319,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.br_next:
                 doNext();
                 break;
@@ -343,14 +334,9 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     }
 
 
-
-
-
-    private void doResendCode()
-    {
+    private void doResendCode() {
         doingHttpChangeUI();
-        switch (type)
-        {
+        switch (type) {
             case Constant.TYPE_PHONE:
                 doPhoneResendCode();
                 break;
@@ -372,16 +358,13 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         }
     }
 
-    private void doNext()
-    {
-        if (TextUtils.isEmpty(etCode.getText().toString()))
-        {
+    private void doNext() {
+        if (TextUtils.isEmpty(etCode.getText().toString())) {
             etCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
             return;
         }
         doingHttpChangeUI();
-        switch (type)
-        {
+        switch (type) {
             case Constant.TYPE_PHONE:
                 doPhoneVerifyUser();
                 break;
@@ -404,12 +387,11 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     }
 
 
-
     private void doPhoneResendCode() {
         HashMap<String, String> params = new HashMap<>();
-        params.put("user_login_id",strCountryCode + MyTextUtil.NoZero(strPhoneNumber));
-        params.put("user_country_code",strCountryCode);
-        params.put("user_phone",MyTextUtil.NoZero(strPhoneNumber));
+        params.put("user_login_id", strCountryCode + MyTextUtil.NoZero(strPhoneNumber));
+        params.put("user_country_code", strCountryCode);
+        params.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
 
         new HttpTools(this).get(Constant.API_START_CHECK_LOG_ID, params, CHECK_GET_CODE, new HttpCallback() {
             @Override
@@ -465,7 +447,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     private void doUsernameResendCode() {
         HashMap<String, String> params = new HashMap<>();
         params.put("user_login_id", strLogId);
-        params.put("user_country_code",strCountryCode);
+        params.put("user_country_code", strCountryCode);
         params.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
 
         new HttpTools(this).get(Constant.API_START_CHECK_LOG_ID, params, CHECK_GET_CODE, new HttpCallback() {
@@ -642,21 +624,18 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     }
 
 
-
-
-    private void doPhoneVerifyUser()
-    {
+    private void doPhoneVerifyUser() {
         HashMap<String, String> params = new HashMap<>();
         params.put("user_country_code", strCountryCode);
         params.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
         params.put("verify_code", etCode.getText().toString());
-        params.put("user_login_id",strLogId);
+        params.put("user_login_id", strLogId);
         params.put("user_login_type", Constant.TYPE_PHONE);
-        params.put("user_password",strPassword);
+        params.put("user_password", strPassword);
         params.put("user_uuid", Settings.Secure.getString(VerificationActivity.this.getContentResolver(),
                 Settings.Secure.ANDROID_ID));
         params.put("user_app_version", AppInfoUtil.getAppVersionName(this));
-        params.put("user_app_os",Constant.USER_APP_OS);
+        params.put("user_app_os", Constant.USER_APP_OS);
 
         new HttpTools(this).post(Constant.API_START_PHONE_CREATE_USER, params, VERIFY_CODE, new HttpCallback() {
             @Override
@@ -722,15 +701,14 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
     }
 
-    private void doUsernameVerifyUser()
-    {
+    private void doUsernameVerifyUser() {
         HashMap<String, String> params = new HashMap<>();
         params.put("user_country_code", strCountryCode);
         params.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
         params.put("verify_code", etCode.getText().toString());
-        params.put("user_login_id",strLogId);
+        params.put("user_login_id", strLogId);
         params.put("user_login_type", Constant.TYPE_USERNAME);
-        params.put("user_password",strPassword);
+        params.put("user_password", strPassword);
         params.put("user_uuid", Settings.Secure.getString(VerificationActivity.this.getContentResolver(),
                 Settings.Secure.ANDROID_ID));
         params.put("user_app_version", AppInfoUtil.getAppVersionName(this));
@@ -751,20 +729,16 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
             public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-                Log.d("","response---------" + response);
+                Log.d("", "response---------" + response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    if (Constant.SUCCESS.equals(jsonObject.getString("response_status")))
-                    {
+                    if (Constant.SUCCESS.equals(jsonObject.getString("response_status"))) {
                         //注册成功，返回部分用户数据，有可能会有错误数据？
                         userEntity = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), UserEntity.class);
                         tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
                         handler.sendEmptyMessage(HANDLE_SUCCESS_CREATE_USER);
-                    }
-                    else
-                    {
-                        switch (jsonObject.getString("response_message"))
-                        {
+                    } else {
+                        switch (jsonObject.getString("response_message")) {
                             case LOGIN_ID_EXISET:
                                 handler.sendEmptyMessage(HANDLE_LOGIN_ID_EXISET);
                                 break;
@@ -805,8 +779,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         });
     }
 
-    private void doForgotPassword()
-    {
+    private void doForgotPassword() {
         HashMap<String, String> params = new HashMap<>();
         params.put("user_country_code", strCountryCode);
         params.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
@@ -955,8 +928,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 } catch (JSONException e) {
                     handler.sendEmptyMessage(CATCH);
                     e.printStackTrace();
-                }
-                finally {
+                } finally {
                     finishHttpChangeUI();
                 }
             }
@@ -967,14 +939,14 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 finishHttpChangeUI();
                 error.printStackTrace();
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("user_country_code", strCountryCode);
-                params.put("user_phone",MyTextUtil.NoZero(strPhoneNumber));
+                params.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
                 params.put("verify_code", etCode.getText().toString());
-                params.put("user_login_id",faceBookUserEntity.getUserId());
+                params.put("user_login_id", faceBookUserEntity.getUserId());
                 params.put("user_login_type", Constant.TYPE_FACEBOOK);
                 params.put("user_uuid", Settings.Secure.getString(VerificationActivity.this.getContentResolver(),
                         Settings.Secure.ANDROID_ID));
@@ -983,12 +955,9 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 params.put("access_token", faceBookUserEntity.getToken());
                 params.put("user_surname", faceBookUserEntity.getLastname());
                 params.put("user_given_name", faceBookUserEntity.getFirstname());
-                if ("male".equals(faceBookUserEntity.getGender()))
-                {
+                if ("male".equals(faceBookUserEntity.getGender())) {
                     params.put("user_gender", "M");
-                }
-                else
-                {
+                } else {
                     params.put("user_gender", "F");
                 }
                 return params;
@@ -999,32 +968,26 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     }
 
 
-
-    private void goBackAgain()
-    {
+    private void goBackAgain() {
         MessageUtil.showMessage(this, getString(R.string.text_start_fail_verify_code));
         finish();
     }
 
-    private void doingHttpChangeUI()
-    {
+    private void doingHttpChangeUI() {
         rlProgress.setVisibility(View.VISIBLE);
         etCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
         UIUtil.hideKeyboard(this, etCode);
     }
 
-    private void finishHttpChangeUI()
-    {
+    private void finishHttpChangeUI() {
         rlProgress.setVisibility(View.GONE);
     }
 
-    private void goDetails()
-    {
+    private void goDetails() {
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(Constant.LOGIN_USER, userEntity);
         intent.putExtra(Constant.HTTP_TOKEN, tokenEntity);
-        switch (userEntity.getUser_login_type())
-        {
+        switch (userEntity.getUser_login_type()) {
             case Constant.TYPE_USERNAME:
                 MyAppsFlyer.appsFlyerRegistrationUsername();
                 break;
@@ -1036,12 +999,11 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         startActivity(intent);
     }
 
-    private void goSelectAccount()
-    {
+    private void goSelectAccount() {
         Intent intent = new Intent(this, SelectAccountActivity.class);
         intent.putExtra(Constant.LOGIN_USER, forgotAccountList);
-        intent.putExtra("user_country_code",strCountryCode);
-        intent.putExtra("user_phone",MyTextUtil.NoZero(strPhoneNumber));
+        intent.putExtra("user_country_code", strCountryCode);
+        intent.putExtra("user_phone", MyTextUtil.NoZero(strPhoneNumber));
         startActivity(intent);
     }
 
@@ -1054,8 +1016,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE)
-        {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
             doNext();
             return true;
         }
@@ -1065,8 +1026,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(Constant.TYPE_FACEBOOK.equals(type))
-        {
+        if (Constant.TYPE_FACEBOOK.equals(type)) {
             LoginManager.getInstance().logOut();//清除Facebook授权缓存
         }
     }

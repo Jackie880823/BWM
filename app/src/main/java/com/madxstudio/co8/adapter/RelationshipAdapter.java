@@ -192,10 +192,10 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         tvName.setText(name);
 
         String treeTypeName;
-        treeTypeName = familyMemberEntity.getTree_type_name();
-        if(!TextUtils.isEmpty(treeTypeName)) {
-            treeTypeName = RelationshipUtil.getRelationshipName(context, treeTypeName);
-        }
+        treeTypeName = familyMemberEntity.getPosition();
+//        if(!TextUtils.isEmpty(treeTypeName)) {
+//            treeTypeName = RelationshipUtil.getRelationshipName(context, treeTypeName);
+//        }
         tvRelation.setText(treeTypeName);
     }
 

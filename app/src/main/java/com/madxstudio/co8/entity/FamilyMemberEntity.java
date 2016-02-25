@@ -29,6 +29,8 @@ public class FamilyMemberEntity implements Serializable {
      */
     private String tree_type_name;
 
+    private String position;
+
     /**
      * 生日
      */
@@ -46,6 +48,14 @@ public class FamilyMemberEntity implements Serializable {
     private String group_new_post;//
     private String added_flag;//new flag to determine user add flow
     private String dofeel_code;//心情代码
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
 
     public String getUser_id() {
         return user_id;

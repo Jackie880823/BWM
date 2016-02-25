@@ -780,7 +780,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             timePicker.setCalendar(calendar);
             mEevent.setGroup_end_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
         } else if (startMeetingTime != null && startMeetingTime != 0L) {
-            Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(startMeetingTime));
+            Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(startMeetingTime + 1000 * 60));
             calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
             datePicker.setCalendar(calendar);
             timePicker.setCalendar(calendar);
