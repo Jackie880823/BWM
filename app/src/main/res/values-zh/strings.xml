@@ -715,4 +715,6 @@
     <!--<string name="title_writle_new_title">Title</string>-->
     <!--<string name="text_write_new_here">Write your story here</string>-->
     <!--<string name="text_org_chart">Org Chart</string>-->
+    <!--<string name="text_expired_code">Invalid or expired code. Please try again.</string>-->
+    <!--<string name="text_wrong_pwd_name">Wrong username or password. Please try again.</string>-->
 </resources>
