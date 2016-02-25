@@ -81,12 +81,12 @@ public class ContactUsActivity extends BaseActivity {
 
     private void showSelectDialog() {
 
-        if(showSelectDialog==null) {
+        if (showSelectDialog == null) {
             LayoutInflater factory = LayoutInflater.from(this);
             final View selectIntention = factory.inflate(R.layout.dialog_mail_select_subject, null);
             showSelectDialog = new MyDialog(this, R.string.hint_subject, selectIntention);
             showSelectDialog.setCanceledOnTouchOutside(false);
-            showSelectDialog.setButtonCancel(R.string.text_dialog_cancel,new View.OnClickListener() {
+            showSelectDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showSelectDialog.dismiss();
@@ -96,15 +96,15 @@ public class ContactUsActivity extends BaseActivity {
             selectIntention.findViewById(R.id.subject_2).setOnClickListener(this);
             selectIntention.findViewById(R.id.subject_3).setOnClickListener(this);
         }
-        if(!showSelectDialog.isShowing())
+        if (!showSelectDialog.isShowing())
             showSelectDialog.show();
     }
 
     @Override
     protected void onDestroy() {
-        if(showSelectDialog!=null){
+        if (showSelectDialog != null) {
             showSelectDialog.dismiss();
-            showSelectDialog=null;
+            showSelectDialog = null;
         }
         super.onDestroy();
     }
@@ -114,10 +114,10 @@ public class ContactUsActivity extends BaseActivity {
         if (TextUtils.isEmpty(subject_text)) {
             return false;
         }
-        mail_from_text = mail_from.getText().toString();
-        if (TextUtils.isEmpty(mail_from_text) && MyTextUtil.isInvalidText(mail_from_text)) {
-            return false;
-        }
+//        mail_from_text = mail_from.getText().toString();
+//        if (TextUtils.isEmpty(mail_from_text) && MyTextUtil.isInvalidText(mail_from_text)) {
+//            return false;
+//        }
 
         mail_content_text = mail_content.getText().toString();
         if (TextUtils.isEmpty(mail_content_text) && MyTextUtil.isInvalidText(mail_content_text)) {
@@ -127,9 +127,14 @@ public class ContactUsActivity extends BaseActivity {
         return true;
     }
 
-//    ProgressDialog mProgressDialog;
-    private void sendMail(){
-        if(validateForm()) {
+    //    ProgressDialog mProgressDialog;
+    private void sendMail() {
+        mail_from_text = mail_from.getText().toString();
+        if (TextUtils.isEmpty(mail_from_text) || MyTextUtil.isInvalidText(mail_from_text) || mail_from_text.indexOf("@") <= 0) {
+            MessageUtil.getInstance(this).showShortToast(getString(R.string.text_valid_email));
+            return;
+        }
+        if (validateForm()) {
 
 //            mProgressDialog = new ProgressDialog(this,getString(R.string.text_sending));
 //            mProgressDialog.show();
@@ -141,7 +146,7 @@ public class ContactUsActivity extends BaseActivity {
             params.put("subject", subject_text);
             params.put("body", mail_content_text);
             params.put("email", mail_from_text);
-            new HttpTools(this).post(Constant.API_CONTACT_US, params,this, new HttpCallback() {
+            new HttpTools(this).post(Constant.API_CONTACT_US, params, this, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -154,8 +159,8 @@ public class ContactUsActivity extends BaseActivity {
 
                 @Override
                 public void onResult(String string) {
-                    MessageUtil.showMessage(ContactUsActivity.this,R.string.msg_action_successed);
-                    if (!isFinishing()){
+                    MessageUtil.showMessage(ContactUsActivity.this, R.string.msg_action_successed);
+                    if (!isFinishing()) {
                         finish();
                     }
                 }
@@ -175,16 +180,15 @@ public class ContactUsActivity extends BaseActivity {
 
                 }
             });
-        }else{
+        } else {
             MessageUtil.showMessage(this, R.string.alert_text_mail_info_not_complete);
         }
     }
 
 
-
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.subject_1:
                 subject_text = getString(R.string.mail_subject_1);
                 mail_subject.setText(subject_text);
