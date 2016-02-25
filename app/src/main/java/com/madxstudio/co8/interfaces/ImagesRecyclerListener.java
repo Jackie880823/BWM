@@ -17,5 +17,7 @@ public interface ImagesRecyclerListener {
 
     void deletePhoto(PushedPhotoEntity photo);
 
+    void loadRemotePhotoed();
+
     void loadFinish();
 }

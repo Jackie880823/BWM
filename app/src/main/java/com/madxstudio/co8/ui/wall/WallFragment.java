@@ -465,6 +465,9 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
+
+        vProgress.setVisibility(View.GONE);
+
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Constant.INTENT_UPDATE_DIARY: { // 更新了评论
@@ -505,6 +508,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     }
                     refresh();
                     break;
+
                 case Constant.INTENT_REQUEST_UPDATE_WALL: // 更新了日志
                 case Constant.INTENT_REQUEST_UPDATE_PHOTOS:// 更新了图片的日志
                 {

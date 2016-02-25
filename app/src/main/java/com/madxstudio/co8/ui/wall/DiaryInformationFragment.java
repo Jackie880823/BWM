@@ -164,6 +164,8 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
+        vProgress.setVisibility(View.GONE);
+
         if (Activity.RESULT_OK == resultCode) {
             switch (requestCode) {
                 case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
