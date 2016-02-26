@@ -1,10 +1,8 @@
 package com.madxstudio.co8.ui.share;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -32,7 +30,6 @@ import com.madxstudio.co8.ui.BaseFragment;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
-import com.madxstudio.co8.util.SDKUtil;
 import com.madxstudio.co8.util.SortMediaComparator;
 import com.madxstudio.co8.widget.CustomGridView;
 import com.madxstudio.co8.widget.DrawerArrowDrawable;
@@ -179,34 +176,18 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     }
 
-    /**
-     * Callback for the result from requesting permissions. This method
-     * is invoked for every call on {@link #requestPermissions(String[], int)}.
-     * <p>
-     * <strong>Note:</strong> It is possible that the permissions request interaction
-     * with the user is interrupted. In this case you will receive empty permissions
-     * and results arrays which should be treated as a cancellation.
-     * </p>
-     *
-     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions
-     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
-     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
-     * @see #requestPermissions(String[], int)
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 100:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    readMediaDatabase();
-                } else {
-                    LogUtil.w(TAG, "Permission Denial: requires android.permission.READ_EXTERNAL_STORAGE");
-                }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        switch (requestCode) {
+//            case 100:
+//                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    readMediaDatabase();
+//                } else {
+//                    LogUtil.w(TAG, "Permission Denial: requires android.permission.READ_EXTERNAL_STORAGE");
+//                }
+//        }
+//    }
 
     @Override
     public void initView() {
@@ -219,13 +200,15 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
         multi = getActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
 
-        if (SDKUtil.IS_M) {
-            if (FileUtil.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 100)) {
-                readMediaDatabase();
-            }
-        } else {
-            readMediaDatabase();
-        }
+//        if (SDKUtil.IS_M) {
+//            if (FileUtil.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 100)) {
+//                readMediaDatabase();
+//            }
+//        } else {
+//            readMediaDatabase();
+//        }
+
+        readMediaDatabase();
 
         final Resources resources = getResources();
         drawerArrowDrawable = new DrawerArrowDrawable(resources);
