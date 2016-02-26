@@ -482,7 +482,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                     foreground = false;
                     //重置add弹窗
                     if(user!=null){
-                        if (isBackground()&&checkHasPendingRequest(activity)) {
+                        if (isBackground()) {
                             needShowAddDialog = true;
                         }
                     }
@@ -612,42 +612,41 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
     HttpTools httpTools;
     private final static String TAG_CHECK_PENDING = "check_pending";
-    private boolean checkHasPendingRequest(final Activity activity){
-        httpTools = new HttpTools(activity);
-
-        httpTools.get(String.format(Constant.API_CHECK_HAS_PENDING_REQUEST, user.getUser_id()), null, TAG_CHECK_PENDING, new HttpCallback() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-
-            @Override
-            public void onResult(String string) {
-                needShowAddDialog = false;
-                showAddDialog(activity);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
-        return true;
+    private void checkHasPendingRequest(final Activity activity){
+//        httpTools = new HttpTools(activity);
+//
+//        httpTools.get(String.format(Constant.API_CHECK_HAS_PENDING_REQUEST, user.getUser_id()), null, TAG_CHECK_PENDING, new HttpCallback() {
+//            @Override
+//            public void onStart() {
+//
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//
+//            }
+//
+//            @Override
+//            public void onResult(String string) {
+//                needShowAddDialog = false;
+//                showAddDialog(activity);
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onCancelled() {
+//
+//            }
+//
+//            @Override
+//            public void onLoading(long count, long current) {
+//
+//            }
+//        });
     }
 
     private void showAddDialog(final Activity activity) {
