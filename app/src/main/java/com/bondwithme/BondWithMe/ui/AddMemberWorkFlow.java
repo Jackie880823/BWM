@@ -23,6 +23,8 @@ import java.util.HashMap;
  */
 public class AddMemberWorkFlow extends Activity {
 
+    public final static String FLAG_FROM = "from";
+    public final static String FLAG_TO = "to";
     private String to;
     private String from;
     private final static int GET_RELATIONSHIP = 10;
@@ -35,8 +37,8 @@ public class AddMemberWorkFlow extends Activity {
 //        setContentView(null);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        from = getIntent().getStringExtra("from");
-        to = getIntent().getStringExtra("to");
+        from = getIntent().getStringExtra(FLAG_FROM);
+        to = getIntent().getStringExtra(AddMemberWorkFlow.FLAG_TO);
 
         if (TextUtils.isEmpty(from) || TextUtils.isEmpty(to)) {
             finish();

@@ -448,5 +448,7 @@ public class Constant {
     public static final String API_GET_My_REWARD = API_SERVER + "/bondwithme/index.php/api/myRewardList/%s";
     public static final String API_GET_REWARD_LIST = API_SERVER + "/bondwithme/index.php/api/rewardList/%s";
     public static final String API_POST_REWARD_CODE = API_SERVER +"/bondwithme/index.php/api/redeemReward";
+    public static final String API_CHECK_HAS_PENDING_REQUEST = API_SERVER + "/bondwithme/index.php/api/pendingMember/%s";
+    public static final String API_REJECT_PENDING_MEMBER = API_SERVER + "/bondwithme/index.php/api/rejectPendingMember/%s";
 
 }
