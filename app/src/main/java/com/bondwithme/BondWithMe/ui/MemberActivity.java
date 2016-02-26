@@ -36,6 +36,7 @@ public class MemberActivity extends BaseActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
     private MyDialog showSelectDialog;
+    private MyDialog showAddDialog;
 
     private int startIndex = 0;
     private final static int offset = 20;
@@ -127,6 +128,12 @@ public class MemberActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(showAddDialog!=null){
+            showAddDialog.dismiss();
+        }
+        if(showSelectDialog!=null){
+            showSelectDialog.dismiss();
+        }
     }
 
     private void finishReFresh() {
@@ -162,9 +169,9 @@ public class MemberActivity extends BaseActivity {
                 }.getType());
 
                 //no data!
-                if (!data.isEmpty()){
+                if (!data.isEmpty()) {
                     llNoData.setVisibility(View.GONE);
-                }else if (adapter.getItemCount()<=0 && data.isEmpty() && !MemberActivity.this.isFinishing()){
+                } else if (adapter.getItemCount() <= 0 && data.isEmpty() && !MemberActivity.this.isFinishing()) {
                     llNoData.setVisibility(View.VISIBLE);
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_members));
                 }
@@ -206,7 +213,7 @@ public class MemberActivity extends BaseActivity {
 
             @Override
             public void addClick(MemberEntity member, int position) {
-                doAdd(member);
+                showAddDialog(member);
             }
         });
         rvList.setAdapter(adapter);
@@ -234,8 +241,8 @@ public class MemberActivity extends BaseActivity {
     private void doAdd(final MemberEntity member) {
         mProgressDialog.setVisibility(View.VISIBLE);
         Intent intent = new Intent(this, AddMemberWorkFlow.class);
-        intent.putExtra("from", MainActivity.getUser().getUser_id());
-        intent.putExtra("to", member.getAction_user_id());
+        intent.putExtra(AddMemberWorkFlow.FLAG_FROM, MainActivity.getUser().getUser_id());
+        intent.putExtra(AddMemberWorkFlow.FLAG_TO, member.getAction_user_id());
         startActivityForResult(intent, ADD_MEMBER);
     }
 
@@ -244,6 +251,43 @@ public class MemberActivity extends BaseActivity {
 
     }
 
+    private void showAddDialog(final MemberEntity member) {
+
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View selectIntention = factory.inflate(R.layout.dialog_bond_alert_member, null);
+        showAddDialog = new MyDialog(this, getResources().getString(R.string.text_tips_title), selectIntention);
+        showAddDialog.setCanceledOnTouchOutside(false);
+
+        showAddDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddDialog.dismiss();
+            }
+        });
+
+        TextView item1 = (TextView) selectIntention.findViewById(R.id.subject_1);
+        item1.setText(R.string.accept);
+        item1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doAdd(member);
+                showAddDialog.dismiss();
+            }
+        });
+
+        TextView item2 = (TextView) selectIntention.findViewById(R.id.subject_2);
+        item2.setText(R.string.text_item_reject);
+        item2.setOnClickListener(new View.OnClickListener() {
+            //        selectIntention.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addRemove(member.getAction_user_id());
+                showAddDialog.dismiss();
+            }
+        });
+
+        showAddDialog.show();
+    }
 
     private void showSelectDialog(final MemberEntity member) {
 
@@ -276,6 +320,49 @@ public class MemberActivity extends BaseActivity {
         });
 
         showSelectDialog.show();
+    }
+
+    private void addRemove(final String memberId) {
+
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.url = String.format(Constant.API_REJECT_PENDING_MEMBER , MainActivity.getUser().getUser_id());
+        Map<String, String> params = new HashMap<>();
+        params.put("requestor_id", memberId);
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+        new HttpTools(this).put(requestInfo, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String string) {
+                //bad date???
+//                startIndex = 0;
+//                isRefresh = true;
+                requestData();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(MemberActivity.this, R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     private void awaitingRemove(final String memberId) {

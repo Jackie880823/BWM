@@ -729,5 +729,7 @@
     <string name="members_invited"><![CDATA[<font color="#0087FF">%1$s</font> members invited]]></string>
     <string name="members_pending"><![CDATA[<font color="#0087FF">%1$s</font> members pending]]></string>
     <string name="voucher_code">VOUCHER CODE</string>
-
+    <string name="desc_recerve_member_add_request">There is new member request. Accept now?</string>
+    <string name="text_item_reject">Reject</string>
+    <string name="text_later">Later</string>
 </resources>
