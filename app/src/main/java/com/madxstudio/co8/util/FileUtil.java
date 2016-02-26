@@ -4,12 +4,17 @@ package com.madxstudio.co8.util;
  * Created by wing on 15/3/22.
  */
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 
 import com.madxstudio.co8.App;
@@ -338,6 +343,38 @@ public class FileUtil {
         } finally {
             sourceChannel.close();
             destChannel.close();
+        }
+    }
+
+    /**
+     * 检测权限是否绑定，若没有绑定则申请相应权限，此函数适应于v4包的Fragment
+     * @param fragment
+     * @param permission
+     * @param requestCode
+     * @return
+     */
+    public static boolean checkSelfPermission(Fragment fragment, String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(fragment.getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+            fragment.requestPermissions(new String[]{permission}, requestCode);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 检测权限是否绑定，若没有绑定则申请相应权限，此函数适应于Activity
+     * @param activity
+     * @param permission
+     * @param requestCode
+     * @return
+     */
+    public static boolean checkSelfPermission(Activity activity, String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode);
+            return false;
+        } else {
+            return true;
         }
     }
 

@@ -1,8 +1,10 @@
 package com.madxstudio.co8.ui.share;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -30,6 +32,7 @@ import com.madxstudio.co8.ui.BaseFragment;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.SDKUtil;
 import com.madxstudio.co8.util.SortMediaComparator;
 import com.madxstudio.co8.widget.CustomGridView;
 import com.madxstudio.co8.widget.DrawerArrowDrawable;
@@ -176,7 +179,35 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    /**
+     * Callback for the result from requesting permissions. This method
+     * is invoked for every call on {@link #requestPermissions(String[], int)}.
+     * <p>
+     * <strong>Note:</strong> It is possible that the permissions request interaction
+     * with the user is interrupted. In this case you will receive empty permissions
+     * and results arrays which should be treated as a cancellation.
+     * </p>
+     *
+     * @param requestCode  The request code passed in {@link #requestPermissions(String[], int)}.
+     * @param permissions  The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions
+     *                     which is either {@link PackageManager#PERMISSION_GRANTED}
+     *                     or {@link PackageManager#PERMISSION_DENIED}. Never null.
+     * @see #requestPermissions(String[], int)
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 100:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    readMediaDatabase();
+                } else {
+                    LogUtil.w(TAG, "Permission Denial: requires android.permission.READ_EXTERNAL_STORAGE");
+                }
+        }
+    }
+
     @Override
     public void initView() {
         mDrawerList = getViewById(R.id.lv_images_titles);
@@ -188,46 +219,13 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
         multi = getActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
 
-        /*
-      请求数据是否可以包含视频
-     */
-        boolean useVideo = getActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
-
-        // 获取数据库中的图片资源游标
-//        String[] imageColumns = {MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails._ID};
-//        String imageOrderBy = MediaStore.Images.Thumbnails.DEFAULT_SORT_ORDER ;
-//        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
-
-        String[] imageColumns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED};
-        String imageOrderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
-        String imageSelect = MediaStore.Images.Media.SIZE + ">0";
-        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, imageSelect, null, imageOrderBy).loadInBackground();
-
-        if (useVideo) {
-            // 获取数据库中的视频资源游标
-            String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA, MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION, MediaStore.Video.Media.DATE_ADDED};
-            String videoOrderBy = MediaStore.Video.Media.DATE_ADDED + " DESC";
-            String select = String.format("%s <= %d and %s >= %d", MediaStore.Video.VideoColumns.SIZE, MediaData.MAX_SIZE, MediaStore.Video.VideoColumns.DURATION, 1000);
-            videoCursor = new CursorLoader(getActivity(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, select, null, videoOrderBy).loadInBackground();
+        if (SDKUtil.IS_M) {
+            if (FileUtil.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 100)) {
+                readMediaDatabase();
+            }
+        } else {
+            readMediaDatabase();
         }
-
-        // 查找到的数据条目总数,用于初始化显示所有的媒体数据的ArrayList的大小
-        int dataCount = 0;
-        if (imageCursor != null) {
-            dataCount += imageCursor.getCount();
-        }
-        if (videoCursor != null) {
-            dataCount += videoCursor.getCount();
-        }
-        String bucketsFirst = getActivity().getString(R.string.text_all);
-        ArrayList<MediaData> allMedias;
-        allMedias = new ArrayList<>(dataCount);
-        mMediaUris.put(bucketsFirst, allMedias);
-
-        buckets = new ArrayList<>();
-        buckets.add(bucketsFirst);
-
-        initHandler();
 
         final Resources resources = getResources();
         drawerArrowDrawable = new DrawerArrowDrawable(resources);
@@ -319,6 +317,50 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             }
         });
         mGvShowPhotos.setAdapter(localMediaAdapter);
+    }
+
+    private void readMediaDatabase() {
+
+        // 请求数据是否可以包含视频
+        boolean useVideo = getActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
+
+        // 获取数据库中的图片资源游标
+        //        String[] imageColumns = {MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails._ID};
+        //        String imageOrderBy = MediaStore.Images.Thumbnails.DEFAULT_SORT_ORDER ;
+        //        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
+
+        String[] imageColumns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED};
+        String imageOrderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
+        String imageSelect = MediaStore.Images.Media.SIZE + ">0";
+
+
+        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, imageSelect, null, imageOrderBy).loadInBackground();
+
+        if (useVideo) {
+            // 获取数据库中的视频资源游标
+            String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA, MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION, MediaStore.Video.Media.DATE_ADDED};
+            String videoOrderBy = MediaStore.Video.Media.DATE_ADDED + " DESC";
+            String select = String.format("%s <= %d and %s >= %d", MediaStore.Video.VideoColumns.SIZE, MediaData.MAX_SIZE, MediaStore.Video.VideoColumns.DURATION, 1000);
+            videoCursor = new CursorLoader(getActivity(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, select, null, videoOrderBy).loadInBackground();
+        }
+
+        // 查找到的数据条目总数,用于初始化显示所有的媒体数据的ArrayList的大小
+        int dataCount = 0;
+        if (imageCursor != null) {
+            dataCount += imageCursor.getCount();
+        }
+        if (videoCursor != null) {
+            dataCount += videoCursor.getCount();
+        }
+        String bucketsFirst = getActivity().getString(R.string.text_all);
+        ArrayList<MediaData> allMedias;
+        allMedias = new ArrayList<>(dataCount);
+        mMediaUris.put(bucketsFirst, allMedias);
+
+        buckets = new ArrayList<>();
+        buckets.add(bucketsFirst);
+
+        initHandler();
     }
 
     /**
