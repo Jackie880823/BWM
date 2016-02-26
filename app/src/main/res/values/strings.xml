@@ -749,6 +749,9 @@
     <string name="text_orgin_workspace">Organisation</string>
 
     <string name="text_news_edit">Write your news here</string>
+    <string name="desc_recerve_member_add_request">There is new member request. Accept now?</string>
+    <string name="text_item_reject">Reject</string>
+    <string name="text_later">Later</string>
     <string name="text_expired_code">Invalid or expired code. Please try again.</string>
     <string name="text_wrong_pwd_name">Login ID/password is incorrect. Please try again.</string>
     <string name="text_valid_email">Please enter valid email format.</string>

@@ -105,10 +105,10 @@ public class Constant {
     /**
      * for api
      */
-//    public static final String API_SERVER = "http://ptb2be.bondwith.me";
-//    public static final int TRACKER_SITE_ID = 5;//dev
-    public static final String API_SERVER = App.getContextInstance().getString(R.string.api_server);
-    public static final int TRACKER_SITE_ID = Integer.valueOf(App.getContextInstance().getString(R.string.tracker_site_id));//dev
+    public static final String API_SERVER = "http://ptb2be.bondwith.me";
+    public static final int TRACKER_SITE_ID = 5;//dev
+//    public static final String API_SERVER = App.getContextInstance().getString(R.string.api_server);
+//    public static final int TRACKER_SITE_ID = Integer.valueOf(App.getContextInstance().getString(R.string.tracker_site_id));//dev
 
     public static final String API_CHECK_VERSION = API_SERVER + "/bondwithme/index.php/api/appVersion";
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER + "/bondwithme/index.php/api/multiPhoto";
@@ -464,4 +464,7 @@ public class Constant {
     public static final String API_UPDATE_GOOD_JOB = API_SERVER + "/bondwithme/index.php/api/goodjob/%s";//消除好友的goodjob
 
     public static final String API_GET_GROUP_DEFAULT = API_SERVER + "/bondwithme/index.php/api/groupInfo/%s";
+    public static final String API_CHECK_HAS_PENDING_REQUEST = API_SERVER + "/bondwithme/index.php/api/pendingMember/%s";
+    public static final String API_REJECT_PENDING_MEMBER = API_SERVER + "/bondwithme/index.php/api/rejectPendingMember/%s";
+
 }

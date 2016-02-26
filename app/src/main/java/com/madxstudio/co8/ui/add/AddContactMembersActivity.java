@@ -230,8 +230,8 @@ public class AddContactMembersActivity extends BaseActivity {
     private void doPendingResend(String userId) {
         vProgress.setVisibility(View.VISIBLE);
         Intent intent = new Intent(this, AddMemberWorkFlow.class);
-        intent.putExtra("from", MainActivity.getUser().getUser_id());
-        intent.putExtra("to", userId);
+        intent.putExtra(AddMemberWorkFlow.FLAG_FROM, MainActivity.getUser().getUser_id());
+        intent.putExtra(AddMemberWorkFlow.FLAG_TO, userId);
         startActivityForResult(intent, PENDING_MEMBER);
     }
 
