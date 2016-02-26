@@ -463,11 +463,11 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
     }
 
     public void onceAdd(String ActionUserId) {
-//        vProgress.setVisibility(View.VISIBLE);
-//        Intent intent = new Intent(getActivity(), AddMemberWorkFlow.class);
-//        intent.putExtra("from", MainActivity.getUser().getUser_id());
-//        intent.putExtra("to", ActionUserId);
-//        startActivityForResult(intent, ADD_MEMBER);
+        vProgress.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(getActivity(), AddMemberWorkFlow.class);
+        intent.putExtra(AddMemberWorkFlow.FLAG_FROM, MainActivity.getUser().getUser_id());
+        intent.putExtra(AddMemberWorkFlow.FLAG_TO, ActionUserId);
+        startActivityForResult(intent, ADD_MEMBER);
     }
 
     private void awaitingRemove(final String memberId) {

@@ -18,6 +18,10 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.SDKInitializer;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.google.gson.Gson;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.madxstudio.co8.db.SQLiteHelperOrm;
 import com.madxstudio.co8.entity.AppTokenEntity;
 import com.madxstudio.co8.entity.UserEntity;
@@ -25,6 +29,7 @@ import com.madxstudio.co8.interfaces.NetChangeObserver;
 import com.madxstudio.co8.receiver_service.AlarmControler;
 import com.madxstudio.co8.receiver_service.NetWorkStateReceiver;
 import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.MemberActivity;
 import com.madxstudio.co8.ui.start.StartActivity;
 import com.madxstudio.co8.util.AppInfoUtil;
 import com.madxstudio.co8.util.FileUtil;
@@ -37,10 +42,6 @@ import com.madxstudio.co8.util.SystemUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.InteractivePopupWindow;
 import com.madxstudio.co8.widget.MyDialog;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.google.gson.Gson;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +84,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     private static List<String> notificationBigDayList = new ArrayList<>();
     private static List<String> notificationNewsList = new ArrayList<>();
     private static List<String> notificationGroupList = new ArrayList<>();
+    private MyDialog showAddDialog;
 
     @Override
     public void onCreate() {
@@ -452,9 +454,15 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             activityList.add(activity);
     }
 
+    private boolean needShowAddDialog = true;
     @Override
     public void onActivityResumed(Activity activity) {
         paused = false;
+
+        if(user!=null){
+            if (needShowAddDialog)
+                checkHasPendingRequest(activity);
+        }
         foreground = true;
         if (check != null) {
             handler.removeCallbacks(check);
@@ -462,7 +470,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     @Override
-    public void onActivityPaused(Activity activity) {
+    public void onActivityPaused(final Activity activity) {
         paused = true;
         if (check != null) {
             handler.removeCallbacks(check);
@@ -472,6 +480,12 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             public void run() {
                 if (foreground && paused) {
                     foreground = false;
+                    //重置add弹窗
+                    if(user!=null){
+                        if (isBackground()&&checkHasPendingRequest(activity)) {
+                            needShowAddDialog = true;
+                        }
+                    }
                 } else {
                 }
             }
@@ -480,7 +494,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     @Override
     public void onActivityStopped(Activity activity) {
-
+        if(isBackground()) {
+            httpTools.cancelRequestByTag(TAG_CHECK_PENDING);
+        }
     }
 
     @Override
@@ -593,5 +609,71 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public void googleServiceCheckFinished(boolean googleAvailable) {
         //初始推送api
         PushApi.initPushApi(getContextInstance(), googleAvailable);
+    }
+    HttpTools httpTools;
+    private final static String TAG_CHECK_PENDING = "check_pending";
+    private boolean checkHasPendingRequest(final Activity activity){
+        httpTools = new HttpTools(activity);
+
+        httpTools.get(String.format(Constant.API_CHECK_HAS_PENDING_REQUEST, user.getUser_id()), null, TAG_CHECK_PENDING, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String string) {
+                needShowAddDialog = false;
+                showAddDialog(activity);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+        return true;
+    }
+
+    private void showAddDialog(final Activity activity) {
+        needShowAddDialog = false;
+        if(showAddDialog!=null&&showAddDialog.isShowing()){
+
+        }else {
+            showAddDialog = new MyDialog(activity, R.string.text_tips_title, R.string.desc_recerve_member_add_request);
+            showAddDialog.setCanceledOnTouchOutside(false);
+
+            showAddDialog.setButtonCancel(R.string.text_later, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showAddDialog.dismiss();
+                }
+            });
+
+            showAddDialog.setButtonAccept(R.string.event_accept, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.startActivity(new Intent(activity.getBaseContext(), MemberActivity.class));
+                    showAddDialog.dismiss();
+                }
+            });
+
+            showAddDialog.show();
+        }
     }
 }
