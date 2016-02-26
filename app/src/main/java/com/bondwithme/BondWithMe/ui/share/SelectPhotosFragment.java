@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.ui.share;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -429,7 +430,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             SortMediaComparator comparator = new SortMediaComparator();
             Collections.sort(allMedias, comparator);
 
-            getActivity().runOnUiThread(adapterRefresh);
+            WeakReference<Activity> activityWeakReference = new WeakReference<Activity>(getActivity());
+            if (activityWeakReference.get() != null) {
+                activityWeakReference.get().runOnUiThread(adapterRefresh);
+            }
         }
     }
 
