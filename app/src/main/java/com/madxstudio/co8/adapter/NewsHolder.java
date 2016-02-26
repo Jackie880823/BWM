@@ -140,7 +140,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.mViewClickListener = mViewClickListener;
     }
 
-    public NewsHolder(BaseFragment fragment,View itemView, Context mContext) {
+    public NewsHolder(BaseFragment fragment, View itemView, Context mContext) {
         super(itemView);
         this.mContext = mContext;
         this.fragment = fragment;
@@ -197,16 +197,20 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //        LogUtil.d(TAG, "date======" + newsEntity.getContent_creation_date());
 //        tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, newsEntity.getRelease_date()));
         tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, newsEntity.getContent_creation_date()));
-        tvUser.setText("Posted by: "+newsEntity.getUser_given_name());
+        tvUser.setText("Posted by: " + newsEntity.getUser_given_name());
         tvContent.setText(newsEntity.getText_description());
-        if(Integer.valueOf(newsEntity.getComment_count()).intValue() > 0){
+        if (Integer.valueOf(newsEntity.getComment_count()).intValue() > 0) {
             newsCommentMember.setText(newsEntity.getComment_count());
+        } else {
+            newsCommentMember.setText(0 + "");
         }
-        if(Integer.valueOf(newsEntity.getLove_count()).intValue() > 0){
+        if (Integer.valueOf(newsEntity.getLove_count()).intValue() > 0) {
             newsGoodMember.setText(newsEntity.getLove_count());
+        } else {
+            newsGoodMember.setText(0 + "");
         }
 
-        if (accountUserId.equals(newsEntity.getUser_id())){
+        if (accountUserId.equals(newsEntity.getUser_id())) {
             btnOption.setVisibility(View.VISIBLE);
         } else {
             btnOption.setVisibility(View.GONE);
@@ -218,9 +222,9 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
             ibAgree.setImageResource(R.drawable.goodjob_clicked);
         }
 
-        if(TextUtils.isEmpty(newsEntity.getFile_id()) && TextUtils.isEmpty(newsEntity.getVideo_thumbnail())){
+        if (TextUtils.isEmpty(newsEntity.getFile_id()) && TextUtils.isEmpty(newsEntity.getVideo_thumbnail())) {
             llNewsImage.setVisibility(View.GONE);
-        }else {
+        } else {
             llNewsImage.setVisibility(View.VISIBLE);
 
             if (!TextUtils.isEmpty(newsEntity.getVideo_thumbnail())) { // 有视频图片说这条Wall上传的是视频并有图片，显示视频图片
@@ -236,7 +240,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     tvPhotoCount.setVisibility(View.VISIBLE);
                     tvPhotoCount.setText(duration);
                 }
-            }else {
+            } else {
                 int count = Integer.valueOf(newsEntity.getPhoto_count());
                 if (count > 1) {
                     String photoCountStr;
@@ -285,7 +289,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * 跳至地图
      *
      * @param context 资源
-     * @param entity    {@link WallEntity}
+     * @param entity  {@link WallEntity}
      */
     private void gotoLocationSetting(Context context, NewsEntity entity) {
         if (TextUtils.isEmpty(entity.getLoc_latitude()) || TextUtils.isEmpty(entity.getLoc_longitude())) {
@@ -369,7 +373,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void initItemMenu(View v) {
-        if(newsEntity == null)return;
+        if (newsEntity == null) return;
 
         PopupMenu popupMenu = new PopupMenu(mContext, v);
         popupMenu.inflate(R.menu.news_item_menu);
@@ -575,7 +579,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         public void onLoading(long count, long current) {
 
         }
-}
+    }
 
     /**
      * 设置收起开头的显示/隐藏

@@ -2,7 +2,6 @@ package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.madxstudio.co8.entity.RelationshipEnum;
 import com.madxstudio.co8.http.VolleyUtil;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.ui.OnFamilyItemClickListener;
-import com.madxstudio.co8.util.RelationshipUtil;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 
 import java.util.ArrayList;
@@ -72,7 +70,6 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
     @Override
     public RelationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LinearLayout layout = new LinearLayout(context);
-        int padding = context.getResources().getDimensionPixelOffset(R.dimen.default_content_padding);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
         layout.setLayoutParams(params);
         layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -153,7 +150,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
 
                 }
             });
-            holder.addView(child, i == count - 1 && position != 0);
+            holder.addView(child, position != 0);
         }
     }
 
@@ -193,10 +190,10 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         tvName.setText(name);
 
         String treeTypeName;
-        treeTypeName = familyMemberEntity.getTree_type_name();
-        if(!TextUtils.isEmpty(treeTypeName)) {
-            treeTypeName = RelationshipUtil.getRelationshipName(context, treeTypeName);
-        }
+        treeTypeName = familyMemberEntity.getPosition();
+//        if(!TextUtils.isEmpty(treeTypeName)) {
+//            treeTypeName = RelationshipUtil.getRelationshipName(context, treeTypeName);
+//        }
         tvRelation.setText(treeTypeName);
     }
 
@@ -238,6 +235,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
          * {@link LinearLayout#dispatchDraw(android.graphics.Canvas)} or any related method.</p>
          *
          * @param child the child view to add
+         * @param show
          * @see LinearLayout#generateDefaultLayoutParams()
          */
         public void addView(View child, boolean show) {
@@ -253,7 +251,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
                 }
             });
             View nullView = child.findViewById(R.id.null_image_view);
-            if(show) {
+            if(show && itemView.getChildCount() == 0) {
                 nullView.setVisibility(View.VISIBLE);
             } else {
                 nullView.setVisibility(View.GONE);

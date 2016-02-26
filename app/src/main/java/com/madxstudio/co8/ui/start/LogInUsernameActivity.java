@@ -28,6 +28,7 @@ import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.util.AppInfoUtil;
 import com.madxstudio.co8.util.MD5Util;
+import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.UIUtil;
@@ -43,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class LogInUsernameActivity extends BaseActivity implements View.OnClickListener, EditText.OnEditorActionListener{
+public class LogInUsernameActivity extends BaseActivity implements View.OnClickListener, EditText.OnEditorActionListener {
 
     private final static String TAG = LogInUsernameActivity.class.getSimpleName();
     private final static String GET_USER = TAG + "_GET_USER";
@@ -51,11 +52,11 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     private static final int ERROR = -1;
     private static final int GO_DETAILS = 1;
     private static final int GO_MAIN = 2;
-    private static final int CATCH =3;
+    private static final int CATCH = 3;
 
     private EditText etUsername;
     private EditText etPassword;
-//    private TextView tvLogin;
+    //    private TextView tvLogin;
     private PaperButton btnLogIn;
     private RelativeLayout rlProgress;
 
@@ -64,12 +65,10 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     private AppTokenEntity tokenEntity;
 
 
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case GO_MAIN:
                     goMainActivity();
                     break;
@@ -91,7 +90,6 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
             }
         }
     };
-
 
 
     @Override
@@ -192,8 +190,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.br_log_in:
                 doLogIn();
                 break;
@@ -217,8 +214,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
         String strUsername = etUsername.getText().toString();
         String strPassword = etPassword.getText().toString();
 
-        if (!MyTextUtil.isHasEmpty(strUsername, strPassword))
-        {
+        if (!MyTextUtil.isHasEmpty(strUsername, strPassword)) {
             doingLogInChangeUI();
 
             HashMap<String, String> jsonParams = new HashMap<>();
@@ -254,11 +250,11 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        userEntities = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<List<UserEntity>>(){}.getType());
+                        userEntities = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<List<UserEntity>>() {
+                        }.getType());
                         tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
 
-                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
-                        {
+                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id())) {
                             //wrong data??
                             unkonwWrong();
                             return;
@@ -266,12 +262,9 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
                         userEntity = userEntities.get(0);
 
-                        if ("created".equals(userEntity.getUser_status()))
-                        {
+                        if ("created".equals(userEntity.getUser_status())) {
                             handler.sendEmptyMessage(GO_DETAILS);
-                        }
-                        else
-                        {
+                        } else {
                             handler.sendEmptyMessage(GO_MAIN);
                         }
 
@@ -298,24 +291,16 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
                 }
             });
-        }
-        else
-        {
-            if (TextUtils.isEmpty(etUsername.getText().toString()))
-            {
+        } else {
+            if (TextUtils.isEmpty(etUsername.getText().toString())) {
                 etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
 
-            if (TextUtils.isEmpty(etPassword.getText().toString()))
-            {
+            if (TextUtils.isEmpty(etPassword.getText().toString())) {
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         }
@@ -323,16 +308,14 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     }
 
 
-    public void doingLogInChangeUI()
-    {
+    public void doingLogInChangeUI() {
         rlProgress.setVisibility(View.VISIBLE);
 //        tvLogin.setClickable(false);
         btnLogIn.setClickable(false);
         UIUtil.hideKeyboard(this, etPassword);
     }
 
-    public void finishLogInChangeUI()
-    {
+    public void finishLogInChangeUI() {
         rlProgress.setVisibility(View.GONE);
 //        tvLogin.setClickable(true);
         btnLogIn.setClickable(true);
@@ -343,8 +326,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
         App.userLoginSuccessed(LogInUsernameActivity.this, userEntity, tokenEntity);
     }
 
-    public void goDetails()
-    {
+    public void goDetails() {
         Intent intent = new Intent(LogInUsernameActivity.this, DetailsActivity.class);
         intent.putExtra(Constant.LOGIN_USER, userEntity);
         intent.putExtra(Constant.HTTP_TOKEN, tokenEntity);
@@ -353,16 +335,15 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE)
-        {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
             doLogIn();
             return true;
         }
         return false;
     }
 
-    private void unkonwWrong()
-    {
+    private void unkonwWrong() {
+        MessageUtil.getInstance(LogInUsernameActivity.this).showShortToast(getString(R.string.text_wrong_pwd_name));
         etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
         etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
     }

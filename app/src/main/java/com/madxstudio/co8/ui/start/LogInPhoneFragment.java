@@ -52,7 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LogInPhoneFragment extends Fragment implements View.OnClickListener , TextView.OnEditorActionListener, LogInStateListener {
+public class LogInPhoneFragment extends Fragment implements View.OnClickListener, TextView.OnEditorActionListener, LogInStateListener {
 
     private final static String TAG = LogInPhoneFragment.class.getSimpleName();
     private final static String GET_USER = TAG + "_GET_USER";
@@ -70,7 +70,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
-//    private TextView tvCountryCode;
+    //    private TextView tvCountryCode;
     private EditText tvStartCountryCode;
     private EditText etPhoneNumber;
     private EditText etPassword;
@@ -91,13 +91,11 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     private boolean blnChooseCountryCode;//通过选择获得的国家区号。如果用户手动修改。把国家名称改回原始状态。这是用来判断的
 
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case GO_DETAILS:
                     goDetails();
                     break;
@@ -121,14 +119,12 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                     break;
 
 
-
                 default:
                     break;
             }
 
         }
     };
-
 
 
     @Override
@@ -146,8 +142,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.rl_country_code:
                 Intent intent = new Intent(getActivity(), CountryCodeActivity.class);
                 startActivityForResult(intent, GET_COUNTRY_CODE);
@@ -178,23 +173,21 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-            LoginManager.onActivityResult(requestCode, resultCode, data);
+        LoginManager.onActivityResult(requestCode, resultCode, data);
 
-            switch (requestCode)
-            {
-                case GET_COUNTRY_CODE:
-                    if (resultCode == getActivity().RESULT_OK)
-                    {
-                        blnChooseCountryCode = true;
-                        tvCountry.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
+        switch (requestCode) {
+            case GET_COUNTRY_CODE:
+                if (resultCode == getActivity().RESULT_OK) {
+                    blnChooseCountryCode = true;
+                    tvCountry.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
 //                        tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
-                        tvStartCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
-                    }
-                    break;
+                    tvStartCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
+                }
+                break;
 
-                default:
-                    break;
-            }
+            default:
+                break;
+        }
 
     }
 
@@ -204,20 +197,19 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         LoginManager.OnDestory();
     }
 
-    private void initView(View view)
-    {
-        rlCountryCode = (RelativeLayout)view.findViewById(R.id.rl_country_code);
-        tvCountry = (TextView)view.findViewById(R.id.tv_country);
+    private void initView(View view) {
+        rlCountryCode = (RelativeLayout) view.findViewById(R.id.rl_country_code);
+        tvCountry = (TextView) view.findViewById(R.id.tv_country);
 //        tvCountryCode = (TextView)view.findViewById(R.id.tv_country_code);
-        tvStartCountryCode = (EditText)view.findViewById(R.id.tv_start_country_code);
-        etPhoneNumber = (EditText)view.findViewById(R.id.et_phone_number);
-        etPassword = (EditText)view.findViewById(R.id.et_password);
+        tvStartCountryCode = (EditText) view.findViewById(R.id.tv_start_country_code);
+        etPhoneNumber = (EditText) view.findViewById(R.id.et_phone_number);
+        etPassword = (EditText) view.findViewById(R.id.et_password);
 //        tvLogIn = (TextView)view.findViewById(R.id.tv_btn_log_in);
-        brLogIn = (PaperButton)view.findViewById(R.id.br_log_in);
-        tvForgetPassword = (TextView)view.findViewById(R.id.tv_forget_password);
-        ivUsername = (ImageView)view.findViewById(R.id.iv_username);
-        ivFacebook = (ImageView)view.findViewById(R.id.iv_facebook);
-        rlProgress = (RelativeLayout)view.findViewById(R.id.rl_progress);
+        brLogIn = (PaperButton) view.findViewById(R.id.br_log_in);
+        tvForgetPassword = (TextView) view.findViewById(R.id.tv_forget_password);
+        ivUsername = (ImageView) view.findViewById(R.id.iv_username);
+        ivFacebook = (ImageView) view.findViewById(R.id.iv_facebook);
+        rlProgress = (RelativeLayout) view.findViewById(R.id.rl_progress);
 
 //        tvLogIn.setOnClickListener(this);
         brLogIn.setOnClickListener(this);
@@ -243,12 +235,9 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (blnChooseCountryCode)
-                {
+                if (blnChooseCountryCode) {
 
-                }
-                else
-                {
+                } else {
                     tvCountry.setText(getText(R.string.title_country_code));
                 }
                 blnChooseCountryCode = false;
@@ -304,20 +293,16 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
-                {
+                if (TextUtils.isEmpty(tvStartCountryCode.getText().toString())) {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                }
-                else
-                {
+                } else {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                 }
             }
         });
     }
 
-    public void doLogIn()
-    {
+    public void doLogIn() {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
             Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             return;
@@ -327,8 +312,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
 
-        if(!MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber, strPassword))
-        {
+        if (!MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber, strPassword)) {
             doingLogInChangeUI();
 
             HashMap<String, String> jsonParams = new HashMap<String, String>();
@@ -366,8 +350,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                         }.getType());
                         tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
 
-                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
-                        {
+                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id())) {
                             //这样可以当做是bad date
                             unknowWrong();
                             return;
@@ -375,12 +358,9 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
                         userEntity = userEntities.get(0);
 
-                        if ("created".equals(userEntity.getUser_status()))
-                        {
+                        if ("created".equals(userEntity.getUser_status())) {
                             handler.sendEmptyMessage(GO_DETAILS);
-                        }
-                        else
-                        {
+                        } else {
                             handler.sendEmptyMessage(GO_MAIN);
                         }
 
@@ -406,40 +386,28 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
                 }
             });
-        }
-        else
-        {
-            if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
-            {
+        } else {
+            if (TextUtils.isEmpty(tvStartCountryCode.getText().toString())) {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
 
-            if (TextUtils.isEmpty(etPhoneNumber.getText().toString()))
-            {
+            if (TextUtils.isEmpty(etPhoneNumber.getText().toString())) {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
 
-            if (TextUtils.isEmpty(etPassword.getText().toString()))
-            {
+            if (TextUtils.isEmpty(etPassword.getText().toString())) {
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         }
     }
 
-    public void doingLogInChangeUI()
-    {
+    public void doingLogInChangeUI() {
         rlProgress.setVisibility(View.VISIBLE);
 //        tvLogIn.setClickable(false);
         brLogIn.setClickable(false);
@@ -452,13 +420,11 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         brLogIn.setClickable(true);
     }
 
-    public void goMainActivity()
-    {
-        App.userLoginSuccessed(getActivity(),userEntity, tokenEntity);
+    public void goMainActivity() {
+        App.userLoginSuccessed(getActivity(), userEntity, tokenEntity);
     }
 
-    public void goDetails()
-    {
+    public void goDetails() {
         Intent intent = new Intent(getActivity(), DetailsActivity.class);
         intent.putExtra(Constant.LOGIN_USER, userEntity);
         intent.putExtra(Constant.HTTP_TOKEN, tokenEntity);
@@ -467,16 +433,15 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE)
-        {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
             doLogIn();
             return true;
         }
         return false;
     }
 
-    private void unknowWrong()
-    {
+    private void unknowWrong() {
+        MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_wrong_pwd_name));
         etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
         etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
     }
@@ -487,14 +452,11 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     public void OnLoginSuccess(FaceBookUserEntity faceBookUserEntity, String logType) {
 
         com.facebook.login.LoginManager.getInstance().logOut();//清除Facebook授权缓存
-        if (!MyTextUtil.isHasEmpty(faceBookUserEntity.getUserId(), faceBookUserEntity.getFirstname(), faceBookUserEntity.getLastname(), faceBookUserEntity.getGender()))
-        {
+        if (!MyTextUtil.isHasEmpty(faceBookUserEntity.getUserId(), faceBookUserEntity.getFirstname(), faceBookUserEntity.getLastname(), faceBookUserEntity.getGender())) {
             Log.d("", faceBookUserEntity.toString());
             this.faceBookUserEntity = faceBookUserEntity;
             checkFacebookId();
-        }
-        else
-        {
+        } else {
             //没必要吧？？？
         }
     }
@@ -534,24 +496,20 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
             public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-                Log.d("","---facebook--checkId" + response);
+                Log.d("", "---facebook--checkId" + response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    if ("1".equals(jsonObject.getString("bwm_user")))
-                    {
+                    if ("1".equals(jsonObject.getString("bwm_user"))) {
                         userEntities = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<List<UserEntity>>() {
                         }.getType());
                         tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
-                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
-                        {
+                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id())) {
                             //这样可以当做是bad date
                             return;
                         }
                         userEntity = userEntities.get(0);
                         handler.sendEmptyMessage(GO_MAIN);
-                    }
-                    else if ("0".equals(jsonObject.getString("bwm_user")))
-                    {
+                    } else if ("0".equals(jsonObject.getString("bwm_user"))) {
                         handler.sendEmptyMessage(THIRD_PARTY_SIGN_UP);
                     }
 
@@ -582,7 +540,6 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         intent.putExtra(Constant.TYPE_FACEBOOK, faceBookUserEntity);
         startActivity(intent);
     }
-
 
 
 }
