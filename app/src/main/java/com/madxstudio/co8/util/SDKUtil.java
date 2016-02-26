@@ -19,4 +19,10 @@ public class SDKUtil {
     public static final boolean IS_KITKAT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     /**21*/
     public static final boolean IS_L = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+
+    /**
+     * 23
+     */
+    public static final boolean IS_M = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+
 }
