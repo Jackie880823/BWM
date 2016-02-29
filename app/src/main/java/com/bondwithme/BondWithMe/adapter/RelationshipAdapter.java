@@ -153,7 +153,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
 
                 }
             });
-            holder.addView(child);
+            holder.addView(child, position != 0);
         }
     }
 
@@ -238,9 +238,10 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
          * {@link LinearLayout#dispatchDraw(android.graphics.Canvas)} or any related method.</p>
          *
          * @param child the child view to add
+         * @param show
          * @see LinearLayout#generateDefaultLayoutParams()
          */
-        public void addView(View child) {
+        public void addView(View child, boolean show) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
             child.setLayoutParams(params);
             child.setOnClickListener(new View.OnClickListener() {
@@ -253,7 +254,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
                 }
             });
             View nullView = child.findViewById(R.id.null_image_view);
-            if(itemView.getChildCount() == 0) {
+            if(show && itemView.getChildCount() == 0) {
                 nullView.setVisibility(View.VISIBLE);
             } else {
                 nullView.setVisibility(View.GONE);

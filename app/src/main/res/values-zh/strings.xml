@@ -722,8 +722,10 @@
     <string name="reward_point"> 个奖励点数兑换此优惠券吗?</string>
     <string name="fully_redeemed">已全部兑换</string>
     <string name="text_pts">点</string>
-
     <string name="members_invited"><![CDATA[邀请了<font color="#0087FF">%1$s</font>个成员]]></string>
     <string name="members_pending"><![CDATA[<font color="#0087FF">%1$s</font>个待批准成员]]></string>
     <string name="voucher_code">优惠码</string>
+    <string name="desc_recerve_member_add_request">您有新的成员请求。接受吗？</string>
+    <string name="text_item_reject">拒绝</string>
+    <string name="text_later">稍后</string>
 </resources>
