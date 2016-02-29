@@ -347,19 +347,19 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             tvEmail.setText(userEntity.getUser_email());
             tvRegion.setText(userEntity.getUser_location_name());
             String dofeel_code = userEntity.getDofeel_code();
-            if (!TextUtils.isEmpty(dofeel_code)) {
-                try {
-                    String filePath = "";
-                    if (dofeel_code.indexOf("_") != -1) {
-                        filePath = dofeel_code.replaceAll("_", File.separator);
-                    }
-                    InputStream is = getParentActivity().getAssets().open(filePath);
-                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-                    ivBottomLeft.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+//            if (!TextUtils.isEmpty(dofeel_code)) {
+//                try {
+//                    String filePath = "";
+//                    if (dofeel_code.indexOf("_") != -1) {
+//                        filePath = dofeel_code.replaceAll("_", File.separator);
+//                    }
+//                    InputStream is = getParentActivity().getAssets().open(filePath);
+//                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                    ivBottomLeft.setImageBitmap(bitmap);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
         } else {
             networkImageView.setDefaultImageResId(profileBackgroundId);
         }

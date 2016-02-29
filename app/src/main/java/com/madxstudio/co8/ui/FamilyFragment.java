@@ -657,7 +657,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
 //                        intent.putExtra("fam_nickname",familyMemberEntity.getFam_nickname());
 //                        intent.putExtra("member_status",familyMemberEntity.getUser_status());
 //                        startActivity(intent);
-                        intent.putExtra("getDofeel_code", familyMemberEntity.getDofeel_code());
+//                        intent.putExtra("getDofeel_code", familyMemberEntity.getDofeel_code());
                         startActivityForResult(intent, 1);
                     }
                 }

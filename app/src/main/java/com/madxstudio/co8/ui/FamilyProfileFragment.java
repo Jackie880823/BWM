@@ -175,17 +175,17 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         }
 
         if (!TextUtils.isEmpty(getDofeelCode)) {
-            try {
-                String filePath = "";
-                if (getDofeelCode.contains("_")) {
-                    filePath = getDofeelCode.replaceAll("_", File.separator);
-                }
-                InputStream is = App.getContextInstance().getAssets().open(filePath);
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                ivBottomLeft.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                String filePath = "";
+//                if (getDofeelCode.contains("_")) {
+//                    filePath = getDofeelCode.replaceAll("_", File.separator);
+//                }
+//                InputStream is = App.getContextInstance().getAssets().open(filePath);
+//                Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                ivBottomLeft.setImageBitmap(bitmap);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
 
         cniMain.setOnClickListener(new View.OnClickListener() {
@@ -355,17 +355,17 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                         getDofeelCode = userEntity.getDofeel_code();
                     }
                     if (!TextUtils.isEmpty(getDofeelCode)) {
-                        try {
-                            String filePath = "";
-                            if (getDofeelCode.contains("_")) {
-                                filePath = getDofeelCode.replaceAll("_", File.separator);
-                            }
-                            InputStream is = App.getContextInstance().getAssets().open(filePath);
-                            Bitmap bitmap = BitmapFactory.decodeStream(is);
-                            ivBottomLeft.setImageBitmap(bitmap);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            String filePath = "";
+//                            if (getDofeelCode.contains("_")) {
+//                                filePath = getDofeelCode.replaceAll("_", File.separator);
+//                            }
+//                            InputStream is = App.getContextInstance().getAssets().open(filePath);
+//                            Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                            ivBottomLeft.setImageBitmap(bitmap);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
                     }
                     break;
             }

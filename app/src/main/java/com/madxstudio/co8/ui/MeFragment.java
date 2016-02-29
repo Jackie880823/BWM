@@ -106,18 +106,18 @@ public class MeFragment extends BaseFragment<MeActivity> {
         }
 
         String dofeel_code = MainActivity.getUser().getDofeel_code();
-        if (!TextUtils.isEmpty((dofeel_code))) {
-            try {
-                String filePath = "";
-                if (dofeel_code.indexOf("_") != -1) {
-                    filePath = dofeel_code.replaceAll("_", File.separator);
-                }
-                InputStream is = getActivity().getAssets().open(filePath);
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                ivBottomLeft.setImageBitmap(bitmap);
-            } catch (IOException e) {
-            }
-        }
+//        if (!TextUtils.isEmpty((dofeel_code))) {
+//            try {
+//                String filePath = "";
+//                if (dofeel_code.indexOf("_") != -1) {
+//                    filePath = dofeel_code.replaceAll("_", File.separator);
+//                }
+//                InputStream is = getActivity().getAssets().open(filePath);
+//                Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                ivBottomLeft.setImageBitmap(bitmap);
+//            } catch (IOException e) {
+//            }
+//        }
 
         //跳转到view QRCode 页面
         rlViewQRCode.setOnClickListener(new View.OnClickListener() {
