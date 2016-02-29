@@ -125,20 +125,20 @@ public class MyFamilyAdapter extends BaseAdapter implements Filterable {
             }
             //左下角心情图标
             String dofeel_code = familyMemberEntity.getDofeel_code();
-            if (!TextUtils.isEmpty(dofeel_code)) {
-                viewHolder.imageLeft.setVisibility(View.VISIBLE);
-                viewHolder.imageLeft.setImageDrawable(null);
-                try {
-                    String filePath = "";
-                    if (dofeel_code.indexOf("_") != -1) {
-                        filePath = dofeel_code.replaceAll("_", File.separator);
-                    }
-                    InputStream is = mContext.getAssets().open(filePath);
-                    Drawable da = Drawable.createFromStream(is, null);
-                    viewHolder.imageLeft.setImageDrawable(da);
-                } catch (IOException e) {
-                }
-            }
+//            if (!TextUtils.isEmpty(dofeel_code)) {
+//                viewHolder.imageLeft.setVisibility(View.VISIBLE);
+//                viewHolder.imageLeft.setImageDrawable(null);
+//                try {
+//                    String filePath = "";
+//                    if (dofeel_code.indexOf("_") != -1) {
+//                        filePath = dofeel_code.replaceAll("_", File.separator);
+//                    }
+//                    InputStream is = mContext.getAssets().open(filePath);
+//                    Drawable da = Drawable.createFromStream(is, null);
+//                    viewHolder.imageLeft.setImageDrawable(da);
+//                } catch (IOException e) {
+//                }
+//            }
         }
         return convertView;
     }
