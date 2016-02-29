@@ -128,7 +128,7 @@ public class RewardsActivity extends BaseActivity {
 
     int userPoint;
     private void initAdapter() {
-        if (!dataReward.isEmpty()){
+        if (!dataReward.isEmpty() && dataReward.size() > 0){
             userPoint = Integer.parseInt(dataRewardPoint.get(0).getUser_point());
             adapter = new RewardAdapter(this,dataReward,String.valueOf(userPoint));
             reList.setAdapter(adapter);
@@ -216,7 +216,7 @@ public class RewardsActivity extends BaseActivity {
                 startActivity(toRewardInfo);
             }
         });
-        if (!dataRewardPoint.isEmpty()){
+        if (!dataRewardPoint.isEmpty() && dataRewardPoint.size() > 0){
             rewardPointEntity = dataRewardPoint.get(0);
             tvRewardPointDesc1.setText(rewardPointEntity.getDescription_1());
             tvRewardPointDesc2.setText(rewardPointEntity.getDescription_2());
@@ -228,7 +228,7 @@ public class RewardsActivity extends BaseActivity {
     }
 
     private void initGeneralRewardView() {
-        if (!dataGeneralReward.isEmpty()){
+        if (!dataGeneralReward.isEmpty() && dataGeneralReward.size() > 0){
             generalRewardEntity = dataGeneralReward.get(0);
             BitmapTools.getInstance(this).display(ivGeneralReward,generalRewardEntity.getImage(),R.drawable.network_image_default, R.drawable.network_image_default);
             tvGeneralRewardTitle.setText(generalRewardEntity.getTitle());

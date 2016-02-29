@@ -117,7 +117,7 @@ public class MyRewardsActivity extends BaseActivity {
                 data = gson.fromJson(string,new TypeToken<ArrayList<MyRewardEntity>>(){}.getType());
                 initAdapter();
                 //no my reward;
-                if (!data.isEmpty()){
+                if (!data.isEmpty() && data.size() > 0){
                     tvNoData.setVisibility(View.GONE);
                 }else {
                     tvNoData.setVisibility(View.VISIBLE);

@@ -272,9 +272,6 @@
             android:name=".ui.more.SettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.RewardsActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.more.ViewLargePicActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <!-- More StickerStore相关的Activity -->
