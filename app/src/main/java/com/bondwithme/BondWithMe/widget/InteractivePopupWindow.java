@@ -19,6 +19,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.util.DensityUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.util.UIUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -133,7 +134,10 @@ public class InteractivePopupWindow extends PopupWindow {
         TextView textView = new TextView(mContext);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setText(ToDBC(text));
-        textView.setBackground(mContext.getResources().getDrawable(R.drawable.pop_chat_bg));
+        //wing modified
+        UIUtil.setViewBackground(mContext, textView,R.drawable.pop_chat_bg);
+//        textView.setBackground(mContext.getResources().getDrawable(R.drawable.pop_chat_bg));
+        //wing modified
         textView.setTextSize(14);
         textView.setTextColor(Color.WHITE);
         layout.addView(textView);
