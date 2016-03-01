@@ -496,7 +496,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     @Override
     public void onActivityStopped(Activity activity) {
-        if(isBackground()) {
+        if(isBackground()&&httpTools!=null) {
             httpTools.cancelRequestByTag(TAG_CHECK_PENDING);
         }
     }
