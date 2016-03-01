@@ -1,4 +1,4 @@
-package com.madxstudio.co8.widget;
+package com.bondwithme.BondWithMe.widget;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,11 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.madxstudio.co8.App;
-import com.madxstudio.co8.R;
-import com.madxstudio.co8.util.DensityUtil;
-import com.madxstudio.co8.util.LogUtil;
-import com.madxstudio.co8.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.App;
+import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.util.DensityUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,18 +44,18 @@ public class InteractivePopupWindow extends PopupWindow {
     public final static String INTERACTIVE_TIP_DOWNLOAD_STICKIES = "Interactive_tip_download_stickies";
 
 
-    public final static String[] dirayStrings = new String[]{INTERACTIVE_TIP_ADD_MEMBER, INTERACTIVE_TIP_ADD_PHOTO
-            , INTERACTIVE_TIP_ADD_DIARY, INTERACTIVE_TIP_FEELING, INTERACTIVE_TIP_TAG_MEMBER, INTERACTIVE_TIP_ALLOW_ME
-            , INTERACTIVE_TIP_LOCATION, INTERACTIVE_TIP_TAG_POST, INTERACTIVE_TIP_CREATE_EVENT, INTERACTIVE_TIP_SAVE_EVENT
-            , INTERACTIVE_TIP_ADD_MEMBER_CHATTING, INTERACTIVE_TIP_SELECT_MEMBER_CHATTING, INTERACTIVE_TIP_DOWNLOAD_STICKIES};
+    public final static String[] dirayStrings = new String[]{INTERACTIVE_TIP_ADD_MEMBER,INTERACTIVE_TIP_ADD_PHOTO
+    ,INTERACTIVE_TIP_ADD_DIARY,INTERACTIVE_TIP_FEELING,INTERACTIVE_TIP_TAG_MEMBER,INTERACTIVE_TIP_ALLOW_ME
+    ,INTERACTIVE_TIP_LOCATION,INTERACTIVE_TIP_TAG_POST,INTERACTIVE_TIP_CREATE_EVENT,INTERACTIVE_TIP_SAVE_EVENT
+    ,INTERACTIVE_TIP_ADD_MEMBER_CHATTING,INTERACTIVE_TIP_SELECT_MEMBER_CHATTING,INTERACTIVE_TIP_DOWNLOAD_STICKIES};
 
     private View conentView;
     private Context mContext;
-    private PopupWindow popText;
-    private int contentViewWidth, contentViewHeight;
-    private int position_x, position_y;
-    private int positionTest_x, positionTest_y;
-    private Rect anchor_rect;
+    private PopupWindow  popText;
+    private int contentViewWidth,contentViewHeight;
+    private int position_x,position_y;
+    private int positionTest_x,positionTest_y;
+    private  Rect anchor_rect;
     private View mParent;
     private String mTest;
     private int[] screen_pos;
@@ -63,8 +63,8 @@ public class InteractivePopupWindow extends PopupWindow {
     private WindowManager.LayoutParams lp;
 
 
-    public InteractivePopupWindow(final Activity context, View parent, String text, int model) {
-        LogUtil.i(TAG, "INTERACTIVE_TIP_START" + PreferencesUtil.getValue(context, INTERACTIVE_TIP_START, false));
+    public InteractivePopupWindow(final Activity context, View parent, String text, int model){
+        LogUtil.i(TAG,"INTERACTIVE_TIP_START"+PreferencesUtil.getValue(context,INTERACTIVE_TIP_START,false));
         mContext = context;
         mParent = parent;
         mTest = text;
@@ -74,12 +74,12 @@ public class InteractivePopupWindow extends PopupWindow {
         lp.alpha = (float) 0.5; //0.0-1.0
         context.getWindow().setAttributes(lp);
 
-        if (PreferencesUtil.getValue(context, INTERACTIVE_TIP_START, false))
+        if(PreferencesUtil.getValue(context,INTERACTIVE_TIP_START,false))
             return;
-        if (model == 0) {
-            conentView = LayoutInflater.from(context).inflate(R.layout.interactive_pop_dialog, null);
-        } else {
-            conentView = LayoutInflater.from(context).inflate(R.layout.interactive_pop_up_dialog, null);
+        if(model == 0){
+            conentView = LayoutInflater.from(context).inflate(R.layout.interactive_pop_dialog,null);
+        }else {
+            conentView = LayoutInflater.from(context).inflate(R.layout.interactive_pop_up_dialog,null);
         }
         // 设置SelectPicPopupWindow的View
         this.setContentView(conentView);
@@ -93,11 +93,11 @@ public class InteractivePopupWindow extends PopupWindow {
         this.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss() {
-                if (popText != null && mPopDismissListener != null) {
+                if(popText != null && mPopDismissListener != null){
                     popText.dismiss();
                     lp.alpha = (float) 1.0;
                     context.getWindow().setAttributes(lp);
-                    LogUtil.i("==============0", "dismiss");
+                    LogUtil.i("==============0","dismiss");
                     mPopDismissListener.popDismiss();
                 }
             }
@@ -119,7 +119,7 @@ public class InteractivePopupWindow extends PopupWindow {
             position_x = anchor_rect.centerX() - (contentViewWidth / 2);
             position_y = anchor_rect.bottom - (anchor_rect.height() / 2);
 
-            if (mTest != null) {
+            if(mTest != null){
                 addPopupText(mTest);
             }
         } else {
@@ -128,37 +128,37 @@ public class InteractivePopupWindow extends PopupWindow {
     }
 
 
-    private void addPopupText(String text) {
+    private void addPopupText(String text){
         LinearLayout layout = new LinearLayout(mContext);
         TextView textView = new TextView(mContext);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setText(ToDBC(text));
-        textView.setBackground(mContext.getResources().getDrawable(R.drawable.pop_chat_bg));
+        //wing modified
+        UIUtil.setViewBackground(mContext, textView,R.drawable.pop_chat_bg);
+//        textView.setBackground(mContext.getResources().getDrawable(R.drawable.pop_chat_bg));
+        //wing modified
         textView.setTextSize(14);
         textView.setTextColor(Color.WHITE);
         layout.addView(textView);
 
-        LinearLayout.LayoutParams para = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams para =new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT );
         para.setMargins(10, 10, 10, 10);
         para.gravity = Gravity.RIGHT;
         textView.setPadding(13, 13, 13, 13);
         textView.setLayoutParams(para);
         layout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);//强制绘出view
-        positionTest_x = anchor_rect.centerX() - (layout.getMeasuredWidth() / 2);
-        popText = new PopupWindow(layout, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        positionTest_x = anchor_rect.centerX() - (layout.getMeasuredWidth()/2);
+        popText = new PopupWindow(layout,ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         popText.setFocusable(false);
         popText.setOutsideTouchable(true);
-        LogUtil.i("textView.getWidth", ": " + textView.getWidth());
+        LogUtil.i("textView.getWidth",": "+textView.getWidth());
     }
 
     /**
      * 显示PopupWindow在view上方
      */
-    public void showPopupWindowUp() {
-        if (((Activity) mContext).isFinishing()) {
-            return;
-        }
+    public void showPopupWindowUp(){
         LogUtil.i("textView.getWidth_2", ": " + popText.getContentView().getMeasuredWidth());
         this.showAtLocation(mParent, Gravity.NO_GRAVITY, position_x, screen_pos[1] - this.getHeight() - DensityUtil.dip2px(App.getContextInstance(), 10));
         popText.showAtLocation(mParent, Gravity.NO_GRAVITY, positionTest_x, screen_pos[1] - this.getHeight() - DensityUtil.dip2px(App.getContextInstance(), 34));//显示文字
@@ -171,10 +171,7 @@ public class InteractivePopupWindow extends PopupWindow {
     /**
      * 显示PopupWindow在view下方
      */
-    public void showPopupWindow(Boolean Connection) {
-        if (((Activity) mContext).isFinishing()) {
-            return;
-        }
+    public void showPopupWindow(Boolean Connection){
         isConnection = Connection;
         this.showAtLocation(mParent, Gravity.NO_GRAVITY, position_x, position_y + DensityUtil.dip2px(App.getContextInstance(), 20));//显示箭头
         popText.showAtLocation(mParent, Gravity.NO_GRAVITY, position_x, position_y + DensityUtil.dip2px(App.getContextInstance(), 34));//显示文字
@@ -185,7 +182,7 @@ public class InteractivePopupWindow extends PopupWindow {
     /**
      * 关闭PopupWindow
      */
-    public void dismissPopupWindow() {
+    public void dismissPopupWindow(){
         this.dismiss();
         popText.dismiss();
     }
@@ -193,24 +190,23 @@ public class InteractivePopupWindow extends PopupWindow {
     /**
      * 存储已经显示Pop的状态
      */
-    public void getSavePopFinish(String key) {
+    public void getSavePopFinish(String key){
         PreferencesUtil.saveValue(mContext, key, true);
     }
 
     /**
      * 返回上一个Pop是否显示过
-     *
      * @return
      */
-    private Map<String, Boolean> getLastPop(String key) {
+    private Map<String,Boolean> getLastPop(String key){
         boolean b;
         String s;
-        Map<String, Boolean> map = new HashMap<>();
-        for (int i = 0; i < dirayStrings.length; i++) {
-            if (dirayStrings[i] == key) {
-                s = dirayStrings[i - 1];
-                b = PreferencesUtil.getValue(mContext, s, false);
-                map.put(s, b);
+        Map<String,Boolean> map = new HashMap<>();
+        for (int i = 0; i < dirayStrings.length; i++){
+            if(dirayStrings[i] == key){
+                s = dirayStrings[i-1];
+                b = PreferencesUtil.getValue(mContext,s,false);
+                map.put(s,b);
             }
         }
         return map;
@@ -237,11 +233,10 @@ public class InteractivePopupWindow extends PopupWindow {
 
     public PopDismissListener mPopDismissListener;
 
-    public void setDismissListener(PopDismissListener popDismissListener) {
+    public void setDismissListener(PopDismissListener popDismissListener){
         mPopDismissListener = popDismissListener;
     }
-
-    public interface PopDismissListener {
+    public interface PopDismissListener{
         public void popDismiss();
     }
 }
