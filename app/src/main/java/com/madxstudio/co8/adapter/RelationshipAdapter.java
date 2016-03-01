@@ -150,12 +150,6 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
             if (type == RelationshipEnum.colleague) {
                 child.findViewById(R.id.relationship_item_content).setBackgroundResource(R.color.family_tree_relationship_sibling_background_color);
             }
-            child.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
             holder.addView(child, position != 0);
         }
     }
