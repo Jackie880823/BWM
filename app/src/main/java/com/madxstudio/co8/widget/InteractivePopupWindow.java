@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.widget;
+package com.madxstudio.co8.widget;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,11 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.bondwithme.BondWithMe.App;
-import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.util.DensityUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.madxstudio.co8.App;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.util.DensityUtil;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.PreferencesUtil;
+import com.madxstudio.co8.util.UIUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class InteractivePopupWindow extends PopupWindow {
 
 
     public InteractivePopupWindow(final Activity context, View parent, String text, int model){
-        LogUtil.i(TAG,"INTERACTIVE_TIP_START"+PreferencesUtil.getValue(context,INTERACTIVE_TIP_START,false));
+        LogUtil.i(TAG, "INTERACTIVE_TIP_START" + PreferencesUtil.getValue(context, INTERACTIVE_TIP_START, false));
         mContext = context;
         mParent = parent;
         mTest = text;
@@ -74,7 +75,7 @@ public class InteractivePopupWindow extends PopupWindow {
         lp.alpha = (float) 0.5; //0.0-1.0
         context.getWindow().setAttributes(lp);
 
-        if(PreferencesUtil.getValue(context,INTERACTIVE_TIP_START,false))
+        if(PreferencesUtil.getValue(context, INTERACTIVE_TIP_START, false))
             return;
         if(model == 0){
             conentView = LayoutInflater.from(context).inflate(R.layout.interactive_pop_dialog,null);
@@ -134,7 +135,7 @@ public class InteractivePopupWindow extends PopupWindow {
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setText(ToDBC(text));
         //wing modified
-        UIUtil.setViewBackground(mContext, textView,R.drawable.pop_chat_bg);
+        UIUtil.setViewBackground(mContext, textView, R.drawable.pop_chat_bg);
 //        textView.setBackground(mContext.getResources().getDrawable(R.drawable.pop_chat_bg));
         //wing modified
         textView.setTextSize(14);
