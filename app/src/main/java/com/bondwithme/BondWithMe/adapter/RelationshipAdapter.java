@@ -72,7 +72,6 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
     @Override
     public RelationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LinearLayout layout = new LinearLayout(context);
-        int padding = context.getResources().getDimensionPixelOffset(R.dimen.default_content_padding);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
         layout.setLayoutParams(params);
         layout.setOrientation(LinearLayout.HORIZONTAL);
@@ -116,6 +115,12 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
 
         if(this.type == RelationshipEnum.sibling) {
             checkArrow(holder, position);
+        }
+
+        if (position == 0) {
+            holder.hideSpaceView();
+        } else {
+            holder.showSpaceView();
         }
 
         showData(userEntities, holder);
@@ -253,13 +258,21 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
                     }
                 }
             });
-            View nullView = child.findViewById(R.id.null_image_view);
-            if(show && itemView.getChildCount() == 0) {
-                nullView.setVisibility(View.VISIBLE);
-            } else {
-                nullView.setVisibility(View.GONE);
-            }
+//            View nullView = child.findViewById(R.id.null_image_view);
+//            if(show && itemView.getChildCount() == 0) {
+//                nullView.setVisibility(View.VISIBLE);
+//            } else {
+//                nullView.setVisibility(View.GONE);
+//            }
             itemView.addView(child);
+        }
+
+        public void showSpaceView() {
+            getChildAt(0).findViewById(R.id.null_image_view).setVisibility(View.VISIBLE);
+        }
+
+        public void hideSpaceView() {
+            getChildAt(0).findViewById(R.id.null_image_view).setVisibility(View.GONE);
         }
 
         /**
