@@ -422,19 +422,19 @@ public class MyViewProfileActivity extends BaseActivity {
             et_internal_phone.setText(phoneExtList.get(0));
         }
         String dofeel_code = userEntity.getDofeel_code();
-        if (!TextUtils.isEmpty(dofeel_code)) {
-            try {
-                String filePath = "";
-                if (dofeel_code.indexOf("_") != -1) {
-                    filePath = dofeel_code.replaceAll("_", File.separator);
-                }
-                InputStream is = MyViewProfileActivity.this.getAssets().open(filePath);
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                ivBottomLeft.setImageBitmap(bitmap);
-
-            } catch (IOException e) {
-            }
-        }
+//        if (!TextUtils.isEmpty(dofeel_code)) {
+//            try {
+//                String filePath = "";
+//                if (dofeel_code.indexOf("_") != -1) {
+//                    filePath = dofeel_code.replaceAll("_", File.separator);
+//                }
+//                InputStream is = MyViewProfileActivity.this.getAssets().open(filePath);
+//                Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                ivBottomLeft.setImageBitmap(bitmap);
+//
+//            } catch (IOException e) {
+//            }
+//        }
 
 
         rlGender.setOnClickListener(new View.OnClickListener() {

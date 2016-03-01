@@ -31,18 +31,18 @@
     <dimen name="default_border_width">1dp</dimen>
 
     <!--标准-->
-    <dimen name="text_mirco_size">12sp</dimen>
-    <dimen name="text_small_size">14sp</dimen>
-    <dimen name="text_medium_size">18sp</dimen>
-    <dimen name="text_large_size">22sp</dimen>
+    <dimen name="text_mirco_size">24dp</dimen>
+    <dimen name="text_small_size">28dp</dimen>
+    <dimen name="text_medium_size">36dp</dimen>
+    <dimen name="text_large_size">44dp</dimen>
     <!--设计-->
-    <dimen name="text_size_10sp">10sp</dimen>
-    <dimen name="text_size_12sp">12sp</dimen>
-    <dimen name="text_size_13sp">13sp</dimen>
-    <dimen name="text_size_14sp">14sp</dimen>
-    <dimen name="text_size_16sp">16sp</dimen>
-    <dimen name="text_size_19sp">19sp</dimen>
-    <dimen name="text_size_22sp">22sp</dimen>
+    <dimen name="text_size_10sp">20dp</dimen>
+    <dimen name="text_size_12sp">24dp</dimen>
+    <dimen name="text_size_13sp">26dp</dimen>
+    <dimen name="text_size_14sp">28dp</dimen>
+    <dimen name="text_size_16sp">32dp</dimen>
+    <dimen name="text_size_19sp">38dp</dimen>
+    <dimen name="text_size_22sp">44dp</dimen>
 
     <dimen name="_0dp">0dp</dimen>
     <dimen name="_1dp">2dp</dimen>
@@ -156,7 +156,7 @@
     <dimen name="_400dp">800dp</dimen>
 
     <!-- SpringIndicator -->
-    <dimen name="si_default_text_size">8sp</dimen>
+    <dimen name="si_default_text_size">16dp</dimen>
     <dimen name="si_default_radius_max">4dp</dimen>
     <dimen name="si_default_radius_min">2dp</dimen>
 </resources>

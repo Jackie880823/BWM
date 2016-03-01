@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center_vertical"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/up_tri_angel_iv"
@@ -13,7 +13,7 @@
         android:layout_gravity="top"
         android:scaleType="centerInside"
         android:src="@drawable/up_tri_angel"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <LinearLayout
         android:id="@+id/relationship_item_content"
@@ -28,7 +28,7 @@
             android:layout_width="@dimen/_20dp"
             android:layout_height="match_parent"
             android:src="@null"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -41,25 +41,29 @@
                 android:id="@+id/relationship_item_image"
                 android:layout_width="@dimen/_75dp"
                 android:layout_height="@dimen/_75dp"
-                app:border="false"/>
+                app:border="false" />
 
             <TextView
                 android:id="@+id/relationship_item_name_tv"
                 style="@style/text_user_name"
                 android:layout_width="@dimen/_75dp"
-
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textSize="@dimen/text_mirco_size"/>
+                android:textSize="@dimen/text_mirco_size" />
 
             <TextView
                 android:id="@+id/relationship_item_relation_tv"
-                style="@style/text_user_name"
                 android:layout_width="@dimen/_75dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:lines="2"
+                android:maxEms="6"
+                android:textColor="@color/default_text_color_dark"
                 android:textSize="@dimen/text_mirco_size"
-                android:visibility="visible"/>
+                android:textStyle="bold"
+                android:visibility="visible" />
 
         </LinearLayout>
     </LinearLayout>
@@ -71,6 +75,6 @@
         android:layout_gravity="bottom"
         android:scaleType="centerInside"
         android:src="@drawable/down_tri_angel"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
 </LinearLayout>

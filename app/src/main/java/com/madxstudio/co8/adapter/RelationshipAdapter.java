@@ -99,20 +99,26 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         FamilyMemberEntity member = data.get(position);
         userEntities.add(member);
         ArrayList<FamilyMemberEntity> spouse = member.getSpouse();
-        if(spouse != null) {
+        if (spouse != null) {
             userEntities.addAll(spouse);
         }
 
         int count = holder.getChildCount();
         int minSize = userEntities.size();
-        if(count > minSize) {
+        if (count > minSize) {
             holder.removeViews(minSize, count - minSize);
-        } else if(count < minSize) {
+        } else if (count < minSize) {
             addViews(holder, minSize - count, position);
         }
 
-        if(this.type == RelationshipEnum.colleague) {
+        if (this.type == RelationshipEnum.colleague) {
             checkArrow(holder, position);
+        }
+
+        if (position == 0) {
+            holder.hideSpaceView();
+        } else {
+            holder.showSpaceView();
         }
 
         showData(userEntities, holder);
@@ -120,7 +126,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
 
     private void checkArrow(RelationHolder holder, int position) {
         View view = holder.getChildAt(0);
-        if(position == 0) {
+        if (position == 0) {
             view.findViewById(R.id.up_tri_angel_iv).setVisibility(View.VISIBLE);
             view.findViewById(R.id.down_tri_angel_iv).setVisibility(View.VISIBLE);
             view.findViewById(R.id.relationship_item_content).setBackgroundResource(R.color.family_tree_relationship_me_background_color);
@@ -139,9 +145,9 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
      * @param position 数据列表位置
      */
     private void addViews(RelationHolder holder, int count, int position) {
-        for(int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             View child = LayoutInflater.from(context).inflate(R.layout.relationship_item_layout, null);
-            if(type == RelationshipEnum.colleague) {
+            if (type == RelationshipEnum.colleague) {
                 child.findViewById(R.id.relationship_item_content).setBackgroundResource(R.color.family_tree_relationship_sibling_background_color);
             }
             child.setOnClickListener(new View.OnClickListener() {
@@ -157,9 +163,9 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
     private void showData(ArrayList<FamilyMemberEntity> familyMemberEntities, RelationHolder holder) {
         int count = holder.getChildCount();
         int dataSize = familyMemberEntities.size();
-        for(int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             View child = holder.getChildAt(i);
-            if(i < dataSize) {
+            if (i < dataSize) {
                 child.findViewById(R.id.relationship_item_name_tv).setVisibility(View.VISIBLE);
                 child.findViewById(R.id.relationship_item_relation_tv).setVisibility(View.VISIBLE);
                 child.findViewById(R.id.relationship_item_image).setVisibility(View.VISIBLE);
@@ -182,7 +188,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         VolleyUtil.initNetworkImageView(context, headImage, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, familyMemberEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
         String name;
-        if(MainActivity.getUser().getUser_id().equals(familyMemberEntity.getUser_id())) {
+        if (MainActivity.getUser().getUser_id().equals(familyMemberEntity.getUser_id())) {
             name = context.getString(R.string.text_me);
         } else {
             name = familyMemberEntity.getUser_given_name();
@@ -245,18 +251,26 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
                 @Override
                 public void onClick(View v) {
                     Object tag = v.getTag();
-                    if(listener != null && tag != null) {
+                    if (listener != null && tag != null) {
                         listener.onClick(v, (FamilyMemberEntity) tag);
                     }
                 }
             });
-            View nullView = child.findViewById(R.id.null_image_view);
-            if(show && itemView.getChildCount() == 0) {
-                nullView.setVisibility(View.VISIBLE);
-            } else {
-                nullView.setVisibility(View.GONE);
-            }
+//            View nullView = child.findViewById(R.id.null_image_view);
+//            if(show && itemView.getChildCount() == 0) {
+//                nullView.setVisibility(View.VISIBLE);
+//            } else {
+//                nullView.setVisibility(View.GONE);
+//            }
             itemView.addView(child);
+        }
+
+        public void showSpaceView() {
+            getChildAt(0).findViewById(R.id.null_image_view).setVisibility(View.VISIBLE);
+        }
+
+        public void hideSpaceView() {
+            getChildAt(0).findViewById(R.id.null_image_view).setVisibility(View.GONE);
         }
 
         /**
