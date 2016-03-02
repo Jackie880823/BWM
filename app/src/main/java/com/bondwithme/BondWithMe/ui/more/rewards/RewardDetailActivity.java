@@ -36,7 +36,8 @@ public class RewardDetailActivity extends BaseActivity {
     private NetworkImageView ivReward;
     private TextView tvRewardDate;
     private TextView tvRewardPoint;
-    private TextView tvRewardDesc;
+    private TextView tvRewardTitle;
+    private TextView getTvRewardDesc;
     private Button btnRedeem;
     @Override
     public int getLayout() {
@@ -78,12 +79,14 @@ public class RewardDetailActivity extends BaseActivity {
         ivReward = getViewById(R.id.iv_reward);
         tvRewardDate = getViewById(R.id.tv_reward_date);
         tvRewardPoint = getViewById(R.id.tv_reward_pts);
-        tvRewardDesc = getViewById(R.id.tv_description);
+        tvRewardTitle = getViewById(R.id.tv_description);
+        getTvRewardDesc = getViewById(R.id.tv_description_1);
         btnRedeem = getViewById(R.id.tv_redeem);
         BitmapTools.getInstance(this).display(ivReward,rewardEntity.getImage(),R.drawable.network_image_default, R.drawable.network_image_default);
         tvRewardDate.setText(getString(R.string.valid_till) + " " +rewardEntity.getVoucher_due());
         tvRewardPoint.setText(rewardEntity.getPoint() + " " +getString(R.string.text_capital_points));
-        tvRewardDesc.setText(rewardEntity.getDescription());
+        tvRewardTitle.setText(rewardEntity.getDescription());
+        getTvRewardDesc.setText(rewardEntity.getDescription_1());
         btnRedeem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
