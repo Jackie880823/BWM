@@ -436,6 +436,10 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
+        if(activity instanceof MainActivity&&user!=null){
+//            if (needShowAddDialog)
+                checkHasPendingRequest(activity);
+        }
     }
 
     private List<Activity> activityList = new ArrayList<>();
@@ -461,10 +465,10 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public void onActivityResumed(Activity activity) {
         paused = false;
 
-        if(user!=null){
-            if (needShowAddDialog)
-                checkHasPendingRequest(activity);
-        }
+//        if(user!=null){
+//            if (needShowAddDialog)
+//                checkHasPendingRequest(activity);
+//        }
         foreground = true;
         if (check != null) {
             handler.removeCallbacks(check);
@@ -496,9 +500,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     @Override
     public void onActivityStopped(Activity activity) {
-        if(isBackground()&&httpTools!=null) {
-            httpTools.cancelRequestByTag(TAG_CHECK_PENDING);
-        }
+//        if(isBackground()&&httpTools!=null) {
+//            httpTools.cancelRequestByTag(TAG_CHECK_PENDING);
+//        }
     }
 
     @Override
