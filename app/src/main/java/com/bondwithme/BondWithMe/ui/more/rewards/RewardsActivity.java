@@ -123,7 +123,6 @@ public class RewardsActivity extends BaseActivity {
         reList.setHasFixedSize(true);
         reList.setItemAnimator(new DefaultItemAnimator());
 
-
     }
 
     int userPoint;
@@ -243,7 +242,7 @@ public class RewardsActivity extends BaseActivity {
             });
 
         }else {
-            ivGeneralReward.setVisibility(View.VISIBLE);
+            ivNoGeneralReward.setVisibility(View.VISIBLE);
             ivGeneralReward.setVisibility(View.INVISIBLE);
             rlGeneralRewardInfo.setVisibility(View.INVISIBLE);
         }

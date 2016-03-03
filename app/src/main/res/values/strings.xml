@@ -732,4 +732,10 @@
     <string name="desc_recerve_member_add_request">There is new member request. Accept now?</string>
     <string name="text_item_reject">Reject</string>
     <string name="text_later">Later</string>
+    
+    <string name="text_days">Days</string>
+    <string name="text_hrs">Hrs</string>
+    <string name="text_min">Min</string>
+    <string name="text_sec">Src</string>
+    <string name="left">Left!</string>
 </resources>
