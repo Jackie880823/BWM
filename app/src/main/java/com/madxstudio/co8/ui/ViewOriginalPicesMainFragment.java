@@ -124,7 +124,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
         viewPaperAdapter.setOnMyPageChangeListenner(new MyFragmentPagerAdapter.OnPageChangeListenner() {
             @Override
             public void onPageChange(int position) {
-                String text = null;
+                String text;
                 int count = data.size();
                 Log.i(TAG, "onPageChange& position = " + position + "; count = " + count);
                 if (count == 1) {
@@ -137,6 +137,11 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                     text = getActivity().getString(R.string.photo_position_double_arrow);
                 }
                 currentId = position;
+
+                // 如果TextView是GONE状态setText()会出异常，且需要显示调用setText()才有意义
+                if (tvIndexOfList.getVisibility() != View.VISIBLE) {
+                    tvIndexOfList.setVisibility(View.VISIBLE);
+                }
                 tvIndexOfList.setText(String.format(text, position + 1, data.size()));
             }
         });
@@ -244,7 +249,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
             viewPaperAdapter.notifyDataSetChanged();
 
             tvIndexOfList.setVisibility(View.VISIBLE);
-            String text = null;
+            String text;
             if (count == 1) {
                 text = getActivity().getString(R.string.photo_position_no_arrow);
             } else {
