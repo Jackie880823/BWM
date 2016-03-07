@@ -108,6 +108,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private static final int HANDLER_LOAD_FLAG = 100;
 
+    private WeakReference<Activity> activityWeakReference;
+
     /**
      * post到UI线程中的更新图片的Runnable
      */
@@ -192,6 +194,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     @Override
     public void initView() {
+        activityWeakReference = new WeakReference<Activity>(getActivity());
+
         mDrawerList = getViewById(R.id.lv_images_titles);
         mGvShowPhotos = getViewById(R.id.gv_select_photo);
         mDrawerLayout = getViewById(R.id.drawer_layout);
@@ -453,7 +457,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             SortMediaComparator comparator = new SortMediaComparator();
             Collections.sort(allMedias, comparator);
 
-            WeakReference<Activity> activityWeakReference = new WeakReference<Activity>(getActivity());
+            // 这里使用弱引用获取Activity防止父Activity已被回还去更新UI而造成App闪退.
             if (activityWeakReference.get() != null) {
                 activityWeakReference.get().runOnUiThread(adapterRefresh);
             }
