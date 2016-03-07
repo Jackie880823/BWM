@@ -457,10 +457,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             SortMediaComparator comparator = new SortMediaComparator();
             Collections.sort(allMedias, comparator);
 
-            // 这里使用弱引用获取Activity防止父Activity已被回还去更新UI而造成App闪退.
-            if (activityWeakReference.get() != null) {
-                activityWeakReference.get().runOnUiThread(adapterRefresh);
-            }
+            subThreadRefreshAdapter();
         }
     }
 
@@ -593,6 +590,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         if (allMedias.size() == 50) {
             SortMediaComparator comparator = new SortMediaComparator();
             Collections.sort(allMedias, comparator);
+
+            subThreadRefreshAdapter();
         }
 
         if (mMediaUris.containsKey(bucket)) {
@@ -603,7 +602,20 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             al.add(mediaData);
             mMediaUris.put(bucket, al);
             buckets.add(bucket);
-            getActivity().runOnUiThread(uiRunnable);
+
+            subThreadRefreshAdapter();
+        }
+    }
+
+    /**
+     * 子线程刷新列表的适配器
+     */
+    private void subThreadRefreshAdapter() {
+        // 这里使用弱引用获取Activity防止父Activity已被回还去更新UI而造成App闪退.
+        if (activityWeakReference.get() != null) {
+            activityWeakReference.get().runOnUiThread(adapterRefresh);
+        } else {
+            quitAllLoadThread();
         }
     }
 
