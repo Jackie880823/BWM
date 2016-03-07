@@ -728,4 +728,10 @@
     <string name="desc_recerve_member_add_request">您有新的成员请求。接受吗？</string>
     <string name="text_item_reject">拒绝</string>
     <string name="text_later">稍后</string>
+
+    <string name="text_days">天</string>
+    <string name="text_hrs">小时</string>
+    <string name="text_min">分</string>
+    <string name="text_sec">秒</string>
+    <string name="left">后!</string>
 </resources>
