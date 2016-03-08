@@ -1,6 +1,5 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,28 +8,25 @@
         layout="@layout/title_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/fragment_main_top"
         android:background="@color/dialog_bg_color">
-            <EditText
-                android:id="@+id/et_caption"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:layout_below="@+id/ll"
-                android:layout_gravity="center"
-                android:padding="@dimen/default_text_padding"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_small_size"
-                android:text=""
-                android:inputType="textCapSentences"
-                />
+
+        <EditText
+            android:id="@+id/et_caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@null"
+            android:padding="@dimen/default_text_padding"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_small_size"/>
     </ScrollView>
 
-    <include layout="@layout/progress_layout"></include>
+    <include layout="@layout/progress_layout"/>
 
 </RelativeLayout>
