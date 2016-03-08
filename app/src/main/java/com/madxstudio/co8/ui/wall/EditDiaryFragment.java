@@ -1105,8 +1105,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
         if (pickUris != null) {
             clearVideo();
-            imageUris.clear();
-            imageUris.addAll(pickUris);
             addDataAndNotify(pickUris);
         }
     }
@@ -1127,12 +1125,26 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
     private void addDataAndNotify(ArrayList<Uri> pickUris) {
+
+        List<Uri> tempImageUris = new ArrayList<>(imageUris);
+        List<DiaryPhotoEntity> tempLocalEntities = new ArrayList<>(localEntities);
+
         photoEntities.removeAll(localEntities);
         localEntities.clear();
+        imageUris.clear();
+
+        imageUris.addAll(pickUris);
         for (Uri uri : pickUris) {
             LogUtil.i(TAG, "addDataAndNotify& add uri: " + uri.toString());
+
             DiaryPhotoEntity entity = new DiaryPhotoEntity();
             entity.setUri(uri);
+            if (tempImageUris.contains(uri)) {
+                int index = tempImageUris.indexOf(uri);
+                String caption = tempLocalEntities.get(index).getPhoto_caption();
+                entity.setPhoto_caption(caption);
+            }
+
             localEntities.add(entity);
         }
         int index = photoEntities.size();
@@ -1343,6 +1355,14 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void openPhotos() {
         LogUtil.d("", "openPhotos========");
+
+        int count = photoEntities.size();
+        int pushedCount = count - localEntities.size();
+        for (int index = pushedCount; index < count; index++) {
+            DiaryPhotoEntity photoEntity = (DiaryPhotoEntity) photoEntities.get(index);
+            photoEntity.setPhoto_caption(getPhotoCaptionByPosition(index + 1));
+        }
+
         Intent intent = new Intent(getParentActivity(), SelectPhotosActivity.class);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         /**
