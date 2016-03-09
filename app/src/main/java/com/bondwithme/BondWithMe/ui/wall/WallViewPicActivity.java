@@ -318,9 +318,6 @@ public class WallViewPicActivity extends BaseActivity {
             TextView textView = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content);
             TextView textViewAll = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content_all);
 
-            textView.setVisibility(View.VISIBLE);
-            textViewAll.setVisibility(View.VISIBLE);
-
             textView.setText(data.getStringExtra("update_caption"));
             textViewAll.setText(data.getStringExtra("update_caption"));
             this.data.get(viewPager.getCurrentItem()).setPhoto_caption(data.getStringExtra("update_caption"));
@@ -414,6 +411,13 @@ public class WallViewPicActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        TextView textView = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content);
+        TextView textViewAll = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content_all);
+
+        textView.setVisibility(View.VISIBLE);
+        textViewAll.setVisibility(View.VISIBLE);
+
         if (resultCode == RESULT_OK)
         {
             switch (requestCode)
