@@ -36,7 +36,7 @@
     <string name="event_cancel">否</string>
     <string name="text_tips_title">提示</string>
     <string name="alert_text_title_null">为您的活动起个好名字！</string>
-    <string name="alert_text_desc_null">活动主题是什么？</string>
+    <string name="alert_text_desc_null">请填写活动内容</string>
     <string name="alert_text_location_null">活动地点在哪里？</string>
     <string name="alert_text_date_null">日期和时间是什么？</string>
     <string name="title_message_creategroup">新建群组</string>
@@ -488,7 +488,7 @@
     <string name="text_long_press_display">长按可预览表情。</string>
 
     <string name="no_member">赶快添加成员开始聊天吧！</string>
-    <string name="no_group">你新建群组，与您的亲人促进感情。</string>
+    <string name="no_group">新建群组与您的亲人促进感情</string>
 
     <string name="update_message">新版本已推出。更新后方可继续使用。</string>
     <string name="title_download_task">伴我玩正在下载 &#8230;</string>

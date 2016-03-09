@@ -27,7 +27,6 @@ import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
-import com.bondwithme.BondWithMe.widget.OverScrollView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -53,6 +52,7 @@ public class RewardsActivity extends BaseActivity {
     private RecyclerView reList;
     private FullyLinearLayoutManager fll;
     private RelativeLayout rlGeneralRewardInfo;
+    private View sc_rewards;
     private TextView tvGeneralRewardData;
     private TextView tvAddMemberForPoint;
     private TextView tvPointAcc;
@@ -114,6 +114,7 @@ public class RewardsActivity extends BaseActivity {
         ivNoGeneralReward = getViewById(R.id.iv_no_general_reward);
         ivNoReward = getViewById(R.id.iv_no_reward);
         rlGeneralRewardInfo = getViewById(R.id.rl_reward_info);
+        sc_rewards = getViewById(R.id.sc_rewards);
 
 
 
@@ -122,7 +123,6 @@ public class RewardsActivity extends BaseActivity {
         reList.setLayoutManager(fll);
         reList.setHasFixedSize(true);
         reList.setItemAnimator(new DefaultItemAnimator());
-
     }
 
     int userPoint;
@@ -135,9 +135,9 @@ public class RewardsActivity extends BaseActivity {
                 @Override
                 public void itemClick(RewardEntity rewardEntity, int position) {
                     int rewardPoint = Integer.parseInt(rewardEntity.getPoint());
-                    if (!rewardEntity.getTotal_voucher().equals("0") && rewardPoint <= userPoint){
-                        Intent intent = new Intent(RewardsActivity.this,RewardDetailActivity.class);
-                        intent.putExtra(REWARD,rewardEntity);
+                    if (!rewardEntity.getTotal_voucher().equals("0") && rewardPoint <= userPoint) {
+                        Intent intent = new Intent(RewardsActivity.this, RewardDetailActivity.class);
+                        intent.putExtra(REWARD, rewardEntity);
                         startActivity(intent);
                     }
 
@@ -171,16 +171,24 @@ public class RewardsActivity extends BaseActivity {
             }
 
             @Override
-            public void onResult(String string) {
-                Gson gson =new Gson();
+            public void onResult(final String string) {
+                final Gson gson =new Gson();
                 LogUtil.d(TAG, "onResult=====" + string);
-                rewardResultEntity = gson.fromJson(string, RewardResultEntity.class);
-                dataGeneralReward = rewardResultEntity.getGeneralReward();
-                dataRewardPoint = rewardResultEntity.getRewardPoint();
-                dataReward = rewardResultEntity.getReward();
-                initGeneralRewardView();
-                initRewardPointView();
-                initAdapter();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        rewardResultEntity = gson.fromJson(string, RewardResultEntity.class);
+                        dataGeneralReward = rewardResultEntity.getGeneralReward();
+                        dataRewardPoint = rewardResultEntity.getRewardPoint();
+                        dataReward = rewardResultEntity.getReward();
+                        initGeneralRewardView();
+                        initRewardPointView();
+                        initAdapter();
+                        //wing mofified
+                        sc_rewards.setVisibility(View.VISIBLE);
+                    }
+                });
+
             }
 
             @Override
@@ -246,19 +254,18 @@ public class RewardsActivity extends BaseActivity {
             ivGeneralReward.setVisibility(View.INVISIBLE);
             rlGeneralRewardInfo.setVisibility(View.INVISIBLE);
         }
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refreshData();
-        reList.post(new Runnable() {
-            @Override
-            public void run() {
-                ((OverScrollView) RewardsActivity.this.getViewById(R.id.sc_rewards)).scrollTo(0, 0);
-            }
-        });
+//        reList.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                ((OverScrollView) RewardsActivity.this.getViewById(R.id.sc_rewards)).scrollTo(0, 0);
+//            }
+//        });
     }
 
     @Override

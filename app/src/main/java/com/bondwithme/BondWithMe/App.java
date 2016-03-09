@@ -436,6 +436,10 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
+        if(activity instanceof MainActivity&&user!=null){
+//            if (needShowAddDialog)
+                checkHasPendingRequest(activity);
+        }
     }
 
     private List<Activity> activityList = new ArrayList<>();
@@ -461,10 +465,10 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public void onActivityResumed(Activity activity) {
         paused = false;
 
-        if(user!=null){
-            if (needShowAddDialog)
-                checkHasPendingRequest(activity);
-        }
+//        if(user!=null){
+//            if (needShowAddDialog)
+//                checkHasPendingRequest(activity);
+//        }
         foreground = true;
         if (check != null) {
             handler.removeCallbacks(check);
@@ -496,9 +500,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     @Override
     public void onActivityStopped(Activity activity) {
-        if(isBackground()) {
-            httpTools.cancelRequestByTag(TAG_CHECK_PENDING);
-        }
+//        if(isBackground()&&httpTools!=null) {
+//            httpTools.cancelRequestByTag(TAG_CHECK_PENDING);
+//        }
     }
 
     @Override
@@ -630,8 +634,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
             @Override
             public void onResult(String string) {
-                needShowAddDialog = false;
-                showAddDialog(activity);
+                if("\"true\"".equals(string)) {
+                    showAddDialog(activity);
+                }
             }
 
             @Override
@@ -652,29 +657,31 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     private void showAddDialog(final Activity activity) {
-        needShowAddDialog = false;
-        if(showAddDialog!=null&&showAddDialog.isShowing()){
+        if(activity!=null&&!activity.isFinishing()) {
+            needShowAddDialog = false;
+            if (showAddDialog != null && showAddDialog.isShowing()) {
 
-        }else {
-            showAddDialog = new MyDialog(activity, R.string.text_tips_title, R.string.desc_recerve_member_add_request);
-            showAddDialog.setCanceledOnTouchOutside(false);
+            } else {
+                showAddDialog = new MyDialog(activity, R.string.text_tips_title, R.string.desc_recerve_member_add_request);
+                showAddDialog.setCanceledOnTouchOutside(false);
 
-            showAddDialog.setButtonCancel(R.string.text_later, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showAddDialog.dismiss();
-                }
-            });
+                showAddDialog.setButtonCancel(R.string.text_later, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAddDialog.dismiss();
+                    }
+                });
 
-            showAddDialog.setButtonAccept(R.string.yes, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activity.startActivity(new Intent(activity.getBaseContext(), MemberActivity.class));
-                    showAddDialog.dismiss();
-                }
-            });
+                showAddDialog.setButtonAccept(R.string.yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.startActivity(new Intent(activity.getBaseContext(), MemberActivity.class));
+                        showAddDialog.dismiss();
+                    }
+                });
 
-            showAddDialog.show();
+                showAddDialog.show();
+            }
         }
     }
 }

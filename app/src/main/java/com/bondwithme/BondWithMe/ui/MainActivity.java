@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -128,7 +129,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        LogUtil.i(TAG, "onCreate: api: " + Constant.API_SERVER + "; site id: " + Constant.TRACKER_SITE_ID);
+
+//        DisplayMetrics dm = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(dm);
+//        LogUtil.i(TAG, "onCreate: dpi: " + dm.densityDpi);
         if (App.getLoginedUser() == null) {//防止出现迷之不存在用户数据进入到主页
             App.getContextInstance().logout(this);
             return;
