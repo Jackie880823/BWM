@@ -111,17 +111,17 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     private WeakReference<Activity> activityWeakReference;
 
     /**
-     * post到UI线程中的更新图片的Runnable
+     * post到UI线程中的更新图片目录的Runnable
      */
-    private Runnable uiRunnable = new Runnable() {
+    private Runnable bucketsAdapterRunnable = new Runnable() {
         private int lastPosition = -1;
 
         @Override
         public synchronized void run() {
-            LogUtil.i(TAG, "uiRunnable& update adapter");
+            LogUtil.i(TAG, "bucketsAdapterRunnable& update adapter");
             updateBucketsAdapter();
             if (buckets.size() > 0 && lastPosition != curLoaderPosition) {
-                LogUtil.i(TAG, "uiRunnable& loadLocalMediaOrder");
+                LogUtil.i(TAG, "bucketsAdapterRunnable& loadLocalMediaOrder");
                 // 查找到了图片显示列表第一项的图片
                 loadLocalMediaOrder(curLoaderPosition);
                 lastPosition = curLoaderPosition;
@@ -129,12 +129,17 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         }
     };
 
-    private Runnable adapterRefresh = new Runnable() {
+    /**
+     * post到UI线程中的更新图片的Runnable
+     */
+    private Runnable localPhotoAdapterRefresh = new Runnable() {
         @Override
         public void run() {
             if (bucketsAdapter != null) {
                 bucketsAdapter.clear();
                 bucketsAdapter.addAll(buckets);
+            } else {
+                LogUtil.w(TAG, "bucketsAdapter is null");
             }
 
             loading.stop();
@@ -142,6 +147,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
             if (localMediaAdapter != null) {
                 selectImageUirListener.onLoadedMedia(mMediaUris.get(getContext().getString(R.string.text_all)), localMediaAdapter);
+            } else {
+                LogUtil.w(TAG, "localMediaAdapter is null");
             }
         }
     };
@@ -602,8 +609,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             al.add(mediaData);
             mMediaUris.put(bucket, al);
             buckets.add(bucket);
-
-            subThreadRefreshAdapter();
+            if (activityWeakReference.get() != null) {
+                activityWeakReference.get().runOnUiThread(bucketsAdapterRunnable);
+            }
         }
     }
 
@@ -613,8 +621,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     private void subThreadRefreshAdapter() {
         // 这里使用弱引用获取Activity防止父Activity已被回还去更新UI而造成App闪退.
         if (activityWeakReference.get() != null) {
-            activityWeakReference.get().runOnUiThread(adapterRefresh);
+            activityWeakReference.get().runOnUiThread(localPhotoAdapterRefresh);
         } else {
+            LogUtil.w(TAG, "the activityWeakReference get is null");
             quitAllLoadThread();
         }
     }

@@ -33,6 +33,8 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
     private RelationshipEnum type;
     private OnFamilyItemClickListener listener;
 
+    private static final int FIRST_VIEW = 0;
+
     public RelationshipAdapter(Context context, ArrayList<FamilyMemberEntity> data, RelationshipEnum type) {
         this.data = data;
         this.context = context;
@@ -73,7 +75,11 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
         layout.setLayoutParams(params);
         layout.setOrientation(LinearLayout.HORIZONTAL);
-        return new RelationHolder<>(layout);
+        if (viewType == FIRST_VIEW) {
+            return new RelationHolder<>(layout);
+        } else {
+            return new RelationHolder<>(layout);
+        }
     }
 
     /**
@@ -116,7 +122,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         }
 
         if (position == 0) {
-            holder.hideSpaceView();
+            holder.goneSpaceView();
         } else {
             holder.showSpaceView();
         }
@@ -135,6 +141,11 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
             view.findViewById(R.id.down_tri_angel_iv).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.relationship_item_content).setBackgroundResource(R.color.family_tree_relationship_sibling_background_color);
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     /**
@@ -263,8 +274,11 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
             getChildAt(0).findViewById(R.id.null_image_view).setVisibility(View.VISIBLE);
         }
 
-        public void hideSpaceView() {
-            getChildAt(0).findViewById(R.id.null_image_view).setVisibility(View.GONE);
+        public void goneSpaceView() {
+            View spaceView = getChildAt(0).findViewById(R.id.null_image_view);
+            if (spaceView.getVisibility() != View.GONE) {
+                spaceView.setVisibility(View.GONE);
+            }
         }
 
         /**
