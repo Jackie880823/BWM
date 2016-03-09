@@ -12,21 +12,21 @@ import android.widget.ListView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.DiaryPhotoEntity;
 import com.madxstudio.co8.entity.PhotoEntity;
 import com.madxstudio.co8.entity.PushedPhotoEntity;
 import com.madxstudio.co8.entity.UserEntity;
-import com.madxstudio.co8.http.VolleyUtil;
 import com.madxstudio.co8.interfaces.ImagesRecyclerListener;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.WallEditView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
@@ -177,7 +177,21 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
             headHolder.wevContent.requestFocus();
             //头部分
             UserEntity owner = MainActivity.getUser();
-            VolleyUtil.initNetworkImageView(context, headHolder.cniHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, owner.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+
+            // 设置头像加载选项
+            DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
+            builder.cloneFrom(UniversalImageLoaderUtil.options);
+            // 设置图片加载/解码过程中错误时候显示的图片
+            builder.showImageOnFail(R.drawable.default_head_icon);
+            // 设置图片在加载期间显示的图片
+            builder.showImageOnLoading(R.drawable.default_head_icon);
+            // 设置图片Uri为空或是错误的时候显示的图
+            builder.showImageForEmptyUri(R.drawable.default_head_icon);
+            // 头像路径
+            String uri = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, owner.getUser_id());
+            // 加载显示头像
+            ImageLoader.getInstance().displayImage(uri, headHolder.ivHead, builder.build());
+
             headHolder.tvUserName.setText(owner.getUser_given_name());
         }
         if (position == getItemCount() - 1) {
