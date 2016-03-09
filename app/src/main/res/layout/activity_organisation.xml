@@ -1,0 +1,224 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_text_color_while"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/fragment_main_top"
+            layout="@layout/title_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:id="@+id/linear_company_profile"
+                    android:layout_width="@dimen/default_user_head_width_height"
+                    android:layout_height="@dimen/default_user_head_width_height"
+                    android:background="@drawable/circular_bg_blue"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/company_profile_icon" />
+                </RelativeLayout>
+
+                <TextView
+                    style="@style/text_dark_default"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/default_view_margin"
+                    android:text="@string/text_org_company_profile" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/linear_org_chart"
+                    android:layout_width="@dimen/default_user_head_width_height"
+                    android:layout_height="@dimen/default_user_head_width_height"
+                    android:background="@drawable/circular_bg_blue"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/org_chart_icon" />
+                </RelativeLayout>
+
+                <TextView
+                    style="@style/text_dark_default"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/default_view_margin"
+                    android:text="@string/text_my_org_chart" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/linear_my_group"
+                    android:layout_width="@dimen/default_user_head_width_height"
+                    android:layout_height="@dimen/default_user_head_width_height"
+                    android:background="@drawable/circular_bg_blue"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/my_group_icon" />
+                </RelativeLayout>
+
+                <TextView
+                    style="@style/text_dark_default"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/default_view_margin"
+                    android:text="@string/text_org_my_group" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/linear_all_staff"
+                    android:layout_width="@dimen/default_user_head_width_height"
+                    android:layout_height="@dimen/default_user_head_width_height"
+                    android:background="@drawable/circular_bg_blue"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/all_staff_icon" />
+                </RelativeLayout>
+
+                <TextView
+                    style="@style/text_dark_default"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/default_view_margin"
+                    android:text="@string/text_org_all_staff" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:id="@+id/linear_all_staff1"
+                    android:layout_width="@dimen/default_user_head_width_height"
+                    android:layout_height="@dimen/default_user_head_width_height"
+                    android:background="@drawable/circular_bg_blue"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/all_staff_icon" />
+                </RelativeLayout>
+
+                <TextView
+                    style="@style/text_dark_default"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/default_view_margin"
+                    android:text="@string/text_org_all_staff" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:id="@+id/linear_org_others"
+                    android:layout_width="@dimen/default_user_head_width_height"
+                    android:layout_height="@dimen/default_user_head_width_height"
+                    android:background="@drawable/circular_bg_blue"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/org_others_icon" />
+                </RelativeLayout>
+
+                <TextView
+                    style="@style/text_dark_default"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/default_view_margin"
+                    android:text="@string/text_org_others" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"></LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
