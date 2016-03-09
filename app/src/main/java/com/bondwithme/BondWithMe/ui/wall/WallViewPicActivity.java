@@ -253,6 +253,9 @@ public class WallViewPicActivity extends BaseActivity {
                     TextView tvCaption = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content);
                     TextView tvCaptionAll = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content_all);
 
+                    tvCaption.setVisibility(View.INVISIBLE);
+                    tvCaptionAll.setVisibility(View.INVISIBLE);
+
                     Intent intent = new Intent(WallViewPicActivity.this, WallEditCaptionActivity.class);
                     intent.putExtra("caption", tvCaptionAll.getText().toString());
                     intent.putExtra("photo_id", data.get(viewPager.getCurrentItem()).getPhoto_id());
@@ -314,6 +317,7 @@ public class WallViewPicActivity extends BaseActivity {
         {
             TextView textView = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content);
             TextView textViewAll = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content_all);
+
             textView.setText(data.getStringExtra("update_caption"));
             textViewAll.setText(data.getStringExtra("update_caption"));
             this.data.get(viewPager.getCurrentItem()).setPhoto_caption(data.getStringExtra("update_caption"));
@@ -407,6 +411,13 @@ public class WallViewPicActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        TextView textView = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content);
+        TextView textViewAll = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content_all);
+
+        textView.setVisibility(View.VISIBLE);
+        textViewAll.setVisibility(View.VISIBLE);
+
         if (resultCode == RESULT_OK)
         {
             switch (requestCode)
@@ -443,6 +454,9 @@ public class WallViewPicActivity extends BaseActivity {
                         {
                             TextView tvCaption = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content);
                             TextView tvCaptionAll = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content_all);
+
+                            tvCaption.setVisibility(View.INVISIBLE);
+                            tvCaptionAll.setVisibility(View.INVISIBLE);
 
                             Intent intent = new Intent(WallViewPicActivity.this, WallEditCaptionActivity.class);
                             intent.putExtra("caption", tvCaptionAll.getText().toString());

@@ -8,7 +8,6 @@ import android.widget.TextView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.WallEditView;
 
 /**
@@ -34,14 +33,14 @@ public class HeadHolder extends RecyclerView.ViewHolder {
      */
     public TextView tvLocationDesc;
 
-    public CircularNetworkImage cniHead;
+    public ImageView ivHead;
     public TextView tvUserName;
 
     public HeadHolder(View itemView) {
         super(itemView);
         //头部分
         UserEntity owner = MainActivity.getUser();
-        cniHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
+        ivHead = (ImageView) itemView.findViewById(R.id.owner_head);
         tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
         tvUserName.setText(owner.getUser_given_name());
 
