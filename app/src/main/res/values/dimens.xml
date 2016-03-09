@@ -42,7 +42,7 @@
     <dimen name="text_size_10sp">9dp</dimen>
     <dimen name="text_size_12sp">11dp</dimen>
     <dimen name="text_size_13sp">12dp</dimen>
-    <dimen name="text_size_14dp">13dp</dimen>
+    <dimen name="text_size_14sp">13dp</dimen>
     <dimen name="text_size_16sp">14dp</dimen>
     <dimen name="text_size_19sp">18dp</dimen>
     <dimen name="text_size_22sp">21dp</dimen>
