@@ -144,7 +144,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
-//        rvList.setHasFixedSize(true);
+        rvList.setHasFixedSize(true);
         adapter = new EventAdapter(getParentActivity(), data, birthdayEvents);
 
         rvList.setAdapter(adapter);
@@ -159,7 +159,8 @@ public class EventFragment extends BaseFragment<MainActivity> {
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                int count = Math.abs(totalItemCount - 5);
+                if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= count && dy > 0) {
                     loading = true;
                     loadMoreEvent();//再请求数据
                 }
@@ -251,6 +252,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
             public void onFinish() {
                 if(vProgress!=null)
                     vProgress.setVisibility(View.GONE);
+                loading = false;
             }
 
             @Override
@@ -296,7 +298,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                             Intent intent = new Intent(getActivity(), EventDetailActivity.class);
 //                            intent.putExtra("event", eventEntity);
                             intent.putExtra("group_id", eventEntity.getGroup_id());
-                            intent.putExtra("Content_group_id",eventEntity.getContent_group_id());
+                            intent.putExtra("Content_group_id", eventEntity.getContent_group_id());
                             startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
 //                            requestData();
 //                            }
@@ -305,7 +307,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     });
                     rvList.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
-                    loading = false;
+
 
                 } catch (JSONException e) {
                     if (isRefresh) {
