@@ -40,6 +40,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected TextView tvTitle;                          //头部栏的标题
     protected ImageView title_icon;                          //头部栏的标题
     public ImageButton rightButton;             //头部栏的右边按钮
+    public ImageButton rightSearchButton;
     protected LinearLayout bottom;             //底部栏的布局
     protected TextView yearButton;
     //    protected TextView rightTextButton;
@@ -155,6 +156,10 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
      */
     protected abstract void titleRightEvent();
 
+    protected void titleRightSearchEvent() {
+
+    }
+
     protected void titleMiddleEvent() {
     }
 
@@ -170,11 +175,13 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         tvTitle = getViewById(R.id.tv_title);
         title_icon = getViewById(R.id.title_icon);
         rightButton = getViewById(R.id.ib_top_button_right);
+        rightSearchButton= getViewById(R.id.ib_top_button_right2);
         yearButton = getViewById(R.id.ib_top_button_right_year);
         //        rightTextButton = getViewById(R.id.ib_top_text_right);
         getViewById(R.id.tv_top_title).setOnClickListener(this);
         leftButton.setOnClickListener(this);
         rightButton.setOnClickListener(this);
+        rightSearchButton.setOnClickListener(this);
         yearButton.setOnClickListener(this);
         //        rightTextButton.setOnClickListener(this);
         setTitle();
@@ -231,6 +238,9 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
             case R.id.ib_top_button_right:
                 //            case R.id.ib_top_text_right:
                 titleRightEvent();
+                break;
+            case R.id.ib_top_button_right2:
+                titleRightSearchEvent();
                 break;
             case R.id.msg_bar:
                 goNetworkSetting();
