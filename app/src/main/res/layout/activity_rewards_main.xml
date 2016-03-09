@@ -146,7 +146,6 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_8dp"
                         android:padding="@dimen/_8dp"
-                        android:visibility="gone"
                         android:background="@drawable/bg_white_round_corner">
 
 
