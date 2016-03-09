@@ -138,11 +138,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void onResume() {
         super.onResume();
-        if(sendCommentView != null) {
+        if (sendCommentView != null) {
             sendCommentView.commitAllowingStateLoss();
         }
-        if(getParentActivity().mEvent != null){
-            if (adapter != null){
+        if (getParentActivity().mEvent != null) {
+            if (adapter != null) {
                 event = getParentActivity().mEvent;
                 adapter.alterHeader(event);
             }
@@ -187,14 +187,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         eventDetailActivity.setTitleLeftClick(new EventDetailActivity.TitleLeftClick() {
             @Override
             public void Click() {
-                if(false) {
+                if (false) {
                     getParentActivity().finish();
                 } else {
                     //                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
                 }
             }
         });
-        if(NetworkUtil.isNetworkConnected(getActivity())) {
+        if (NetworkUtil.isNetworkConnected(getActivity())) {
 
 
             etChat = getViewById(R.id.et_chat);
@@ -210,7 +210,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             option_maybe = getViewById(R.id.image_maybe);
             option_going = getViewById(R.id.image_going);
             colorIntentSelected = getResources().getColor(R.color.btn_bg_color_green_press);
-            getViewById(R.id.connent_Rl).setOnTouchListener(new View.OnTouchListener(){
+            getViewById(R.id.content_rl).setOnTouchListener(new View.OnTouchListener() {
 
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -259,16 +259,16 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onReceiveBitmapUri(Uri uri) {
                     isCommentBim = true;
                     hideAllViewState();
-                    if(uri != null) {
-                        if(defaultComment != null && defaultComment.getVisibility() == View.VISIBLE){
+                    if (uri != null) {
+                        if (defaultComment != null && defaultComment.getVisibility() == View.VISIBLE) {
                             headProgressBar.setVisibility(View.VISIBLE);
                         }
-                        if(progressBar != null){
+                        if (progressBar != null) {
                             progressBar.setVisibility(View.VISIBLE);
                         }
                         UploadBimapTask task = new UploadBimapTask();
                         //for not work in down 11
-                        if(SDKUtil.IS_HONEYCOMB) {
+                        if (SDKUtil.IS_HONEYCOMB) {
                             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
                         } else {
                             task.execute(uri);
@@ -302,7 +302,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     int totalItemCount = llm.getItemCount();
                     //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                     // dy>0 表示向下滑动
-                    if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                    if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
 //                        LogUtil.i("eventdetail====", "onScrolled& getComments");
 //                        currentPage++;
                         loading = true;
@@ -315,12 +315,12 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
                 @Override
                 public boolean execute(View v) {
-                    if(vProgress.getVisibility() == View.VISIBLE) {
+                    if (vProgress.getVisibility() == View.VISIBLE) {
                         return false;
                     }
 
-                    if(R.id.tv_title == v.getId()) {
-                        if(MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
+                    if (R.id.tv_title == v.getId()) {
+                        if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
 
                             option_cancel.setVisibility(View.VISIBLE);
                             option_status.setVisibility(View.GONE);
@@ -331,7 +331,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                         }
 
-                        if(event_options.getVisibility() == View.VISIBLE) {
+                        if (event_options.getVisibility() == View.VISIBLE) {
                             event_options.setVisibility(View.GONE);
                             getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
                         } else {
@@ -339,15 +339,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
                         }
 
-                    } else if(R.id.ib_top_button_right == v.getId()) {
+                    } else if (R.id.ib_top_button_right == v.getId()) {
                         //打开编辑页面
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
                         getActivity().startActivityForResult(intent, 3);
 //                        getActivity().finish();
                         //                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
-                    } else if(v.getId() == getParentActivity().leftButton.getId()) {
-                        if(isCommentBim) {
+                    } else if (v.getId() == getParentActivity().leftButton.getId()) {
+                        if (isCommentBim) {
                             getParentActivity().finish();
                         } else {
                             //                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
@@ -364,7 +364,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     //适配器
     private void initAdapter() {
-        adapter = new EventCommentAdapter(getParentActivity(),event, data, rvList);
+        adapter = new EventCommentAdapter(getParentActivity(), event, data, rvList);
         adapter.setCommentActionListener(new EventCommentAdapter.CommentActionListener() {
             @Override
             public void doLove(EventCommentEntity commentEntity, boolean love) {
@@ -377,7 +377,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             }
 
             @Override
-            public void showOriginalPic(String User_id,String File_id) {
+            public void showOriginalPic(String User_id, String File_id) {
                 Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
                 ArrayList<PhotoEntity> datas = new ArrayList();
                 PhotoEntity peData = new PhotoEntity();
@@ -390,8 +390,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 intent.putExtra("datas", datas);
                 startActivity(intent);
             }
+
             @Override
-            public void setIntentAll(EventEntity entity,int memeber) {
+            public void setIntentAll(EventEntity entity, int memeber) {
                 goInvitedStutus(memeber);
             }
 
@@ -414,13 +415,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         animator.setRemoveDuration(1000);
     }
 
-    private void initListSecondView(View listSecondView){
+    private void initListSecondView(View listSecondView) {
         progressBar = (CircularProgress) listSecondView.findViewById(R.id.event_detail_progress_bar);
 
     }
 
-    private void initHeadView(View headView){
-        defaultComment = headView.findViewById(R.id.default_comment);
+    private void initHeadView(View headView) {
+        defaultComment = headView.findViewById(R.id.comment_head);
         headProgressBar = (CircularProgress) headView.findViewById(R.id.event_detail_progress_bar);
 //        defaultComment.setVisibility(View.GONE);
     }
@@ -459,13 +460,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     private void changeIntentUI(ResponseStatus status) {
-        if(status == null) {
+        if (status == null) {
             return;
         }
-        switch(status) {
+        switch (status) {
             case not_re:
-                if(!MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
-                    if(event_options.getVisibility() == View.GONE) {
+                if (!MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
+                    if (event_options.getVisibility() == View.GONE) {
                         event_options.setVisibility(View.VISIBLE);
                     }
                 }
@@ -481,8 +482,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 option_going.setImageResource(R.drawable.status_going_normal);
                 option_maybe.setImageResource(R.drawable.status_maybe_press);
                 option_no_going.setImageResource(R.drawable.status_not_going_normal);
-                if(!MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
-                    if(event_options.getVisibility() == View.GONE) {
+                if (!MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
+                    if (event_options.getVisibility() == View.GONE) {
                         event_options.setVisibility(View.VISIBLE);
                     }
                 }
@@ -508,7 +509,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
      * 发送大表情
      */
     private void sendSticker() {
-        if(NetworkUtil.isNetworkConnected(getActivity())) {
+        if (NetworkUtil.isNetworkConnected(getActivity())) {
 //            progressBar.setVisibility(View.VISIBLE);
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_group_id", event.getContent_group_id());
@@ -523,7 +524,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             mHttpTools.post(Constant.API_EVENT_POST_COMMENT, params, TAG, new HttpCallback() {
                 @Override
                 public void onStart() {
-                    if(defaultComment != null && defaultComment.getVisibility() == View.VISIBLE){
+                    if (defaultComment != null && defaultComment.getVisibility() == View.VISIBLE) {
                         headProgressBar.setVisibility(View.VISIBLE);
                     }
                     if (progressBar != null) {
@@ -536,7 +537,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        data.clear();
 //                        adapter.removeCommentData();
 //                        requestComment();
-                    if(defaultComment != null && defaultComment.getVisibility() == View.VISIBLE){
+                    if (defaultComment != null && defaultComment.getVisibility() == View.VISIBLE) {
                         headProgressBar.setVisibility(View.GONE);
                     }
                     if (progressBar != null) {
@@ -592,17 +593,17 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         //        }
 //        isComment = false;
         String commentText = "";
-        if(et != null){
+        if (et != null) {
             commentText = et.getText().toString().trim();
             et.setText("");
         }
-        if(TextUtils.isEmpty(commentText)) {
+        if (TextUtils.isEmpty(commentText)) {
             // 如果没有输入字不发送评论
             MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
 //            isComment = true;
             return;
         } else {
-            if(NetworkUtil.isNetworkConnected(getActivity())) {
+            if (NetworkUtil.isNetworkConnected(getActivity())) {
 //                progressBar.setVisibility(View.VISIBLE);
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("content_group_id", event.getContent_group_id());
@@ -610,7 +611,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 params.put("content_type", "comment");
                 params.put("comment_content", commentText);
                 //            if(isStickerItemClick){
-                if(false) {
+                if (false) {
                     //                Log.i("isStickerItemClick=====","true");
                     params.put("sticker_group_path", stickerEntity.getSticker_group_path());
                     params.put("sticker_name", stickerEntity.getSticker_name());
@@ -626,7 +627,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 mHttpTools.post(Constant.API_EVENT_POST_COMMENT, params, TAG, new HttpCallback() {
                     @Override
                     public void onStart() {
-                        if(defaultComment != null && defaultComment.getVisibility() == View.VISIBLE){
+                        if (defaultComment != null && defaultComment.getVisibility() == View.VISIBLE) {
                             headProgressBar.setVisibility(View.VISIBLE);
                         }
                         if (progressBar != null) {
@@ -639,7 +640,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        data.clear();
 //                        adapter.removeCommentData();
 //                        requestComment();
-                        if(defaultComment != null && defaultComment.getVisibility() == View.VISIBLE){
+                        if (defaultComment != null && defaultComment.getVisibility() == View.VISIBLE) {
                             headProgressBar.setVisibility(View.GONE);
                         }
                         if (progressBar != null) {
@@ -693,7 +694,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         @Override
         protected String doInBackground(Uri... params) {
-            if(params == null) {
+            if (params == null) {
                 return null;
             }
             return LocalImageLoader.compressBitmap(getActivity(), params[0], 480, 800, false);
@@ -706,7 +707,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         private void submitPic(String path) {
             File f = new File(path);
-            if(!f.exists()) {
+            if (!f.exists()) {
                 return;
             }
 
@@ -726,7 +727,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onFinish() {
-                    if(defaultComment != null && defaultComment.getVisibility() == View.VISIBLE){
+                    if (defaultComment != null && defaultComment.getVisibility() == View.VISIBLE) {
                         headProgressBar.setVisibility(View.GONE);
                     }
                     if (progressBar != null) {
@@ -768,93 +769,93 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     @Override
     public void requestData() {
-            //请求detail数据
-            HashMap<String, String> jsonParams = new HashMap<String, String>();
-            jsonParams.put("user_id", MainActivity.getUser().getUser_id());
-            jsonParams.put("group_id", group_id);
-            String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+        //请求detail数据
+        HashMap<String, String> jsonParams = new HashMap<String, String>();
+        jsonParams.put("user_id", MainActivity.getUser().getUser_id());
+        jsonParams.put("group_id", group_id);
+        String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put("condition", jsonParamsString);
-            String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-            mHttpTools.get(url, params, TAG, new HttpCallback() {
-                @Override
-                public void onStart() {
-                    if (vProgress.getVisibility() == View.GONE) {
-                        vProgress.setVisibility(View.VISIBLE);
-                    }
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("condition", jsonParamsString);
+        String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
+        mHttpTools.get(url, params, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                if (vProgress.getVisibility() == View.GONE) {
+                    vProgress.setVisibility(View.VISIBLE);
                 }
+            }
 
-                @Override
-                public void onFinish() {
+            @Override
+            public void onFinish() {
 //                //如果只是Activity回调就不用在刷新评论
 //                if(data.size() < 1 ){
 //                    requestComment();
 //                }
 
-                }
+            }
 
-                @Override
-                public void onResult(String response) {
-                    event = new Gson().fromJson(response, EventEntity.class);
-                    vProgress.setVisibility(View.GONE);
-                    try {
-                        isRefresh = false;
-                        currentPage = 1;//还原为第一页
-                        initAdapter();
-                        ResponseStatus[] statuses = ResponseStatus.values();
-                        for (ResponseStatus status : statuses) {
-                            if (status.getServerCode().equals(event.getGroup_member_response())) {
-                                currentStatus = status;
-                                break;
-                            }
+            @Override
+            public void onResult(String response) {
+                event = new Gson().fromJson(response, EventEntity.class);
+                vProgress.setVisibility(View.GONE);
+                try {
+                    isRefresh = false;
+                    currentPage = 1;//还原为第一页
+                    initAdapter();
+                    ResponseStatus[] statuses = ResponseStatus.values();
+                    for (ResponseStatus status : statuses) {
+                        if (status.getServerCode().equals(event.getGroup_member_response())) {
+                            currentStatus = status;
+                            break;
+                        }
 
-                        }
-                        changeIntentUI(currentStatus);
-                        swipeRefreshLayout.setRefreshing(false);
-                        loading = false;
-                        if (data.size() < 1) {
-                            requestComment();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        reInitDataStatus();
                     }
-
-                    if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
-                        getParentActivity().rightButton.setImageResource(R.drawable.btn_edit);
-
-                        getParentActivity().rightButton.setVisibility(View.VISIBLE);
-                        if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date())))) {
-                            getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
-                            getParentActivity().rightButton.setEnabled(false);
-                        }
-                        if ("2".equals(event.getGroup_event_status())) {
-                            getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
-                            getParentActivity().title_icon.setVisibility(View.GONE);
-                            getParentActivity().rightButton.setEnabled(false);
-                        }
-                    } else {
-                        getParentActivity().rightButton.setVisibility(View.INVISIBLE);
+                    changeIntentUI(currentStatus);
+                    swipeRefreshLayout.setRefreshing(false);
+                    loading = false;
+                    if (data.size() < 1) {
+                        requestComment();
                     }
-
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    reInitDataStatus();
                 }
 
-                @Override
-                public void onError(Exception e) {
+                if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
+                    getParentActivity().rightButton.setImageResource(R.drawable.btn_edit);
 
+                    getParentActivity().rightButton.setVisibility(View.VISIBLE);
+                    if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date())))) {
+                        getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
+                        getParentActivity().rightButton.setEnabled(false);
+                    }
+                    if ("2".equals(event.getGroup_event_status())) {
+                        getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
+                        getParentActivity().title_icon.setVisibility(View.GONE);
+                        getParentActivity().rightButton.setEnabled(false);
+                    }
+                } else {
+                    getParentActivity().rightButton.setVisibility(View.INVISIBLE);
                 }
 
-                @Override
-                public void onCancelled() {
+            }
 
-                }
+            @Override
+            public void onError(Exception e) {
 
-                @Override
-                public void onLoading(long count, long current) {
+            }
 
-                }
-            });
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
 
 
     }
@@ -863,8 +864,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
      * 请求评论数据
      */
     public void requestComment() {
-        if(NetworkUtil.isNetworkConnected(getActivity())) {
-            if(event == null || MainActivity.getUser() == null)
+        if (NetworkUtil.isNetworkConnected(getActivity())) {
+            if (event == null || MainActivity.getUser() == null)
                 return;
 
             HashMap<String, String> jsonParams = new HashMap<String, String>();
@@ -915,16 +916,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             initAdapter();
                         }
                     }
-                    if(adapter != null && adapter.getItemCount() > 1){
-                        if(defaultComment != null){
-                            defaultComment.setVisibility(View.GONE);
-                        }
-                    }
-                     else {
-                        if(defaultComment != null){
-                            defaultComment.setVisibility(View.VISIBLE);
-                        }
-                    }
+//                    if (adapter != null && adapter.getItemCount() > 1) {
+//                        if (defaultComment != null) {
+//                            defaultComment.setVisibility(View.GONE);
+//                        }
+//                    } else {
+//                        if (defaultComment != null) {
+//                            defaultComment.setVisibility(View.VISIBLE);
+//                        }
+//                    }
                     loading = false;
 //                    //如果有评论，则隐藏进度条
 //                    if(adapter != null && adapter.getItemCount() > 1) {
@@ -959,13 +959,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         startIndex = 0;
         loading = false;
     }
+
     /**
      * 打开选择好友界面
      */
     private void goInvitedStutus(int memeber) {
         intent = new Intent(getActivity(), InvitedStatusActivity.class);
         intent.putExtra("event", event);
-        intent.putExtra("tabIndex",memeber);
+        intent.putExtra("tabIndex", memeber);
         startActivity(intent);
     }
 
@@ -1015,7 +1016,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
      */
     private void updateIntentStatus(ResponseStatus status) {
         String serverCode = status.getServerCode();
-        if(TextUtils.isEmpty(serverCode))
+        if (TextUtils.isEmpty(serverCode))
             return;
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("group_id", event.getGroup_id());
@@ -1043,8 +1044,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             public void onResult(String response) {
                 try {
                     JSONObject result = new JSONObject(response);
-                    if(!getParentActivity().getClass().getSimpleName().equals(TAG)){
-                        EventBus.getDefault().postSticky(new  UpdateEvent(Constant.ACTION_EVENT_UPDATE_BIRTHDAY));
+                    if (!getParentActivity().getClass().getSimpleName().equals(TAG)) {
+                        EventBus.getDefault().postSticky(new UpdateEvent(Constant.ACTION_EVENT_UPDATE_BIRTHDAY));
                     }
 
                     getParentActivity().setResult(Activity.RESULT_OK);
@@ -1093,11 +1094,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         ResponseStatus getStatusByCode(String serverCode) {
 
-            if(go.getServerCode().equals(serverCode)) {
+            if (go.getServerCode().equals(serverCode)) {
                 return go;
-            } else if(maybe.getServerCode().equals(serverCode)) {
+            } else if (maybe.getServerCode().equals(serverCode)) {
                 return maybe;
-            } else if(not_go.getServerCode().equals(serverCode)) {
+            } else if (not_go.getServerCode().equals(serverCode)) {
                 return not_go;
             }
             return null;
@@ -1111,13 +1112,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void onClick(View v) {
 
-        switch(v.getId()) {
+        switch (v.getId()) {
 //            case R.id.btn_intent_all:
 //                goInvitedStutus();
 //                break;
             case R.id.btn_location:
             case R.id.event_picture_4_location:
-                if(TextUtils.isEmpty(event.getLoc_latitude()) || TextUtils.isEmpty(event.getLoc_longitude())) {
+                if (TextUtils.isEmpty(event.getLoc_latitude()) || TextUtils.isEmpty(event.getLoc_longitude())) {
                     return;
                 }
                 LocationUtil.goNavigation(getActivity(), Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()), event.getLoc_type());
@@ -1131,14 +1132,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             case R.id.image_going:
                 //            case R.id.option_going:
                 event_options.setVisibility(View.GONE);
-                if(ResponseStatus.go != currentStatus) {
+                if (ResponseStatus.go != currentStatus) {
                     doChangeResponse(ResponseStatus.go);
                 }
                 break;
             case R.id.image_maybe:
                 //            case R.id.option_maybe:
                 event_options.setVisibility(View.GONE);
-                if(ResponseStatus.maybe != currentStatus) {
+                if (ResponseStatus.maybe != currentStatus) {
                     doChangeResponse(ResponseStatus.maybe);
                 }
                 break;
@@ -1146,7 +1147,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 //            case R.id.option_no_going:
 
                 event_options.setVisibility(View.GONE);
-                if(ResponseStatus.not_go != currentStatus) {
+                if (ResponseStatus.not_go != currentStatus) {
                     doChangeResponse(ResponseStatus.not_go);
                 }
                 break;
@@ -1219,13 +1220,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 removeAlertDialog.dismiss();
             }
         });
-        if(!removeAlertDialog.isShowing()) {
+        if (!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
     }
 
     /**
      * 点赞
+     *
      * @param commentEntity
      * @param love
      */

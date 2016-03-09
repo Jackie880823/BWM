@@ -3,9 +3,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/_14dp"
-    android:layout_marginRight="@dimen/_14dp"
-    android:layout_marginBottom="@dimen/_60dp"
     android:background="@drawable/event_detail_footer_shape"
     android:elevation="3dip"
     android:orientation="vertical">
