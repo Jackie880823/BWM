@@ -160,7 +160,7 @@
         android:textSize="@dimen/_22dp"
         android:textColor="#ffffff"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/btn_chat_send_bg"
+        android:background="@drawable/btn_red_bg"
         android:layout_marginBottom="@dimen/_30dp"
         android:layout_marginLeft="@dimen/_30dp"
         android:layout_marginRight="@dimen/_30dp" />
