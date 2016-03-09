@@ -77,14 +77,6 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.VHItem> {
             holder.tvRewardDate.setText(mContext.getString(R.string.valid_till) + " " + rewardEntity.getVoucher_due());
             holder.tvRewardCostPoint.setText(rewardEntity.getPoint() + " " + mContext.getString(R.string.points));
 
-            //user_point < reward_point，locked；
-            if (Integer.parseInt(rewardEntity.getPoint()) > Integer.parseInt(userPoint)) {
-                holder.ivLock.setVisibility(View.VISIBLE);
-                holder.rl.setVisibility(View.VISIBLE);
-            } else {
-                holder.ivLock.setVisibility(View.INVISIBLE);
-                holder.rl.setVisibility(View.INVISIBLE);
-            }
             LogUtil.d(TAG,"onBindViewHolder==Total_voucher="+rewardEntity.getTotal_voucher());
             //voucher_total = 0;
             if ("0".equals(rewardEntity.getTotal_voucher())){
@@ -97,12 +89,17 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.VHItem> {
                 holder.rlRewardInfo.setVisibility(View.VISIBLE);
                 holder.rlCountDownTime.setVisibility(View.VISIBLE);
                 holder.tvFullyRed.setVisibility(View.INVISIBLE);
+                //user_point < reward_point，locked；
+                if (Integer.parseInt(rewardEntity.getPoint()) > Integer.parseInt(userPoint)) {
+                    holder.ivLock.setVisibility(View.VISIBLE);
+                    holder.rl.setVisibility(View.VISIBLE);
+                } else {
+                    holder.ivLock.setVisibility(View.INVISIBLE);
+                    holder.rl.setVisibility(View.INVISIBLE);
+                }
             }
 
             holder.setTextTime(leftTime);
-            LogUtil.d(TAG,"count==="+downCount);
-
-            LogUtil.d(TAG,"rl_item_visibility======"+holder.rl.getVisibility());
         }
 
 
