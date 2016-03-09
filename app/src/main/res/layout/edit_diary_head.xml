@@ -16,7 +16,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.madxstudio.co8.widget.CircularNetworkImage
+        <com.madxstudio.co8.widget.CircularImageView
             android:id="@+id/owner_head"
             android:layout_width="@dimen/default_user_head_width_height"
             android:layout_height="@dimen/default_user_head_width_height" />

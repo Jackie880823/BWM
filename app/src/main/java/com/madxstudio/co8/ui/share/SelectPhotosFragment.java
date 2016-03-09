@@ -108,18 +108,20 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private static final int HANDLER_LOAD_FLAG = 100;
 
+    private WeakReference<Activity> activityWeakReference;
+
     /**
-     * post到UI线程中的更新图片的Runnable
+     * post到UI线程中的更新图片目录的Runnable
      */
-    private Runnable uiRunnable = new Runnable() {
+    private Runnable bucketsAdapterRunnable = new Runnable() {
         private int lastPosition = -1;
 
         @Override
         public synchronized void run() {
-            LogUtil.i(TAG, "uiRunnable& update adapter");
+            LogUtil.i(TAG, "bucketsAdapterRunnable& update adapter");
             updateBucketsAdapter();
             if (buckets.size() > 0 && lastPosition != curLoaderPosition) {
-                LogUtil.i(TAG, "uiRunnable& loadLocalMediaOrder");
+                LogUtil.i(TAG, "bucketsAdapterRunnable& loadLocalMediaOrder");
                 // 查找到了图片显示列表第一项的图片
                 loadLocalMediaOrder(curLoaderPosition);
                 lastPosition = curLoaderPosition;
@@ -127,12 +129,17 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         }
     };
 
-    private Runnable adapterRefresh = new Runnable() {
+    /**
+     * post到UI线程中的更新图片的Runnable
+     */
+    private Runnable localPhotoAdapterRefresh = new Runnable() {
         @Override
         public void run() {
             if (bucketsAdapter != null) {
                 bucketsAdapter.clear();
                 bucketsAdapter.addAll(buckets);
+            } else {
+                LogUtil.w(TAG, "bucketsAdapter is null");
             }
 
             loading.stop();
@@ -140,6 +147,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
             if (localMediaAdapter != null) {
                 selectImageUirListener.onLoadedMedia(mMediaUris.get(getContext().getString(R.string.text_all)), localMediaAdapter);
+            } else {
+                LogUtil.w(TAG, "localMediaAdapter is null");
             }
         }
     };
@@ -192,6 +201,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     @Override
     public void initView() {
+        activityWeakReference = new WeakReference<Activity>(getActivity());
+
         mDrawerList = getViewById(R.id.lv_images_titles);
         mGvShowPhotos = getViewById(R.id.gv_select_photo);
         mDrawerLayout = getViewById(R.id.drawer_layout);
@@ -453,10 +464,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             SortMediaComparator comparator = new SortMediaComparator();
             Collections.sort(allMedias, comparator);
 
-            WeakReference<Activity> activityWeakReference = new WeakReference<Activity>(getActivity());
-            if (activityWeakReference.get() != null) {
-                activityWeakReference.get().runOnUiThread(adapterRefresh);
-            }
+            subThreadRefreshAdapter();
         }
     }
 
@@ -589,6 +597,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         if (allMedias.size() == 50) {
             SortMediaComparator comparator = new SortMediaComparator();
             Collections.sort(allMedias, comparator);
+
+            subThreadRefreshAdapter();
         }
 
         if (mMediaUris.containsKey(bucket)) {
@@ -599,7 +609,22 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             al.add(mediaData);
             mMediaUris.put(bucket, al);
             buckets.add(bucket);
-            getActivity().runOnUiThread(uiRunnable);
+            if (activityWeakReference.get() != null) {
+                activityWeakReference.get().runOnUiThread(bucketsAdapterRunnable);
+            }
+        }
+    }
+
+    /**
+     * 子线程刷新列表的适配器
+     */
+    private void subThreadRefreshAdapter() {
+        // 这里使用弱引用获取Activity防止父Activity已被回还去更新UI而造成App闪退.
+        if (activityWeakReference.get() != null) {
+            activityWeakReference.get().runOnUiThread(localPhotoAdapterRefresh);
+        } else {
+            LogUtil.w(TAG, "the activityWeakReference get is null");
+            quitAllLoadThread();
         }
     }
 

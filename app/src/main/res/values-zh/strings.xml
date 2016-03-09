@@ -718,4 +718,10 @@
     <!--<string name="text_expired_code">Invalid or expired code. Please try again.</string>-->
     <!--<string name="text_wrong_pwd_name">Wrong username or password. Please try again.</string>-->
     <!--<string name="text_valid_email">Please enter valid email format.</string>-->
+    <!--<string name="text_org_company_profile">Company Profile</string>-->
+    <!--<string name="text_my_org_chart">My Org Chart</string>-->
+    <!--<string name="text_org_my_group">My Group</string>-->
+    <!--<string name="text_org_all_staff">All Staff</string>-->
+    <!--<string name="text_org_others">Others</string>-->
+    <!--<string name="text_org_list_empty">You have no member here</string>-->
 </resources>

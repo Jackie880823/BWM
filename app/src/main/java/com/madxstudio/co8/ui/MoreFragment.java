@@ -64,9 +64,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case GET_DELAY_ADD_PHOTO:
-                    if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+                    if (MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)) {
                         popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
                         popupWindowAddPhoto.showPopupWindowUp();
                     }
@@ -75,8 +75,6 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 
         }
     };
-
-
 
 
     @Override
@@ -131,24 +129,24 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         super.setUserVisibleHint(isVisibleToUser);
     }
 
-    private void newPopAddPhoto(){
-        if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+    private void newPopAddPhoto() {
+        if (MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)) {
             popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
             popupWindowAddPhoto.showPopupWindowUp();
-        }else {
+        } else {
             handler.sendEmptyMessageDelayed(GET_DELAY_ADD_PHOTO, 500);
         }
 
     }
 
     private void bondDatas(JSONObject jsonObject) throws JSONException {
-        checkDataAndBond2View(news_alert_num,jsonObject.getString("news"));
+        checkDataAndBond2View(news_alert_num, jsonObject.getString("news"));
 //        checkDataAndBond2View(member_alert_num,jsonObject.getString("member"));
 //        checkDataAndBond2View(recommend_alert_num,jsonObject.getString("recommended"));
 //        checkDataAndBond2View(rewards_num,jsonObject.getString("reward"));
     }
 
-    private void checkDataAndBond2View(TextView view, String countString){
+    private void checkDataAndBond2View(TextView view, String countString) {
         int count = Integer.valueOf(countString);
 
         if (count > 99) {
@@ -163,8 +161,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         }
     }
 
-    public void getNum()
-    {
+    public void getNum() {
 
 
         new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_MODULES_COUNT, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
@@ -209,7 +206,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 
     @Override
     public void requestData() {
-        new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_ALL_COUNT, MainActivity.getUser().getUser_id()), null,this, new HttpCallback() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_ALL_COUNT, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -228,15 +225,15 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                     int countOfTotal = Integer.valueOf(countString);
                     int countOfNews = Integer.valueOf(jsonObject.getString("news"));
                     int countOfMember = Integer.valueOf(jsonObject.getString("member"));
-                    int countOfRecommended = Integer.valueOf(jsonObject.optString("recommended","0"));
+                    int countOfRecommended = Integer.valueOf(jsonObject.optString("recommended", "0"));
                     int countOfRewards = Integer.valueOf(jsonObject.getString("reward"));
-                    LogUtil.d(TAG,"countOfNews======"+countOfNews+"countOfRewards========="+countOfRewards);
+                    LogUtil.d(TAG, "countOfNews======" + countOfNews + "countOfRewards=========" + countOfRewards);
                     int count = countOfTotal - countOfNews - countOfRecommended;
                     if (count > 0) {
-                        Log.d("","mmmmmmmmm" + "mmmmmmm>0");
+                        Log.d("", "mmmmmmmmm" + "mmmmmmm>0");
                         tv_num.setVisibility(View.VISIBLE);
                     } else {
-                        Log.d("","mmmmmmmmm" + "mmmmmmm<0");
+                        Log.d("", "mmmmmmmmm" + "mmmmmmm<0");
                         tv_num.setVisibility(View.GONE);
                     }
 
@@ -322,7 +319,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     }
 
     private void goRewards() {
-        Intent intent = new Intent(getActivity(), FamilyActivity.class);
+        Intent intent = new Intent(getActivity(), OrganisationActivity.class);
         startActivity(intent);
     }
 
@@ -330,7 +327,6 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         Intent intent = new Intent(getActivity(), MemberActivity.class);
         startActivity(intent);
     }
-
 
 
     private void goNews() {
@@ -344,11 +340,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     }
 
 
-
     private void shareApp() {
         share2Friend();
     }
-
 
 
     private void goBondAlert() {
@@ -372,15 +366,17 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         Intent intent = new Intent(getActivity(), MoreSettingActivity.class);
         startActivity(intent);
     }
+
     private void goStickerStore() {
-        Intent intent = new Intent(getActivity(),StickerStoreActivity.class);
+        Intent intent = new Intent(getActivity(), StickerStoreActivity.class);
         startActivity(intent);
     }
 
-    private void goArchive(){
+    private void goArchive() {
         Intent intent = new Intent(getActivity(), ArchiveActivity.class);
         startActivity(intent);
     }
+
     private void goFamily() {
         Intent intent = new Intent(getActivity(), FamilyFragment.class);
         startActivity(intent);
@@ -392,7 +388,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     }
 
     private void goAbout() {
-        Intent intent = new Intent(getActivity(),AboutActivity.class);
+        Intent intent = new Intent(getActivity(), AboutActivity.class);
         startActivity(intent);
     }
 
@@ -407,7 +403,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
             switch (requestCode) {
                 case 0:
                     requestData();
-                break;
+                    break;
             }
         }
 

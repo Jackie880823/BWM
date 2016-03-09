@@ -18,8 +18,7 @@
         android:gravity="center_vertical"
         android:minHeight="?android:attr/actionBarSize"
         android:paddingLeft="@dimen/default_content_padding"
-        android:paddingRight="@dimen/default_content_padding"
-        >
+        android:paddingRight="@dimen/default_content_padding">
 
         <ImageButton
             android:id="@+id/ib_top_button_left"
@@ -66,27 +65,35 @@
         <!--android:layout_gravity="right|center_vertical"-->
         <!--android:textColor="@drawable/text_title_seletor"-->
         <!--android:visibility="gone" />-->
+        <ImageButton
+            android:id="@+id/ib_top_button_right2"
+            android:layout_width="@dimen/default_button_width_height"
+            android:layout_height="@dimen/default_button_width_height"
+            android:layout_gravity="right|center_vertical"
+            android:background="@null"
+            android:src="@drawable/search"
+            android:visibility="gone" />
 
         <ImageButton
-
             android:id="@+id/ib_top_button_right"
             android:layout_width="@dimen/default_button_width_height"
             android:layout_height="@dimen/default_button_width_height"
             android:layout_gravity="right|center_vertical"
             android:background="@null"
             android:src="@drawable/btn_add" />
+
         <TextView
             android:id="@+id/ib_top_button_right_year"
-            android:visibility="gone"
             android:layout_width="@dimen/default_button_width_height"
             android:layout_height="@dimen/default_button_width_height"
             android:layout_gravity="right|center_vertical"
             android:background="@null"
-            android:textColor="@color/Year"
             android:paddingTop="@dimen/_12dp"
             android:src="@drawable/btn_add"
+            android:text="@string/year"
+            android:textColor="@color/Year"
             android:textSize="@dimen/_20dp"
-            android:text="@string/year"/>
+            android:visibility="gone" />
     </LinearLayout>
 
     <RelativeLayout
