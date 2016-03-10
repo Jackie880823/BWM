@@ -36,7 +36,7 @@ public class NewsActivity extends BaseActivity {
     private boolean isRefresh;
 
     private int startIndex = 0;
-    private int offSet = 8;
+    private int offset = 8;
     private boolean loading;
     private List<NewsEntity> data = new ArrayList<>();
     private NewsAdapter adapter;
@@ -112,7 +112,7 @@ public class NewsActivity extends BaseActivity {
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
                 int count = Math.abs(totalItemCount - 3);
-                if (!loading && count!=0 && lastVisibleItem >= count && dy > 0) {
+                if (data.size() >= offset && !loading && lastVisibleItem >= count && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
                 }
@@ -136,7 +136,7 @@ public class NewsActivity extends BaseActivity {
 
         Map<String, String> params = new HashMap<>();
         params.put("start", "" + startIndex);
-        params.put("limit",""+offSet);
+        params.put("limit",""+ offset);
 
 
         new HttpTools(this).get(String.format(Constant.API_NEWS, MainActivity.getUser().getUser_id()), params, this, new HttpCallback() {

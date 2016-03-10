@@ -16,7 +16,6 @@ import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -84,7 +83,7 @@ public class MyStickerActivity extends BaseActivity {
         }
         if (data != null && data.size() > 0) {
             rvList = (RecyclerView) getViewById(R.id.rv_my_sticker);
-            llm = new FullyLinearLayoutManager(MyStickerActivity.this);
+            llm = new LinearLayoutManager(MyStickerActivity.this);
             rvList.setLayoutManager(llm);
             rvList.setHasFixedSize(true);
             rvList.setItemAnimator(new DefaultItemAnimator());

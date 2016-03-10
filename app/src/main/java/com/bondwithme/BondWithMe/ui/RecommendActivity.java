@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,13 +22,11 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.RecommendAdapter;
 import com.bondwithme.BondWithMe.entity.RecommendEntity;
-import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.material.widget.CheckBox;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,11 +34,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static com.bondwithme.BondWithMe.R.id.progress_bar;
-import static com.bondwithme.BondWithMe.R.id.recommend_relationship;
-import static com.bondwithme.BondWithMe.R.id.rv;
-import static com.bondwithme.BondWithMe.R.id.tv;
 
 /**
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
@@ -170,7 +162,8 @@ public class RecommendActivity extends BaseActivity {
 //                int totalItemCount = llm.getItemCount();
 //                //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
 //                // dy>0 表示向下滑动
-//                if (!loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+//        int count = Math.abs(totalItemCount - 5);
+//        if (data.size() >= offset && !loading && lastVisibleItem >= count && dy > 0) {
 //                    loading = true;
 //                    requestData();//再请求数据
 //                }
