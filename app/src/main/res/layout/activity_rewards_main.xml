@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true" />
 
 
-        <com.bondwithme.BondWithMe.widget.OverScrollView
+        <android.support.v4.widget.NestedScrollView
             android:id="@+id/sc_rewards"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_8dp"
                         android:padding="@dimen/_8dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:background="@drawable/bg_white_round_corner">
 
 
@@ -256,7 +256,7 @@
 
             </RelativeLayout>
 
-        </com.bondwithme.BondWithMe.widget.OverScrollView>
+        </android.support.v4.widget.NestedScrollView>
 
 
 

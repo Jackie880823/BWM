@@ -114,21 +114,26 @@ public class RewardsActivity extends BaseActivity {
         ivNoGeneralReward = getViewById(R.id.iv_no_general_reward);
         ivNoReward = getViewById(R.id.iv_no_reward);
         rlGeneralRewardInfo = getViewById(R.id.rl_reward_info);
-        sc_rewards = getViewById(R.id.sc_rewards);
 
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                sc_rewards.scrollTo(0,0);
+//            }
+//        });
 
-
-        reList = getViewById(R.id.rvList);
-        fll = new LinearLayoutManager(this);
-//        fll = new FullyLinearLayoutManager(this);
-        reList.setLayoutManager(fll);
-        reList.setHasFixedSize(true);
-        reList.setItemAnimator(new DefaultItemAnimator());
     }
 
     int userPoint;
     private void initAdapter() {
         if (!dataReward.isEmpty() && dataReward.size() > 0){
+            reList = getViewById(R.id.rvList);
+            fll = new LinearLayoutManager(this);
+//        fll = new FullyLinearLayoutManager(this);
+            reList.setLayoutManager(fll);
+            reList.setHasFixedSize(true);
+            reList.setItemAnimator(new DefaultItemAnimator());
+            reList.setNestedScrollingEnabled(false);
             userPoint = Integer.parseInt(dataRewardPoint.get(0).getUser_point());
             adapter = new RewardAdapter(this,dataReward,String.valueOf(userPoint));
             reList.setAdapter(adapter);
@@ -186,7 +191,9 @@ public class RewardsActivity extends BaseActivity {
                         initRewardPointView();
                         initAdapter();
                         //wing mofified
+                        sc_rewards = getViewById(R.id.sc_rewards);
                         sc_rewards.setVisibility(View.VISIBLE);
+                        sc_rewards.scrollTo(0,0);
                     }
                 });
 
