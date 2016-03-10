@@ -42,10 +42,10 @@
             android:shape="rectangle">
             <stroke
                 android:width="2dp"
-                android:color="#feb400"/>
+                android:color="#24518A"/>
             <gradient
-                android:endColor="#feb400"
-                android:startColor="#feb400" />
+                android:endColor="#24518A"
+                android:startColor="#24518A" />
             <corners
                 android:radius="5dp"  />
         </shape>

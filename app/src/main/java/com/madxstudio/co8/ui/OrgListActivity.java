@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
@@ -80,6 +81,7 @@ public class OrgListActivity extends BaseActivity {
     private Dialog showSelectDialog;
     private EditText etSearch;
     private View serachLinear;
+    private TextView tv_org_empty;
 
     @Override
     protected void initBottomBar() {
@@ -266,14 +268,17 @@ public class OrgListActivity extends BaseActivity {
         etSearch = getViewById(R.id.et_search);
         emptyView = getViewById(R.id.family_group_text_empty);
         serachLinear = getViewById(R.id.search_linear);
+        tv_org_empty= getViewById(R.id.tv_org_empty);
         if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
             groupEntityList = new ArrayList<>();
             groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
             gridView.setAdapter(groupAdapter);
+            tv_org_empty.setText(R.string.text_org_no_group);
         } else {
             memberList = new ArrayList<>();
             memberAdapter = new MyFamilyAdapter(mContext, memberList);
             gridView.setAdapter(memberAdapter);
+            tv_org_empty.setText("No Contacts");
         }
         userIb.setOnClickListener(new View.OnClickListener() {
             @Override

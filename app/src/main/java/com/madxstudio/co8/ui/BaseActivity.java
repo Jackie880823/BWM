@@ -175,13 +175,15 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         tvTitle = getViewById(R.id.tv_title);
         title_icon = getViewById(R.id.title_icon);
         rightButton = getViewById(R.id.ib_top_button_right);
-        rightSearchButton= getViewById(R.id.ib_top_button_right2);
+        rightSearchButton = getViewById(R.id.ib_top_button_right2);
         yearButton = getViewById(R.id.ib_top_button_right_year);
         //        rightTextButton = getViewById(R.id.ib_top_text_right);
         getViewById(R.id.tv_top_title).setOnClickListener(this);
         leftButton.setOnClickListener(this);
         rightButton.setOnClickListener(this);
-        rightSearchButton.setOnClickListener(this);
+        if (rightSearchButton != null) {
+            rightSearchButton.setOnClickListener(this);
+        }
         yearButton.setOnClickListener(this);
         //        rightTextButton.setOnClickListener(this);
         setTitle();

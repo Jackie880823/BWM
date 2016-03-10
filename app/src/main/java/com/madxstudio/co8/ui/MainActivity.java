@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     public static String STICKERS_NAME = "stickers";
     public static String IS_FIRST_LOGIN = "isFirstLogin";
 
-    public static String STICKER_VERSION = "3";
+    public static String STICKER_VERSION = "4";
 
     public static Boolean IS_INTERACTIVE_USE;
     public static Map<String, InteractivePopupWindow> interactivePopupWindowMap;
@@ -165,7 +165,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         rightButton.setVisibility(View.VISIBLE);
         tabIv2.setImageResource(R.drawable.tab_news_select);
         ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_press5));
-        tabTv2.setTextColor(Color.BLACK);
+        tabTv2.setTextColor(Color.WHITE);
     }
 
     @Override
@@ -473,15 +473,15 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         MyAppsFlyer.doLoginTrack();
         interactivePopupWindowMap = new HashMap<String, InteractivePopupWindow>();
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
-        IS_FIRST_LOGIN = IS_FIRST_LOGIN + STICKER_VERSION + App.getLoginedUser().getUser_id();
-        boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
+        IS_FIRST_LOGIN = IS_FIRST_LOGIN + App.getLoginedUser().getUser_id();
+        String isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, "0");
         IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START, true);
         if (getUser().isShow_tip()) {
             IS_INTERACTIVE_USE = true;
         }
 //        IS_INTERACTIVE_USE = false;
         LogUtil.d(TAG, "isFirstLogin=========" + isFirstLogin + "======IS_FIRST_LOGIN======" + IS_FIRST_LOGIN);
-        if (isFirstLogin) {
+        if (!STICKER_VERSION.equals(isFirstLogin)) {
             new Thread() {
                 @Override
                 public void run() {
@@ -493,6 +493,25 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                         dao.deleteSticker(MainActivity.this, "PapaPanda");
                         List<String> pathList = FileUtil.getAllFilePathsFromAssets(MainActivity.this, "stickers");
                         if (null != pathList) {
+                            List<String> list = dao.queryAllDefaultSticker();
+                            if (list != null && list.size() > 0) {
+                                boolean isDefaultData = false;
+                                for (String listData : list) {
+                                    isDefaultData = false;
+                                    for (String string : pathList) {
+                                        if (string.endsWith(".zip")) {
+                                            string = string.substring(0, string.indexOf(".zip"));
+                                        }
+                                        if (listData.equals(string)) {
+                                            isDefaultData = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!isDefaultData) {
+                                        dao.updateDefaultSticker(listData);
+                                    }
+                                }
+                            }
                             for (String string : pathList) {
                                 String filePath = "stickers" + File.separator + string;
                                 ZipUtils.unZip(MainActivity.this, filePath, STICKERS_NAME);
@@ -503,7 +522,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                     }
                 }
             }.start();
-            PreferencesUtil.saveValue(this, IS_FIRST_LOGIN, false);
+            PreferencesUtil.saveValue(this, IS_FIRST_LOGIN, STICKER_VERSION);
         }
 
         mViewPager = getViewById(R.id.pager);
@@ -646,7 +665,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             rightButton.setVisibility(View.VISIBLE);
             tabIv0.setImageResource(R.drawable.tab_workspace_select);
             ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
-            tabTv0.setTextColor(Color.BLACK);
+            tabTv0.setTextColor(Color.WHITE);
         }
     }
 
@@ -700,7 +719,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 rightButton.setVisibility(View.VISIBLE);
                 tabIv0.setImageResource(R.drawable.tab_workspace_select);
                 ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
-                tabTv0.setTextColor(Color.BLACK);
+                tabTv0.setTextColor(Color.WHITE);
                 break;
             case event:
                 setDrawable();
@@ -715,7 +734,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 rightButton.setVisibility(View.VISIBLE);
                 tabIv1.setImageResource(R.drawable.tab_event_select);
                 ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press2));
-                tabTv1.setTextColor(Color.BLACK);
+                tabTv1.setTextColor(Color.WHITE);
                 break;
             case chat:
                 setDrawable();
@@ -731,7 +750,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 rightButton.setVisibility(View.VISIBLE);
                 tabIv3.setImageResource(R.drawable.tab_message_select);
                 ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_press3));
-                tabTv3.setTextColor(Color.BLACK);
+                tabTv3.setTextColor(Color.WHITE);
                 break;
             case more:
                 setDrawable();
@@ -746,7 +765,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 rightButton.setVisibility(View.INVISIBLE);
                 tabIv4.setImageResource(R.drawable.tab_more_select);
                 ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
-                tabTv4.setTextColor(Color.BLACK);
+                tabTv4.setTextColor(Color.WHITE);
                 break;
             case family:
                 init4DefaultPage();

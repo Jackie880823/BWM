@@ -2,6 +2,7 @@ package com.madxstudio.co8.dao;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.db.SQLiteHelperOrm;
@@ -94,6 +95,43 @@ public class LocalStickerInfoDao {
         } catch (SQLException localSQLException) {
             localSQLException.printStackTrace();
         }
+    }
+
+    public void updateDefaultSticker(String stickerPath) {
+        if (TextUtils.isEmpty(stickerPath)) {
+            return;
+        }
+        QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
+        try {
+            queryBuilder.where().eq("path", stickerPath);
+            List<LocalStickerInfo> localList = queryBuilder.query();
+            if ((localList != null) && (localList.size() > 0)) {
+                for (LocalStickerInfo info : localList) {
+                    info.setDefaultSticker(LocalStickerInfo.DEFAULT_INSTALL_STICKER);
+                    stickerInfoDao.update(info);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public List<String> queryAllDefaultSticker() {
+        QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
+        List<String> list = new ArrayList<>();
+        try {
+            queryBuilder.where().eq("defaultSticker", LocalStickerInfo.DEFAULT_STICKER);
+            List<LocalStickerInfo> localList = queryBuilder.query();
+            if ((localList != null) && (localList.size() > 0)) {
+                for (LocalStickerInfo info : localList) {
+                    list.add(info.getPath());
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public boolean hasDownloadSticker(String path) {
