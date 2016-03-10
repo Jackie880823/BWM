@@ -4,7 +4,7 @@
     android:orientation="vertical">
 
     <!--
-    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com.madxstudio.co8/widget/SendCommentView.java
+    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com.bondwithme.BondWithMe/widget/SendCommentView.java
     -->
     <!-- 隐藏的选项 -->
     <RelativeLayout
@@ -38,13 +38,13 @@
                         android:layout_width="@dimen/default_small_button_width_height"
                         android:layout_height="@dimen/default_small_button_width_height"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/status_not_going_normal" />
+                        android:src="@drawable/status_not_going_normal"/>
 
                     <TextView
                         style="@style/text_dark_default"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/default_view_margin"
-                        android:text="@string/text_not_going" />
+                        android:text="@string/text_not_going"/>
 
                 </LinearLayout>
 
@@ -61,13 +61,13 @@
                         android:layout_width="@dimen/default_small_button_width_height"
                         android:layout_height="@dimen/default_small_button_width_height"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/status_maybe_normal" />
+                        android:src="@drawable/status_maybe_normal"/>
 
                     <TextView
                         style="@style/text_dark_default"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/default_view_margin"
-                        android:text="@string/text_maybe" />
+                        android:text="@string/text_maybe"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -83,13 +83,13 @@
                         android:layout_width="@dimen/default_small_button_width_height"
                         android:layout_height="@dimen/default_small_button_width_height"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/status_going_normal" />
+                        android:src="@drawable/status_going_normal"/>
 
                     <TextView
                         style="@style/text_dark_default"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/default_view_margin"
-                        android:text="@string/text_going" />
+                        android:text="@string/text_going"/>
                 </LinearLayout>
             </RelativeLayout>
 
@@ -107,49 +107,49 @@
                     android:layout_width="@dimen/default_small_button_width_height"
                     android:layout_height="@dimen/default_small_button_width_height"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/status_not_going_normal" />
+                    android:src="@drawable/status_not_going_normal"/>
 
                 <TextView
                     style="@style/text_dark_default"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/default_view_margin"
-                    android:text="@string/text_dialog_cancel" />
+                    android:text="@string/cancel"/>
             </LinearLayout>
 
             <View
                 android:id="@+id/option_split_line"
-                style="@style/split_line_default" />
+                style="@style/split_line_default"/>
         </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/connent_Rl"
+        android:id="@+id/content_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/event_options">
-        <RelativeLayout
+        android:layout_above="@+id/send_comment"
+        android:layout_below="@+id/event_options"
+        android:layout_margin="@dimen/default_view_margin">
+
+        <com.madxstudio.co8.widget.MySwipeRefreshLayout
+            android:id="@+id/swipe_archive_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.madxstudio.co8.widget.MySwipeRefreshLayout
-                android:id="@+id/swipe_archive_layout"
+            android:background="@android:color/white">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_event_comment_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                android:background="@android:color/white">
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_event_comment_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/top_event"
-                    android:scrollbars="vertical">
-                </android.support.v7.widget.RecyclerView>
-            </com.madxstudio.co8.widget.MySwipeRefreshLayout>
-        </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/top_event"
+                android:scrollbars="vertical">
+            </android.support.v7.widget.RecyclerView>
+        </com.madxstudio.co8.widget.MySwipeRefreshLayout>
 
         <!--<RelativeLayout-->
-            <!--android:id="@+id/test"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/_48dp">-->
+        <!--android:id="@+id/test"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/_48dp">-->
 
         <!--</RelativeLayout>-->
     </RelativeLayout>
@@ -158,8 +158,9 @@
         android:id="@+id/send_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:visibility="visible"/>
+
     <include layout="@layout/progress_layout"/>
 
 </RelativeLayout>
