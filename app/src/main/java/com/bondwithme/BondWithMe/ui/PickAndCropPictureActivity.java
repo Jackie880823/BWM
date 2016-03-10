@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.soundcloud.android.crop.Crop;
 
@@ -241,14 +242,13 @@ public class PickAndCropPictureActivity extends Activity {
 //        }
 
         /**使用第三方*/
-            if (uri == null || uri.getPath() == null) {
-                return;
-            }
-//            String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
-//            Uri source = Uri.fromFile(new File(path));
-            File f = PicturesCacheUtil.getCachePicFileByName(this, headCache,true);
-            mCropImagedUri = Uri.fromFile(f);
-//            Crop.of(uri, mCropImagedUri).asSquare().start(this,REQUEST_PIC_FINAL);
-            Crop.of(uri, mCropImagedUri).withAspect(picAspectWidth, picAspectHeight).start(this, REQUEST_PIC_FINAL);
+        if (uri == null || uri.getPath() == null) {
+            return;
+        }
+        String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
+        Uri source = Uri.fromFile(new File(path));
+        File f = PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME, true);
+        mCropImagedUri = Uri.fromFile(f);
+        Crop.of(source, mCropImagedUri).asSquare().start(this, REQUEST_PIC_FINAL);
     }
 }
