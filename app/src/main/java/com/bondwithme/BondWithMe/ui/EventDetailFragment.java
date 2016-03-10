@@ -410,9 +410,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             }
         });
         rvList.setAdapter(adapter);
-        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
-        animator.setAddDuration(2000);
-        animator.setRemoveDuration(1000);
+//        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
+//        animator.setAddDuration(2000);
+//        animator.setRemoveDuration(1000);
     }
 
     private void initListSecondView(View listSecondView) {

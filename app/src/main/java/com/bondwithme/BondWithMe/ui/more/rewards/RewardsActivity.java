@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
@@ -26,7 +27,6 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class RewardsActivity extends BaseActivity {
     private RewardPointEntity rewardPointEntity = null;
     private RewardResultEntity rewardResultEntity = null;
     private RecyclerView reList;
-    private FullyLinearLayoutManager fll;
+    private LinearLayoutManager fll;
     private RelativeLayout rlGeneralRewardInfo;
     private View sc_rewards;
     private TextView tvGeneralRewardData;
@@ -119,7 +119,8 @@ public class RewardsActivity extends BaseActivity {
 
 
         reList = getViewById(R.id.rvList);
-        fll = new FullyLinearLayoutManager(this);
+        fll = new LinearLayoutManager(this);
+//        fll = new FullyLinearLayoutManager(this);
         reList.setLayoutManager(fll);
         reList.setHasFixedSize(true);
         reList.setItemAnimator(new DefaultItemAnimator());
