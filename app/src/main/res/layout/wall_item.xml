@@ -203,7 +203,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/iv_love"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -238,7 +238,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/iv_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
