@@ -12,7 +12,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -194,11 +193,11 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //        if(currentTabEnum!=null){
 //            changeTitleColor();
 //        }
-        int newJumpIndex = getIntent().getIntExtra(JUMP_INDEX, -1);
+//        int newJumpIndex = getIntent().getIntExtra(JUMP_INDEX, -1);
         /**新的跳转，以区分旧的，避免第一次启动重复set tab*/
-        if (newJumpIndex != -1 && newJumpIndex != jumpIndex && currentTabEnum.ordinal() != newJumpIndex) {
-            mViewPager.setCurrentItem(newJumpIndex, false);
-        }
+//        if (newJumpIndex != -1 && newJumpIndex != jumpIndex && currentTabEnum.ordinal() != newJumpIndex) {
+//            mViewPager.setCurrentItem(newJumpIndex, false);
+//        }
 
         if (fragments != null) {
             for (Fragment f : fragments) {
@@ -483,7 +482,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         if (getUser().isShow_tip()) {
             IS_INTERACTIVE_USE = true;
         }
-        LogUtil.d(TAG, "isFirstLogin=========" + isFirstLogin + "======IS_FIRST_LOGIN======" + IS_FIRST_LOGIN);
         if (isFirstLogin) {
             new Thread() {
                 @Override
@@ -516,18 +514,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         fragments.add(MessageMainFragment.newInstance());
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
-//        eventFragment = EventFragment.newInstance();
-//        fragments.add(eventFragment);
-//        if(isEventFragmentDate()){
-//            Log.i("isEventFragmentDate==================","true");
-//
-//        }
-//        else {
-//            Log.i("isEventFragmentDate==================","false");
-////            fragments.remove(eventFragment);
-////            fragments.add(1,eventStartupFragment);
-//        }
-//        fragments.add(MessageFragment.newInstance());
         fragments.add(MoreFragment.newInstance());
 
 

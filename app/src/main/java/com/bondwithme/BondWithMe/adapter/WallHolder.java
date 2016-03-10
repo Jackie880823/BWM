@@ -173,7 +173,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     /**
      * 红心按钮点击添加或者取消赞
      */
-    private ImageButton ibAgree;
+    private ImageView ibAgree;
 
     /**
      * 更多功能视图
@@ -265,7 +265,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tvAgreeCount = (TextView) itemView.findViewById(R.id.tv_wall_agree_count);
         //        tvLoveList = (TextView) itemView.findViewById(R.id.tv_love_list);
         tvCommentCount = (TextView) itemView.findViewById(R.id.tv_wall_relay_count);
-        ibAgree = (ImageButton) itemView.findViewById(R.id.iv_love);
+        ibAgree = (ImageView) itemView.findViewById(R.id.iv_love);
         btnOption = (ImageButton) itemView.findViewById(R.id.btn_option);
         iv_mood = (ImageView) itemView.findViewById(R.id.iv_mood);
         llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
@@ -659,6 +659,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         // 第九行只显示十个字符
                         int maxLineEndIndex = tvContent.getLayout().getLineEnd(4);
                         CharSequence sourceText = tvContent.getText();
+                        String string = sourceText.toString().substring(maxLineEndIndex - 3);
+                        if (string.startsWith("...")) {
+                            return;
+                        }
+
                         SpannableStringBuilder ssb = new SpannableStringBuilder(sourceText);
                         ssb.replace(maxLineEndIndex - 3, ssb.length() - 1, "...");
                         setSpanContent(context, ssb.toString());
