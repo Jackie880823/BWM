@@ -761,4 +761,6 @@
     <string name="text_org_all_staff">All Staff</string>
     <string name="text_org_others">Others</string>
     <string name="text_org_list_empty">You have no member here</string>
+    <string name="text_org_no_group">No Group</string>
+    <string name="text_org_no_contact">No Contacts</string>
 </resources>

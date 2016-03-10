@@ -29,18 +29,18 @@
     <color name="default_unenable_item_bg">#a6C7C7C7</color><!--  65% -->
 
 
-    <color name="tab_color_normal">#EBEBF4</color>
-    <color name="tab_color_press1">#66ccff</color>
-    <color name="tab_color_press2">#cc99ff</color>
-    <color name="tab_color_press3">#99ff66</color>
-    <color name="tab_color_press4">#cccc99</color>
+    <color name="tab_color_normal">#24518A</color>
+    <color name="tab_color_press1">#24518A</color>
+    <color name="tab_color_press2">#24518A</color>
+    <color name="tab_color_press3">#24518A</color>
+    <color name="tab_color_press4">#24518A</color>
     <!--add for fimily-->
-    <color name="tab_color_press5">#ffcc33</color>
+    <color name="tab_color_press5">#24518A</color>
 
     <!--不同模块按钮点击效果,只对GO -->
     <color name="tab_color_press11">#65BE00</color>
     <color name="tab_color_press21">#570099</color>
-    <color name="tab_color_press31">#D89000</color>
+    <color name="tab_color_press31">#0077AE</color>
     <color name="tab_color_press41">#0077AE</color>
 
     <color name="btn_text_color_press_green">#87d488</color>

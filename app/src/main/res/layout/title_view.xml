@@ -44,7 +44,7 @@
                 android:layout_gravity="center"
                 android:ellipsize="marquee"
                 android:singleLine="true"
-                android:textColor="#333333"
+                android:textColor="#ffffff"
                 android:textStyle="bold" />
 
             <ImageView
