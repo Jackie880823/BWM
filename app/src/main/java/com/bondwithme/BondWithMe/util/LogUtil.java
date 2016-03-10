@@ -8,7 +8,7 @@ import android.util.Log;
 public class LogUtil {
     /**debug 输出控制等级 TODO release 把值设为0*/
 //    private static final int DEBUG_LEVEL = 0;// 0:none;1:error;2:error and warning// 3:e,w,d;4:e,w,d,i;5:all
-    private static final int DEBUG_LEVEL = 5;// 0:none;1:error;2:error and warning// 3:e,w,d;4:e,w,d,i;5:all
+    private static final int DEBUG_LEVEL = 3;// 0:none;1:error;2:error and warning// 3:e,w,d;4:e,w,d,i;5:all
 
     public static void e(String tag, String msg) {
         if (DEBUG_LEVEL >= 1) {

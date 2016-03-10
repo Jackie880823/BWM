@@ -55,7 +55,8 @@ import java.util.Map;
 /**
  * 主页Activity,包含了头部和底部，无需定义中间内容(ViewPaper)
  */
-public class MainActivity extends BaseActivity implements NotificationUtil.NotificationOtherHandle {
+public class MainActivity extends BaseActivity  {
+//public class MainActivity extends BaseActivity implements NotificationUtil.NotificationOtherHandle {
 
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
@@ -152,6 +153,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         }
 
         App.checkVerSion(this);
+
+//        throw new NullPointerException();
 
     }
 
@@ -433,8 +436,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     private TitleEventListenner mTitleEventListenner;
 
-    @Override
-    public void doSomething(TabEnum tab) {
+    public void showRedPoint(TabEnum tab) {
         if (handler != null && tab != currentTabEnum) {
             Message msg = handler.obtainMessage();
             msg.what = SHOW_RED_POINT;
@@ -442,6 +444,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             handler.sendMessage(msg);
         }
     }
+
+//    public void showAddRequestDialog() {
+//        App.getContextInstance().showAddDialog(this);
+//    }
 
     @Override
     protected void onResumeFragments() {
@@ -541,7 +547,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         red_point_4 = getViewById(R.id.red_point_4);
         red_point_5 = getViewById(R.id.red_point_5);
 
-        NotificationUtil.setNotificationOtherHandle(this);
+//        NotificationUtil.setNotificationOtherHandle(this);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(this.ACTION_REFRESH_RED_POINT_4_FIMILY);
@@ -578,13 +584,13 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     private void checkAndShowRedPoit() {
         if (App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MESSAGE).size() != 0) {
-            doSomething(TabEnum.chat);
+            showRedPoint(TabEnum.chat);
         }
         if (App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_EVENT).size() != 0) {
-            doSomething(TabEnum.event);
+            showRedPoint(TabEnum.event);
         }
         if (App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_WALL).size() != 0) {
-            doSomething(TabEnum.wall);
+            showRedPoint(TabEnum.wall);
         }
         if (App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_BIGDAY).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MISS).size() != 0
@@ -592,7 +598,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MEMBER).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_GROUP).size() != 0
                 ) {
-            doSomething(TabEnum.more);
+            showRedPoint(TabEnum.more);
         }
     }
 

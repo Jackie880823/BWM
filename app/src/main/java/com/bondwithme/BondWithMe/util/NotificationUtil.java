@@ -114,6 +114,7 @@ public class NotificationUtil {
         getNotivficationManager(context).notify(GCM_MESSAGE, mBuilder.build());
 
     }
+
     public static void sendLocalNotification(Context context, MessageType messageType) throws JSONException {
         Notification notification = getLocalNotification(context, messageType);
         if (notification != null) {
@@ -256,6 +257,9 @@ public class NotificationUtil {
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MEMBER);
                 newMsg = NotificationMessageGenerateUtil.getMemberMessage(context, action, action_owner, item_name);
                 doNotificationHandle(MainActivity.TabEnum.more);
+                if ("add".equals(action)) {
+                    intent.putExtra(FLAG_SHOW_ADD_TIP, true);
+                }
                 break;
             case BONDALERT_MESSAGE:
                 smallIcon = R.drawable.bondalert_message_icon;
@@ -373,6 +377,8 @@ public class NotificationUtil {
         return intent;
     }
 
+    final static String FLAG_SHOW_ADD_TIP = "flag_show_add_tip";
+
     /**
      * 是否为单模式(只有一条)，双模式为(可显示为一条和多条list)
      */
@@ -393,7 +399,7 @@ public class NotificationUtil {
 
     private static Notification getLocalNotification(Context context, MessageType messageType) throws JSONException {
         Notification notification = null;
-        notification = getSingleNotification(context, getLocalFowwordIntent(context,messageType), context.getString(R.string.app_name), newMsg, 1);
+        notification = getSingleNotification(context, getLocalFowwordIntent(context, messageType), context.getString(R.string.app_name), newMsg, 1);
         return notification;
     }
 
@@ -420,14 +426,9 @@ public class NotificationUtil {
             case LOCAL_FAMILY_PAGE:
                 smallIcon = R.drawable.bondalert_member_icon;
                 intent = new Intent(context, MainActivity.class);
-                intent.putExtra(MainActivity.JUMP_INDEX,0);
+                intent.putExtra(MainActivity.JUMP_INDEX, 0);
                 newMsg = context.getString(R.string.local_notification_text_for_5_day);
                 break;
-        }
-
-        //应用在前台不发通知,不写在最前面是因为需要刷新红点(getFowwordIntent里)
-        if (App.isForeground()) {
-            return null;
         }
 
         if (intent != null) {
@@ -444,6 +445,9 @@ public class NotificationUtil {
         Intent intent = getFowwordIntent(context, msg, isGCM);
         //应用在前台不发通知,不写在最前面是因为需要刷新红点(getFowwordIntent里)
         if (App.isForeground()) {
+            if (intent != null && intent.getBooleanExtra(FLAG_SHOW_ADD_TIP, false)) {
+                mNotificationOtherHandle.showAddRequestDialog();
+            }
             return null;
         }
 
@@ -505,6 +509,8 @@ public class NotificationUtil {
 
     public interface NotificationOtherHandle {
         public void doSomething(MainActivity.TabEnum tab);
+
+        public void showAddRequestDialog();
     }
 
     public static void unRegisterPush(Context context, final String userId) {
@@ -656,8 +662,7 @@ public class NotificationUtil {
 
     public static final String NOTIFICATION_DELETED_ACTION = "notification_deleted_action";
 
-    public static void clearBadge(Context context)
-    {
+    public static void clearBadge(Context context) {
         ShortcutBadger.with(context).remove();
         allCount = 0;
     }

@@ -57,7 +57,7 @@ import java.util.Map;
 /**
  * Created by wing on 15/3/21.
  */
-public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks, NetChangeObserver, LocationUtil.GoogleServiceCheckTaskListener {
+public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks, NetChangeObserver, LocationUtil.GoogleServiceCheckTaskListener, NotificationUtil.NotificationOtherHandle {
 
     private static UserEntity user;
     private static App appContext;
@@ -116,7 +116,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 //        filter.addAction("refresh");
         registerReceiver(mReceiver, filter);
         NetWorkStateReceiver.registerNetStateObserver(this);
-
+        NotificationUtil.setNotificationOtherHandle(this);
 
     }
 
@@ -127,13 +127,14 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     /**
      * 登录才能使用这个方法。
+     *
      * @param context
      * @param user
      * @param tokenEntity
      */
     public static void userLoginSuccessed(Activity context, UserEntity user, AppTokenEntity tokenEntity) {
 
-        if(user!=null) {
+        if (user != null) {
             changeLoginedUser(user, tokenEntity);
             runAlarmTask(context, user);
             goMain(context);
@@ -143,6 +144,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     /**
      * 运行定时任务
+     *
      * @param context
      * @param user
      */
@@ -436,9 +438,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
-        if(activity instanceof MainActivity&&user!=null){
+        if (activity instanceof MainActivity && user != null) {
 //            if (needShowAddDialog)
-                checkHasPendingRequest(activity);
+            checkHasPendingRequest(activity);
         }
     }
 
@@ -461,6 +463,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     private boolean needShowAddDialog = true;
+
     @Override
     public void onActivityResumed(Activity activity) {
         paused = false;
@@ -487,7 +490,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 if (foreground && paused) {
                     foreground = false;
                     //重置add弹窗
-                    if(user!=null){
+                    if (user != null) {
                         if (isBackground()) {
                             needShowAddDialog = true;
                         }
@@ -616,9 +619,11 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         //初始推送api
         PushApi.initPushApi(getContextInstance(), googleAvailable);
     }
+
     HttpTools httpTools;
     private final static String TAG_CHECK_PENDING = "check_pending";
-    private void checkHasPendingRequest(final Activity activity){
+
+    private void checkHasPendingRequest(final Activity activity) {
         httpTools = new HttpTools(activity);
 
         httpTools.get(String.format(Constant.API_CHECK_HAS_PENDING_REQUEST, user.getUser_id()), null, TAG_CHECK_PENDING, new HttpCallback() {
@@ -634,7 +639,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
             @Override
             public void onResult(String string) {
-                if("\"true\"".equals(string)) {
+                if ("\"true\"".equals(string)) {
                     showAddDialog(activity);
                 }
             }
@@ -656,32 +661,49 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         });
     }
 
-    private void showAddDialog(final Activity activity) {
-        if(activity!=null&&!activity.isFinishing()) {
+    public void showAddDialog(final Activity activity) {
+        if (activity != null && !activity.isFinishing()) {
             needShowAddDialog = false;
-            if (showAddDialog != null && showAddDialog.isShowing()) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final MyDialog showAddDialog = new MyDialog(activity, R.string.text_tips_title, R.string.desc_recerve_member_add_request);
+                    showAddDialog.setCanceledOnTouchOutside(false);
+                    showAddDialog.setButtonCancel(R.string.text_later, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showAddDialog.dismiss();
+                        }
+                    });
 
-            } else {
-                showAddDialog = new MyDialog(activity, R.string.text_tips_title, R.string.desc_recerve_member_add_request);
-                showAddDialog.setCanceledOnTouchOutside(false);
+                    showAddDialog.setButtonAccept(R.string.yes, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.startActivity(new Intent(activity.getBaseContext(), MemberActivity.class));
+                            showAddDialog.dismiss();
+                        }
+                    });
+                    showAddDialog.show();
+                }
+            });
 
-                showAddDialog.setButtonCancel(R.string.text_later, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showAddDialog.dismiss();
-                    }
-                });
+        }
+    }
 
-                showAddDialog.setButtonAccept(R.string.yes, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.startActivity(new Intent(activity.getBaseContext(), MemberActivity.class));
-                        showAddDialog.dismiss();
-                    }
-                });
+    @Override
+    public void doSomething(MainActivity.TabEnum tab) {
+        Activity activity = AppControler.getAppControler().currentActivity();
+        if (activity != null && activity instanceof MainActivity) {
+            ((MainActivity) activity).showRedPoint(tab);
+        }
+    }
 
-                showAddDialog.show();
-            }
+    @Override
+    public void showAddRequestDialog() {
+        Activity activity = AppControler.getAppControler().currentActivity();
+        //不需要弹
+        if(activity!=null&&!(activity instanceof MemberActivity)) {
+            showAddDialog(activity);
         }
     }
 }

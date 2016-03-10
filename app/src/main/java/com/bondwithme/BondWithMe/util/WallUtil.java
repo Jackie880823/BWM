@@ -103,7 +103,7 @@ public class WallUtil {
         String strMember = "";
         if(tagMemberCount > 0) {
             strMember = String.format(mContext.getString(R.string.text_diary_content_at_member_desc), tagMemberCount);
-            LogUtil.d("WallUtil", "setSpanContent=================" + wall.getContent_group_id());
+//            LogUtil.d("WallUtil", "setSpanContent=================" + wall.getContent_group_id());
             // 文字特殊效果设置
             SpannableString ssMember = new SpannableString(strMember);
 
@@ -173,9 +173,9 @@ public class WallUtil {
             }
             setSpecialText(ssb, target, ssGroup);
         }
-        LogUtil.i(TAG, "setSpanContent setting end at description: " + ssb.toString());
+//        LogUtil.i(TAG, "setSpanContent setting end at description: " + ssb.toString());
         setClickNormal(ssb, strMember, strGroup, wall);
-        LogUtil.i(TAG, "setSpanContent setting end normal description: " + ssb.toString());
+//        LogUtil.i(TAG, "setSpanContent setting end normal description: " + ssb.toString());
         tvContent.setText(ssb);
         tvContent.setAutoLinkMask(Linkify.ALL);
     }
@@ -216,7 +216,7 @@ public class WallUtil {
      */
     private void setClickNormal(SpannableStringBuilder ssb, String strMember, String strGroup, WallEntity wallEntity) {
         String description = ssb.toString();
-        LogUtil.i(TAG, "setClickNormal& description: " + description + "; member: " + strMember + "; group: " + strGroup);
+//        LogUtil.i(TAG, "setClickNormal& description: " + description + "; member: " + strMember + "; group: " + strGroup);
         int startMember = description.indexOf(strMember);
         int endMember = startMember + strMember.length();
         int startGroup = description.indexOf(strGroup);
@@ -224,14 +224,14 @@ public class WallUtil {
         if(endGroup == endMember) {
             // @群组和用户结束所在的位置相等说明没有任何@,全字符可点击
             setNormalSpecialText(ssb, wallEntity, 0, description.length());
-            LogUtil.w(TAG, "setClickNormal& no action description: " + ssb.toString());
+//            LogUtil.w(TAG, "setClickNormal& no action description: " + ssb.toString());
             return;
         } else {
 
             int length = description.length();
             if(startMember > startGroup || TextUtils.isEmpty(strMember)) {
                 setNormalSpecialText(ssb, wallEntity, 0, startGroup);
-                LogUtil.i(TAG, "setClickNormal& group first description: " + ssb.toString());
+//                LogUtil.i(TAG, "setClickNormal& group first description: " + ssb.toString());
 
                 if(endGroup < startMember) {
                     setNormalSpecialText(ssb, wallEntity, endGroup, startMember);
