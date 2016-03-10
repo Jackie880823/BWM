@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -128,7 +127,7 @@ public class RewardsActivity extends BaseActivity {
 //        fll = new FullyLinearLayoutManager(this);
             reList.setLayoutManager(fll);
             reList.setHasFixedSize(true);
-            reList.setItemAnimator(new DefaultItemAnimator());
+            reList.setItemAnimator(null);
             reList.setNestedScrollingEnabled(false);
             userPoint = Integer.parseInt(dataRewardPoint.get(0).getUser_point());
             adapter = new RewardAdapter(this, dataReward, String.valueOf(userPoint));

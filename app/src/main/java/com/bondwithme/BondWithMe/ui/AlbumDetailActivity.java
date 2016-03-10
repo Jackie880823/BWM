@@ -139,6 +139,7 @@ public class AlbumDetailActivity extends BaseActivity {
 //        mProgressDialog.show();
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setItemAnimator(null);
         recyclerView.setLayoutManager(linearLayoutManager);
         albumDetailAdapter = new AlbumDetailAdapter(mContext, memberId, new ArrayList<AlbumPhotoEntity>(), linearLayoutManager);
         recyclerView.setAdapter(albumDetailAdapter);

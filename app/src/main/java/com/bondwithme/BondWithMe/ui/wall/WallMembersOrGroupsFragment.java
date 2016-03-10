@@ -101,6 +101,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
         rvList = getViewById(R.id.rv_wall_member_or_group_list);
         final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
     }
 
     @Override

@@ -544,6 +544,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rvImages.setLayoutManager(llm);
+        rvImages.setItemAnimator(null);
         mAdapter = new EditDiaryAdapter(getContext(), photoEntities);
         mAdapter.setListener(new ImagesRecyclerListener() {
             @Override

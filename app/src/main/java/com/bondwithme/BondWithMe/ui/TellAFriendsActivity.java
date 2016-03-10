@@ -87,6 +87,7 @@ public class TellAFriendsActivity extends BaseActivity {
         adapter = new ContactCursorAdapter(this, cursor);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         contact_list.setLayoutManager(llm);
+        contact_list.setItemAnimator(null);
         contact_list.setAdapter(adapter);
 
         search_view = getViewById(R.id.search_view);

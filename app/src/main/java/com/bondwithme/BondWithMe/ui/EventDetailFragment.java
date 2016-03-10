@@ -180,6 +180,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         //        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         //        rvList.setHasFixedSize(true);
         initAdapter();

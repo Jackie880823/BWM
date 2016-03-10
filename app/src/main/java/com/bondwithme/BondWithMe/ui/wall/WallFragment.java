@@ -144,6 +144,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         rvList = getViewById(R.id.rv_wall_list);
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         initAdapter();
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {

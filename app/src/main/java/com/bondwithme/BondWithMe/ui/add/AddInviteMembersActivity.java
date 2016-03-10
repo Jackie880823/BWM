@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -96,6 +95,7 @@ public class AddInviteMembersActivity extends BaseActivity {
 
         tvName.setText(data.getDisplayName());
         rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setItemAnimator(null);
         adapter = new AddInviteMembersAdapter(data, this);
         rv.setAdapter(adapter);
         etInfo.addTextChangedListener(new TextWatcher() {

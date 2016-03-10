@@ -140,6 +140,7 @@ public class RecommendActivity extends BaseActivity {
         llm = new LinearLayoutManager(this);
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
+        rvList.setItemAnimator(null);
         initAdapter();
 
 //        swipeRefreshLayout = getViewById(R.id.swipe_refresh_layout);

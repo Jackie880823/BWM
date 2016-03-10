@@ -140,7 +140,7 @@ public class AddMembersActivity extends BaseActivity{
         ivSearch = getViewById(R.id.iv_search);
 
         rv.setLayoutManager(new LinearLayoutManager(this));
-
+        rv.setItemAnimator(null);
         ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

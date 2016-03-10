@@ -75,6 +75,7 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
 
         LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
 
         TAG = this.getClass().getSimpleName();

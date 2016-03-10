@@ -148,6 +148,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
         linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(null);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

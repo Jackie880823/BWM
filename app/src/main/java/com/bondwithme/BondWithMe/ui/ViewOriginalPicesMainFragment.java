@@ -107,6 +107,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
         tvIndexOfList = (TextView) getViewById(R.id.tv_index_count);
         llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         //        got_data_in = getArguments().getBoolean("is_data",false);
         request_url = getArguments().getString(Constant.REQUEST_URL);
         memberId = getArguments().getString("memberId");

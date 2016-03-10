@@ -73,6 +73,7 @@ public class BigDayActivity extends BaseActivity {
 
         rvList = getViewById(R.id.rvList);
         rvList.setLayoutManager(new LinearLayoutManager(this));
+        rvList.setItemAnimator(null);
         initAdapter();
     }
 

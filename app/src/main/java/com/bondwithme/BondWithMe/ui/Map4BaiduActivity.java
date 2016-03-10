@@ -532,6 +532,7 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
         address_suggest_list.bringToFront();
         llm = new LinearLayoutManager(this);
         address_suggest_list.setLayoutManager(llm);
+        address_suggest_list.setItemAnimator(null);
         if(suggestions == null) {
             suggestions = new ArrayList<>();
         }

@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe.ui.more.sticker;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -86,7 +85,8 @@ public class MyStickerActivity extends BaseActivity {
             llm = new LinearLayoutManager(MyStickerActivity.this);
             rvList.setLayoutManager(llm);
             rvList.setHasFixedSize(true);
-            rvList.setItemAnimator(new DefaultItemAnimator());
+            rvList.setItemAnimator(null);
+//            rvList.setItemAnimator(new DefaultItemAnimator());
 
             MyStickerAdapter adapter = new MyStickerAdapter(MyStickerActivity.this, data);
             rvList.setAdapter(adapter);

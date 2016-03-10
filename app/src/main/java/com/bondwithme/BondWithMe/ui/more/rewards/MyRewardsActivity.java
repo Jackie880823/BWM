@@ -80,6 +80,7 @@ public class MyRewardsActivity extends BaseActivity {
         tvNoData = getViewById(R.id.tv_no_reward);
         rvList.setHasFixedSize(true);
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
 
     }
 

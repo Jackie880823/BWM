@@ -90,6 +90,7 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
         rvList = getViewById(R.id.rv_archive_list);
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         initAdapter();
 

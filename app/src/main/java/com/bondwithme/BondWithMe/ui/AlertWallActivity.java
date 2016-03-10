@@ -87,6 +87,7 @@ public class AlertWallActivity extends BaseActivity {
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         initAdapter();
 
