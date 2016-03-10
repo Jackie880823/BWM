@@ -659,6 +659,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         // 第九行只显示十个字符
                         int maxLineEndIndex = tvContent.getLayout().getLineEnd(4);
                         CharSequence sourceText = tvContent.getText();
+                        String string = sourceText.toString().substring(maxLineEndIndex - 3);
+                        if (string.startsWith("...")) {
+                            return;
+                        }
+
                         SpannableStringBuilder ssb = new SpannableStringBuilder(sourceText);
                         ssb.replace(maxLineEndIndex - 3, ssb.length() - 1, "...");
                         setSpanContent(context, ssb.toString());

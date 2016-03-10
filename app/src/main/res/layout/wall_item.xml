@@ -213,6 +213,9 @@
                 <TextView
                     android:id="@+id/tv_wall_agree_count"
                     style="@style/text_light_default"
+                    android:paddingRight="@dimen/default_content_padding"
+                    android:paddingBottom="@dimen/default_content_padding"
+                    android:paddingTop="@dimen/default_content_padding"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/_15dp" />
 
