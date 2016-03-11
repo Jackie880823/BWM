@@ -178,12 +178,10 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
             } else {
                 mCamera = Camera.open(CameraInfo.CAMERA_FACING_FRONT);
             }
-            Parameters camParams = mCamera.getParameters();
             mCamera.lock();
             mSurfaceHolder = mVideoView.getHolder();
             mSurfaceHolder.addCallback(this);
             mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-            mCamera.setDisplayOrientation(90);
 
         } catch(RuntimeException ex) {
             ex.printStackTrace();
@@ -301,6 +299,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
                             initCamera();
                         }
                         try {
+                            mCamera.setDisplayOrientation(90);
                             mCamera.setPreviewDisplay(mSurfaceHolder);
                             mCamera.startPreview();
                             handleSurfaceChanged();
@@ -332,6 +331,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
 
         }
         try {
+            mCamera.setDisplayOrientation(90);
             mCamera.setPreviewDisplay(mSurfaceHolder);
             mCamera.startPreview();
             handleSurfaceChanged();
@@ -388,13 +388,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
             // 设置录制视频源为Camera（相机）
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-            if(frontCamera == CameraInfo.CAMERA_FACING_FRONT) {
-                // 前置摄像头
-                mMediaRecorder.setOrientationHint(270);
-            } else {
-                // 后置摄像头
-                mMediaRecorder.setOrientationHint(90);
-            }
+
             // 设置录制完成后视频的封装格式MPEG_4为mp4
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
