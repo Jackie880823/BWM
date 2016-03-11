@@ -145,8 +145,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             loading.stop();
             loading.setVisibility(View.GONE);
 
-            if (localMediaAdapter != null) {
-                selectImageUirListener.onLoadedMedia(mMediaUris.get(getContext().getString(R.string.text_all)), localMediaAdapter);
+            if (localMediaAdapter != null && activityWeakReference.get() != null) {
+                selectImageUirListener.onLoadedMedia(mMediaUris.get(activityWeakReference.get().getString(R.string.text_all)), localMediaAdapter);
             } else {
                 LogUtil.w(TAG, "localMediaAdapter is null");
             }
