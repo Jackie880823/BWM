@@ -29,7 +29,7 @@
     <color name="default_unenable_item_bg">#a6C7C7C7</color><!--  65% -->
 
 
-    <color name="tab_color_normal">#24518A</color>
+    <color name="tab_color_normal">#e0e0e0</color>
     <color name="tab_color_press1">#24518A</color>
     <color name="tab_color_press2">#24518A</color>
     <color name="tab_color_press3">#24518A</color>
@@ -54,7 +54,7 @@
     <color name="btn_bg_color_red_normal">#FF5833</color>
     <color name="btn_bg_color_gray_normal">#989898</color>
 
-    <color name="btn_bg_color_green_press">#00AD00</color>
+    <color name="btn_bg_color_green_press">#0077AE</color>
     <color name="btn_bg_color_red_press">#C5270C</color>
     <color name="btn_bg_color_gray_press">#6E6E6E</color>
 
@@ -74,13 +74,13 @@
     <color name="bg_forget_password">#cc363636</color>
     <color name="default_sticker">#feb400</color>
 
-    <color name="btn_gradient_color_green_normal">#3BD42E</color>
-    <color name="btn_gradient_color_green_press">#00AD00</color>
+    <color name="btn_gradient_color_green_normal">#24518A</color>
+    <color name="btn_gradient_color_green_press">#0077AE</color>
 
     <color name="stroke_color_gray_normal">#a6C7C7C7</color>
     <color name="stroke_color_red_wrong">#C5270C</color>
 
-    <color name="Year">#000000</color><!--  65% -->
+    <color name="Year">#ffffff</color><!--  65% -->
 
     <color name="drawer_arrow_color">#000000</color>
     <color name="archive_comment_background">#f2f4f6</color>
@@ -99,7 +99,7 @@
     <color name="indicator_2">#64A4A4</color>
     <color name="indicator_3">#66D7B9</color>
     <color name="indicator_4">#FDBC7D</color>
-    <color name="indicator_5">#33CC33</color>
+    <color name="indicator_5">#24518A</color>
     <color name="interactive_Pop">#282a2e</color>
 
     <color name="comment_agree_gray_background">#f5f6f8</color>
@@ -127,5 +127,5 @@
     <color name="reward_locked">#80000000</color>
     <color name="reward_code_box">#ffce15</color>
     <color name="new_title">#dc7400</color>
-
+    <color name="ok_button_color">#ffffff</color>
 </resources>

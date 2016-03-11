@@ -38,7 +38,7 @@ import java.util.Map;
 /**
  * Created by quankun on 16/1/22.
  */
-public class NewsFragment extends BaseFragment<MainActivity> implements NewsViewClickListener{
+public class NewsFragment extends BaseFragment<MainActivity> implements NewsViewClickListener {
     private static final String TAG = "NewsFragment";
     View mProgressDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -51,8 +51,9 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
     private NewsAdapter adapter;
     private RecyclerView rvList;
     private LinearLayoutManager llm;
-    private TextView tvNoData;
-    private LinearLayout llNoData;
+    //    private TextView tvNoData;
+//    private LinearLayout llNoData;
+    private View newsEmpty;
 
     public static NewsFragment newInstance(String... params) {
         return createInstance(new NewsFragment(), params);
@@ -72,9 +73,10 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
     public void initView() {
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
-        tvNoData = getViewById(R.id.tv_no_data_display);
-        llNoData = getViewById(R.id.ll_no_data_display);
-
+//        tvNoData = getViewById(R.id.tv_no_data_display);
+//        llNoData = getViewById(R.id.ll_no_data_display);
+        newsEmpty = getViewById(R.id.newsEmpty);
+        newsEmpty.setVisibility(View.GONE);
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(getActivity());
         rvList.setLayoutManager(llm);
@@ -111,11 +113,10 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
     }
 
 
-
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case Constant.ACTION_EVENT_UPDATE_BIRTHDAY:
                     swipeRefreshLayout.setRefreshing(true);
                     isRefresh = true;
@@ -126,6 +127,7 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
 
         }
     };
+
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
@@ -179,7 +181,7 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
 
 
         String url = UrlUtil.generateUrl(Constant.API_GET_NEWS_LIST, params);
-        new HttpTools(getActivity()).get(url, params,TAG, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -213,11 +215,11 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
 
                 LogUtil.d("NewsActivity", "item count" + adapter.getItemCount());
                 //no data!!!
-                if (!data.isEmpty()) {
-                    llNoData.setVisibility(View.GONE);
+                if (data != null && !data.isEmpty()) {
+                    newsEmpty.setVisibility(View.GONE);
                 } else if (adapter.getItemCount() <= 0 && data.isEmpty() && !getActivity().isFinishing()) {
-                    llNoData.setVisibility(View.VISIBLE);
-                    tvNoData.setText(getResources().getString(R.string.text_no_date_news));
+                    newsEmpty.setVisibility(View.VISIBLE);
+//                    tvNoData.setText(getResources().getString(R.string.text_no_date_news));
                 }
             }
 
@@ -244,7 +246,7 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
     }
 
     private void initAdapter() {
-        adapter = new NewsAdapter(this,getActivity(), data);
+        adapter = new NewsAdapter(this, getActivity(), data);
         adapter.setPicClickListener(this);
         rvList.setAdapter(adapter);
     }
@@ -263,15 +265,17 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
         intent.putExtra(WallUtil.GET_LOVE_LIST_TYPE, type);
         startActivity(intent);
     }
+
     MyDialog removeAlertDialog;
-    private void showDeleteDialog(final NewsEntity newsEntity){
+
+    private void showDeleteDialog(final NewsEntity newsEntity) {
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogUtil.d("delete=====标题",newsEntity.getContent_title());
-                LogUtil.d("delete=====作者",newsEntity.getUser_given_name());
-                LogUtil.d("delete=====useId",newsEntity.getUser_id());
+                LogUtil.d("delete=====标题", newsEntity.getContent_title());
+                LogUtil.d("delete=====作者", newsEntity.getUser_given_name());
+                LogUtil.d("delete=====useId", newsEntity.getUser_id());
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, newsEntity.getContent_group_id()), null);
                 new HttpTools(getActivity()).put(requestInfo, TAG, new HttpCallback() {
                     @Override

@@ -2,53 +2,78 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
 
-<RelativeLayout
-    android:id="@+id/eventStart"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:visibility="gone">
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/eventStart"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:visibility="gone">-->
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+    <!--<ImageView-->
+    <!--android:id="@+id/noevet_img"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:src="@drawable/event_noevent"/>-->
+    <!--<LinearLayout-->
+    <!--android:id="@+id/test"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/noevet_img"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:orientation="vertical">-->
+    <!--<TextView-->
+    <!--android:id="@+id/happ_text"-->
+    <!--style="@style/text_empty_pages"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/text_evnt_empty_happ_with"/>-->
+    <!--<TextView-->
+    <!--style="@style/text_empty_pages"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/text_evnt_empty_love_one"/>-->
+    <!--<TextView-->
+    <!--style="@style/text_empty_pages"-->
+    <!--android:layout_marginBottom="@dimen/_32dp"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/text_evnt_empty_dont_now"/>-->
+    <!--</LinearLayout>-->
+    <!--</RelativeLayout>-->
+
+    <!--</RelativeLayout>-->
+
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/noevet_img"
+        android:id="@+id/eventStart"
+        android:layout_width="@dimen/_120dp"
+        android:layout_height="300dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_30dp"
+        android:background="@drawable/workspace_empty_tag"
+        android:visibility="gone">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/event_noevent"/>
-        <LinearLayout
-            android:id="@+id/test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/noevet_img"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/happ_text"
-                style="@style/text_empty_pages"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_evnt_empty_happ_with"/>
-            <TextView
-                style="@style/text_empty_pages"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_evnt_empty_love_one"/>
-            <TextView
-                style="@style/text_empty_pages"
-                android:layout_marginBottom="@dimen/_32dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_evnt_empty_dont_now"/>
-        </LinearLayout>
+            android:layout_marginBottom="@dimen/_50dp"
+            android:layout_marginLeft="@dimen/_15dp"
+            android:layout_marginRight="@dimen/_15dp"
+            android:gravity="center_horizontal"
+            android:text="@string/text_meeting_empty"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_16dp" />
     </RelativeLayout>
 
-    </RelativeLayout>
     <com.madxstudio.co8.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -79,7 +104,7 @@
         </LinearLayout>
     </com.madxstudio.co8.widget.MySwipeRefreshLayout>
 
-    <include layout="@layout/progress_layout"/>
+    <include layout="@layout/progress_layout" />
 
 
 </RelativeLayout>

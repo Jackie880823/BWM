@@ -726,4 +726,8 @@
     <!--<string name="text_org_list_empty">You have no member here</string>-->
     <!--<string name="text_org_no_group">No Group</string>-->
     <!--<string name="text_org_no_contact">No Contacts</string>-->
+    <!--<string name="text_workspace_empty">Tap &quot;+&quot; to create new WorkSpace</string>-->
+    <!--<string name="text_meeting_empty">Tap &quot;+&quot; to create new Meeting</string>-->
+    <!--<string name="text_news_empty">Tap &quot;+&quot; to add News</string>-->
+    <!--<string name="text_message_empty">Start messaging with your contacts</string>-->
 </resources>

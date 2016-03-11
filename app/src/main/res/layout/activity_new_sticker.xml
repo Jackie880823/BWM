@@ -24,16 +24,18 @@
         android:layout_height="0.5dp"
         android:background="#ccc" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp"
         android:orientation="horizontal">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/sticker_recyclerView"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:transcriptMode="alwaysScroll"
+            android:layout_toLeftOf="@+id/sticker_setting_linear"
+            android:layout_alignParentLeft="true"
             android:background="#eee" />
 
         <View
@@ -46,6 +48,7 @@
             android:layout_width="@dimen/_50dp"
             android:layout_height="@dimen/_50dp"
             android:layout_gravity="center"
+            android:layout_alignParentRight="true"
             android:background="#fff">
 
             <ImageView
@@ -66,5 +69,5 @@
                 android:visibility="gone" />
         </RelativeLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

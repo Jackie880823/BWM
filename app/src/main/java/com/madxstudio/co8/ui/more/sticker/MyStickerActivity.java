@@ -3,12 +3,12 @@ package com.madxstudio.co8.ui.more.sticker;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ScrollView;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.MyStickerAdapter;
 import com.madxstudio.co8.db.SQLiteHelperOrm;
@@ -16,9 +16,6 @@ import com.madxstudio.co8.entity.LocalStickerInfo;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.util.LogUtil;
-import com.madxstudio.co8.widget.FullyLinearLayoutManager;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,11 +80,11 @@ public class MyStickerActivity extends BaseActivity {
 
         }
         if (data != null && data.size() > 0) {
-            rvList = (RecyclerView) getViewById(R.id.rv_my_sticker);
-            llm = new FullyLinearLayoutManager(MyStickerActivity.this);
+            rvList = getViewById(R.id.rv_my_sticker);
+            llm = new LinearLayoutManager(MyStickerActivity.this);
             rvList.setLayoutManager(llm);
-            rvList.setHasFixedSize(true);
-            rvList.setItemAnimator(new DefaultItemAnimator());
+            rvList.setHasFixedSize(false);
+            rvList.setItemAnimator(null);
 
             MyStickerAdapter adapter = new MyStickerAdapter(MyStickerActivity.this, data);
             rvList.setAdapter(adapter);
@@ -95,7 +92,7 @@ public class MyStickerActivity extends BaseActivity {
             rvList.post(new Runnable() {
                 @Override
                 public void run() {
-                    ((ScrollView) MyStickerActivity.this.getViewById(R.id.sc_my_sticker)).scrollTo(0, 0);
+                    (MyStickerActivity.this.getViewById(R.id.sc_my_sticker)).scrollTo(0, 0);
                 }
             });
 
