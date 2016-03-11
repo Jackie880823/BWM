@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -148,7 +149,15 @@ public class StickerMainNewFragment extends BaseFragment<MainActivity> {
         linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemAnimator(null);
+//        recyclerView.setItemAnimator(null);
+        DefaultItemAnimator animator = new DefaultItemAnimator() {
+            @Override
+            public boolean canReuseUpdatedViewHolder(RecyclerView.ViewHolder viewHolder) {
+                return true;
+            }
+        };
+        recyclerView.setItemAnimator(animator);
+
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -253,6 +262,8 @@ public class StickerMainNewFragment extends BaseFragment<MainActivity> {
             } else {
                 setPage(nowName, arg0);
                 recyclerAdapter.setScrollPosition(nowName);
+//                recyclerView.getLayoutManager().scrollToPosition(recyclerAdapter.clickPosition);
+
             }
             lastPage = arg0;
         }

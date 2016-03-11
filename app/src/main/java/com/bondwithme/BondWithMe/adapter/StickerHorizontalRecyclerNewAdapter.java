@@ -30,7 +30,7 @@ public class StickerHorizontalRecyclerNewAdapter extends RecyclerView.Adapter<St
     private List<String> list = new ArrayList<>();
     private List<String> stickerNameList = new ArrayList<>();
     private Context mContext;
-    private int clickPosition;
+    public int clickPosition;
     private LinearLayoutManager linearLayoutManager;
 
     public StickerHorizontalRecyclerNewAdapter(LinkedHashMap<String, List<String>> map, Context mContext, LinearLayoutManager linearLayoutManager) {
@@ -69,6 +69,7 @@ public class StickerHorizontalRecyclerNewAdapter extends RecyclerView.Adapter<St
         notifyItemChanged(lastPosition);
         notifyItemChanged(clickPosition);
         linearLayoutManager.scrollToPosition(clickPosition);
+
     }
 
     public String getFirstStickerName() {
