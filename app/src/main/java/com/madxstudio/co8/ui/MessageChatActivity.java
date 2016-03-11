@@ -485,7 +485,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         llm = new LinearLayoutManager(MessageChatActivity.this);
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
-
+        recyclerView.setItemAnimator(null);
         playerManager = AudioPlayUtils.getManager();
         messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm, isGroupChat, playerManager);
         recyclerView.setAdapter(messageChatAdapter);
