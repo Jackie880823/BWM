@@ -203,7 +203,7 @@
                 android:paddingTop="@dimen/default_content_padding"
                 android:paddingRight="@dimen/default_content_padding">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/iv_love"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -243,7 +243,7 @@
                 android:paddingBottom="@dimen/default_content_padding"
                 android:paddingTop="@dimen/default_content_padding">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/iv_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

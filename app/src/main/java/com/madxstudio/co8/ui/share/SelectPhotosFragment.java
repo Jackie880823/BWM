@@ -145,8 +145,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             loading.stop();
             loading.setVisibility(View.GONE);
 
-            if (localMediaAdapter != null) {
-                selectImageUirListener.onLoadedMedia(mMediaUris.get(getContext().getString(R.string.text_all)), localMediaAdapter);
+            if (localMediaAdapter != null && activityWeakReference.get() != null) {
+                selectImageUirListener.onLoadedMedia(mMediaUris.get(activityWeakReference.get().getString(R.string.text_all)), localMediaAdapter);
             } else {
                 LogUtil.w(TAG, "localMediaAdapter is null");
             }
@@ -167,8 +167,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     public SelectPhotosFragment() {
         super();
-        mSelectedImageUris = weakReference.get();
-        weakReference = null;
+        if(weakReference!=null) {
+            mSelectedImageUris = weakReference.get();
+            weakReference = null;
+        }
     }
 
     public static SelectPhotosFragment newInstance(List<MediaData> selectUris, String... params) {
@@ -186,19 +188,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode) {
-//            case 100:
-//                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    readMediaDatabase();
-//                } else {
-//                    LogUtil.w(TAG, "Permission Denial: requires android.permission.READ_EXTERNAL_STORAGE");
-//                }
-//        }
-//    }
-
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void initView() {
         activityWeakReference = new WeakReference<Activity>(getActivity());
