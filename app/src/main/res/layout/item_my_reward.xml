@@ -37,6 +37,7 @@
                 android:text=""
                 android:layout_marginLeft="@dimen/_8dp"
                 android:textStyle="bold"
+                android:textSize="@dimen/text_medium_size"
                 style="@style/text_white_center"/>
 
             <TextView

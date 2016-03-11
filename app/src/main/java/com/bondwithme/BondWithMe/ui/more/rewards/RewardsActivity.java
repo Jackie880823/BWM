@@ -3,6 +3,7 @@ package com.bondwithme.BondWithMe.ui.more.rewards;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +28,6 @@ import com.bondwithme.BondWithMe.entity.RewardResultEntity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
-import com.bondwithme.BondWithMe.widget.OverScrollView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class RewardsActivity extends BaseActivity {
     private RecyclerView reList;
     private LinearLayoutManager fll;
     private RelativeLayout rlGeneralRewardInfo;
-    private OverScrollView sc_rewards;
+    private NestedScrollView sc_rewards;
     private TextView tvGeneralRewardData;
     private TextView tvAddMemberForPoint;
     private TextView tvPointAcc;
@@ -117,18 +117,19 @@ public class RewardsActivity extends BaseActivity {
         rlGeneralRewardInfo = getViewById(R.id.rl_reward_info);
         sc_rewards = getViewById(R.id.sc_rewards);
 
-
-        reList = getViewById(R.id.rvList);
-        fll = new LinearLayoutManager(this);
-        reList.setLayoutManager(fll);
-        reList.setHasFixedSize(true);
-        reList.setItemAnimator(new DefaultItemAnimator());
     }
 
     int userPoint;
 
     private void initAdapter() {
-        if (!dataReward.isEmpty() && dataReward.size() > 0) {
+        if (!dataReward.isEmpty() && dataReward.size() > 0){
+            reList = getViewById(R.id.rvList);
+            fll = new LinearLayoutManager(this);
+//        fll = new FullyLinearLayoutManager(this);
+            reList.setLayoutManager(fll);
+            reList.setHasFixedSize(true);
+            reList.setItemAnimator(new DefaultItemAnimator());
+            reList.setNestedScrollingEnabled(false);
             userPoint = Integer.parseInt(dataRewardPoint.get(0).getUser_point());
             adapter = new RewardAdapter(this, dataReward, String.valueOf(userPoint));
             reList.setAdapter(adapter);
