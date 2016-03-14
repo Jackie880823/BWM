@@ -601,7 +601,8 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:noHistory="true" />
-        <activity android:name=".ui.share.PreviewVideoActivity">
+        <activity android:name=".ui.share.PreviewVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="com.bondwithme.BondWithMe.ui.PreviewVideoActivity" />
 
