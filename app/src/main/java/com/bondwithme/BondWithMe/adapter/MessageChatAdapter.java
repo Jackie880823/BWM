@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -42,7 +41,6 @@ import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.AudioPlayUtils;
 import com.bondwithme.BondWithMe.util.AudioPlayUtils.StopCallback;
 import com.bondwithme.BondWithMe.util.FileUtil;
-import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -805,6 +803,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             return;
         }
         if (myList == null || position > myList.size() || position < 0) {
+            return;
+        }
+        //如果在发送中。。。
+        if(holder.sendProgress.getVisibility()==View.VISIBLE){
             return;
         }
         final MsgEntity msgEntity = myList.get(position);
