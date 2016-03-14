@@ -12,6 +12,9 @@ import android.widget.RelativeLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.EventAdapter;
@@ -23,9 +26,6 @@ import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.PreferencesUtil;
 import com.madxstudio.co8.widget.InteractivePopupWindow;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -160,7 +160,8 @@ public class EventFragment extends BaseFragment<MainActivity> {
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                int count = Math.abs(totalItemCount - 5);
+                if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= count && dy > 0) {
                     loading = true;
                     loadMoreEvent();//再请求数据
                 }
@@ -252,6 +253,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
             public void onFinish() {
                 if(vProgress!=null)
                     vProgress.setVisibility(View.GONE);
+                loading = false;
             }
 
             @Override
@@ -297,7 +299,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                             Intent intent = new Intent(getActivity(), EventDetailActivity.class);
 //                            intent.putExtra("event", eventEntity);
                             intent.putExtra("group_id", eventEntity.getGroup_id());
-                            intent.putExtra("Content_group_id",eventEntity.getContent_group_id());
+                            intent.putExtra("Content_group_id", eventEntity.getContent_group_id());
                             startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
 //                            requestData();
 //                            }
@@ -306,7 +308,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     });
                     rvList.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
-                    loading = false;
+
 
                 } catch (JSONException e) {
                     if (isRefresh) {

@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId "com.madxstudio.co8"
         minSdkVersion 16
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 62   //TODO
         versionName "2.3.0" //TODO
 
@@ -74,7 +74,7 @@ android {
                 def outputFile = output.outputFile
                 if (outputFile != null && outputFile.name.endsWith('.apk')&&'release'.equals(variant.buildType.name)) {
                     // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
-                    def fileName = "co8_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                    def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
                     output.outputFile = new File(outputFile.parent, fileName)
                 }
             }

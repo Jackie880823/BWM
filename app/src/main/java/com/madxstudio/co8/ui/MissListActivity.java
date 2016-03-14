@@ -44,7 +44,7 @@ public class MissListActivity extends BaseActivity {
     private boolean isRefresh;
 
     private int startIndex = 0;
-    private int offSet = 20;
+    private int offset = 20;
     private boolean loading;
     private List<MissEntity> data = new ArrayList<>();
     private MissAdapter adapter;
@@ -119,7 +119,8 @@ public class MissListActivity extends BaseActivity {
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if (!loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                int count = Math.abs(totalItemCount - 5);
+                if (data.size() >= offset && !loading && lastVisibleItem >= count && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
                 }
@@ -149,7 +150,7 @@ public class MissListActivity extends BaseActivity {
 
         Map<String, String> params = new HashMap<>();
         params.put("start", "" + startIndex);
-        params.put("limit",""+offSet);
+        params.put("limit",""+ offset);
 
         new HttpTools(this).get(String.format(Constant.API_BONDALERT_LIST, MainActivity.getUser().getUser_id()), params, this,new HttpCallback() {
             @Override
