@@ -83,7 +83,7 @@ public class MyStickerActivity extends BaseActivity {
             rvList = getViewById(R.id.rv_my_sticker);
             llm = new LinearLayoutManager(MyStickerActivity.this);
             rvList.setLayoutManager(llm);
-            rvList.setHasFixedSize(false);
+            rvList.setHasFixedSize(true);
             rvList.setItemAnimator(null);
 
             MyStickerAdapter adapter = new MyStickerAdapter(MyStickerActivity.this, data);

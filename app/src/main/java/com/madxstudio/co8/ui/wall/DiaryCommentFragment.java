@@ -149,6 +149,7 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
         rvList = getViewById(R.id.rv_wall_comment_list);
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         //        initAdapter();
 
@@ -226,7 +227,8 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if (data.size() >= offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                int count = Math.abs(totalItemCount - 5);
+                if (data.size() >= offset && !loading && lastVisibleItem >= count && dy > 0) {
                     LogUtil.i(TAG, "onScrolled& getComments");
                     loading = true;
                     getComments();//再请求数据

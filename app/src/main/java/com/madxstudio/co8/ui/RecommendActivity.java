@@ -18,15 +18,15 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.RecommendAdapter;
 import com.madxstudio.co8.entity.RecommendEntity;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,6 +140,7 @@ public class RecommendActivity extends BaseActivity {
         llm = new LinearLayoutManager(this);
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
+        rvList.setItemAnimator(null);
         initAdapter();
 
 //        swipeRefreshLayout = getViewById(R.id.swipe_refresh_layout);
@@ -346,7 +347,7 @@ public class RecommendActivity extends BaseActivity {
 
     //改变已选数量
     private void changeSelectCount() {
-        LogUtil.d(TAG,"=changeSelectCount()===");
+        LogUtil.d(TAG, "=changeSelectCount()===");
         if (selectedRecommendCount == 0){
             LogUtil.d(TAG,"======changeSelectCount==0");
             btnRemove.setTextColor(getResources().getColor(R.color.default_text_color_light));

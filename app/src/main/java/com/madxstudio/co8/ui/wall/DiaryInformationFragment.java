@@ -110,6 +110,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
         RecyclerView rvList = getViewById(R.id.rv_wall_comment_list);
         LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
 
         mAdapter = new DiaryInformationAdapter(DiaryInformationFragment.this);

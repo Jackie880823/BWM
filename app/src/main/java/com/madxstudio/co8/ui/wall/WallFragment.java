@@ -144,6 +144,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         rvList = getViewById(R.id.rv_wall_list);
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         initAdapter();
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -154,7 +155,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if (data.size() >= offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                int count = Math.abs(totalItemCount - 5);
+                if (data.size() >= offset && !loading && lastVisibleItem >= count && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
                 }

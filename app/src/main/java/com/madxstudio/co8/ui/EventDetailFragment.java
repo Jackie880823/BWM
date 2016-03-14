@@ -180,6 +180,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         //        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         //        rvList.setHasFixedSize(true);
         initAdapter();
@@ -302,7 +303,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     int totalItemCount = llm.getItemCount();
                     //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                     // dy>0 表示向下滑动
-                    if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                    int count = Math.abs(totalItemCount - 5);
+                    if (data.size() >= offset && !loading && lastVisibleItem >= count && dy > 0) {
 //                        LogUtil.i("eventdetail====", "onScrolled& getComments");
 //                        currentPage++;
                         loading = true;
@@ -410,9 +412,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             }
         });
         rvList.setAdapter(adapter);
-        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
-        animator.setAddDuration(2000);
-        animator.setRemoveDuration(1000);
     }
 
     private void initListSecondView(View listSecondView) {
