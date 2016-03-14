@@ -85,8 +85,8 @@
     <color name="drawer_arrow_color">#000000</color>
     <color name="archive_comment_background">#f2f4f6</color>
 
-    <color name="family_tree_relationship_sibling_background_color">#E9FFE6</color>
-    <color name="family_tree_relationship_me_background_color">#B7F291</color>
+    <color name="family_tree_relationship_sibling_background_color">#d9f8ff</color>
+    <color name="family_tree_relationship_me_background_color">#408ee2</color>
     <color name="family_tree_hint_color_text">#33CC33</color>
 
     <!-- Recorder Video-->
