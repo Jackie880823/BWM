@@ -100,7 +100,7 @@ android {
 //        taobao {}
         appinchina {}
         googleplay {}
-        preload_globe_ph {}
+//        preload_globe_ph {}
 
         //...
     }

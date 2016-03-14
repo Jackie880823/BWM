@@ -92,6 +92,7 @@ public class MemberActivity extends BaseActivity {
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         TAG = this.getClass().getSimpleName();
         initAdapter();//为空 为什么要做这步？？？

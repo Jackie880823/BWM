@@ -180,6 +180,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         //        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         //        rvList.setHasFixedSize(true);
         initAdapter();
@@ -410,9 +411,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             }
         });
         rvList.setAdapter(adapter);
-        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
-        animator.setAddDuration(2000);
-        animator.setRemoveDuration(1000);
     }
 
     private void initListSecondView(View listSecondView) {

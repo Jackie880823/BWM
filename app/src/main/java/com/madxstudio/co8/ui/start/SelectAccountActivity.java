@@ -63,6 +63,7 @@ public class SelectAccountActivity extends BaseActivity {
         getData();
         rvList = getViewById(R.id.rv);
         rvList.setLayoutManager(new LinearLayoutManager(this));
+        rvList.setItemAnimator(null);
         initAdapter();
     }
 

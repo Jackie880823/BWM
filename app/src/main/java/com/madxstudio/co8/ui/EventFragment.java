@@ -144,7 +144,8 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
-//        rvList.setHasFixedSize(true);
+        rvList.setItemAnimator(null);
+        rvList.setHasFixedSize(true);
         adapter = new EventAdapter(getParentActivity(), data, birthdayEvents);
 
         rvList.setAdapter(adapter);

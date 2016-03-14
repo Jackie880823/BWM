@@ -83,6 +83,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         TAG = this.getClass().getSimpleName();
         LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
 
 

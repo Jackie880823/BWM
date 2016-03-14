@@ -56,6 +56,7 @@ public class FeelingFragment extends BaseFragment<FeelingActivity> implements Fe
         LinearLayoutManager llmFeeling = new LinearLayoutManager(getParentActivity());
         llmFeeling.setOrientation(LinearLayoutManager.VERTICAL);
         feeling_icons.setLayoutManager(llmFeeling);
+        feeling_icons.setItemAnimator(null);
         List<String> fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), Constant.PATH_PREFIX);
         // 对文件进行按首字的大小排序
         SortComparator comparator = new SortComparator();

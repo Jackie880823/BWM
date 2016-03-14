@@ -123,6 +123,7 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
         rvList = getViewById(R.id.rv_Archive_list);
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         initAdapter();
 
