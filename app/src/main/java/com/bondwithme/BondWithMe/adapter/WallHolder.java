@@ -569,9 +569,15 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     // 为了兼容以前版本把心情名称的首字母都转为大写与当前心情包的文件相匹配
                     b.replace(charIndex + 1, charIndex + 2, s.toUpperCase());
                 }
+
                 LogUtil.d(TAG, "setContent& mood: " + b.toString());
-                InputStream is = context.getAssets().open(b.toString());
-                iv_mood.setImageBitmap(BitmapFactory.decodeStream(is));
+
+                if (b.toString().endsWith("png")) {
+                    InputStream is = context.getAssets().open(b.toString());
+                    iv_mood.setImageBitmap(BitmapFactory.decodeStream(is));
+                } else {
+                    iv_mood.setVisibility(View.GONE);
+                }
             } else {
                 iv_mood.setVisibility(View.GONE);
             }
