@@ -114,7 +114,7 @@ public class OrgListActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
-            rightButton.setVisibility(View.GONE);
+            rightButton.setVisibility(View.INVISIBLE);
         }
         rightSearchButton.setVisibility(View.VISIBLE);
     }

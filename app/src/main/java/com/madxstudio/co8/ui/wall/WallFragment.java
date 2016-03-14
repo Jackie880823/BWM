@@ -232,13 +232,15 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     }
                     LogUtil.i(TAG, "requestData& adapter size: " + adapter.getItemCount());
                     if (data.size() <= 0 && !hasData) {
-                        if (TextUtils.isEmpty(member_id)) {
-                            tvNoData.setVisibility(View.GONE);
-                            flWallStartUp.setVisibility(View.VISIBLE);
-                        } else {
-                            tvNoData.setVisibility(View.VISIBLE);
-                            flWallStartUp.setVisibility(View.GONE);
-                        }
+//                        if (TextUtils.isEmpty(member_id)) {
+//                            tvNoData.setVisibility(View.GONE);
+//                            flWallStartUp.setVisibility(View.VISIBLE);
+//                        } else {
+//                            tvNoData.setVisibility(View.VISIBLE);
+//                            flWallStartUp.setVisibility(View.GONE);
+//                        }
+                        tvNoData.setVisibility(View.GONE);
+                        flWallStartUp.setVisibility(View.VISIBLE);
                         swipeRefreshLayout.setVisibility(View.GONE);
                     } else {
                         swipeRefreshLayout.setVisibility(View.VISIBLE);
