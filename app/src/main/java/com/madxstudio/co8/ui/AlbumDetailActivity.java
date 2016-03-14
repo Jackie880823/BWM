@@ -140,6 +140,7 @@ public class AlbumDetailActivity extends BaseActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(null);
         albumDetailAdapter = new AlbumDetailAdapter(mContext, memberId, new ArrayList<AlbumPhotoEntity>(), linearLayoutManager);
         recyclerView.setAdapter(albumDetailAdapter);
         albumDetailAdapter.setPicClickListener(new AlbumDetailAdapter.SelectViewClickListener() {

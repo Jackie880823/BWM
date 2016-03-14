@@ -44,7 +44,7 @@
                 android:layout_gravity="center"
                 android:ellipsize="marquee"
                 android:singleLine="true"
-                android:textColor="#333333"
+                android:textColor="#ffffff"
                 android:textStyle="bold" />
 
             <ImageView
@@ -71,7 +71,7 @@
             android:layout_height="@dimen/default_button_width_height"
             android:layout_gravity="right|center_vertical"
             android:background="@null"
-            android:src="@drawable/search"
+            android:src="@drawable/org_search_icon"
             android:visibility="gone" />
 
         <ImageButton

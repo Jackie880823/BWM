@@ -86,8 +86,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         this.layoutId = R.layout.fragment_wall;
     }
 
-    private FrameLayout flWallStartUp;
-    private TextView tvNoData;
+    private View flWallStartUp;
+    private View tvNoData;
 
     private RecyclerView rvList;
     private WallAdapter adapter;
@@ -135,7 +135,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
             member_id = getArguments().getString(ARG_PARAM_PREFIX + 0);
         }
 
-        flWallStartUp = getViewById(R.id.wall_start_up);
+        flWallStartUp = getViewById(R.id.tv_no_data);
         tvNoData = getViewById(R.id.tv_no_data);
 
         vProgress = getViewById(R.id.rl_progress);
@@ -418,7 +418,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
      * 显示点赞的用户列表
      *
      * @param viewer_id {@link WallEntity#user_id}
-     * @param refer_id  {@link WallEntity#content_id} or {@link WallCommentEntity#comment_id}
+     * @param refer_id  {@link WallEntity#content_id}
      * @param type      {@link WallUtil#LOVE_MEMBER_COMMENT_TYPE} or {@link WallUtil#LOVE_MEMBER_WALL_TYPE}
      */
     @Override

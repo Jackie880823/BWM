@@ -420,7 +420,7 @@
                     android:background="@drawable/btn_chat_send_bg"
                     android:padding="@dimen/default_content_padding"
                     android:text="@string/text_send_message"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/ok_button_color"
                     android:textSize="@dimen/text_large_size"
                     android:visibility="gone"/>
 

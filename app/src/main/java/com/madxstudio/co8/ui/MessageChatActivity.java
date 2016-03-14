@@ -225,7 +225,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             for (String mapKey : sendMap.keySet()) {
                                 msgSendList.add(sendMap.get(mapKey));
                             }
-                            Collections.reverse(msgSendList);
+//                            Collections.reverse(msgSendList);
 //                            Collections.sort(msgSendList, new MessageAction.SortExpertsTeamDate());
                         }
                         messageChatAdapter.addSendData(msgSendList);
@@ -243,7 +243,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             for (String mapKey : sendMap.keySet()) {
                                 msgHistoryList.add(sendMap.get(mapKey));
                             }
-                            Collections.reverse(msgHistoryList);
+//                            Collections.reverse(msgHistoryList);
 //                            Collections.sort(msgHistoryList, new MessageAction.SortExpertsTeamDate());
                         }
                         messageChatAdapter.addHistoryData(msgHistoryList);
@@ -305,7 +305,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             for (String mapKey : sendMap.keySet()) {
                                 msgTimerList.add(sendMap.get(mapKey));
                             }
-                            Collections.reverse(msgTimerList);
+//                            Collections.reverse(msgTimerList);
 //                            Collections.sort(msgTimerList, new MessageAction.SortExpertsTeamDate());
                         }
                         messageChatAdapter.addTimerData(msgTimerList);
@@ -485,7 +485,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         llm = new LinearLayoutManager(MessageChatActivity.this);
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
-
+        recyclerView.setItemAnimator(null);
         playerManager = AudioPlayUtils.getManager();
         messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm, isGroupChat, playerManager);
         recyclerView.setAdapter(messageChatAdapter);

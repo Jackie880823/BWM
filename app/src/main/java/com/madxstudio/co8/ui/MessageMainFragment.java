@@ -199,9 +199,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     private boolean isUserRefresh = false;
     private int startIndex = 1;
     private boolean isPullData = false;
-    private LinearLayout emptyMemberMessageLinear;
-    private ImageView emptyMemberMessageIv;
-    private TextView emptyMemberMessageTv;
+    private View emptyMemberMessageLinear;
+    //    private ImageView emptyMemberMessageIv;
+//    private TextView emptyMemberMessageTv;
     private View vProgress;
     private ListView groupListView;
     private ImageButton groupIb;
@@ -211,9 +211,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     private boolean isGroupRefresh = false;
     private int startIndexGroup = 1;
     private boolean isPullDataGroup = false;
-    private LinearLayout emptyGroupMessageLinear;
-    private ImageView emptyGroupMessageIv;
-    private TextView emptyGroupMessageTv;
+    private View emptyGroupMessageLinear;
+    //    private ImageView emptyGroupMessageIv;
+//    private TextView emptyGroupMessageTv;
     private String TAG;
     private static final int DEF_DATA_NUM = 20;
 
@@ -235,9 +235,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         userListView = (ListView) userView.findViewById(R.id.message_listView);
         userIb = (ImageButton) userView.findViewById(R.id.ib_top);
         userRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
-        emptyMemberMessageLinear = (LinearLayout) userView.findViewById(R.id.message_main_empty_linear);
-        emptyMemberMessageIv = (ImageView) userView.findViewById(R.id.message_main_image_empty);
-        emptyMemberMessageTv = (TextView) userView.findViewById(R.id.message_main_text_empty);
+        emptyMemberMessageLinear = userView.findViewById(R.id.message_main_empty_linear);
+//        emptyMemberMessageIv = (ImageView) userView.findViewById(R.id.message_main_image_empty);
+//        emptyMemberMessageTv = (TextView) userView.findViewById(R.id.message_main_text_empty);
         vProgress = userView.findViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
         userEntityList = new ArrayList<>();
@@ -312,9 +312,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         groupListView = (ListView) groupView.findViewById(R.id.message_listView);
         groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
         groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
-        emptyGroupMessageLinear = (LinearLayout) groupView.findViewById(R.id.message_main_empty_linear);
-        emptyGroupMessageIv = (ImageView) groupView.findViewById(R.id.message_main_image_empty);
-        emptyGroupMessageTv = (TextView) groupView.findViewById(R.id.message_main_text_empty);
+        emptyGroupMessageLinear = groupView.findViewById(R.id.message_main_empty_linear);
+//        emptyGroupMessageIv = (ImageView) groupView.findViewById(R.id.message_main_image_empty);
+//        emptyGroupMessageTv = (TextView) groupView.findViewById(R.id.message_main_text_empty);
         userEntityListGroup = new ArrayList<>();
         messageGroupAdapter = new MessageGroupFragmentAdapter(mContext, userEntityListGroup);
         groupListView.setAdapter(messageGroupAdapter);
@@ -496,7 +496,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     Map<String, Object> pullPrivateMapNew = (Map) msg.obj;
                     List<PrivateMessageEntity> userEntityList1 = (List<PrivateMessageEntity>) pullPrivateMapNew.get(MESSAGE_DATA);
                     String unReadNumNewPrivate = (String) pullPrivateMapNew.get(MESSAGE_UNREAD_NUM);
-                    if (TextUtils.isEmpty(unReadNumNewPrivate)||"0".equalsIgnoreCase(unReadNumNewPrivate)) {
+                    if (TextUtils.isEmpty(unReadNumNewPrivate) || "0".equalsIgnoreCase(unReadNumNewPrivate)) {
 //                        ,,
                     }
                     privateAdapter.NewUserEntityData(userEntityList1);
@@ -505,7 +505,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     Map<String, Object> pullPrivateMap = (Map) msg.obj;
                     List<PrivateMessageEntity> userEntityListPull1 = (List<PrivateMessageEntity>) pullPrivateMap.get(MESSAGE_DATA);
                     String unReadNumPullPrivate = (String) pullPrivateMap.get(MESSAGE_UNREAD_NUM);
-                    if (TextUtils.isEmpty(unReadNumPullPrivate)||"0".equalsIgnoreCase(unReadNumPullPrivate)) {
+                    if (TextUtils.isEmpty(unReadNumPullPrivate) || "0".equalsIgnoreCase(unReadNumPullPrivate)) {
 //                        ,,
                     }
 //                    List<PrivateMessageEntity> userEntityListPull1 = (List<PrivateMessageEntity>) msg.obj;
@@ -515,7 +515,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     Map<String, Object> newGroupMap = (Map) msg.obj;
                     List<GroupMessageEntity> userEntityList = (List<GroupMessageEntity>) newGroupMap.get(MESSAGE_DATA);
                     String unReadNum = (String) newGroupMap.get(MESSAGE_UNREAD_NUM);
-                    if (TextUtils.isEmpty(unReadNum)||"0".equalsIgnoreCase(unReadNum)) {
+                    if (TextUtils.isEmpty(unReadNum) || "0".equalsIgnoreCase(unReadNum)) {
                         group_red_point.setVisibility(View.GONE);
                     } else {
                         group_red_point.setVisibility(View.VISIBLE);
@@ -526,7 +526,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     Map<String, Object> pullGroupMap = (Map) msg.obj;
                     List<GroupMessageEntity> userEntityListPull = (List<GroupMessageEntity>) pullGroupMap.get(MESSAGE_DATA);
                     String unReadNumPull = (String) pullGroupMap.get(MESSAGE_UNREAD_NUM);
-                    if (TextUtils.isEmpty(unReadNumPull)||"0".equalsIgnoreCase(unReadNumPull)) {
+                    if (TextUtils.isEmpty(unReadNumPull) || "0".equalsIgnoreCase(unReadNumPull)) {
                         group_red_point.setVisibility(View.GONE);
                     } else {
                         group_red_point.setVisibility(View.VISIBLE);
@@ -574,8 +574,8 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             groupRefreshLayout.setVisibility(View.GONE);
         }
         emptyGroupMessageLinear.setVisibility(View.VISIBLE);
-        emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
-        emptyGroupMessageTv.setText(mContext.getString(R.string.text_msg_start_bonding));
+//        emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
+//        emptyGroupMessageTv.setText(mContext.getString(R.string.text_msg_start_bonding));
     }
 
     private void hideGroupEmptyView() {
@@ -680,8 +680,8 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             userRefreshLayout.setVisibility(View.GONE);
         }
         emptyMemberMessageLinear.setVisibility(View.VISIBLE);
-        emptyMemberMessageIv.setImageResource(R.drawable.message_member_empty);
-        emptyMemberMessageTv.setText(mContext.getString(R.string.text_msg_start_bonding));
+//        emptyMemberMessageIv.setImageResource(R.drawable.message_member_empty);
+//        emptyMemberMessageTv.setText(mContext.getString(R.string.text_msg_start_bonding));
     }
 
     private void hideMemberEmptyView() {

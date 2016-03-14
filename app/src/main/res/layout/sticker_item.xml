@@ -46,6 +46,7 @@
                 android:background="@drawable/btn_member_add_bg"
                 android:gravity="center"
                 android:text="@string/download"
+                android:textColor="@android:color/white"
                 android:textSize="12sp"
                 />
 
@@ -55,7 +56,7 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ok_normal" />
+                android:src="@drawable/sticker_ok_normal" />
 
             <ProgressBar
                 android:id="@+id/pb_download"
