@@ -126,10 +126,12 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
 //        llm = new FullyLinearLayoutManager(this);
         llm = new LinearLayoutManager(this);
+        recyclerViewList.setItemAnimator(null);
         recyclerViewList.setLayoutManager(llm);
         recyclerViewList.setHasFixedSize(true);
+        recyclerViewList.setItemAnimator(null);
         recyclerViewList.setAdapter(adapter);
-//        initAdapter();      //加载表情包列表；
+//        initAdapter();      //加载表情包列表；®
 //        requestData();
         /**wing modified for 性能 end*/
 

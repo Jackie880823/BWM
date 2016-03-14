@@ -95,6 +95,7 @@ public class AddInviteMembersActivity extends BaseActivity {
 
         tvName.setText(data.getDisplayName());
         rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setItemAnimator(null);
         adapter = new AddInviteMembersAdapter(data, this);
         rv.setAdapter(adapter);
         etInfo.addTextChangedListener(new TextWatcher() {

@@ -92,6 +92,7 @@ public class AlertEventActivity extends BaseActivity {
         llm = new LinearLayoutManager(this);
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
+        rvList.setItemAnimator(null);
         initAdapter();
 
         swipeRefreshLayout = getViewById(R.id.swipe_refresh_layout);
@@ -114,7 +115,8 @@ public class AlertEventActivity extends BaseActivity {
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if ((data.size()==(currentPage*offset))&&!loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                int count = Math.abs(totalItemCount - 5);
+                if (data.size() >= offset && !loading && lastVisibleItem >= count && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
                 }

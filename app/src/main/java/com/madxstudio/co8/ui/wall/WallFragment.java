@@ -86,8 +86,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         this.layoutId = R.layout.fragment_wall;
     }
 
-    private FrameLayout flWallStartUp;
-    private TextView tvNoData;
+    private View flWallStartUp;
+    private View tvNoData;
 
     private RecyclerView rvList;
     private WallAdapter adapter;
@@ -135,7 +135,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
             member_id = getArguments().getString(ARG_PARAM_PREFIX + 0);
         }
 
-        flWallStartUp = getViewById(R.id.wall_start_up);
+        flWallStartUp = getViewById(R.id.tv_no_data);
         tvNoData = getViewById(R.id.tv_no_data);
 
         vProgress = getViewById(R.id.rl_progress);
@@ -144,6 +144,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         rvList = getViewById(R.id.rv_wall_list);
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         initAdapter();
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -154,7 +155,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if (data.size() >= offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                int count = Math.abs(totalItemCount - 5);
+                if (data.size() >= offset && !loading && lastVisibleItem >= count && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
                 }
@@ -232,13 +234,15 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     }
                     LogUtil.i(TAG, "requestData& adapter size: " + adapter.getItemCount());
                     if (data.size() <= 0 && !hasData) {
-                        if (TextUtils.isEmpty(member_id)) {
-                            tvNoData.setVisibility(View.GONE);
-                            flWallStartUp.setVisibility(View.VISIBLE);
-                        } else {
-                            tvNoData.setVisibility(View.VISIBLE);
-                            flWallStartUp.setVisibility(View.GONE);
-                        }
+//                        if (TextUtils.isEmpty(member_id)) {
+//                            tvNoData.setVisibility(View.GONE);
+//                            flWallStartUp.setVisibility(View.VISIBLE);
+//                        } else {
+//                            tvNoData.setVisibility(View.VISIBLE);
+//                            flWallStartUp.setVisibility(View.GONE);
+//                        }
+                        tvNoData.setVisibility(View.GONE);
+                        flWallStartUp.setVisibility(View.VISIBLE);
                         swipeRefreshLayout.setVisibility(View.GONE);
                     } else {
                         swipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -418,7 +422,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
      * 显示点赞的用户列表
      *
      * @param viewer_id {@link WallEntity#user_id}
-     * @param refer_id  {@link WallEntity#content_id} or {@link WallCommentEntity#comment_id}
+     * @param refer_id  {@link WallEntity#content_id}
      * @param type      {@link WallUtil#LOVE_MEMBER_COMMENT_TYPE} or {@link WallUtil#LOVE_MEMBER_WALL_TYPE}
      */
     @Override

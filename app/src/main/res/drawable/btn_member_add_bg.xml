@@ -9,8 +9,8 @@
     <item android:state_pressed="true" >
         <shape>
             <gradient
-                android:endColor="#ff339119"
-                android:startColor="#ff339119" />
+                android:endColor="#0077AE"
+                android:startColor="#0077AE" />
             <corners
                 android:radius="6dp" />
         </shape>
@@ -19,8 +19,8 @@
     <item android:state_focused="true"  >
         <shape>
             <gradient
-                android:endColor="#ff339119"
-                android:startColor="#ff339119" />
+                android:endColor="#0077AE"
+                android:startColor="#0077AE" />
             <corners
                 android:radius="6dp"  />
         </shape>
@@ -29,8 +29,8 @@
     <item android:state_enabled="false" >
         <shape>
             <gradient
-                android:endColor="#ff2bff1d"
-                android:startColor="#ff2bff1d" />
+                android:endColor="#24518A"
+                android:startColor="#24518A" />
             <corners
                 android:radius="6dp"  />
         </shape>

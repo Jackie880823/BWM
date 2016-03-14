@@ -186,6 +186,7 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(null);
     }
 
     @Override

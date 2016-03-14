@@ -576,6 +576,7 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         android:text="@string/text_change_password"
+                        android:textColor="@color/ok_button_color"
                         android:textSize="22sp" />
                 </LinearLayout>
             </LinearLayout>

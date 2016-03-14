@@ -84,12 +84,12 @@
 
     <!-- about -->
 
-    <string name="text_about_desc1">B2BE is an international organisation that helps businesses be more efficient and profitable by deploying business-to-business e-Solutions.
-\n\nFounded in Australia in 1998, B2BE expanded across Europe, Oceania, North America and Asia. We have customers in many industries and market segments.
+    <string name="text_about_desc1">Co8 is an international organisation that helps businesses be more efficient and profitable by deploying business-to-business e-Solutions.
+\n\nFounded in Australia in 1998, Co8 expanded across Europe, Oceania, North America and Asia. We have customers in many industries and market segments.
 \n\nOur mission is to provide compelling and innovative e-solutions to facilitate effective process improvement, driving cost savings into businesses with competitive pricing and excellent customer service.
-\n\nB2BE’s team of e-solution specialists have a track record in a wide range of industries. Our consultants have extensive experience from successful collaborations with customers, intermediaries and third party providers.
-\n\nB2BE’s products and solutions are flexible and adaptable. Each solution can be customised to any environment or process.
-\n\nB2BE recently acquired the ECN Group, which has many complementary products and solutions.</string>
+\n\nCo8’s team of e-solution specialists have a track record in a wide range of industries. Our consultants have extensive experience from successful collaborations with customers, intermediaries and third party providers.
+\n\nCo8’s products and solutions are flexible and adaptable. Each solution can be customised to any environment or process.
+\n\nCo8 recently acquired the ECN Group, which has many complementary products and solutions.</string>
     <string name="text_about_desc2"></string>
     <string name="text_about_desc3"></string>
     <string name="msg_ask_exit_app">Do you really want to log out?</string>
@@ -374,13 +374,13 @@
     <string name="text_recommend">Recommended</string>
     <string name="text_alert_group">Group</string>
 
-    <string name="titlte_terms_and_privacy">Terms and Privacy</string>
+    <string name="titlte_terms_and_privacy">Terms Of Use</string>
 
     <string name="text_tell_friend">Tell a friend</string>
     <string name="text_setting">Settings</string>
     <string name="text_about_us">About Us</string>
     <string name="text_contact_us">Contact Us</string>
-    <string name="text_terms">Terms &amp; Privacy</string>
+    <string name="text_terms">Terms Of Use</string>
     <string name="text_sign_out">Log Out</string>
 
     <string name="text_invited_event">%s invited you to a Meeting.</string>
@@ -733,7 +733,7 @@
 
     <string name="text_profile_position">Position</string>
     <string name="text_profile_department">Department</string>
-    <string name="text_about_b2be">B2BE</string>
+    <string name="text_about_b2be">Co8</string>
     <string name="text_good_job">Good Job</string>
     <string name="text_internal_phone">Internal Phone Ext.</string>
 
@@ -763,4 +763,8 @@
     <string name="text_org_list_empty">You have no member here</string>
     <string name="text_org_no_group">No Group</string>
     <string name="text_org_no_contact">No Contacts</string>
+    <string name="text_workspace_empty">Tap “+” to create new WorkSpace</string>
+    <string name="text_meeting_empty">Tap “+” to create new Meeting</string>
+    <string name="text_news_empty">Tap “+” to add News</string>
+    <string name="text_message_empty">Start messaging with your contacts</string>
 </resources>

@@ -485,9 +485,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         llm = new LinearLayoutManager(MessageChatActivity.this);
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
-
+        recyclerView.setItemAnimator(null);
         playerManager = AudioPlayUtils.getManager();
         messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm, isGroupChat, playerManager);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
         mTimer = new Timer();

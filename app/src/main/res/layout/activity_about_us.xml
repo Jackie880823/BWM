@@ -32,7 +32,8 @@
             <ImageView
                 android:layout_width="125dp"
                 android:layout_height="50dp"
-                android:src="@drawable/b2be_logo" />
+                android:src="@drawable/b2be_logo"
+                android:visibility="gone"/>
 
 
             <TextView

@@ -326,6 +326,7 @@ public class AddContactMembersActivity extends BaseActivity {
         ivSearch = getViewById(R.id.iv_search);
 
         rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setItemAnimator(null);
         vProgress.setVisibility(View.VISIBLE);
         new Thread(new Runnable() {
             @Override
