@@ -114,9 +114,11 @@ public class OrgListActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
-            rightButton.setVisibility(View.INVISIBLE);
+            rightButton.setImageResource(R.drawable.org_search_icon);
+            rightSearchButton.setVisibility(View.GONE);
+        } else {
+            rightSearchButton.setVisibility(View.VISIBLE);
         }
-        rightSearchButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -128,6 +130,14 @@ public class OrgListActivity extends BaseActivity {
             startActivityForResult(intent, CREATE_GROUP);
         } else if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
             startActivity(new Intent(mContext, AddMembersActivity.class));
+        } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+            if (serachLinear.getVisibility() == View.VISIBLE) {
+                serachLinear.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.org_up_from_bottom));
+                serachLinear.setVisibility(View.GONE);
+            } else {
+                serachLinear.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.up_from_top));
+                serachLinear.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -268,7 +278,7 @@ public class OrgListActivity extends BaseActivity {
         etSearch = getViewById(R.id.et_search);
         emptyView = getViewById(R.id.family_group_text_empty);
         serachLinear = getViewById(R.id.search_linear);
-        tv_org_empty= getViewById(R.id.tv_org_empty);
+        tv_org_empty = getViewById(R.id.tv_org_empty);
         if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
             groupEntityList = new ArrayList<>();
             groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);

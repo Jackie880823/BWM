@@ -84,12 +84,7 @@
 
     <!-- about -->
 
-    <string name="text_about_desc1">Co8 is an international organisation that helps businesses be more efficient and profitable by deploying business-to-business e-Solutions.
-\n\nFounded in Australia in 1998, Co8 expanded across Europe, Oceania, North America and Asia. We have customers in many industries and market segments.
-\n\nOur mission is to provide compelling and innovative e-solutions to facilitate effective process improvement, driving cost savings into businesses with competitive pricing and excellent customer service.
-\n\nCo8’s team of e-solution specialists have a track record in a wide range of industries. Our consultants have extensive experience from successful collaborations with customers, intermediaries and third party providers.
-\n\nCo8’s products and solutions are flexible and adaptable. Each solution can be customised to any environment or process.
-\n\nCo8 recently acquired the ECN Group, which has many complementary products and solutions.</string>
+    <string name="text_about_desc1">co8 enables you and your work communities to connect and collaborate anytime and anywhere. Collaboration made simple for a better and more effective team communication./n/nContact: support@co8app.com/nWebsite: www.co8app.com</string>
     <string name="text_about_desc2"></string>
     <string name="text_about_desc3"></string>
     <string name="msg_ask_exit_app">Do you really want to log out?</string>
@@ -733,7 +728,7 @@
 
     <string name="text_profile_position">Position</string>
     <string name="text_profile_department">Department</string>
-    <string name="text_about_b2be">Co8</string>
+    <string name="text_about_b2be">co8</string>
     <string name="text_good_job">Good Job</string>
     <string name="text_internal_phone">Internal Phone Ext.</string>
 
