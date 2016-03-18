@@ -481,64 +481,23 @@ public class GroupSettingActivity extends BaseActivity {
         tvRemoveUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showAdminDialog1.dismiss();
 
-                RequestInfo requestInfo = new RequestInfo();
-
-                HashMap<String, String> jsonParams = new HashMap<String, String>();
-                jsonParams.put("user_id", userList.get(position).getUser_id());//MainActivity
-                final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-
-                requestInfo.url = String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId);
-                requestInfo.jsonParam = jsonParamsString;
-
-                new HttpTools(GroupSettingActivity.this).put(requestInfo, Tag, new HttpCallback() {
+                alertDialog = new MyDialog(GroupSettingActivity.this, getString(R.string.text_tips_title), getString(R.string.alert_deleter_member));
+                alertDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
                     @Override
-                    public void onStart() {
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                    }
-
-                    @Override
-                    public void onResult(String response) {
-                        try {
-
-                            JSONObject jsonObject = new JSONObject(response);
-
-                            if (("200").equals(jsonObject.getString("response_status_code"))) {
-                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();//成功
-                                getMembersList();
-                                showAdminDialog1.dismiss();
-
-                            } else {
-                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();//成功
-                                showAdminDialog1.dismiss();
-                            }
-                        } catch (JSONException e) {
-                            Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                        showAdminDialog1.dismiss();
-                    }
-
-                    @Override
-                    public void onCancelled() {
-
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
                     }
                 });
+                alertDialog.setButtonAccept(R.string.ok, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        deleteMember(userList.get(position));
+                    }
+                });
+                alertDialog.show();
+
             }
         });
 
@@ -570,6 +529,63 @@ public class GroupSettingActivity extends BaseActivity {
         });
         if (!showAdminDialog1.isShowing())
             showAdminDialog1.show();
+    }
+    Dialog alertDialog ;
+    private void deleteMember(UserEntity userEntity){
+        RequestInfo requestInfo = new RequestInfo();
+
+        HashMap<String, String> jsonParams = new HashMap<String, String>();
+        jsonParams.put("user_id", userEntity.getUser_id());//MainActivity
+        final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+
+        requestInfo.url = String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId);
+        requestInfo.jsonParam = jsonParamsString;
+
+        new HttpTools(GroupSettingActivity.this).put(requestInfo, Tag, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+                alertDialog.dismiss();
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response);
+
+                    if (("200").equals(jsonObject.getString("response_status_code"))) {
+                        Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();//成功
+                        getMembersList();
+
+                    } else {
+                        Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();//成功
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     //admin and addedflag = 0

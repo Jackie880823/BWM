@@ -738,4 +738,5 @@
     <string name="text_min">Min</string>
     <string name="text_sec">Src</string>
     <string name="left">Left!</string>
+    <string name="alert_deleter_member">Are you sure you want to remove this member?</string>
 </resources>
