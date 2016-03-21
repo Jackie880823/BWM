@@ -470,6 +470,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
+            android:name="com.madxstudio.co8.ui.OrgDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
+        <activity
             android:name="com.madxstudio.co8.ui.OrganisationActivity"
             android:screenOrientation="portrait" />
 
@@ -622,7 +627,8 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:noHistory="true" />
-        <activity android:name="com.madxstudio.co8.ui.share.PreviewVideoActivity">
+        <activity android:name="com.madxstudio.co8.ui.share.PreviewVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="com.madxstudio.co8.ui.PreviewVideoActivity" />
 

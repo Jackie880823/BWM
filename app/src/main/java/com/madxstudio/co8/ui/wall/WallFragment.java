@@ -136,7 +136,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         }
 
         flWallStartUp = getViewById(R.id.tv_no_data);
-        tvNoData = getViewById(R.id.tv_no_data);
+        tvNoData = getViewById(R.id.workspace_tv_no_data);
 
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
@@ -234,7 +234,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     }
                     LogUtil.i(TAG, "requestData& adapter size: " + adapter.getItemCount());
                     if (data.size() <= 0 && !hasData) {
-                        if (TextUtils.isEmpty(member_id)) {
+                        if (TextUtils.isEmpty(member_id) || MainActivity.getUser().getUser_id().equals(member_id)) {
                             tvNoData.setVisibility(View.GONE);
                             flWallStartUp.setVisibility(View.VISIBLE);
                         } else {

@@ -91,17 +91,17 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
                 startActivity(intent);
                 break;
             case R.id.linear_my_group:
-                Intent intent1 = new Intent(mContext, OrgListActivity.class);
+                Intent intent1 = new Intent(mContext, OrgDetailActivity.class);
                 intent1.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_GROUP);
                 startActivity(intent1);
                 break;
             case R.id.linear_all_staff:
-                Intent intent2 = new Intent(mContext, OrgListActivity.class);
+                Intent intent2 = new Intent(mContext, OrgDetailActivity.class);
                 intent2.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_STAFF);
                 startActivity(intent2);
                 break;
             case R.id.linear_org_others:
-                Intent intent3 = new Intent(mContext, OrgListActivity.class);
+                Intent intent3 = new Intent(mContext, OrgDetailActivity.class);
                 intent3.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
                 startActivity(intent3);
                 break;

@@ -27,8 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/linear_company_profile"
@@ -116,10 +115,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <RelativeLayout
-                    android:id="@+id/linear_all_staff"
+                    android:id="@+id/linear_all_staff1"
                     android:layout_width="@dimen/default_user_head_width_height"
                     android:layout_height="@dimen/default_user_head_width_height"
                     android:background="@drawable/circular_bg_blue"
@@ -153,10 +153,10 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <RelativeLayout
-                    android:id="@+id/linear_all_staff1"
+                    android:id="@+id/linear_all_staff"
                     android:layout_width="@dimen/default_user_head_width_height"
                     android:layout_height="@dimen/default_user_head_width_height"
                     android:background="@drawable/circular_bg_blue"
@@ -210,7 +210,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical"
+                android:visibility="gone"></LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"

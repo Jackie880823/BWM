@@ -28,51 +28,58 @@
             android:background="@null"
             android:src="@drawable/back_normal" />
 
-        <LinearLayout
-            android:id="@+id/tv_top_title"
-            android:layout_width="0dp"
+        <RelativeLayout
+            android:layout_width="@dimen/_0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/default_view_margin"
-            android:layout_marginRight="@dimen/default_view_margin"
-            android:layout_weight="1"
-            android:gravity="center">
+            android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/tv_title"
-                style="@style/text_title_default"
-                android:layout_gravity="center"
-                android:ellipsize="marquee"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/tv_top_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_view_margin"
+                android:layout_marginRight="@dimen/default_view_margin"
+                android:gravity="center">
 
-            <ImageView
-                android:id="@+id/title_icon"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/default_text_padding"
+                <TextView
+                    android:id="@+id/tv_title"
+                    style="@style/text_title_default"
+                    android:layout_gravity="center"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/title_icon"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/default_text_padding"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!--<TextView-->
+            <!--android:id="@+id/ib_top_text_right"-->
+            <!--style="@style/text_title_default"-->
+            <!--android:layout_width="@dimen/default_small_button_width_height"-->
+            <!--android:layout_height="@dimen/default_small_button_width_height"-->
+            <!--android:text="GO"-->
+            <!--android:layout_gravity="right|center_vertical"-->
+            <!--android:textColor="@drawable/text_title_seletor"-->
+            <!--android:visibility="gone" />-->
+            <ImageButton
+                android:id="@+id/ib_top_button_right2"
+                android:layout_width="@dimen/default_button_width_height"
+                android:layout_height="@dimen/default_button_width_height"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:src="@drawable/org_search_icon"
                 android:visibility="gone" />
-        </LinearLayout>
-
-        <!--<TextView-->
-        <!--android:id="@+id/ib_top_text_right"-->
-        <!--style="@style/text_title_default"-->
-        <!--android:layout_width="@dimen/default_small_button_width_height"-->
-        <!--android:layout_height="@dimen/default_small_button_width_height"-->
-        <!--android:text="GO"-->
-        <!--android:layout_gravity="right|center_vertical"-->
-        <!--android:textColor="@drawable/text_title_seletor"-->
-        <!--android:visibility="gone" />-->
-        <ImageButton
-            android:id="@+id/ib_top_button_right2"
-            android:layout_width="@dimen/default_button_width_height"
-            android:layout_height="@dimen/default_button_width_height"
-            android:layout_gravity="right|center_vertical"
-            android:background="@null"
-            android:src="@drawable/org_search_icon"
-            android:visibility="gone" />
+        </RelativeLayout>
 
         <ImageButton
             android:id="@+id/ib_top_button_right"
