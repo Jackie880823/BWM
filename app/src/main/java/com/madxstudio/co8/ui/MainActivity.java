@@ -311,9 +311,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                             break;
                         case chat:
 //                          fragment.startActivity(new Intent(getApplicationContext(), CreateGroupActivity.class));
-                            if (commandlistener != null) {
-                                commandlistener.execute(rightButton);
-                            }
+//                            if (commandlistener != null) {
+//                                commandlistener.execute(rightButton);
+//                            }
                             break;
                         case family:
                             fragment.startActivityForResult(new Intent(getApplicationContext(), WriteNewsActivity.class), Constant.ACTION_NEWS_CREATE);
@@ -467,6 +467,15 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     }
 
+    @Override
+    protected void titleRightSearchEvent() {
+        super.titleRightSearchEvent();
+        if (TabEnum.chat == currentTabEnum) {
+            if (commandlistener != null) {
+                commandlistener.execute(rightSearchButton);
+            }
+        }
+    }
 
     @Override
     public void initView() {
@@ -531,7 +540,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
         fragments.add(NewsFragment.newInstance());
-        fragments.add(MessageMainFragment.newInstance());
+        fragments.add(MessageFragment.newInstance());
 //        eventFragment = EventFragment.newInstance();
 //        fragments.add(eventFragment);
 //        if(isEventFragmentDate()){
@@ -746,8 +755,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
 //                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                 leftButton.setVisibility(View.INVISIBLE);
-                leftButton.setImageResource(R.drawable.btn_family);
                 rightButton.setVisibility(View.VISIBLE);
+                rightSearchButton.setVisibility(View.VISIBLE);
+                rightButton.setImageResource(R.drawable.profile_add_message);
                 tabIv3.setImageResource(R.drawable.tab_message_select);
                 ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_press3));
                 tabTv3.setTextColor(Color.WHITE);

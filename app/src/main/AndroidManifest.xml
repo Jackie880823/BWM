@@ -470,6 +470,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
+            android:name="com.madxstudio.co8.ui.OrgDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
+        <activity
             android:name="com.madxstudio.co8.ui.OrganisationActivity"
             android:screenOrientation="portrait" />
 

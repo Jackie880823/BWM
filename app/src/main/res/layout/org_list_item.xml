@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/org_relative"
+        android:layout_width="@dimen/_65dp"
+        android:layout_height="@dimen/_65dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/_10dp"
+        android:layout_marginLeft="@dimen/_8dp"
+        android:layout_marginTop="@dimen/_8dp">
+
+        <com.madxstudio.co8.widget.CircularNetworkImage
+            android:id="@+id/org_icon_image"
+            android:layout_width="@dimen/_60dp"
+            android:layout_height="@dimen/_60dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/default_head_icon"
+            app:border="false" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:layout_marginRight="@dimen/_8dp"
+        android:layout_toRightOf="@+id/org_relative"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_org_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="@dimen/_40dp"
+            android:layout_toLeftOf="@+id/tv_org_admin"
+            android:singleLine="true"
+            android:textColor="#333"
+            android:textSize="@dimen/_18dp"
+            tools:text="skldsdsdcsvsdcvsvsvddsvsdvdsvdsfjal" />
+
+        <TextView
+            android:id="@+id/tv_org_admin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/tv_org_position"
+            android:layout_marginRight="@dimen/_10dp"
+            android:gravity="center_vertical"
+            android:textColor="#ff3333"
+            android:textSize="@dimen/_10dp"
+            android:visibility="gone"
+            tools:text="@string/text_admin" />
+
+        <TextView
+            android:id="@+id/tv_org_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tv_org_name"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_2dp"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/message_comment"
+            android:textSize="@dimen/_15dp"
+            tools:text="skldfjal" />
+
+        <ImageView
+            android:id="@+id/org_add_request"
+            android:layout_width="@dimen/_25dp"
+            android:layout_height="@dimen/_25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_10dp"
+            android:src="@drawable/time"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_5dp"
+        android:layout_below="@id/org_relative"
+        android:background="#c9c9c9"
+        android:visibility="gone" />
+</RelativeLayout>

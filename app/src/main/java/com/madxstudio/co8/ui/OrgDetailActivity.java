@@ -10,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Filter;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,12 +32,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.adapter.FamilyGroupAdapter;
-import com.madxstudio.co8.adapter.MyFamilyAdapter;
+import com.madxstudio.co8.adapter.OrgGroupListAdapter;
+import com.madxstudio.co8.adapter.OrgMemberListAdapter;
 import com.madxstudio.co8.entity.FamilyGroupEntity;
 import com.madxstudio.co8.entity.FamilyMemberEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.ui.add.AddMembersActivity;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.NetworkUtil;
@@ -53,7 +52,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -62,7 +60,7 @@ import java.util.regex.Pattern;
 /**
  * Created by quankun on 16/3/8.
  */
-public class OrgListActivity extends BaseActivity {
+public class OrgDetailActivity extends BaseActivity {
     private String transmitData;
     private Context mContext;
     private View vProgress;
@@ -71,18 +69,18 @@ public class OrgListActivity extends BaseActivity {
     private static final int GET_DATA = 0x11;
     private final static int ADD_MEMBER = 0x12;
     private final static int CREATE_GROUP = 0x13;
-    private MyFamilyAdapter memberAdapter;
-    private FamilyGroupAdapter groupAdapter;
+    private OrgMemberListAdapter memberAdapter;
+    private OrgGroupListAdapter groupAdapter;
     private MySwipeRefreshLayout refreshLayout;
     private ListView gridView;
     private ImageButton userIb;
     private View emptyView;
     private boolean isRefresh = false;
-    private String Tag = OrgListActivity.class.getName();
-    private Dialog showSelectDialog;
+    private String Tag = OrgDetailActivity.class.getName();
     private EditText etSearch;
     private View serachLinear;
     private TextView tv_org_empty;
+    private TextView searchTv;
 
     @Override
     protected void initBottomBar() {
@@ -166,9 +164,6 @@ public class OrgListActivity extends BaseActivity {
             case CREATE_GROUP:
                 if (resultCode == RESULT_OK) {
                     if (groupEntityList != null) {
-                        groupAdapter.clearBitmap(groupEntityList);
-                        groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
-                        gridView.setAdapter(groupAdapter);
                         getData();
                     }
                 }
@@ -215,12 +210,6 @@ public class OrgListActivity extends BaseActivity {
             public void onResult(String string) {
                 vProgress.setVisibility(View.GONE);
                 MessageUtil.showMessage(mContext, R.string.msg_action_successed);
-                if (groupEntityList != null) {
-                    groupAdapter.clearBitmap(groupEntityList);
-                    groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
-                    gridView.setAdapter(groupAdapter);
-                    getData();
-                }
             }
 
             @Override
@@ -242,25 +231,226 @@ public class OrgListActivity extends BaseActivity {
 
     private void showNoFriendDialog(final FamilyMemberEntity familyMemberEntity) {
         LayoutInflater factory = LayoutInflater.from(mContext);
-        View selectIntention = factory.inflate(R.layout.dialog_bond_alert_member, null);
-        showSelectDialog = new MyDialog(mContext, null, selectIntention);
-        showSelectDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
+        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        profileView.setText(R.string.text_view_profile);
+        messageView.setText(R.string.text_org_resend_request);
+        leaveView.setText(R.string.text_org_cancel_request);
+        profileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSelectDialog.dismiss();
+                Intent intent = new Intent(mContext, FamilyViewProfileActivity.class);
+                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
+                startActivity(intent);
             }
         });
-        selectIntention.findViewById(R.id.subject_1).setOnClickListener(new View.OnClickListener() {
+
+        messageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showSelectDialog.dismiss();
                 onceAdd(familyMemberEntity.getUser_id());
+            }
+        });
+        leaveView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                awaitingRemove(familyMemberEntity.getUser_id());
+            }
+        });
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 showSelectDialog.dismiss();
             }
         });
-        selectIntention.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
+        showSelectDialog.show();
+    }
+
+    private void showGroupDialog(final FamilyGroupEntity groupEntity) {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        profileView.setText(R.string.text_org_group_profile);
+        messageView.setText(R.string.text_org_message);
+        leaveView.setText(R.string.text_org_leave_group);
+        profileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                awaitingRemove(familyMemberEntity.getUser_id());
+                showSelectDialog.dismiss();
+                Intent intent = new Intent(mContext, GroupSettingActivity.class);
+                intent.putExtra(UserEntity.EXTRA_GROUP_ID, groupEntity.getGroup_id());
+                intent.putExtra("groupName", groupEntity.getGroup_name());
+                intent.putExtra(Constant.GROUP_DEFAULT, groupEntity.getGroup_default());
+                startActivity(intent);
+            }
+        });
+
+        messageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, MessageChatActivity.class);
+                intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_GROUP);
+                intent.putExtra(Constant.MESSAGE_CHART_GROUP_ID, groupEntity.getGroup_id());
+                intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, groupEntity.getGroup_name());
+                intent.putExtra(Constant.GROUP_DEFAULT, groupEntity.getGroup_default());
+                startActivity(intent);
+                showSelectDialog.dismiss();
+            }
+        });
+
+        leaveView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                final MyDialog leaveGroupAlertDialog = new MyDialog(mContext, null, getResources().getString(R.string.text_leave_group_sure));
+                leaveGroupAlertDialog.setButtonAccept(getResources().getString(R.string.text_dialog_yes), new View.OnClickListener() {
+                    /**
+                     * end
+                     */
+                    @Override
+                    public void onClick(View v) {
+                        leaveGroupAlertDialog.dismiss();
+                        RequestInfo requestInfo = new RequestInfo();
+                        HashMap<String, String> jsonParams = new HashMap<String, String>();
+                        jsonParams.put("group_id", groupEntity.getGroup_id());
+                        jsonParams.put("group_owner_id", "");
+                        jsonParams.put("group_user_default", "0");
+                        jsonParams.put("query_on", "exitGroup");
+                        jsonParams.put("user_id", MainActivity.getUser().getUser_id());
+                        final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+                        requestInfo.url = String.format(Constant.API_LEAVE_GROUP, groupEntity.getGroup_id());
+                        requestInfo.jsonParam = jsonParamsString;
+
+                        new HttpTools(mContext).put(requestInfo, Tag, new HttpCallback() {
+                            @Override
+                            public void onStart() {
+
+                            }
+
+                            @Override
+                            public void onFinish() {
+
+                            }
+
+                            @Override
+                            public void onResult(String response) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    if (("200").equals(jsonObject.getString("response_status_code"))) {
+                                        MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_success_leave_group));//成功
+                                        groupAdapter.removeData(groupEntity);
+                                    } else {
+                                        MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_fail_leave_group));//失败
+                                    }
+                                } catch (JSONException e) {
+                                    MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_error));
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_error));
+                            }
+
+                            @Override
+                            public void onCancelled() {
+
+                            }
+
+                            @Override
+                            public void onLoading(long count, long current) {
+
+                            }
+                        });
+                    }
+                });
+                leaveGroupAlertDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        leaveGroupAlertDialog.dismiss();
+
+                    }
+                });
+                if (!leaveGroupAlertDialog.isShowing()) {
+                    leaveGroupAlertDialog.show();
+                }
+            }
+        });
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
+    }
+
+    private void showStaffDialog(final FamilyMemberEntity memberEntity) {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        View lineView = selectIntention.findViewById(R.id.leave_line);
+        if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+            profileView.setText(R.string.text_org_view_profile);
+            leaveView.setVisibility(View.GONE);
+            lineView.setVisibility(View.GONE);
+        } else {
+            profileView.setText(R.string.text_view_profile);
+            leaveView.setVisibility(View.VISIBLE);
+            lineView.setVisibility(View.VISIBLE);
+            leaveView.setText(R.string.text_org_delete_contact);
+        }
+        messageView.setText(R.string.text_org_message);
+
+        profileView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                Intent intent = new Intent(mContext, FamilyProfileActivity.class);
+                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, memberEntity.getUser_id());
+                intent.putExtra(UserEntity.EXTRA_GROUP_ID, memberEntity.getGroup_id());
+                intent.putExtra(UserEntity.EXTRA_GROUP_NAME, memberEntity.getUser_given_name());
+                startActivity(intent);
+            }
+        });
+
+        leaveView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        messageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                Intent intent = new Intent(mContext, MessageChatActivity.class);
+                intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);
+                intent.putExtra(UserEntity.EXTRA_GROUP_ID, memberEntity.getGroup_id());
+                intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, memberEntity.getUser_given_name());
+                startActivity(intent);
+            }
+        });
+
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 showSelectDialog.dismiss();
             }
         });
@@ -280,14 +470,15 @@ public class OrgListActivity extends BaseActivity {
         emptyView = getViewById(R.id.family_group_text_empty);
         serachLinear = getViewById(R.id.search_linear);
         tv_org_empty = getViewById(R.id.tv_org_empty);
+        searchTv = getViewById(R.id.message_search);
         if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
             groupEntityList = new ArrayList<>();
-            groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
+            groupAdapter = new OrgGroupListAdapter(mContext, groupEntityList);
             gridView.setAdapter(groupAdapter);
             tv_org_empty.setText(R.string.text_org_no_group);
         } else {
             memberList = new ArrayList<>();
-            memberAdapter = new MyFamilyAdapter(mContext, memberList);
+            memberAdapter = new OrgMemberListAdapter(mContext, memberList, transmitData);
             gridView.setAdapter(memberAdapter);
             tv_org_empty.setText("No Contacts");
         }
@@ -297,39 +488,73 @@ public class OrgListActivity extends BaseActivity {
                 gridView.setSelection(0);
             }
         });
+
+        if (memberAdapter != null) {
+            memberAdapter.showNoData(new NoFoundDataListener() {
+                @Override
+                public void showFoundData(String string) {
+                    refreshLayout.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.GONE);
+                    searchTv.setVisibility(View.VISIBLE);
+                    searchTv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
+                }
+
+                @Override
+                public void showRefreshLayout() {
+                    refreshLayout.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+                    searchTv.setVisibility(View.GONE);
+                }
+            });
+        }
+        if (groupAdapter != null) {
+            groupAdapter.showNoData(new NoFoundDataListener() {
+                @Override
+                public void showFoundData(String string) {
+                    refreshLayout.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.GONE);
+                    searchTv.setVisibility(View.VISIBLE);
+                    searchTv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
+                }
+
+                @Override
+                public void showRefreshLayout() {
+                    refreshLayout.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+                    searchTv.setVisibility(View.GONE);
+                }
+            });
+        }
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
-                    Intent intent = new Intent(mContext, MessageChatActivity.class);
-                    intent.putExtra("type", 1);
-                    intent.putExtra("groupId", groupAdapter.getGroupList().get(arg2).getGroup_id());
-                    intent.putExtra("titleName", groupAdapter.getGroupList().get(arg2).getGroup_name());
-                    intent.putExtra(Constant.GROUP_DEFAULT, groupAdapter.getGroupList().get(arg2).getGroup_default());
-                    startActivityForResult(intent, 1);
+                    showGroupDialog(groupAdapter.getList().get(arg2));
                 } else {
-                    FamilyMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
-                    if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
-                        //不是好友,提示等待接收
-                        if (showSelectDialog != null && showSelectDialog.isShowing()) {
-                            return;
-                        }
-                        showNoFriendDialog(familyMemberEntity);
+                    if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData) && arg2 == 0) {
                         return;
                     } else {
-                        //put请求消除爱心
-                        if ("".equals(familyMemberEntity.getMiss())) {
-                            updateMiss(familyMemberEntity.getUser_id());
-                            arg0.findViewById(R.id.myfamily_image_right).setVisibility(View.GONE);
-                            familyMemberEntity.setMiss(null);
+                        FamilyMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
+                        if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
+                            showNoFriendDialog(familyMemberEntity);
+                        } else {
+                            //put请求消除爱心
+//                            if ("".equals(familyMemberEntity.getMiss())) {
+//                                updateMiss(familyMemberEntity.getUser_id());
+//                                arg0.findViewById(R.id.myfamily_image_right).setVisibility(View.GONE);
+//                                familyMemberEntity.setMiss(null);
+//                            }
+//                            Intent intent = new Intent(mContext, FamilyProfileActivity.class);
+//                            intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
+//                            intent.putExtra(UserEntity.EXTRA_GROUP_ID, familyMemberEntity.getGroup_id());
+//                            intent.putExtra(UserEntity.EXTRA_GROUP_NAME, familyMemberEntity.getUser_given_name());
+//                            startActivityForResult(intent, 1);
+                            showStaffDialog(familyMemberEntity);
                         }
-                        Intent intent = new Intent(mContext, FamilyProfileActivity.class);
-                        intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
-                        intent.putExtra(UserEntity.EXTRA_GROUP_ID, familyMemberEntity.getGroup_id());
-                        intent.putExtra(UserEntity.EXTRA_GROUP_NAME, familyMemberEntity.getUser_given_name());
-                        startActivityForResult(intent, 1);
+
                     }
+
                 }
             }
         });
@@ -401,7 +626,7 @@ public class OrgListActivity extends BaseActivity {
             List<FamilyGroupEntity> familyGroupEntityList;
             if (TextUtils.isEmpty(etImport)) {
                 familyGroupEntityList = groupEntityList;
-                groupAdapter.addData(familyGroupEntityList);
+                groupAdapter.addNewData(familyGroupEntityList);
             } else {
                 Filter filter = groupAdapter.getFilter();
                 filter.filter(etImport);
@@ -524,11 +749,9 @@ public class OrgListActivity extends BaseActivity {
                         }
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            List<FamilyMemberEntity> memberList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
-                            }.getType());
-                            List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
-                            }.getType());
                             if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
+                                List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
+                                }.getType());
                                 if (groupList != null && groupList.size() > 0) {
                                     hideEmptyView();
                                     Message.obtain(handler, GET_DATA, groupList).sendToTarget();
@@ -536,10 +759,18 @@ public class OrgListActivity extends BaseActivity {
                                     showEmptyView();
                                 }
                             } else {
-                                if (memberList != null && memberList.size() > 0) {
+                                List<FamilyMemberEntity> memberEntityList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
+                                }.getType());
+                                FamilyMemberEntity meMemberEntity = new FamilyMemberEntity();
+                                UserEntity userEntity = MainActivity.getUser();
+                                meMemberEntity.setGroup_id(userEntity.getGroup_id());
+                                meMemberEntity.setUser_id(userEntity.getUser_id());
+                                meMemberEntity.setPosition(userEntity.getPosition());
+                                meMemberEntity.setUser_given_name(mContext.getString(R.string.text_me));
+                                if (memberEntityList != null && memberEntityList.size() > 0) {
                                     List<FamilyMemberEntity> staffList = new ArrayList<FamilyMemberEntity>();
                                     List<FamilyMemberEntity> otherList = new ArrayList<FamilyMemberEntity>();
-                                    for (FamilyMemberEntity memberEntity : memberList) {
+                                    for (FamilyMemberEntity memberEntity : memberEntityList) {
                                         String tree_type = memberEntity.getTree_type();
                                         if (Constant.FAMILY_PARENT.equalsIgnoreCase(tree_type) || Constant.FAMILY_CHILDREN.equalsIgnoreCase(tree_type)
                                                 || Constant.FAMILY_SIBLING.equalsIgnoreCase(tree_type)) {
@@ -549,12 +780,13 @@ public class OrgListActivity extends BaseActivity {
                                         }
                                     }
                                     if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
-                                        if (staffList.size() > 0) {
-                                            hideEmptyView();
-                                            Message.obtain(handler, GET_DATA, staffList).sendToTarget();
-                                        } else {
-                                            showEmptyView();
-                                        }
+//                                        if (staffList.size() > 0) {
+                                        hideEmptyView();
+                                        staffList.add(0, meMemberEntity);
+                                        Message.obtain(handler, GET_DATA, staffList).sendToTarget();
+//                                        } else {
+//                                            showEmptyView();
+//                                        }
                                     } else {
                                         if (otherList.size() > 0) {
                                             hideEmptyView();
@@ -564,7 +796,14 @@ public class OrgListActivity extends BaseActivity {
                                         }
                                     }
                                 } else {
-                                    showEmptyView();
+                                    if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+                                        hideEmptyView();
+                                        memberEntityList = new ArrayList<FamilyMemberEntity>();
+                                        memberEntityList.add(0, meMemberEntity);
+                                        Message.obtain(handler, GET_DATA, memberEntityList).sendToTarget();
+                                    } else {
+                                        showEmptyView();
+                                    }
                                 }
                             }
                         } catch (JSONException e) {
@@ -603,7 +842,7 @@ public class OrgListActivity extends BaseActivity {
                             groupEntityList.clear();
                         }
                         groupEntityList = (List<FamilyGroupEntity>) msg.obj;
-                        groupAdapter.addData(groupEntityList);
+                        groupAdapter.addNewData(groupEntityList);
                     } else {
                         if (memberList != null) {
                             memberList.clear();

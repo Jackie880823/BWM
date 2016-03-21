@@ -71,7 +71,7 @@ public class Constant {
     public static final int INTENT_REQUEST_FEELING = 21;
 
     /**
-     *请求编辑评论的意图
+     * 请求编辑评论的意图
      */
     public static final int EDIT_COMMENT_REQUEST_CODE = 1000;
 
@@ -87,6 +87,11 @@ public class Constant {
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
 
+    public static final int MESSAGE_CHART_TYPE_MEMBER = 0;
+    public static final int MESSAGE_CHART_TYPE_GROUP = 1;
+    public static final String MESSAGE_CHART_TYPE ="type";
+    public static final String MESSAGE_CHART_GROUP_ID ="groupId";
+    public static final String MESSAGE_CHART_TITLE_NAME ="titleName";
 
     public static final String GROUP_DEFAULT = "group_default";
 
@@ -219,7 +224,7 @@ public class Constant {
     public static final String API_BONDALERT_GROUP_CONFIRM = API_SERVER + "/bondwithme/index.php/api/confirmJoinGroup/%s";
     public static final String API_BONDALERT_GROUP_REJECT = API_SERVER + "/bondwithme/index.php/api/rejectJoinGroup/%s";
     public static final String API_BONDALERT_REMOVE_RECOMMEND = API_SERVER + "/bondwithme/index.php/api/removeRecomUser/";
-    public static final String API_REWARDS = API_SERVER +"/bondwithme/index.php/api/rewardList/%s";
+    public static final String API_REWARDS = API_SERVER + "/bondwithme/index.php/api/rewardList/%s";
 
     /**
      * Api for sticker store
@@ -350,7 +355,7 @@ public class Constant {
     public static final String EXTRA_LONGITUDE = "longitude";
 
     // 用于网络连拉的参数
-    public static final String PARAM_USER_ID= "user_id";
+    public static final String PARAM_USER_ID = "user_id";
     public static final String PARAM_CONTENT_CREATOR_ID = "content_creator_id";
     public static final String PARAM_CONTENT_TYPE = "content_type";
     public static final String PARAM_TEXT_DESCRIPTION = "text_description";
@@ -376,7 +381,7 @@ public class Constant {
     public static final String FAIL = "Fail";
     public static final String TYPE = "type";
 
-    public static final String FILE_PATH_NAME="CO8";
+    public static final String FILE_PATH_NAME = "CO8";
 
     /**
      * about wall, user extra
@@ -434,12 +439,12 @@ public class Constant {
     /**
      * 视频存放路径
      */
-    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance(),true) + "/Video/";
+    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance(), true) + "/Video/";
 
     //删除message消息
-    public static final String API_MESSAGE_DELETE = API_SERVER +"/bondwithme/index.php/api/removeContent/%s";
-    public static final String API_WALL_UPDATE_CAPTION = API_SERVER +"/bondwithme/index.php/api/editPhoto/%s";
-    public static final String API_WALL_DELETE_PHOTO = API_SERVER +"/bondwithme/index.php/api/deletePhoto/%s";
+    public static final String API_MESSAGE_DELETE = API_SERVER + "/bondwithme/index.php/api/removeContent/%s";
+    public static final String API_WALL_UPDATE_CAPTION = API_SERVER + "/bondwithme/index.php/api/editPhoto/%s";
+    public static final String API_WALL_DELETE_PHOTO = API_SERVER + "/bondwithme/index.php/api/deletePhoto/%s";
 
     //新的得到表情包
     public static final String API_STICKER_GROUP_LIST = API_SERVER + "/bondwithme/index.php/api/stickerGroupList";
@@ -462,13 +467,13 @@ public class Constant {
     //新的rewards
     public static final String API_GET_My_REWARD = API_SERVER + "/bondwithme/index.php/api/myRewardList/%s";
     public static final String API_GET_REWARD_LIST = API_SERVER + "/bondwithme/index.php/api/rewardList/%s";
-    public static final String API_POST_REWARD_CODE = API_SERVER +"/bondwithme/index.php/api/redeemReward";
+    public static final String API_POST_REWARD_CODE = API_SERVER + "/bondwithme/index.php/api/redeemReward";
 
     //news
-    public static final String API_GET_NEWS_LIST = API_SERVER+"/bondwithme/index.php/api/news";
-    public static final String API_POST_NEWS = API_SERVER +"/bondwithme/index.php/api/news";
-    public static final String API_GET_NEWS_DETAIL = API_SERVER +"/bondwithme/index.php/api/news";
-    public static final String API_PUT_NEWS = API_SERVER +"/bondwithme/index.php/api/updateContent/%s";
+    public static final String API_GET_NEWS_LIST = API_SERVER + "/bondwithme/index.php/api/news";
+    public static final String API_POST_NEWS = API_SERVER + "/bondwithme/index.php/api/news";
+    public static final String API_GET_NEWS_DETAIL = API_SERVER + "/bondwithme/index.php/api/news";
+    public static final String API_PUT_NEWS = API_SERVER + "/bondwithme/index.php/api/updateContent/%s";
     public static final String API_GOOD_JOB_MEMBER = API_SERVER + "/bondwithme/index.php/api/goodjob";//goodjob用户
     public static final String API_UPDATE_GOOD_JOB = API_SERVER + "/bondwithme/index.php/api/goodjob/%s";//消除好友的goodjob
 

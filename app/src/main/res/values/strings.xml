@@ -762,4 +762,12 @@
     <string name="text_meeting_empty">Tap “+” to create new Meeting</string>
     <string name="text_news_empty">Tap “+” to add News</string>
     <string name="text_message_empty">Start messaging with your contacts</string>
+    <string name="text_org_group_profile">View Group Profile</string>
+    <string name="text_org_message">Message</string>
+    <string name="text_org_leave_group">Leave Group</string>
+    <string name="text_org_view_profile">View Profile</string>
+    <string name="text_org_delete_contact">Delete Contact</string>
+    <string name="text_org_resend_request">Resend Request</string>
+    <string name="text_org_cancel_request">Cancel Request</string>
+    <string name="text_search_no_data">No results for \"%s\"</string>
 </resources>

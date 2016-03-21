@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_view_profile"
+        style="@style/text_dialog_style"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/default_content_padding"
+        android:text="@string/text_add_new_member" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_split_line" />
+
+    <TextView
+        android:id="@+id/tv_to_message"
+        style="@style/text_dialog_style"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/default_content_padding"
+        android:text="@string/text_create_new_group" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_split_line" />
+
+    <TextView
+        android:id="@+id/tv_leave_or_delete"
+        style="@style/text_dialog_style"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/default_content_padding"
+        android:text="@string/text_add_new_member" />
+
+
+    <View
+        android:id="@+id/leave_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_split_line" />
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        style="@style/text_dialog_style"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/default_content_padding"
+        android:text="@string/text_dialog_cancel"
+        android:textColor="@color/high_light_color"
+        android:textStyle="bold" />
+
+</LinearLayout>

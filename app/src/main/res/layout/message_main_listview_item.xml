@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/message_private_relative"
+        android:layout_width="@dimen/_65dp"
+        android:layout_height="@dimen/_65dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/_10dp"
+        android:layout_marginLeft="@dimen/_8dp"
+        android:layout_marginTop="@dimen/_8dp">
+
+        <com.madxstudio.co8.widget.CircularNetworkImage
+            android:id="@+id/message_icon_image"
+            android:layout_width="@dimen/_60dp"
+            android:layout_height="@dimen/_60dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/default_head_icon"
+            app:border="false" />
+
+        <ImageView
+            android:id="@+id/message_group_sign"
+            android:layout_width="@dimen/_25dp"
+            android:layout_height="@dimen/_25dp"
+            android:layout_alignBottom="@+id/message_icon_image"
+            android:layout_alignEnd="@+id/message_icon_image"
+            android:layout_alignRight="@+id/message_icon_image"
+            android:src="@drawable/group_symbol_icon" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:layout_marginRight="@dimen/_8dp"
+        android:layout_toRightOf="@+id/message_private_relative"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/message_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="@dimen/_5dp"
+            android:layout_toLeftOf="@+id/last_message_date"
+            android:singleLine="true"
+            android:textColor="#333"
+            android:textSize="@dimen/_18dp"
+            tools:text="skldfjal" />
+
+        <TextView
+            android:id="@+id/last_message_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/message_name"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:textColor="#999"
+            android:textSize="@dimen/_10dp"
+            tools:text="skldfjal" />
+
+        <TextView
+            android:id="@+id/last_message_send_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/message_name"
+            android:layout_marginRight="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_2dp"
+            android:singleLine="true"
+            android:textColor="@color/message_comment"
+            android:textSize="@dimen/_16dp"
+            android:textStyle="bold"
+            tools:text="skldfjal" />
+
+        <TextView
+            android:id="@+id/last_message_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/last_message_send_name"
+            android:layout_marginTop="@dimen/_2dp"
+            android:singleLine="true"
+            android:textColor="@color/message_comment"
+            android:textSize="@dimen/_14dp"
+            tools:text="skldfjal" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_num"
+        android:layout_width="@dimen/_18dp"
+        android:layout_height="@dimen/_18dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_45dp"
+        android:background="@drawable/bg_num_red_message"
+        android:gravity="center"
+        android:textColor="@color/default_text_color_while"
+        android:textSize="@dimen/_10dp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        tools:text="99" />
+</RelativeLayout>
