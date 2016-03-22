@@ -726,6 +726,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        <activity
+            android:name=".ui.company.CompanyActivity"
+            android:parentActivityName=".ui.OrganisationActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

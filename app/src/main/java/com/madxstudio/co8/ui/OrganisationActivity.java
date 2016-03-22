@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.ui.family.FamilyTreeActivity;
 
 /**
@@ -84,7 +84,10 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.linear_company_profile:
+            case R.id.linear_company_profile: {
+                Intent intent = new Intent(mContext, CompanyActivity.class);
+                startActivity(intent);
+            }
                 break;
             case R.id.linear_org_chart:
                 Intent intent = new Intent(mContext, FamilyTreeActivity.class);

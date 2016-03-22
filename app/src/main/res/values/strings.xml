@@ -770,4 +770,8 @@
     <string name="text_org_resend_request">Resend Request</string>
     <string name="text_org_cancel_request">Cancel Request</string>
     <string name="text_search_no_data">No results for \"%s\"</string>
+    <string name="text_leave_admin">Leave Admin Group</string>
+    <string name="text_address">Address</string>
+    <string name="attention_leave_group_description">Are you sure you want to leave this organisation? You are advised to assign another admin before you leave if you are the only admin in this organisation.</string>
+    <string name="attention_leave_group_title">Attention</string>
 </resources>

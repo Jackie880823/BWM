@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@null"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="226dp">
+
+        <ImageView
+            android:id="@+id/iv_profile_images"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/company_profile_title_picture"/>
+
+        <TextView
+            android:id="@+id/tv_change_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="#55000000"
+            android:gravity="center"
+            android:text="@string/text_profile_change_prompt"
+            android:textColor="@color/default_text_color_while"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <View style="@style/split_line_default"/>
+
+    <EditText
+        android:id="@+id/et_company_name"
+        style="@style/text_company"
+        android:text="B2BE GSS Malaysia"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_company_name"
+        style="@style/text_company"
+        android:text="B2BE GSS Malaysia"/>
+
+    <View style="@style/split_line_default"/>
+
+    <EditText
+        android:id="@+id/et_company_description"
+        style="@style/text_company"
+        android:text="he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_company_description"
+        style="@style/text_company"
+        android:text="he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!"/>
+
+    <View style="@style/split_line_default"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_content_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_address"
+            android:textColor="@color/default_text_color_light"
+            android:textSize="@dimen/text_mirco_size"/>
+
+        <EditText
+            android:id="@+id/et_address"
+            style="@style/text_company"
+            android:text="南京大学产学研究基地，南山区，深圳市，广东省"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_address"
+            style="@style/text_company"
+            android:text="南京大学产学研究基地，南山区，深圳市，广东省"/>
+    </LinearLayout>
+
+    <View style="@style/split_line_default"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_content_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_phone"
+            android:textColor="@color/default_text_color_light"
+            android:textSize="@dimen/text_mirco_size"/>
+
+        <EditText
+            android:id="@+id/et_phone"
+            style="@style/text_company"
+            android:autoLink="phone"
+            android:inputType="phone"
+            android:text="13129558153"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_phone"
+            style="@style/text_company"
+            android:autoLink="phone"
+            android:text="13129558153"/>
+    </LinearLayout>
+
+    <View style="@style/split_line_default"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_content_padding">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_email"
+            android:textColor="@color/default_text_color_light"
+            android:textSize="@dimen/text_mirco_size"/>
+
+        <EditText
+            android:id="@+id/et_email"
+            style="@style/text_company"
+            android:autoLink="email"
+            android:inputType="textEmailAddress"
+            android:text="zhuweiping@madxstudio.cn"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_email"
+            style="@style/text_company"
+            android:autoLink="email"
+            android:text="zhuweiping@madxstudio.cn"/>
+    </LinearLayout>
+
+</LinearLayout>
