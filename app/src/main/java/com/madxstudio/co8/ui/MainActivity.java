@@ -310,6 +310,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                             fragment.startActivityForResult(new Intent(getApplicationContext(), EventNewActivity.class), Constant.ACTION_EVENT_CREATE);
                             break;
                         case chat:
+                            fragment.startActivityForResult(new Intent(getApplicationContext(), NewChatActivity.class), Constant.ACTION_MESSAGE_CREATE);
 //                          fragment.startActivity(new Intent(getApplicationContext(), CreateGroupActivity.class));
 //                            if (commandlistener != null) {
 //                                commandlistener.execute(rightButton);
@@ -698,6 +699,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         tabIv2.setImageResource(R.drawable.tab_news);
         tabIv3.setImageResource(R.drawable.tab_message);
         tabIv4.setImageResource(R.drawable.tab_more);
+        rightSearchButton.setVisibility(View.GONE);
+        rightButton.setImageResource(R.drawable.btn_add);
         tabTv0.setTextColor(Color.GRAY);
         tabTv1.setTextColor(Color.GRAY);
         tabTv2.setTextColor(Color.GRAY);

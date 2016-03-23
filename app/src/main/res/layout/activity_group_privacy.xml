@@ -37,9 +37,9 @@
 
                 <TextView
                     style="@style/text_title_default"
+                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/cb_to_other"
-                    android:layout_alignParentLeft="true"
                     android:text="@string/text_to_other"
                     android:textColor="@color/default_text_color_dark" />
 
@@ -47,13 +47,13 @@
                     android:id="@+id/cb_to_other"
                     style="@style/checkbox_default"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    />
+                    android:layout_centerVertical="true" />
 
             </RelativeLayout>
 
-            <View style="@style/split_line_default"
-                android:visibility="gone"/>
+            <View
+                style="@style/split_line_default"
+                android:visibility="gone" />
 
 
             <RelativeLayout
@@ -64,9 +64,9 @@
 
                 <TextView
                     style="@style/text_title_default"
+                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/cb_to_me"
-                    android:layout_alignParentLeft="true"
                     android:text="@string/text_to_me"
                     android:textColor="@color/default_text_color_dark" />
 
@@ -74,13 +74,13 @@
                     android:id="@+id/cb_to_me"
                     style="@style/checkbox_default"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    />
+                    android:layout_centerVertical="true" />
 
             </RelativeLayout>
 
-            <View style="@style/split_line_default"
-                android:visibility="gone"/>
+            <View
+                style="@style/split_line_default"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -89,9 +89,9 @@
 
                 <TextView
                     style="@style/text_title_default"
+                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/cb_group_chat"
-                    android:layout_alignParentLeft="true"
                     android:text="@string/text_group_chat"
                     android:textColor="@color/default_text_color_dark" />
 
@@ -99,8 +99,7 @@
                     android:id="@+id/cb_group_chat"
                     style="@style/checkbox_default"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    />
+                    android:layout_centerVertical="true" />
 
             </RelativeLayout>
 
@@ -110,46 +109,44 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/_10dp"
                 android:background="@color/default_unenable_item_bg"
-                android:text="@string/profile_privacy"/>
+                android:padding="@dimen/_10dp"
+                android:text="@string/profile_privacy" />
 
             <LinearLayout
                 android:id="@+id/ll_birthday_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/default_content_padding"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/default_content_padding">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/text_birthday"
-                    android:textColor="@color/default_text_color_dark"
-                    />
+                    android:textColor="@color/default_text_color_dark" />
 
                 <TextView
                     android:id="@+id/tv_birthday_privacy"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
+
             <View style="@style/split_line_default" />
 
             <LinearLayout
                 android:id="@+id/ll_yearOfBirth_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/default_content_padding"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/default_content_padding">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/year_of_birth"
-                    android:textColor="@color/default_text_color_dark"
-                    />
+                    android:textColor="@color/default_text_color_dark" />
 
                 <TextView
                     android:id="@+id/tv_yearOfBirth_privacy"
@@ -158,21 +155,21 @@
 
                     />
             </LinearLayout>
+
             <View style="@style/split_line_default" />
 
             <LinearLayout
                 android:id="@+id/ll_gender_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/default_content_padding"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/default_content_padding">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/text_gender"
-                    android:textColor="@color/default_text_color_dark"
-                    />
+                    android:textColor="@color/default_text_color_dark" />
 
                 <TextView
                     android:id="@+id/tv_gender_privacy"
@@ -182,21 +179,21 @@
 
                     />
             </LinearLayout>
+
             <View style="@style/split_line_default" />
 
             <LinearLayout
                 android:id="@+id/ll_email_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/default_content_padding"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/default_content_padding">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/text_email"
-                    android:textColor="@color/default_text_color_dark"
-                    />
+                    android:textColor="@color/default_text_color_dark" />
 
                 <TextView
                     android:id="@+id/tv_email_privacy"
@@ -205,20 +202,21 @@
 
                     />
             </LinearLayout>
+
             <View style="@style/split_line_default" />
+
             <LinearLayout
                 android:id="@+id/ll_region_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/default_content_padding"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/default_content_padding">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/text_region"
-                    android:textColor="@color/default_text_color_dark"
-                    />
+                    android:textColor="@color/default_text_color_dark" />
 
                 <TextView
                     android:id="@+id/tv_region_privacy"
@@ -227,20 +225,44 @@
 
                     />
             </LinearLayout>
+
             <View style="@style/split_line_default" />
+
+            <LinearLayout
+                android:id="@+id/ll_internal_phone_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/default_content_padding">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_privacy_internal_phone"
+                    android:textColor="@color/default_text_color_dark" />
+
+                <TextView
+                    android:id="@+id/tv_internal_phone_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    />
+            </LinearLayout>
+
+            <View style="@style/split_line_default" />
+
             <LinearLayout
                 android:id="@+id/ll_phone_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/default_content_padding"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/default_content_padding">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/text_phone"
-                    android:textColor="@color/default_text_color_dark"
-                    />
+                    android:textColor="@color/default_text_color_dark" />
 
                 <TextView
                     android:id="@+id/tv_phone_privacy"
@@ -249,6 +271,7 @@
 
                     />
             </LinearLayout>
+
             <View style="@style/split_line_default" />
 
 
@@ -258,12 +281,12 @@
     </ScrollView>
 
 
-
     <RelativeLayout
-        android:layout_below="@+id/fragment_main_top"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <include layout="@layout/progress_layout"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_main_top">
+
+        <include layout="@layout/progress_layout" />
     </RelativeLayout>
 
 </RelativeLayout>

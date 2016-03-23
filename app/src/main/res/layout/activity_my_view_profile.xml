@@ -114,9 +114,63 @@
                     android:layout_gravity="center"
                     android:background="@color/default_wide_split_line" />
 
+                <RelativeLayout
+                    android:id="@+id/rl_organisation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_new_family"
+                            android:textSize="@dimen/_10dp" />
+
+                        <TextView
+                            android:id="@+id/et_organisation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:gravity="left"
+                            android:singleLine="true"
+                            android:text=""
+                            android:textColor="@color/drawer_arrow_color"
+                            android:textSize="@dimen/text_small_size" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="@dimen/_15dp"
+                        android:layout_height="@dimen/_20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/_15dp"
+                        android:src="@drawable/profile_right" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:layout_gravity="center"
+                    android:background="@color/default_wide_split_line" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_alignBottom="@+id/line"
                     android:layout_gravity="center"
                     android:background="@color/default_split_line" />
 
@@ -482,8 +536,8 @@
                             android:layout_height="wrap_content"
                             android:background="@null"
                             android:gravity="left"
-                            android:singleLine="true"
                             android:inputType="phone"
+                            android:singleLine="true"
                             android:text=""
                             android:textSize="@dimen/text_small_size" />
                     </LinearLayout>
