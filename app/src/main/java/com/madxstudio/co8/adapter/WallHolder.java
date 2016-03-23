@@ -681,10 +681,10 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 @Override
                 public void onGlobalLayout() {
                     LogUtil.i(TAG, "onGlobalLayout&");
-                    // 字符显示超过5行，只显示到第九行
+                    // 字符显示超过5行，只显示到第5行
                     int lineCount = tvContent.getLineCount();
                     if (lineCount > 5) {
-                        // 第九行只显示十个字符
+                        // 第5行只显示十个字符
                         int maxLineEndIndex = tvContent.getLayout().getLineEnd(4);
                         CharSequence sourceText = tvContent.getText();
                         String string = sourceText.toString().substring(maxLineEndIndex - 3);
