@@ -10,8 +10,8 @@
     <item android:state_pressed="true" >
         <shape>
             <gradient
-                android:endColor="#570099"
-                android:startColor="#570099" />
+                android:endColor="@color/tab_color_press41"
+                android:startColor="@color/tab_color_press41" />
             <corners
                 android:radius="5dp" />
         </shape>
@@ -21,8 +21,8 @@
     <item android:state_focused="true"  >
         <shape>
             <gradient
-                android:endColor="#570099"
-                android:startColor="#570099" />
+                android:endColor="@color/tab_color_press41"
+                android:startColor="@color/tab_color_press41" />
             <corners
                 android:radius="5dp"  />
         </shape>

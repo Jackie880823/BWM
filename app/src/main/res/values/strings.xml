@@ -774,4 +774,9 @@
     <string name="text_address">Address</string>
     <string name="attention_leave_group_description">Are you sure you want to leave this organisation? You are advised to assign another admin before you leave if you are the only admin in this organisation.</string>
     <string name="attention_leave_group_title">Attention</string>
+    <string name="text_org_admin">Admin</string>
+    <string name="title_admin_settings">Admin Settings</string>
+    <string name="pending_requests">Pending Requests</string>
+    <string name="view_all_staff">View All Staff</string>
+    <string name="view_others">View Others</string>
 </resources>

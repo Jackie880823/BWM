@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -45,7 +44,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public int getLayout() {
-        return R.layout.fragment_company;
+        return R.layout.activity_company;
     }
 
     /**
