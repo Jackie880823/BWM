@@ -49,7 +49,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:background="@drawable/btn_blue_bg"
-        android:text="@string/text_leave_admin"
+        android:text="@string/text_leave_organisation"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:visibility="gone"/>
