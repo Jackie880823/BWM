@@ -1,0 +1,133 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_text_color_while"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/search_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_main_top"
+        android:background="@color/default_content_bg"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_content_padding"
+            android:background="@drawable/et_oval_white"
+            android:drawablePadding="@dimen/default_view_margin"
+            android:drawableRight="@drawable/search"
+            android:hint="@string/family_search"
+            android:paddingBottom="@dimen/_5dp"
+            android:paddingLeft="@dimen/_8dp"
+            android:paddingRight="@dimen/_8dp"
+            android:paddingTop="@dimen/_5dp"
+            android:singleLine="true"
+            android:textColorHint="#ccc" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1dp"
+            android:background="#CCC" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/select_all_rl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35dp"
+        android:layout_below="@id/search_linear"
+        android:background="@color/default_content_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:text="@string/text_select_all" />
+
+        <CheckBox
+            android:id="@+id/check_member_item"
+            android:layout_width="@dimen/_25dp"
+            android:layout_height="@dimen/_25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_15dp"
+            android:button="@drawable/select_member_checkbox_style"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/select_all_rl"
+        android:orientation="vertical">
+
+        <com.madxstudio.co8.widget.MySwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/org_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.madxstudio.co8.widget.MySwipeRefreshLayout>
+    </LinearLayout>
+
+
+    <ImageButton
+        android:id="@+id/ib_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/_8dp"
+        android:layout_marginRight="@dimen/_8dp"
+        android:background="@null"
+        android:src="@drawable/top"
+        android:visibility="gone" />
+
+
+    <LinearLayout
+        android:id="@+id/family_group_text_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/search_linear"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_org_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/text_org_list_empty"
+            android:textSize="@dimen/_20dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/message_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/select_all_rl"
+        android:layout_marginTop="@dimen/_80dp"
+        android:textSize="@dimen/_22dp"
+        android:visibility="visible" />
+
+    <include layout="@layout/progress_layout" />
+
+</RelativeLayout>

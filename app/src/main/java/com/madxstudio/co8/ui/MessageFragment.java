@@ -2,13 +2,16 @@ package com.madxstudio.co8.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -30,12 +33,15 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.MessageListAdapter;
 import com.madxstudio.co8.entity.PrivateMessageEntity;
+import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.InteractivePopupWindow;
+import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -149,13 +155,49 @@ public class MessageFragment extends BaseFragment<MainActivity> {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
-                arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);
-                privateAdapter.getmUserEntityList().get(arg2).setUnread("0");
-                Intent intent = new Intent(getActivity(), MessageChatActivity.class);
-                intent.putExtra("type", 0);
-                intent.putExtra("groupId", privateAdapter.getmUserEntityList().get(arg2).getGroup_id());
-                intent.putExtra("titleName", privateAdapter.getmUserEntityList().get(arg2).getUser_given_name());
+                PrivateMessageEntity messageEntity = privateAdapter.getmUserEntityList().get(arg2);
+                Intent intent = new Intent(mContext, MessageChatActivity.class);
+                intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);
+                intent.putExtra(UserEntity.EXTRA_GROUP_ID, messageEntity.getGroup_id());
+                intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, messageEntity.getUser_given_name());
                 startActivity(intent);
+//                Intent intent = new Intent(mContext, MessageChatActivity.class);
+//                intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_GROUP);
+//                intent.putExtra(Constant.MESSAGE_CHART_GROUP_ID, groupEntity.getGroup_id());
+//                intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, groupEntity.getGroup_name());
+//                intent.putExtra(Constant.GROUP_DEFAULT, groupEntity.getGroup_default());
+//                startActivity(intent);
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                LayoutInflater factory = LayoutInflater.from(mContext);
+                View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+                final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+                TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+                tv_no_member.setText(getString(R.string.text_delete));
+                tv_no_member.setTextColor(ContextCompat.getColor(mContext, R.color.delete_text_color));
+                TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+                cancelTv.setText(R.string.text_start_cancle);
+                tv_no_member.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showSelectDialog.dismiss();
+                        PrivateMessageEntity messageEntity = privateAdapter.getmUserEntityList().get(position);
+                        privateAdapter.getmUserEntityList().remove(position);
+                        privateAdapter.notifyDataSetChanged();
+                    }
+                });
+                cancelTv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showSelectDialog.dismiss();
+                    }
+                });
+                showSelectDialog.show();
+                return true;
             }
         });
 

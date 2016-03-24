@@ -1,6 +1,7 @@
 package com.madxstudio.co8.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,7 +119,7 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            if (constraint == null && constraint.length() == 0) {
+            if (TextUtils.isEmpty(constraint)) {
                 results.values = original;//原始数据
                 results.count = original.size();
             } else {
@@ -139,11 +140,16 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             list = (List<FamilyGroupEntity>) results.values;
+            if (list == null) {
+                list = new ArrayList<>();
+            }
             notifyDataSetChanged();
             if (results.count == 0) {
-                showData.showFoundData(constraint.toString());
+                if (showData != null)
+                    showData.showFoundData(constraint.toString());
             } else {
-                showData.showRefreshLayout();
+                if (showData != null)
+                    showData.showRefreshLayout();
             }
         }
     }

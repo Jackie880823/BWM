@@ -54,8 +54,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by quankun on 16/3/8.
@@ -457,6 +455,19 @@ public class OrgDetailActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
+    private void showSearchNoDataView(String string) {
+        refreshLayout.setVisibility(View.GONE);
+        emptyView.setVisibility(View.GONE);
+        searchTv.setVisibility(View.VISIBLE);
+        searchTv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
+    }
+
+    private void hideSearchNoDataView() {
+        refreshLayout.setVisibility(View.VISIBLE);
+        emptyView.setVisibility(View.GONE);
+        searchTv.setVisibility(View.GONE);
+    }
+
     @Override
     public void initView() {
         mContext = this;
@@ -480,7 +491,7 @@ public class OrgDetailActivity extends BaseActivity {
             memberList = new ArrayList<>();
             memberAdapter = new OrgMemberListAdapter(mContext, memberList, transmitData);
             gridView.setAdapter(memberAdapter);
-            tv_org_empty.setText("No Contacts");
+            tv_org_empty.setText(getString(R.string.text_org_no_contact));
         }
         userIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -493,17 +504,12 @@ public class OrgDetailActivity extends BaseActivity {
             memberAdapter.showNoData(new NoFoundDataListener() {
                 @Override
                 public void showFoundData(String string) {
-                    refreshLayout.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.GONE);
-                    searchTv.setVisibility(View.VISIBLE);
-                    searchTv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
+                    showSearchNoDataView(string);
                 }
 
                 @Override
                 public void showRefreshLayout() {
-                    refreshLayout.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.GONE);
-                    searchTv.setVisibility(View.GONE);
+                    hideSearchNoDataView();
                 }
             });
         }
@@ -511,17 +517,12 @@ public class OrgDetailActivity extends BaseActivity {
             groupAdapter.showNoData(new NoFoundDataListener() {
                 @Override
                 public void showFoundData(String string) {
-                    refreshLayout.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.GONE);
-                    searchTv.setVisibility(View.VISIBLE);
-                    searchTv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
+                    showSearchNoDataView(string);
                 }
 
                 @Override
                 public void showRefreshLayout() {
-                    refreshLayout.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.GONE);
-                    searchTv.setVisibility(View.GONE);
+                    hideSearchNoDataView();
                 }
             });
         }
@@ -623,42 +624,13 @@ public class OrgDetailActivity extends BaseActivity {
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
         if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
-            List<FamilyGroupEntity> familyGroupEntityList;
-            if (TextUtils.isEmpty(etImport)) {
-                familyGroupEntityList = groupEntityList;
-                groupAdapter.addNewData(familyGroupEntityList);
-            } else {
-                Filter filter = groupAdapter.getFilter();
-                filter.filter(etImport);
-            }
+            Filter filter = groupAdapter.getFilter();
+            filter.filter(etImport);
         } else {
-            List<FamilyMemberEntity> familyMemberEntityList;
-            if (!TextUtils.isEmpty(etImport)) {
-                memberAdapter.setSerach(memberList);
-                Filter filter = memberAdapter.getFilter();
-                filter.filter(etImport);
-            } else {
-                familyMemberEntityList = searchMemberList(etImport, memberList);
-                memberAdapter.addNewData(familyMemberEntityList);
-            }
+            memberAdapter.setSerach(memberList);
+            Filter filter = memberAdapter.getFilter();
+            filter.filter(etImport);
         }
-
-    }
-
-    private List<FamilyMemberEntity> searchMemberList(String name, List<FamilyMemberEntity> list) {
-        if (TextUtils.isEmpty(name)) {
-            return list;
-        }
-        List<FamilyMemberEntity> results = new ArrayList();
-        Pattern pattern = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
-        for (FamilyMemberEntity memberEntity : list) {
-            String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getUser_given_name());
-            Matcher matcher = pattern.matcher(userName);
-            if (matcher.find()) {
-                results.add(memberEntity);
-            }
-        }
-        return results;
     }
 
     private void finishReFresh() {

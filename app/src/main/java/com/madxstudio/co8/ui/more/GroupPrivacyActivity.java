@@ -42,6 +42,7 @@ public class GroupPrivacyActivity extends BaseActivity {
     private TextView tvEmail;
     private TextView tvRegion;
     private TextView tvPhone;
+    private TextView tvExtPhone;
 
     private LinearLayout llBirthday;
     private LinearLayout llYearOfBirthday;
@@ -49,6 +50,7 @@ public class GroupPrivacyActivity extends BaseActivity {
     private LinearLayout llEmail;
     private LinearLayout llRegion;
     private LinearLayout llPhone;
+    private LinearLayout llExtPhone;
 
     private ProfilePrivacyEntity profilePrivacyEntity;
     private MyDialog changePrivacyDialog;
@@ -106,6 +108,7 @@ public class GroupPrivacyActivity extends BaseActivity {
         tvEmail = getViewById(R.id.tv_email_privacy);
         tvRegion = getViewById(R.id.tv_region_privacy);
         tvPhone = getViewById(R.id.tv_phone_privacy);
+        tvExtPhone= getViewById(R.id.tv_internal_phone_privacy);
 
         llBirthday = getViewById(R.id.ll_birthday_privacy);
         llYearOfBirthday = getViewById(R.id.ll_yearOfBirth_privacy);
@@ -113,6 +116,7 @@ public class GroupPrivacyActivity extends BaseActivity {
         llEmail = getViewById(R.id.ll_region_privacy);
         llRegion = getViewById(R.id.ll_email_privacy);
         llPhone = getViewById(R.id.ll_phone_privacy);
+        llExtPhone= getViewById(R.id.ll_internal_phone_privacy);
 
         llBirthday.setOnClickListener(this);
         llYearOfBirthday.setOnClickListener(this);
@@ -120,6 +124,7 @@ public class GroupPrivacyActivity extends BaseActivity {
         llEmail.setOnClickListener(this);
         llRegion.setOnClickListener(this);
         llPhone.setOnClickListener(this);
+        llExtPhone.setOnClickListener(this);
     }
 
     @Override
@@ -145,6 +150,9 @@ public class GroupPrivacyActivity extends BaseActivity {
                 case R.id.ll_phone_privacy:
                     setProfilePrivacy(getString(R.string.text_phone), profilePrivacyEntity.getPhone(), tvPhone);
                     break;
+                case R.id.ll_internal_phone_privacy:
+                    setProfilePrivacy(getString(R.string.text_privacy_internal_phone), "0", tvExtPhone);
+                    break;
             }
         }
     }
@@ -154,15 +162,9 @@ public class GroupPrivacyActivity extends BaseActivity {
     RadioButton rbPublic;
 
     private void setProfilePrivacy(String dialogTitle, final String strLevel, final TextView tv) {
-
-        LogUtil.d("setProfilePrivacy" + strLevel, "GroupPrivacyActivity" + dialogTitle);
         LayoutInflater factory = LayoutInflater.from(this);
         final View dialogView = factory.inflate(R.layout.dialog_profile_privacy, null);
-
-
         changePrivacyDialog = new MyDialog(this, dialogTitle, dialogView);
-
-
         rbOnlyMe = (RadioButton) dialogView.findViewById(R.id.rb_only_me);
         rbAllMember = (RadioButton) dialogView.findViewById(R.id.rb_all_member);
         rbPublic = (RadioButton) dialogView.findViewById(R.id.rb_public);
@@ -206,7 +208,10 @@ public class GroupPrivacyActivity extends BaseActivity {
                         profilePrivacyEntity.setPhone(str);
                         displayPrivacyLevel(str, tvPhone);
                         break;
-
+                    case R.id.tv_internal_phone_privacy:
+//                        profilePrivacyEntity.setPhone(str);
+                        displayPrivacyLevel(str, tvExtPhone);
+                        break;
 
                 }
 
@@ -382,7 +387,7 @@ public class GroupPrivacyActivity extends BaseActivity {
         if ("0".equals(level)) {
             tv.setText(getString(R.string.text_only_me));       //0 代表仅自己可以看 (Only Me)
         } else if ("1".equals(level)) {
-            tv.setText(getString(R.string.text_all_member));    //1 代表只有成员可以看 (All Members)
+            tv.setText(getString(R.string.text_new_everyone));    //1 代表只有成员可以看 (All Members)
         } else if ("2".equals(level)) {
             tv.setText(getString(R.string.text_public));        //2代表公开资料 (Public)
         }

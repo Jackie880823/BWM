@@ -738,4 +738,6 @@
     <!--<string name="text_org_resend_request">Resend Request</string>-->
     <!--<string name="text_org_cancel_request">Cancel Request</string>-->
     <!--<string name="text_search_no_data">No results for \"%s\"</string>-->
+    <!--<string name="text_select_all">Select All</string>-->
+    <!--<string name="text_privacy_internal_phone">Internal Phone Ext</string>-->
 </resources>
