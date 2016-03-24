@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/tv_admin_settings_name"
-        style="@style/text_company"
+        style="@style/text_dark_default"
         android:layout_width="@dimen/_0dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1.0"/>

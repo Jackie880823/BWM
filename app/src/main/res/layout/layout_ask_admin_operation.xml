@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_view_admin_of_profile"
+        style="@style/text_dialog_item"
+        android:text="@string/view_admin_of_profile"
+        android:gravity="center"/>
+
+    <View
+        style="@style/split_line_default"/>
+
+    <TextView
+        android:id="@+id/tv_message_admin"
+        style="@style/text_dialog_item"
+        android:text="@string/message_admin"
+        android:gravity="center"/>
+
+    <View
+        style="@style/split_line_default"/>
+
+    <TextView
+        android:id="@+id/tv_remove_admin"
+        style="@style/text_dialog_item"
+        android:gravity="center"
+        android:text="@string/remove_admin"
+        android:textColor="@color/default_text_color_red"/>
+
+    <View
+        style="@style/split_line_default"/>
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        style="@style/text_dialog_item"
+        android:text="@string/cancel"
+        android:gravity="center"
+        android:textColor="@color/high_light_color"
+        android:textStyle="bold"/>
+</LinearLayout>

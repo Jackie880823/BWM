@@ -1,25 +1,33 @@
 package com.madxstudio.co8.ui.company;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.ProfileAdapter;
 import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.PickAndCropPictureActivity;
+import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.widget.MyDialog;
 
 /**
+ * 公司简介和管理页，在这里公司可以修改
  * Created 16/3/21.
  *
  * @author Jackie
  * @version 1.0
  */
-public class CompanyActivity extends BaseActivity implements View.OnClickListener {
+public class CompanyActivity extends BaseActivity implements View.OnClickListener, ProfileAdapterListener {
+    private static final String TAG = "CompanyActivity";
+    public static final int REQUEST_PICTURE = 1;
 
     private ImageButton ibTop;
 
@@ -56,7 +64,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     }
 
     /**
-     * TitilBar 右边事件
+     * TitleBar 右边事件
      */
     @Override
     protected void titleRightEvent() {
@@ -88,14 +96,9 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         rvProfile.setLayoutManager(linearLayoutManager);
         adapter = new ProfileAdapter(this);
         rvProfile.setAdapter(adapter);
+        adapter.setListener(this);
         rvProfile.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            /**
-             * Callback method to be invoked when RecyclerView's scroll state changes.
-             *
-             * @param recyclerView The RecyclerView whose scroll state has changed.
-             * @param newState     The updated scroll state. One of {@link #SCROLL_STATE_IDLE},
-             *                     {@link #SCROLL_STATE_DRAGGING} or {@link #SCROLL_STATE_SETTLING}.
-             */
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -116,7 +119,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int lastPosition = linearLayoutManager.findLastVisibleItemPosition();
-                if (lastPosition == adapter.getItemCount() -1) {
+                if (lastPosition == adapter.getItemCount() - 1) {
                     ibTop.setVisibility(View.GONE);
                     btnLeaveGroup.setVisibility(View.VISIBLE);
                     ibTop.setVisibility(View.VISIBLE);
@@ -133,7 +136,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             }
         });
         btnLeaveGroup.setOnClickListener(this);
-
+        ibTop.setOnClickListener(this);
     }
 
     @Override
@@ -172,11 +175,71 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                 });
                 myDialog.show();
                 break;
+
+            case R.id.ib_top:
+                rvProfile.scrollToPosition(0);
+                break;
         }
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onClickProfileImage(View view) {
+        showCameraAlbum(view.getWidth(), view.getHeight());
+    }
+
+    private void showCameraAlbum(final int photoWidth, final int photoHeight) {
+        LogUtil.i(TAG, photoWidth + "*" + photoHeight);
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View selectIntention = factory.inflate(R.layout.dialog_camera_album, null);
+        myDialog = new MyDialog(this, null, selectIntention);
+
+        TextView tvCamera = (TextView) selectIntention.findViewById(R.id.tv_camera);
+        TextView tvAlbum = (TextView) selectIntention.findViewById(R.id.tv_album);
+        TextView tv_cancel = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+
+        tvCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+                Intent intent = new Intent(CompanyActivity.this, PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, photoWidth);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, photoHeight);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
+                intent.putExtra(PickAndCropPictureActivity.CACHE_PIC_NAME, "_background");
+                startActivityForResult(intent, REQUEST_PICTURE);
+                myDialog = null;
+            }
+        });
+
+        tvAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+                Intent intent = new Intent(CompanyActivity.this, PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, photoWidth);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, photoHeight);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
+                intent.putExtra(PickAndCropPictureActivity.CACHE_PIC_NAME, "_background");
+                startActivityForResult(intent, REQUEST_PICTURE);
+                myDialog = null;
+            }
+        });
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+                myDialog = null;
+            }
+        });
+        myDialog.show();
     }
 }
