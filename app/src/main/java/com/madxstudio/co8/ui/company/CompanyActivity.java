@@ -157,7 +157,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         super.onClick(v);
         switch (v.getId()) {
             case R.id.btn_leave_group:
-                myDialog = new MyDialog(this, R.string.attention_leave_group_title, R.string.attention_leave_group_description);
+                myDialog = new MyDialog(this, R.string.attention_leave_group_title, R.string.attention_leave_organisation_description);
                 myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

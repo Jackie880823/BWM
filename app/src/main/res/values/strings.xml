@@ -774,7 +774,8 @@
     <string name="text_privacy_internal_phone">Internal Phone Ext</string>
     <string name="text_leave_organisation">Leave Organisation</string>
     <string name="text_address">Address</string>
-    <string name="attention_leave_group_description">Are you sure you want to leave this organisation? You are advised to assign another admin before you leave if you are the only admin in this organisation.</string>
+    <string name="attention_leave_organisation_description">Are you sure you want to leave the organisation?</string>
+    <string name="attention_admin_leave_organisation_description"> Please ensure another user is assigned as Admin before you leave this organisation!</string>
     <string name="attention_leave_group_title">Attention</string>
     <string name="text_org_admin">Admin</string>
     <string name="title_admin_settings">Admin Settings</string>
