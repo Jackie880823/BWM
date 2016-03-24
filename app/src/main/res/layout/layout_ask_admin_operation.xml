@@ -22,7 +22,7 @@
     <View
         style="@style/split_line_default"/>
 
-    <View
+    <Viewa
         style="@style/split_line_default"/>
 
     <TextView
