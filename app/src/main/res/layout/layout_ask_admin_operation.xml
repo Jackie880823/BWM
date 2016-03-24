@@ -22,13 +22,6 @@
     <View
         style="@style/split_line_default"/>
 
-    <TextView
-        android:id="@+id/tv_remove_admin"
-        style="@style/text_dialog_item"
-        android:gravity="center"
-        android:text="@string/remove_admin"
-        android:textColor="@color/default_text_color_red"/>
-
     <View
         style="@style/split_line_default"/>
 

@@ -141,7 +141,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     }
 
     public void setAdminView(RecyclerView.ViewHolder holder, int position) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener clickListener = new View.OnClickListener() {
             private MyDialog listDialog;
 
             @Override
@@ -161,7 +161,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                         // TODO: 16/3/23 给Admin发送信息
                         break;
 
-                    case R.id.tv_remove_admin:
+                    case R.id.iv_right:
                         // TODO: 16/3/23 删除Admin
                         listDialog = new MyDialog(context, null, "Remove Gary Liow as Admin?");
                         listDialog.setButtonAccept(R.string.text_dialog_yes, this);
@@ -188,12 +188,13 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                         // 这里的 this是指当道匿名内部类，这里不在去多创建点击监听，可以使用同一个
                         askOptions.findViewById(R.id.tv_view_admin_of_profile).setOnClickListener(this);
                         askOptions.findViewById(R.id.tv_message_admin).setOnClickListener(this);
-                        askOptions.findViewById(R.id.tv_remove_admin).setOnClickListener(this);
                         askOptions.findViewById(R.id.tv_cancel).setOnClickListener(this);
                         break;
                 }
             }
-        });
+        };
+        holder.itemView.findViewById(R.id.tv_admin).setOnClickListener(clickListener);
+        holder.itemView.findViewById(R.id.iv_right).setOnClickListener(clickListener);
     }
 
     /**
