@@ -223,7 +223,6 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     //                Intent intent = new Intent(Intent.ACTION_PICK, null);
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                     intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
-                    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                     fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_PHOTO);
                 }
                 break;
