@@ -173,9 +173,22 @@ public class LocalMediaAdapter extends BaseAdapter {
         msg.arg1 = position;
         mHandler.sendMessage(msg);
 
+        // 判断显示是否是视频，显示视频图标
+        MediaData mediaData = mDatas.get(position);
+        if (MediaData.TYPE_VIDEO.equals(mediaData.getType())) {
+            holder.llDuration.setVisibility(View.VISIBLE);
+            holder.videoIcon.setVisibility(View.VISIBLE);
+            long duration = mediaData.getDuration();
+            holder.tvDuration.setText(MyDateUtils.formatMillisecond(duration));
+        } else {
+            holder.llDuration.setVisibility(View.GONE);
+            holder.videoIcon.setVisibility(View.GONE);
+        }
+
         if (!checkBoxVisible) {
             holder.check.setVisibility(View.GONE);
         } else {
+
             holder.iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -185,16 +198,6 @@ public class LocalMediaAdapter extends BaseAdapter {
                 }
             });
 
-            MediaData mediaData = mDatas.get(position);
-            if (MediaData.TYPE_VIDEO.equals(mediaData.getType())) {
-                holder.llDuration.setVisibility(View.VISIBLE);
-                holder.videoIcon.setVisibility(View.VISIBLE);
-                long duration = mediaData.getDuration();
-                holder.tvDuration.setText(MyDateUtils.formatMillisecond(duration));
-            } else {
-                holder.llDuration.setVisibility(View.GONE);
-                holder.videoIcon.setVisibility(View.GONE);
-            }
 
             // 需要显示选择框，并显设置点击监听事件
             holder.check.setVisibility(View.VISIBLE);
@@ -305,9 +308,9 @@ public class LocalMediaAdapter extends BaseAdapter {
                             String contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + imageId;
                             ImageLoader.getInstance().displayImage(contentUri, (ImageView) view, UniversalImageLoaderUtil.options);
                         }
-                    } catch (Exception e){
+                    } catch (Exception e) {
 
-                    }finally {
+                    } finally {
                         if (cursor != null && !cursor.isClosed()) {
                             cursor.close();
                         }
@@ -354,7 +357,7 @@ public class LocalMediaAdapter extends BaseAdapter {
                     loadLocalBitmap((ImageView) msg.obj, msg.arg1);
                     break;
                 case MSG_NOTIFY:
-                    if (deleteMediaListListener != null && mDatas.isEmpty()){
+                    if (deleteMediaListListener != null && mDatas.isEmpty()) {
                         deleteMediaListListener.deleteList(mDatas);
                     } else {
                         notifyDataSetChanged();
@@ -386,7 +389,7 @@ public class LocalMediaAdapter extends BaseAdapter {
         this.deleteMediaListListener = deleteMediaListListener;
     }
 
-    public interface DeleteMediaListListener{
+    public interface DeleteMediaListListener {
         void deleteList(List<MediaData> list);
     }
 }
