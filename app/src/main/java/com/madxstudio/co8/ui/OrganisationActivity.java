@@ -21,7 +21,6 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
     private RelativeLayout linear_my_group;
     private RelativeLayout linear_all_staff;
     private RelativeLayout linear_org_others;
-    private RelativeLayout linear_admin_settings;
     private Context mContext;
 
     @Override
@@ -64,13 +63,11 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
         linear_my_group = getViewById(R.id.linear_my_group);
         linear_all_staff = getViewById(R.id.linear_all_staff);
         linear_org_others = getViewById(R.id.linear_org_others);
-        linear_admin_settings = getViewById(R.id.linear_admin_setting);
         linear_company_profile.setOnClickListener(this);
         linear_org_chart.setOnClickListener(this);
         linear_my_group.setOnClickListener(this);
         linear_all_staff.setOnClickListener(this);
         linear_org_others.setOnClickListener(this);
-        linear_admin_settings.setOnClickListener(this);
     }
 
     @Override
@@ -109,10 +106,6 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
                 Intent intent3 = new Intent(mContext, OrgDetailActivity.class);
                 intent3.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
                 startActivity(intent3);
-                break;
-            case R.id.linear_admin_setting:
-                Intent adminIntent = new Intent(mContext, AdminSettingActivity.class);
-                startActivity(adminIntent);
                 break;
         }
     }
