@@ -165,6 +165,7 @@
     <dimen name="_160dp">160dp</dimen>
     <dimen name="_180dp">180dp</dimen>
     <dimen name="_200dp">200dp</dimen>
+    <dimen name="_220dp">220dp</dimen>
     <dimen name="_240dp">240dp</dimen>
     <dimen name="_250dp">250dp</dimen>
     <dimen name="_280dp">280dp</dimen>
@@ -172,7 +173,7 @@
     <dimen name="_400dp">400dp</dimen>
 
     <!-- SpringIndicator -->
-    <dimen name="si_default_text_size">8sp</dimen>
+    <dimen name="si_default_text_size">8dp</dimen>
     <dimen name="si_default_radius_max">8dp</dimen>
     <dimen name="si_default_radius_min">2dp</dimen>
 

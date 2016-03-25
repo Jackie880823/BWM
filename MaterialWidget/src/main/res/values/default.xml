@@ -2,13 +2,13 @@
 <resources>
 
     <!-- Text Size Default -->
-    <dimen name="text_mirco_size">12sp</dimen>
-    <dimen name="text_small_size">14sp</dimen>
-    <dimen name="text_medium_size">18sp</dimen>
-    <dimen name="text_large_size">22sp</dimen>
+    <dimen name="text_mirco_size">12dp</dimen>
+    <dimen name="text_small_size">14dp</dimen>
+    <dimen name="text_medium_size">18dp</dimen>
+    <dimen name="text_large_size">22dp</dimen>
 
     <!-- TabIndicator Default -->
-    <dimen name="tab_text_size">15sp</dimen>
+    <dimen name="tab_text_size">15dp</dimen>
     <color name="tab_text_color">#9FC1FB</color>
     <color name="tab_text_selected_color">#FFFFFF</color>
     <color name="tab_text_disabled_color">#000000</color>
@@ -62,7 +62,7 @@
     <color name="circle_button_shadow_color">#ff000000</color>
 
     <!-- PaperButton Default -->
-    <dimen name="paper_text_size">15sp</dimen>
+    <dimen name="paper_text_size">15dp</dimen>
     <color name="paper_text_color">#60000000</color>
     <color name="paper_button_color">#ffffffff</color>
     <color name="paper_button_shadow_color">#000000</color>

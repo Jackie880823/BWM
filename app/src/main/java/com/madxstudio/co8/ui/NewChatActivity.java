@@ -133,6 +133,35 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
         pager.setOnPageChangeListener(new MyOnPageChanger());
         message_member_tv.setOnClickListener(this);
         message_group_tv.setOnClickListener(this);
+
+        memberAdapter.showNoData(new NoFoundDataListener() {
+            @Override
+            public void showFoundData(String string) {
+                memberRefreshLayout.setVisibility(View.GONE);
+                emptyMemberIv.setVisibility(View.VISIBLE);
+                emptyMemberIv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
+            }
+
+            @Override
+            public void showRefreshLayout() {
+                memberRefreshLayout.setVisibility(View.VISIBLE);
+                emptyMemberIv.setVisibility(View.GONE);
+            }
+        });
+        groupAdapter.showNoData(new NoFoundDataListener() {
+            @Override
+            public void showFoundData(String string) {
+                groupRefreshLayout.setVisibility(View.GONE);
+                emptyGroupIv.setVisibility(View.VISIBLE);
+                emptyGroupIv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
+            }
+
+            @Override
+            public void showRefreshLayout() {
+                groupRefreshLayout.setVisibility(View.VISIBLE);
+                emptyGroupIv.setVisibility(View.GONE);
+            }
+        });
         //搜索框监听器
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -208,20 +237,6 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
         final ImageButton userIb = (ImageButton) userView.findViewById(R.id.ib_top);
         memberRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
         emptyMemberIv = (TextView) userView.findViewById(R.id.message_search);
-        memberAdapter.showNoData(new NoFoundDataListener() {
-            @Override
-            public void showFoundData(String string) {
-                memberRefreshLayout.setVisibility(View.GONE);
-                emptyMemberIv.setVisibility(View.VISIBLE);
-                emptyMemberIv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
-            }
-
-            @Override
-            public void showRefreshLayout() {
-                memberRefreshLayout.setVisibility(View.VISIBLE);
-                emptyMemberIv.setVisibility(View.GONE);
-            }
-        });
         userGridView.setAdapter(memberAdapter);
         userIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -294,20 +309,6 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
         groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
         emptyGroupIv = (TextView) groupView.findViewById(R.id.message_search);
         groupListView.setAdapter(groupAdapter);
-        groupAdapter.showNoData(new NoFoundDataListener() {
-            @Override
-            public void showFoundData(String string) {
-                groupRefreshLayout.setVisibility(View.GONE);
-                emptyGroupIv.setVisibility(View.VISIBLE);
-                emptyGroupIv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
-            }
-
-            @Override
-            public void showRefreshLayout() {
-                groupRefreshLayout.setVisibility(View.VISIBLE);
-                emptyGroupIv.setVisibility(View.GONE);
-            }
-        });
         groupIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

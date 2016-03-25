@@ -136,7 +136,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         if (getUser().isShow_add_member())//新用户注册先进入添加好友。
         {
-            Intent intent = new Intent(this, AddMembersActivity.class);
+            Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);
             finish();
         }

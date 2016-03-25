@@ -1,8 +1,10 @@
 package com.madxstudio.co8.ui.start;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,19 +12,30 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
@@ -36,8 +49,6 @@ import com.madxstudio.co8.util.LocalImageLoader;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.widget.CircularImageView;
 import com.madxstudio.co8.widget.MyDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.material.widget.Dialog;
 import com.material.widget.PaperButton;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
@@ -46,10 +57,12 @@ import com.soundcloud.android.crop.Crop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class DetailsActivity extends BaseActivity implements View.OnClickListener{
+public class DetailsActivity extends BaseActivity implements View.OnClickListener {
 
     private final static String TAG = DetailsActivity.class.getSimpleName();
     private final static String COMPLETE_USER = TAG + "_COMPLETE_USER";
@@ -80,7 +93,6 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
     private String strLastName;
     private String strGender;
 
-    private FrameLayout flPic;
     private CircularImageView civPic;
     private RelativeLayout rlPic;
     private EditText etFirst;
@@ -90,20 +102,22 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
     private RadioGroup rgMain;
     private PaperButton brNext;
     private RelativeLayout rlProgress;
+    private TextView detail_new_org;
+
+    private AutoCompleteTextView et_organisation_name;
+    private DetailAdapter<String> adapter;
 
     private Dialog showCameraAlbum;
 
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case HANDLER_COMPLETE_PROFILE_SUCCESS:
                     userEntity.setShow_tip(true);//从登陆流程进入的必须显示tip，此值作为判断依据。
                     userEntity.setShow_add_member(true);
-                    App.userLoginSuccessed(DetailsActivity.this,userEntity, tokenEntity);
+                    App.userLoginSuccessed(DetailsActivity.this, userEntity, tokenEntity);
                     break;
 
                 case ERROR:
@@ -153,18 +167,15 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void initView() {
 
-        if (mSavedInstanceState != null)
-        {
+        if (mSavedInstanceState != null) {
             userEntity = (UserEntity) mSavedInstanceState.getSerializable(Constant.LOGIN_USER);
             tokenEntity = (AppTokenEntity) mSavedInstanceState.getSerializable(Constant.HTTP_TOKEN);
-            if (!TextUtils.isEmpty(mSavedInstanceState.getString("uri")))
-            {
+            if (!TextUtils.isEmpty(mSavedInstanceState.getString("uri"))) {
                 mCropImagedUri = Uri.parse(mSavedInstanceState.getString("uri"));
             }
         }
         getData();
 
-        flPic = getViewById(R.id.fl_pic);
         civPic = getViewById(R.id.civ_pic);
         rlPic = getViewById(R.id.rl_pic);
         etFirst = getViewById(R.id.et_first_name);
@@ -174,10 +185,62 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         rgMain = getViewById(R.id.rg_main);
         brNext = getViewById(R.id.br_next);
         rlProgress = getViewById(R.id.rl_progress);
+        et_organisation_name = getViewById(R.id.et_organisation_name);
+        detail_new_org = getViewById(R.id.detail_new_org);
 
+        detail_new_org.setText(Html.fromHtml(getResources().getString(R.string.text_sign_up_detail_org)));
         rlPic.setOnClickListener(this);
         civPic.setOnClickListener(this);
         brNext.setOnClickListener(this);
+        detail_new_org.setOnClickListener(this);
+
+        adapter = new DetailAdapter<>(this, android.R.layout.simple_spinner_dropdown_item);
+        et_organisation_name.setAdapter(adapter);
+        List<String> list = new ArrayList<>();
+        list.add("B2BE GSS Malaysia");
+        list.add("B2BE GSS Australia");
+        list.add("B2BE New Zealand");
+        list.add("B2BE India");
+        adapter.addAll(list);
+
+        et_organisation_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (et_organisation_name.isPerformingCompletion()) {
+//                    return;
+//                }
+//                if (s.length() < 3) {
+//                    return;
+//                }
+
+//                String query = s.toString();
+//                adapter.clear();
+
+//                List<NameValuePair> data = new ArrayList<NameValuePair>();
+//                data.add(new BasicNameValuePair("keyword", query));
+//
+//                String result = serverConnector.sendRequest(data, ServerConnector.SEARCH);
+//                result = result.substring(2, result.length() - 3);
+//
+//                JSONDecoder decoder = new JSONDecoder(result);
+//                JSONObject value = (JSONObject) decoder.decode();
+//                Map<String, JSONValue> values = value.getValue();
+//                if (values.size() != 0) {
+//
+//                    adapter.add(myPOJO);
+//                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         rgMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -208,13 +271,10 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(etFirst.getText().toString()))
-                {
+                if (TextUtils.isEmpty(etFirst.getText().toString())) {
                     etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     tvFirstNameError.setVisibility(View.VISIBLE);
-                }
-                else
-                {
+                } else {
                     etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                     tvFirstNameError.setVisibility(View.GONE);
                 }
@@ -234,12 +294,9 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(etLast.getText().toString()))
-                {
+                if (TextUtils.isEmpty(etLast.getText().toString())) {
                     etLast.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                }
-                else
-                {
+                } else {
                     etLast.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                 }
             }
@@ -259,8 +316,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.rl_pic:
                 showCameraAlbum();
                 break;
@@ -273,11 +329,37 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                 doHttpCompleteProfile();
                 break;
 
+            case R.id.detail_new_org:
+//                strFirstName = etFirst.getText().toString();
+//                strLastName = etLast.getText().toString();
+//                if (MyTextUtil.isHasEmpty(strFirstName, strLastName, strGender)) {
+//                    if (TextUtils.isEmpty(strFirstName)) {
+//                        etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+//                        tvFirstNameError.setVisibility(View.VISIBLE);
+//                    } else {
+//                        etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+//                        tvFirstNameError.setVisibility(View.GONE);
+//                    }
+//
+//                    if (TextUtils.isEmpty(strLastName)) {
+//                        etLast.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+//                    } else {
+//                        etLast.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+//                    }
+//
+//                    if (TextUtils.isEmpty(strGender)) {
+//                        rlRB.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+//                    } else {
+//                        rlRB.setBackgroundColor(getResources().getColor(R.color.default_text_color_while));
+//                    }
+//                } else {
+                    startActivityForResult(new Intent(DetailsActivity.this, CreateNewOrgActivity.class), Constant.CREATE_NEW_ORG);
+//                }
+                break;
             default:
                 break;
         }
     }
-
 
 
     private void getData() {
@@ -287,14 +369,12 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         App.initToken(userEntity.getUser_login_id(), tokenEntity);
     }
 
-    private void doHttpChangeUI()
-    {
+    private void doHttpChangeUI() {
         rlProgress.setVisibility(View.VISIBLE);
         brNext.setClickable(false);
     }
 
-    private void finishHttpChangeUI()
-    {
+    private void finishHttpChangeUI() {
         rlProgress.setVisibility(View.GONE);
         brNext.setClickable(true);
     }
@@ -320,7 +400,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                 // 下面这句指定调用相机拍照后的照片存储的路径
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
                         .fromFile(PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this,
-                                CACHE_PIC_NAME_TEMP,true)));
+                                CACHE_PIC_NAME_TEMP, true)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 intent2.putExtra("return-data", false);
@@ -361,7 +441,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         Log.i(TAG, "startPhotoZoom& uri: " + uri);
         String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
         Uri source = Uri.fromFile(new File(path));
-        File f = PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this, CACHE_PIC_NAME,true);
+        File f = PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this, CACHE_PIC_NAME, true);
         mCropImagedUri = Uri.fromFile(f);
         Log.i(TAG, "startPhotoZoom& cropImageUri: " + mCropImagedUri);
         Crop.of(source, mCropImagedUri).asSquare().start(this, REQUEST_HEAD_FINAL);
@@ -402,7 +482,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this,
-                            CACHE_PIC_NAME_TEMP,true));
+                            CACHE_PIC_NAME_TEMP, true));
                     uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
                     if (new File(uri.getPath()).exists()) {
                         try {
@@ -435,7 +515,11 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                         }
                     }
                     break;
-
+                case Constant.CREATE_NEW_ORG:
+                    if (data != null) {
+                        et_organisation_name.setText(data.getStringExtra(Constant.CREATE_COUNTRY_NAME));
+                    }
+                    break;
                 default:
                     break;
 
@@ -444,25 +528,21 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    private void doHttpCompleteProfile()
-    {
+    private void doHttpCompleteProfile() {
         strFirstName = etFirst.getText().toString();
         strLastName = etLast.getText().toString();
 
-        if (checkInput())
-        {
+        if (checkInput()) {
             Map<String, Object> params = new HashMap<>();
             params.put("user_id", userEntity.getUser_id());
             params.put("user_given_name", strFirstName);
             params.put("user_surname", strLastName);
             params.put("user_gender", strGender);
 
-            if (mCropImagedUri != null)
-            {
+            if (mCropImagedUri != null) {
                 String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 480, 800, false);
                 File file = new File(path);
-                if (!file.exists())
-                {
+                if (!file.exists()) {
                     return;
                 }
                 params.put("fileKey", "file");
@@ -488,8 +568,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                     Gson gson = gsonb.create();
 
                     userEntity = gson.fromJson(response, UserEntity.class);
-                    if (!TextUtils.isEmpty(userEntity.getUser_id()))
-                    {
+                    if (!TextUtils.isEmpty(userEntity.getUser_id())) {
                         handler.sendEmptyMessage(HANDLER_COMPLETE_PROFILE_SUCCESS);
                     }
                 }
@@ -510,35 +589,24 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                 }
             });
 
-        }
-        else
-        {
-            if (TextUtils.isEmpty(strFirstName))
-            {
+        } else {
+            if (TextUtils.isEmpty(strFirstName)) {
                 etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                 tvFirstNameError.setVisibility(View.VISIBLE);
-            }
-            else
-            {
+            } else {
                 etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                 tvFirstNameError.setVisibility(View.GONE);
             }
 
-            if (TextUtils.isEmpty(strLastName))
-            {
+            if (TextUtils.isEmpty(strLastName)) {
                 etLast.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 etLast.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
 
-            if (TextUtils.isEmpty(strGender))
-            {
+            if (TextUtils.isEmpty(strGender)) {
                 rlRB.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 rlRB.setBackgroundColor(getResources().getColor(R.color.default_text_color_while));
             }
         }
@@ -553,9 +621,40 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         super.onSaveInstanceState(outState);
         outState.putSerializable(Constant.LOGIN_USER, userEntity);
         outState.putSerializable(Constant.HTTP_TOKEN, tokenEntity);
-        if (mCropImagedUri != null)
-        {
+        if (mCropImagedUri != null) {
             outState.putString("uri", mCropImagedUri.toString());
         }
+    }
+
+    public class DetailAdapter<T> extends ArrayAdapter<String> implements Filterable {
+        public DetailAdapter(Context context, int textViewResourceId) {
+            super(context, textViewResourceId);
+        }
+
+        @Override
+        public Filter getFilter() {
+            return filter;
+        }
+
+        private Filter filter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults filterResults = new FilterResults();
+                if (constraint != null) {
+                    filterResults.count = getCount();
+                }
+
+                // do some other stuff
+
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence contraint, FilterResults results) {
+                if (results != null && results.count > 0) {
+                    notifyDataSetChanged();
+                }
+            }
+        };
     }
 }

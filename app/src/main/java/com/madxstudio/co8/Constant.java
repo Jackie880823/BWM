@@ -85,6 +85,8 @@ public class Constant {
 
     public static final int ACTION_MESSAGE_CREATE = 26;
 
+    public final static int CREATE_NEW_ORG = 27;
+
     public static final String ACTION_SHOW_NOTIFY_USER = "ACTION_SHOW_NOTIFY_USER";
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
@@ -113,6 +115,8 @@ public class Constant {
     public static final String FAMILY_PARENT = "Supervisor";
     public static final String FAMILY_CHILDREN = "Subordinate";
     public static final String FAMILY_SIBLING = "Colleague";
+
+    public static final String CREATE_COUNTRY_NAME = "CountryName";
 
     /**
      * 临时文件用户裁剪

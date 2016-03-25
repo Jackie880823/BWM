@@ -50,6 +50,7 @@ import com.material.widget.Dialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -121,9 +122,9 @@ public class OrgDetailActivity extends BaseActivity {
     @Override
     protected void titleRightEvent() {
         if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
-            Intent intent = new Intent(mContext, InviteMemberActivity.class);
+            Intent intent = new Intent(mContext, SelectMemberActivity.class);
             intent.putExtra("isCreateNewGroup", true);
-            intent.putExtra("jumpIndex", 0);
+            intent.putExtra(Constant.SELECT_MEMBER_NORMAL_DATA, (Serializable) memberList);
             startActivityForResult(intent, CREATE_GROUP);
         } else if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
             startActivity(new Intent(mContext, AddMembersActivity.class));
@@ -724,6 +725,19 @@ public class OrgDetailActivity extends BaseActivity {
                             if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
                                 List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
                                 }.getType());
+                                List<FamilyMemberEntity> memberEntityList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
+                                }.getType());
+                                if (memberEntityList != null && memberEntityList.size() > 0) {
+                                    if (memberList == null) {
+                                        memberList = new ArrayList<>();
+                                    }
+                                    memberList.clear();
+                                    for (FamilyMemberEntity memberEntity : memberEntityList) {
+                                        if (!"0".equals(memberEntity.getFam_accept_flag())) {
+                                            memberList.add(memberEntity);
+                                        }
+                                    }
+                                }
                                 if (groupList != null && groupList.size() > 0) {
                                     hideEmptyView();
                                     Message.obtain(handler, GET_DATA, groupList).sendToTarget();
@@ -752,13 +766,9 @@ public class OrgDetailActivity extends BaseActivity {
                                         }
                                     }
                                     if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
-//                                        if (staffList.size() > 0) {
                                         hideEmptyView();
                                         staffList.add(0, meMemberEntity);
                                         Message.obtain(handler, GET_DATA, staffList).sendToTarget();
-//                                        } else {
-//                                            showEmptyView();
-//                                        }
                                     } else {
                                         if (otherList.size() > 0) {
                                             hideEmptyView();
@@ -770,7 +780,7 @@ public class OrgDetailActivity extends BaseActivity {
                                 } else {
                                     if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
                                         hideEmptyView();
-                                        memberEntityList = new ArrayList<FamilyMemberEntity>();
+                                        memberEntityList = new ArrayList<>();
                                         memberEntityList.add(0, meMemberEntity);
                                         Message.obtain(handler, GET_DATA, memberEntityList).sendToTarget();
                                     } else {
