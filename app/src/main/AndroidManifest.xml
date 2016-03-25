@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.madxstudio.co8"
-    >
+    package="com.madxstudio.co8">
     <!--android:installLocation="preferExternal"-->
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -468,19 +467,19 @@
         <activity
             android:name="com.madxstudio.co8.ui.OrgListActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name="com.madxstudio.co8.ui.OrgDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name="com.madxstudio.co8.ui.NewChatActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name="com.madxstudio.co8.ui.SelectMemberActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
 
         <activity
             android:name="com.madxstudio.co8.ui.OrganisationActivity"
@@ -594,6 +593,12 @@
             android:name="com.madxstudio.co8.ui.start.DetailsActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.madxstudio.co8.ui.start.CreateNewOrgActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.madxstudio.co8.ui.WelcomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.madxstudio.co8.ui.start.SignUpUsernameActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -635,7 +640,8 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:noHistory="true" />
-        <activity android:name="com.madxstudio.co8.ui.share.PreviewVideoActivity"
+        <activity
+            android:name="com.madxstudio.co8.ui.share.PreviewVideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
                 <action android:name="com.madxstudio.co8.ui.PreviewVideoActivity" />

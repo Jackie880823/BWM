@@ -740,4 +740,5 @@
     <!--<string name="text_search_no_data">No results for \"%s\"</string>-->
     <!--<string name="text_select_all">Select All</string>-->
     <!--<string name="text_privacy_internal_phone">Internal Phone Ext</string>-->
+    <!--<string name="text_sign_up_detail_org">Can\'t find your organisation? Create Here Or you can leave the organisation field empty to join one later</string>-->
 </resources>

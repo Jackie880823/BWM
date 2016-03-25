@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_text_color_while"
-    tools:context="com.madxstudio.co8.ui.start.DetailsActivity"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    tools:context="com.madxstudio.co8.ui.start.DetailsActivity">
 
     <include
         android:id="@+id/fragment_main_top"
@@ -13,129 +13,142 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <LinearLayout
-            android:id="@+id/ll_center"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_main_top">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="vertical">
 
-            android:layout_centerInParent="true">
-                <EditText
-                    style="@style/et_start_details_name"
-                    android:id="@+id/et_first_name"
-                    android:hint="@string/text_first_name"
-                    />
+            <RelativeLayout
+                android:id="@+id/fl_pic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_30dp"
+                android:layout_marginTop="@dimen/_30dp">
 
-                <TextView
-                    style="@style/tv_start_light_small"
-                    android:text="@string/text_start_detail_first_name_prompt"
-                    android:layout_marginLeft="@dimen/default_content_padding"
-                    android:paddingLeft="@dimen/default_content_padding"
-                    />
-
-                <TextView
-                    style="@style/tv_start_light_small"
-                    android:id="@+id/tv_first_name_error"
-                    android:text="@string/text_start_detail_compulsory_field_error"
-                    android:textColor="@color/stroke_color_red_wrong"
-                    android:layout_marginLeft="@dimen/default_content_padding"
-                    android:paddingLeft="@dimen/default_content_padding"
-                    android:visibility="gone"
-                    />
-
-
-                <EditText
-                    style="@style/et_start_details_name"
-                    android:id="@+id/et_last_name"
-                    android:layout_marginTop="@dimen/default_content_padding"
-                    android:hint="@string/text_last_name"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/rl_rb"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/ll_tv"
-                    android:layout_marginLeft="@dimen/default_content_padding"
-                    android:layout_marginRight="@dimen/default_content_padding"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/_32dp">
-                        <RadioGroup
-                            android:id="@+id/rg_main"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:orientation="horizontal"
-                            android:layout_centerHorizontal="true">
-                                <RadioButton
-                                    android:id="@+id/rb_male"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="@string/text_male"
-                                    android:textColor="@color/default_text_color_light"
-                                    android:textSize="@dimen/text_medium_size"/>
-                                <RadioButton
-                                    android:id="@+id/rb_femal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:layout_marginLeft="@dimen/_80dp"
-                                    android:text="@string/text_female"
-                                    android:textColor="@color/default_text_color_light"
-                                    android:textSize="@dimen/text_medium_size"/>
-                        </RadioGroup>
-                </RelativeLayout>
-
-        </LinearLayout>
-
-
-
-        <FrameLayout
-            android:id="@+id/fl_pic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/ll_center"
-            android:layout_below="@+id/fragment_main_top">
                 <com.madxstudio.co8.widget.CircularImageView
                     android:id="@+id/civ_pic"
                     android:layout_width="@dimen/_100dp"
                     android:layout_height="@dimen/_100dp"
-                    android:layout_gravity="center"
-                    android:visibility="invisible"
-                    android:src="@drawable/album_details" />
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/album_details"
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:id="@+id/rl_pic"
                     android:layout_width="@dimen/_100dp"
                     android:layout_height="@dimen/_100dp"
-                    android:layout_gravity="center"
-                    android:clickable="true"
+                    android:layout_centerInParent="true"
                     android:background="@drawable/bg_stroke_corners90_white">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/album_details"
-                            android:layout_centerInParent="true" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/album_details" />
                 </RelativeLayout>
-        </FrameLayout>
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/et_first_name"
+                style="@style/et_start_details_name"
+                android:hint="@string/text_first_name" />
+
+            <TextView
+                style="@style/tv_start_light_small"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:text="@string/text_start_detail_first_name_prompt" />
+
+            <TextView
+                android:id="@+id/tv_first_name_error"
+                style="@style/tv_start_light_small"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:text="@string/text_start_detail_compulsory_field_error"
+                android:textColor="@color/stroke_color_red_wrong"
+                android:visibility="gone" />
 
 
+            <EditText
+                android:id="@+id/et_last_name"
+                style="@style/et_start_details_name"
+                android:layout_marginTop="@dimen/default_content_padding"
+                android:hint="@string/text_last_name" />
 
-        <com.material.widget.PaperButton
-            android:id="@+id/br_next"
-            android:layout_width="match_parent"
-            style="@style/paper_button_style"
-            app:paper_text="@string/text_start_next"
-            app:paper_color="@color/btn_bg_color_login_normal"
-            app:paper_text_color="@color/login_text_bg_color"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/default_content_padding"
-            android:layout_marginLeft="@dimen/default_view_margin"
-            android:layout_marginRight="@dimen/default_view_margin"
-            />
+            <AutoCompleteTextView
+                android:id="@+id/et_organisation_name"
+                style="@style/et_start_details_name"
+                android:layout_marginTop="@dimen/_22dp"
+                android:drawablePadding="@dimen/default_view_margin"
+                android:drawableRight="@drawable/search"
+                android:hint="@string/text_new_family" />
 
-    <include layout="@layout/progress_layout"/>
+            <TextView
+                android:id="@+id/detail_new_org"
+                style="@style/tv_start_light_small"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding"
+                android:layout_marginTop="@dimen/default_content_padding"
+                android:text="@string/text_sign_up_detail_org" />
 
+            <RelativeLayout
+                android:id="@+id/rl_rb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_tv"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding"
+                android:layout_marginTop="@dimen/_32dp"
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:id="@+id/rg_main"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/text_male"
+                        android:textColor="@color/default_text_color_light"
+                        android:textSize="@dimen/text_medium_size" />
+
+                    <RadioButton
+                        android:id="@+id/rb_femal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_80dp"
+                        android:gravity="center"
+                        android:text="@string/text_female"
+                        android:textColor="@color/default_text_color_light"
+                        android:textSize="@dimen/text_medium_size" />
+                </RadioGroup>
+            </RelativeLayout>
+
+            <com.material.widget.PaperButton
+                android:id="@+id/br_next"
+                style="@style/paper_button_style"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="@dimen/default_content_padding"
+                android:layout_marginLeft="@dimen/default_view_margin"
+                android:layout_marginRight="@dimen/default_view_margin"
+                android:layout_marginTop="@dimen/_40dp"
+                app:paper_color="@color/btn_bg_color_login_normal"
+                app:paper_text="@string/text_start_next"
+                app:paper_text_color="@color/login_text_bg_color" />
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/progress_layout" />
 
 </RelativeLayout>
