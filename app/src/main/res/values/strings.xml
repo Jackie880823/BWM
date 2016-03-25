@@ -785,4 +785,9 @@
     <string name="view_admin_of_profile">View Admin\'s Profile</string>
     <string name="message_admin">Message Admin</string>
     <string name="remove_admin">Remove Admin</string>
+    <string name="hint_company_name">Company Name</string>
+    <string name="hint_company_description">Company profile description</string>
+    <string name="hint_company_address">Company address...</string>
+    <string name="hint_company_phone">Company contact number...</string>
+    <string name="hint_company_email">Company email address...</string>
 </resources>

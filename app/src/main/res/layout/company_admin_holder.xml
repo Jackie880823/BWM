@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_null_press"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/chat_plus_press"/>
+            android:src="@drawable/icon_remove"/>
 
 
     </LinearLayout>

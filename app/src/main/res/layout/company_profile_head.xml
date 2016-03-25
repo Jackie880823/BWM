@@ -36,16 +36,16 @@
         style="@style/text_dark_default"
         android:layout_width="match_parent"
         android:background="@null"
+        android:hint="@string/hint_company_name"
         android:padding="@dimen/default_content_padding"
-        android:text="B2BE GSS Malaysia"
         android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv_company_name"
         style="@style/text_dark_default"
         android:layout_width="match_parent"
-        android:padding="@dimen/default_content_padding"
-        android:text="B2BE GSS Malaysia"/>
+        android:hint="@string/hint_company_name"
+        android:padding="@dimen/default_content_padding"/>
 
     <View style="@style/split_line_default"/>
 
@@ -54,8 +54,9 @@
         style="@style/text_dark_default"
         android:layout_width="match_parent"
         android:background="@null"
+        android:hint="@string/hint_company_description"
+        android:minLines="5"
         android:padding="@dimen/default_content_padding"
-        android:text="he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!"
         android:visibility="gone"/>
 
     <LinearLayout
@@ -69,7 +70,8 @@
             android:id="@+id/tv_company_description"
             style="@style/text_dark_default"
             android:layout_width="match_parent"
-            android:text="he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!"/>
+            android:hint="@string/hint_company_description"
+            android:minLines="5"/>
 
         <TextView
             android:id="@+id/switch_text_show"
@@ -101,14 +103,14 @@
             style="@style/text_dark_default"
             android:layout_width="match_parent"
             android:background="@null"
-            android:text="南京大学产学研究基地，南山区，深圳市，广东省"
+            android:hint="@string/hint_company_address"
             android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_address"
             style="@style/text_dark_default"
             android:layout_width="match_parent"
-            android:text="南京大学产学研究基地，南山区，深圳市，广东省"/>
+            android:hint="@string/hint_company_address"/>
     </LinearLayout>
 
     <View style="@style/split_line_default"/>
@@ -132,8 +134,8 @@
             android:layout_width="match_parent"
             android:autoLink="phone"
             android:background="@null"
+            android:hint="@string/hint_company_phone"
             android:inputType="phone"
-            android:text="13129558153"
             android:visibility="gone"/>
 
         <TextView
@@ -141,7 +143,7 @@
             style="@style/text_dark_default"
             android:layout_width="match_parent"
             android:autoLink="phone"
-            android:text="13129558153"/>
+            android:hint="@string/hint_company_phone"/>
     </LinearLayout>
 
     <View style="@style/split_line_default"/>
@@ -165,8 +167,8 @@
             android:layout_width="match_parent"
             android:autoLink="email"
             android:background="@null"
+            android:hint="@string/hint_company_email"
             android:inputType="textEmailAddress"
-            android:text="zhuweiping@madxstudio.cn"
             android:visibility="gone"/>
 
         <TextView
@@ -174,7 +176,7 @@
             style="@style/text_dark_default"
             android:layout_width="match_parent"
             android:autoLink="email"
-            android:text="zhuweiping@madxstudio.cn"/>
+            android:hint="@string/hint_company_email"/>
     </LinearLayout>
 
 </LinearLayout>
