@@ -105,6 +105,9 @@ public class Constant {
     public final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
     public static final String EXTRA_CHECK_ITEM_INDEX = "check_item_index";
 
+    public static final String REQUEST_TYPE = "REQUEST_TYPE";
+    public static final String ADMIN_REQUEST = "ADMIN_REQUEST";
+    public static final String GENERAL_REQUEST = "GENERAL_REQUEST";
 
     public static final String ORG_TRANSMIT_DATA = "ORG_TRANSMIT_DATA";
     public static final String ORG_TRANSMIT_GROUP = "ORG_TRANSMIT_GROUP";

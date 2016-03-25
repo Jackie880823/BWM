@@ -67,16 +67,19 @@ public class AdminSettingActivity extends BaseActivity {
                     case 0:
                         Intent pendingRequestsIntent = new Intent(AdminSettingActivity.this, OrgDetailActivity.class);
                         pendingRequestsIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
+                        pendingRequestsIntent.putExtra(Constant.REQUEST_TYPE, Constant.ADMIN_REQUEST);
                         startActivity(pendingRequestsIntent);
                         break;
                     case 1:
                         Intent allStaffIntent = new Intent(AdminSettingActivity.this, OrgDetailActivity.class);
                         allStaffIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_STAFF);
+                        allStaffIntent.putExtra(Constant.REQUEST_TYPE, Constant.ADMIN_REQUEST);
                         startActivity(allStaffIntent);
                         break;
                     case 2:
                         Intent othersIntent = new Intent(AdminSettingActivity.this, OrgDetailActivity.class);
                         othersIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
+                        othersIntent.putExtra(Constant.REQUEST_TYPE, Constant.ADMIN_REQUEST);
                         startActivity(othersIntent);
                         break;
                 }

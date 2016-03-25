@@ -22,9 +22,6 @@
     <View
         style="@style/split_line_default"/>
 
-    <Viewa
-        style="@style/split_line_default"/>
-
     <TextView
         android:id="@+id/tv_cancel"
         style="@style/text_dialog_item"

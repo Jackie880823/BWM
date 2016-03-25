@@ -60,6 +60,13 @@ import java.util.Map;
  */
 public class OrgDetailActivity extends BaseActivity {
     private String transmitData;
+
+    /**
+     * add by Jackie
+     * 管理的类型：   -   {@link Constant#ADMIN_REQUEST}管理员的请求可以管理员工<br>
+     *    -   {@link Constant#GENERAL_REQUEST} 普通员工的请求，无法管理员工
+     */
+    private String requestType;
     private Context mContext;
     private View vProgress;
     private List<FamilyMemberEntity> memberList;//不包括family_tree
@@ -472,6 +479,7 @@ public class OrgDetailActivity extends BaseActivity {
     public void initView() {
         mContext = this;
         transmitData = getIntent().getStringExtra(Constant.ORG_TRANSMIT_DATA);
+        requestType = getIntent().getStringExtra(Constant.REQUEST_TYPE);
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
         refreshLayout = getViewById(R.id.swipe_refresh_layout);
