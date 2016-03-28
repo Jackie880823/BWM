@@ -167,7 +167,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     public SelectPhotosFragment() {
         super();
-        if(weakReference!=null) {
+        if (weakReference != null) {
             mSelectedImageUris = weakReference.get();
             weakReference = null;
         }
@@ -353,7 +353,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private void initHandler() {
         mLoadImageThread.start();
-        mLoadVideoThread.start();
         Handler loadImageHandler = new Handler(mLoadImageThread.getLooper()) {
             /**
              * Subclasses must implement this to receive messages.
@@ -376,6 +375,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             }
 
         };
+        loadImageHandler.sendEmptyMessage(HANDLER_LOAD_FLAG);
+
+        mLoadVideoThread.start();
         Handler loadVideoHandler = new Handler(mLoadVideoThread.getLooper()) {
             /**
              * Subclasses must implement this to receive messages.
@@ -398,8 +400,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             }
 
         };
-
-        loadImageHandler.sendEmptyMessage(HANDLER_LOAD_FLAG);
         loadVideoHandler.sendEmptyMessage(HANDLER_LOAD_FLAG);
     }
 
@@ -463,12 +463,15 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private void loadVideos() {
         synchronized (LOADER_VIDEO) {
-            if (videoCursor != null && !videoCursor.isClosed() && videoCursor.getCount() > 0) {
+            if (videoCursor != null && !videoCursor.isClosed()) {
 
                 String bucket;
                 bucket = getContext().getString(R.string.text_video);
                 buckets.add(1, bucket);
                 mMediaUris.put(bucket, new ArrayList<MediaData>(videoCursor.getCount()));
+                if (activityWeakReference.get() != null) {
+                    activityWeakReference.get().runOnUiThread(bucketsAdapterRunnable);
+                }
 
                 int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
                 int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
@@ -594,7 +597,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         if (mMediaUris.containsKey(bucket)) {
             mMediaUris.get(bucket).add(mediaData);
         } else {
-            LogUtil.i(TAG, "addToMediaMap: add map to:" + bucket + ";");
+            LogUtil.d(TAG, "addToMediaMap: add map to:" + bucket + ";");
             ArrayList<MediaData> al = new ArrayList<>();
             al.add(mediaData);
             mMediaUris.put(bucket, al);
