@@ -357,12 +357,12 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             }
 
             if (!needFull) {
-                tvDescription.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
                 // 不显示全部内容只显示5九行
                 tvDescription.setMaxLines(5);
+                tvDescription.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
             } else {
-                tvDescription.setMaxLines(Integer.MAX_VALUE);
                 tvDescription.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
+                tvDescription.setMaxLines(Integer.MAX_VALUE);
                 tvSwitch.setText(R.string.text_collapse);
             }
             tvDescription.setText("he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!");

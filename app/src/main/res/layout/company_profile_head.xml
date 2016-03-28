@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/company_profile_title_picture"/>
+            android:src="@drawable/ic_profile_title_bg"/>
 
         <TextView
             android:id="@+id/tv_change_text"
