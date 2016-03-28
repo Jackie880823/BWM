@@ -77,6 +77,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
         if (adapter != null) {
             adapter.changeEdit(write);
+            rvProfile.scrollToPosition(0);
         }
     }
 
