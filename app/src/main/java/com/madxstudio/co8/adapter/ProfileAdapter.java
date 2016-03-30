@@ -14,13 +14,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.Admin;
 import com.madxstudio.co8.entity.OrganisationDetail;
 import com.madxstudio.co8.entity.Profile;
 import com.madxstudio.co8.ui.company.ProfileAdapterListener;
 import com.madxstudio.co8.util.SDKUtil;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -134,6 +138,16 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                 if (holder instanceof HeadHolderView) {
                     ((HeadHolderView) holder).changeText();
                     if (profile != null) {
+                        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder().cloneFrom(UniversalImageLoaderUtil.options);
+                        // 设置图片加载/解码过程中错误时候显示的图片
+                        builder.showImageOnFail(R.drawable.ic_profile_title_bg);
+                        // 设置图片在加载期间显示的图片
+                        builder.showImageOnLoading(R.drawable.ic_profile_title_bg);
+                        // 设置图片Uri为空或是错误的时候显示的图
+                        builder.showImageForEmptyUri(R.drawable.ic_profile_title_bg);
+
+                        ImageLoader.getInstance().displayImage(String.format(Constant.API_GET_ORGANISATION_COVER, "3"), ((HeadHolderView) holder).ivProfileImage, builder.build());
+
                         ((HeadHolderView) holder).tvDescription.setText(profile.getDescription());
                         ((HeadHolderView) holder).tvCompanyName.setText(profile.getName());
                         ((HeadHolderView) holder).tvAddress.setText(profile.getAddress());
