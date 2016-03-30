@@ -15,9 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.Admin;
+import com.madxstudio.co8.entity.OrganisationDetail;
+import com.madxstudio.co8.entity.Profile;
 import com.madxstudio.co8.ui.company.ProfileAdapterListener;
 import com.madxstudio.co8.util.SDKUtil;
 import com.madxstudio.co8.widget.MyDialog;
+
+import java.util.List;
 
 /**
  * Created 16/3/21.
@@ -43,8 +48,18 @@ public class ProfileAdapter extends RecyclerView.Adapter {
      * 最后一个Item的类型
      */
     private static final int LAST_VIEW = 3;
+    private static final String TAG = "ProfileAdapter";
 
     private Context context;
+
+    /**
+     * 公司资料
+     */
+    private Profile profile;
+    /**
+     * 管理员列表
+     */
+    private List<Admin> admins;
 
     /**
      * 判断当前内容是否可以编辑的标识
@@ -53,8 +68,6 @@ public class ProfileAdapter extends RecyclerView.Adapter {
      */
     private boolean write;
 
-    private String[] dialogItem;
-
     /**
      * Adapter各事件的监听
      */
@@ -62,7 +75,13 @@ public class ProfileAdapter extends RecyclerView.Adapter {
 
     public ProfileAdapter(Context context) {
         this.context = context;
-        dialogItem = new String[]{"View Admin's Profile", "Message Admin", "Remove Admin", context.getString(R.string.cancel)};
+    }
+
+    public void setData(OrganisationDetail organisationDetail) {
+
+        profile = organisationDetail.getProfile();
+        admins = organisationDetail.getAdmin();
+        notifyDataSetChanged();
     }
 
     /**
@@ -113,9 +132,20 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         switch (holder.getItemViewType()) {
             case HEAD_VIEW:
                 if (holder instanceof HeadHolderView) {
-                    ((HeadHolderView) holder).changeText(write);
-                    ((HeadHolderView) holder).setListener(listener);
-                    ((HeadHolderView) holder).switchDescriptionView();
+                    ((HeadHolderView) holder).changeText();
+                    if (profile != null) {
+                        ((HeadHolderView) holder).tvDescription.setText(profile.getDescription());
+                        ((HeadHolderView) holder).tvCompanyName.setText(profile.getName());
+                        ((HeadHolderView) holder).tvAddress.setText(profile.getAddress());
+                        ((HeadHolderView) holder).tvEmail.setText(profile.getEmail());
+                        ((HeadHolderView) holder).tvPhone.setText(profile.getPhone());
+
+                        ((HeadHolderView) holder).etDescription.setText(profile.getDescription());
+                        ((HeadHolderView) holder).etCompanyName.setText(profile.getName());
+                        ((HeadHolderView) holder).etAddress.setText(profile.getAddress());
+                        ((HeadHolderView) holder).etEmail.setText(profile.getEmail());
+                        ((HeadHolderView) holder).etPhone.setText(profile.getPhone());
+                    }
                 }
                 break;
             case ADMIN_TITLE_VIEW:
@@ -135,12 +165,18 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                 break;
             case DEFAULT_VIEW:
             default:
-                setAdminView(holder, position);
+                setAdminView((AdminHolder) holder, position);
                 break;
         }
     }
 
-    public void setAdminView(RecyclerView.ViewHolder holder, int position) {
+    public void setAdminView(AdminHolder holder, int position) {
+
+        if (admins != null && !admins.isEmpty()) {
+            holder.tvAdminName.setText(admins.get(position - 2).getUser_given_name());
+        }
+
+
         View.OnClickListener clickListener = new View.OnClickListener() {
             private MyDialog listDialog;
 
@@ -204,7 +240,13 @@ public class ProfileAdapter extends RecyclerView.Adapter {
      */
     @Override
     public int getItemCount() {
-        return 20;
+        int count;
+        if (admins == null || admins.size() == 0) {
+            count = 2;
+        } else {
+            count = 2 + admins.size() + 1;// 这里的总数要包含
+        }
+        return count;
     }
 
     /**
@@ -219,7 +261,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     /**
      *
      */
-    private static class HeadHolderView extends RecyclerView.ViewHolder {
+    private class HeadHolderView extends RecyclerView.ViewHolder {
         /**
          * 公司图片
          */
@@ -271,17 +313,6 @@ public class ProfileAdapter extends RecyclerView.Adapter {
 
         protected LinearLayout llTvDescription;
         protected TextView tvSwitch;
-        /**
-         * 适配器的监听接口，这在修改图片时要用到
-         */
-        private ProfileAdapterListener listener;
-
-        /**
-         * 判断当前内容是否可以编辑的标识
-         * - true:     可以编辑
-         * - false:    不可编辑
-         */
-        private boolean write;
 
         private boolean needFull;
 
@@ -323,7 +354,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             });
         }
 
-        ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
+        private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener;
 
         /**
          * 切换公司简介内容显示是否可
@@ -365,15 +396,13 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                 tvDescription.setMaxLines(Integer.MAX_VALUE);
                 tvSwitch.setText(R.string.text_collapse);
             }
-            tvDescription.setText("he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!he app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!");
+
+            if (profile != null) {
+                tvDescription.setText(profile.getDescription());
+            }
         }
 
-        public void setListener(ProfileAdapterListener listener) {
-            this.listener = listener;
-        }
-
-        public void changeText(boolean write) {
-            this.write = write;
+        public void changeText() {
             if (write) {// 编辑状态所有内容在编辑框中显示
                 tvChangeText.setVisibility(View.VISIBLE);
                 etCompanyName.setVisibility(View.VISIBLE);

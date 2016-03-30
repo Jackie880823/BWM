@@ -11,8 +11,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.ProfileAdapter;
+import com.madxstudio.co8.entity.OrganisationDetail;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.PickAndCropPictureActivity;
 import com.madxstudio.co8.util.LogUtil;
@@ -41,6 +46,10 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     private MyDialog myDialog;
 
     private boolean write;
+
+    private HttpTools mHttpTools;
+
+    private OrganisationDetail organisationDetail;
 
     /**
      * 初始底部栏，没有可以不操作
@@ -150,7 +159,47 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void requestData() {
+        if (mHttpTools == null) {
+            mHttpTools = new HttpTools(this);
+        }
 
+        mHttpTools.get(String.format(Constant.API_GET_ORGANISATION_DETAILS, "3"), null, this, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onResult(String string) {
+                Gson gson = new Gson();
+                organisationDetail = gson.fromJson(string, OrganisationDetail.class);
+                if (organisationDetail == null) {
+                    LogUtil.w(TAG, "get Organisation Detail fail");
+                } else {
+                    adapter.setData(organisationDetail);
+                    LogUtil.d(TAG, "get Organisation not null");
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     @Override
