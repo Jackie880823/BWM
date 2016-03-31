@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.Admin;
 import com.madxstudio.co8.entity.OrganisationDetail;
 import com.madxstudio.co8.entity.Profile;
-import com.madxstudio.co8.ui.company.ProfileAdapterListener;
+import com.madxstudio.co8.ui.company.OrganisationConstants;
 import com.madxstudio.co8.util.SDKUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
@@ -57,6 +57,11 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     private Context context;
 
     /**
+     * 公司ID
+     */
+    private String companyID;
+
+    /**
      * 公司资料
      */
     private Profile profile;
@@ -77,8 +82,14 @@ public class ProfileAdapter extends RecyclerView.Adapter {
      */
     private ProfileAdapterListener listener;
 
-    public ProfileAdapter(Context context) {
+    /**
+     * 公司背景图片的路径，可以是网络路径也可以是本地路径
+     */
+    private String profileImageUrl;
+
+    public ProfileAdapter(Context context, String companyID) {
         this.context = context;
+        this.companyID = companyID;
     }
 
     public void setData(OrganisationDetail organisationDetail) {
@@ -137,16 +148,12 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             case HEAD_VIEW:
                 if (holder instanceof HeadHolderView) {
                     ((HeadHolderView) holder).changeText();
-                    if (profile != null) {
-                        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder().cloneFrom(UniversalImageLoaderUtil.options);
-                        // 设置图片加载/解码过程中错误时候显示的图片
-                        builder.showImageOnFail(R.drawable.ic_profile_title_bg);
-                        // 设置图片在加载期间显示的图片
-                        builder.showImageOnLoading(R.drawable.ic_profile_title_bg);
-                        // 设置图片Uri为空或是错误的时候显示的图
-                        builder.showImageForEmptyUri(R.drawable.ic_profile_title_bg);
 
-                        ImageLoader.getInstance().displayImage(String.format(Constant.API_GET_ORGANISATION_COVER, "3"), ((HeadHolderView) holder).ivProfileImage, builder.build());
+                    if (profile != null) {
+                        if (TextUtils.isEmpty(profileImageUrl)) {
+                            profileImageUrl = String.format(OrganisationConstants.API_GET_ORGANISATION_COVER, companyID);
+                        }
+                        displayProfileImage(holder);
 
                         ((HeadHolderView) holder).tvDescription.setText(profile.getDescription());
                         ((HeadHolderView) holder).tvCompanyName.setText(profile.getName());
@@ -154,17 +161,17 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                         ((HeadHolderView) holder).tvEmail.setText(profile.getEmail());
                         ((HeadHolderView) holder).tvPhone.setText(profile.getPhone());
 
-                        ((HeadHolderView) holder).etDescription.setText(profile.getDescription());
-                        ((HeadHolderView) holder).etCompanyName.setText(profile.getName());
-                        ((HeadHolderView) holder).etAddress.setText(profile.getAddress());
-                        ((HeadHolderView) holder).etEmail.setText(profile.getEmail());
-                        ((HeadHolderView) holder).etPhone.setText(profile.getPhone());
+                        setEditText(((HeadHolderView) holder).etDescription, profile.getDescription());
+                        setEditText(((HeadHolderView) holder).etCompanyName, profile.getName());
+                        setEditText(((HeadHolderView) holder).etAddress, profile.getAddress());
+                        setEditText(((HeadHolderView) holder).etEmail, profile.getEmail());
+                        setEditText(((HeadHolderView) holder).etPhone, profile.getPhone());
                     }
                 }
                 break;
             case ADMIN_TITLE_VIEW:
                 if (holder instanceof AdminHolder) {
-                    ((AdminHolder) holder).tvAdminName.setText("Admin");
+                    ((AdminHolder) holder).tvAdminName.setText(context.getString(R.string.text_org_admin));
                     if (SDKUtil.IS_M) {
                         ((AdminHolder) holder).tvAdminName.setTextColor(context.getColor(R.color.default_text_color_light));
                     } else {
@@ -181,6 +188,39 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             default:
                 setAdminView((AdminHolder) holder, position);
                 break;
+        }
+    }
+
+    private void setEditText(EditText et, String desc) {
+        if (TextUtils.isEmpty(et.getText())) {
+            et.setText(desc);
+        }
+    }
+
+    /**
+     * 显示公司背影图片
+     *
+     * @param holder
+     * @param strUrl
+     */
+    public void displayProfileImage(RecyclerView.ViewHolder holder, String strUrl) {
+        this.profileImageUrl = strUrl;
+        displayProfileImage(holder);
+    }
+
+    private void displayProfileImage(RecyclerView.ViewHolder holder) {
+        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder().cloneFrom(UniversalImageLoaderUtil.options);
+        // 设置图片加载/解码过程中错误时候显示的图片
+        builder.showImageOnFail(R.drawable.ic_profile_title_bg);
+        // 设置图片在加载期间显示的图片
+        builder.showImageOnLoading(R.drawable.ic_profile_title_bg);
+        // 设置图片Uri为空或是错误的时候显示的图
+        builder.showImageForEmptyUri(R.drawable.ic_profile_title_bg);
+
+        DisplayImageOptions options = builder.build();
+
+        if (holder instanceof HeadHolderView) {
+            ImageLoader.getInstance().displayImage(profileImageUrl, ((HeadHolderView) holder).ivProfileImage, options);
         }
     }
 
@@ -433,6 +473,18 @@ public class ProfileAdapter extends RecyclerView.Adapter {
 
                 ivProfileImage.requestFocus();
             } else {// 不可编辑状态所有内容显示在文本框中
+                if (profile != null && etDescription.getVisibility() == View.VISIBLE) {
+
+                    profile.setName(String.valueOf(etCompanyName.getText()));
+                    profile.setDescription(String.valueOf(etDescription.getText()));
+                    profile.setAddress(String.valueOf(etAddress.getText()));
+                    profile.setPhone(String.valueOf(etPhone.getText()));
+                    profile.setEmail(String.valueOf(etEmail.getText()));
+                    if (listener != null) {
+                        listener.confirmWrite(profile);
+                    }
+                }
+
                 tvChangeText.setVisibility(View.GONE);
                 etCompanyName.setVisibility(View.GONE);
                 etDescription.setVisibility(View.GONE);
@@ -464,5 +516,23 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             tvAdminName = (TextView) itemView.findViewById(R.id.tv_admin);
             ivRight = (ImageView) itemView.findViewById(R.id.iv_right);
         }
+    }
+
+    /**
+     * Company Profile 中适配器的自定义监听，监听适配器中相应的动作或需要的回调
+     * Created 16/3/23.
+     *
+     * @author Jackie
+     * @version 1.0
+     */
+    public interface ProfileAdapterListener {
+        /**
+         * 公司简介图片被点
+         *
+         * @param view 被点击的控件
+         */
+        void onClickProfileImage(View view);
+
+        void confirmWrite(Profile profile);
     }
 }

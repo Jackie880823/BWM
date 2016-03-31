@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -14,14 +15,18 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
-import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.ProfileAdapter;
 import com.madxstudio.co8.entity.OrganisationDetail;
+import com.madxstudio.co8.entity.Profile;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.PickAndCropPictureActivity;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.widget.MyDialog;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 公司简介和管理页，在这里公司可以修改
@@ -30,8 +35,12 @@ import com.madxstudio.co8.widget.MyDialog;
  * @author Jackie
  * @version 1.0
  */
-public class CompanyActivity extends BaseActivity implements View.OnClickListener, ProfileAdapterListener {
+public class CompanyActivity extends BaseActivity implements View.OnClickListener, ProfileAdapter.ProfileAdapterListener {
     private static final String TAG = "CompanyActivity";
+    private static final String PUT_UPDATE_ORGANISATION_TAG = "put update organisation";
+    public static final String GET_ORGANISATION_TAG = "get organisation";
+    public static final String POST_COVER_PHOTO_TAG = "get organisation";
+
     public static final int REQUEST_PICTURE = 1;
 
     private ImageButton ibTop;
@@ -49,7 +58,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     private HttpTools mHttpTools;
 
-    private OrganisationDetail organisationDetail;
+    private Uri postImageUri;
 
     /**
      * 初始底部栏，没有可以不操作
@@ -104,7 +113,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvProfile.setLayoutManager(linearLayoutManager);
-        adapter = new ProfileAdapter(this);
+        adapter = new ProfileAdapter(this, OrganisationConstants.TEST_COMPANY_ID);
         rvProfile.setAdapter(adapter);
         adapter.setListener(this);
         rvProfile.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -163,7 +172,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             mHttpTools = new HttpTools(this);
         }
 
-        mHttpTools.get(String.format(Constant.API_GET_ORGANISATION_DETAILS, "3"), null, this, new HttpCallback() {
+        mHttpTools.get(String.format(OrganisationConstants.API_GET_ORGANISATION_DETAILS, OrganisationConstants.TEST_COMPANY_ID), null, GET_ORGANISATION_TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -175,14 +184,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onResult(String string) {
-                Gson gson = new Gson();
-                organisationDetail = gson.fromJson(string, OrganisationDetail.class);
-                if (organisationDetail == null) {
-                    LogUtil.w(TAG, "get Organisation Detail fail");
-                } else {
-                    adapter.setData(organisationDetail);
-                    LogUtil.d(TAG, "get Organisation not null");
-                }
+                parseDetail(string);
             }
 
             @Override
@@ -200,6 +202,40 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
             }
         });
+    }
+
+    /**
+     * Dispatch incoming result to the correct fragment.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_PICTURE:
+                    rvProfile.scrollToPosition(0);
+                    postImageUri = data.getParcelableExtra(PickAndCropPictureActivity.FINAL_PIC_URI);
+                    LogUtil.d(TAG, "onActivityResult: mBackDropImagedUri: " + postImageUri);
+                    RecyclerView.ViewHolder hodler = rvProfile.findViewHolderForAdapterPosition(0);
+                    adapter.displayProfileImage(hodler, postImageUri.toString());
+                    break;
+            }
+        }
+    }
+
+    private void parseDetail(String string) {
+        Gson gson = new Gson();
+        OrganisationDetail organisationDetail = gson.fromJson(string, OrganisationDetail.class);
+        if (organisationDetail == null) {
+            LogUtil.w(TAG, "parseDetail: get Organisation Detail fail");
+        } else {
+            adapter.setData(organisationDetail);
+            LogUtil.d(TAG, "get Organisation not null");
+        }
     }
 
     @Override
@@ -242,6 +278,108 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         showCameraAlbum(view.getWidth(), view.getHeight());
     }
 
+    @Override
+    public void confirmWrite(Profile profile) {
+        if (mHttpTools == null) {
+            mHttpTools = new HttpTools(this);
+        }
+
+        postCoverPhoto();
+
+//        Map<String, String> map = new HashMap<>();
+//        map.put(OrganisationConstants.NAME, profile.getName());
+//        map.put(OrganisationConstants.DESCRIPTION, profile.getDescription());
+//        map.put(OrganisationConstants.ADDRESS, profile.getAddress());
+//        map.put(OrganisationConstants.PHONE, profile.getPhone());
+//        map.put(OrganisationConstants.EMAIL, profile.getEmail());
+//
+//        RequestInfo requestInfo = new RequestInfo();
+//        requestInfo.url = String.format(OrganisationConstants.API_PUT_ORGANISATION_DETAILS, OrganisationConstants.TEST_COMPANY_ID);
+//        requestInfo.jsonParam = UrlUtil.mapToJsonstring(map);
+//        Log.d(TAG, "confirmWrite: json param = " + requestInfo.jsonParam);
+//
+//        mHttpTools.put(requestInfo, PUT_UPDATE_ORGANISATION_TAG, new HttpCallback() {
+//            @Override
+//            public void onStart() {
+//
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//
+//            }
+//
+//            @Override
+//            public void onResult(String string) {
+//                Log.d(TAG, "onResult: " + string);
+//                parseDetail(string);
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled() {
+//
+//            }
+//
+//            @Override
+//            public void onLoading(long count, long current) {
+//
+//            }
+//        });
+    }
+
+    /**
+     * 上传更新公司图片
+     */
+    private void postCoverPhoto() {
+        if (postImageUri == null || Uri.EMPTY == postImageUri) {
+            return;
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(OrganisationConstants.FILE_KEY, "file");
+        map.put(OrganisationConstants.FILE_NAME, "upload cover" + OrganisationConstants.TEST_COMPANY_ID);
+        map.put(OrganisationConstants.MIME_TYPE, "image/jpeg");
+        map.put(OrganisationConstants.ORG_ID, OrganisationConstants.TEST_COMPANY_ID);
+        map.put(OrganisationConstants.FILE, new File(postImageUri.getPath()));
+
+        mHttpTools.upload(OrganisationConstants.API_POST_ORGANISATION_COVER, map, POST_COVER_PHOTO_TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String string) {
+                Log.d(TAG, "onResult: " + string);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                Log.d(TAG, "onLoading: count = " + count + "; current = " + current);
+            }
+        });
+    }
+
     private void showCameraAlbum(final int photoWidth, final int photoHeight) {
         LogUtil.i(TAG, photoWidth + "*" + photoHeight);
         LayoutInflater factory = LayoutInflater.from(this);
@@ -262,7 +400,6 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, photoHeight);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
-                intent.putExtra(PickAndCropPictureActivity.CACHE_PIC_NAME, "_background");
                 startActivityForResult(intent, REQUEST_PICTURE);
                 myDialog = null;
             }
@@ -278,7 +415,6 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, photoHeight);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
-                intent.putExtra(PickAndCropPictureActivity.CACHE_PIC_NAME, "_background");
                 startActivityForResult(intent, REQUEST_PICTURE);
                 myDialog = null;
             }
