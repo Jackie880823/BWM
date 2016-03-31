@@ -1586,6 +1586,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         params.put("photo_index", String.valueOf(index));
         params.put("photo_caption", getPhotoCaptionByPosition(index + 1));
         params.put("file", f);
+        params.put("photo_index", String.valueOf(photoEntities.size() + index));
         params.put("multiple", multiple ? "1" : "0");
         LogUtil.d(TAG, "submitPic: params: " + params);
         callBack.setLinkType(CallBack.LINK_TYPE_SUBMIT_PICTURE);
