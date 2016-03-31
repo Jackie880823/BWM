@@ -128,4 +128,6 @@
     <color name="reward_code_box">#ffce15</color>
     <color name="new_title">#dc7400</color>
     <color name="ok_button_color">#ffffff</color>
+    <color name="delete_text_color">#ff3333</color>
+
 </resources>

@@ -679,7 +679,7 @@
     <string name="text_s">\'s&#160;</string>
     <string name="text_search_bwm_user_no_found">No Result found,Try again.</string>
     <string name="text_invite_members_info">This app is cool,add me!</string>
-    <string name="profile_privacy">Profile\'s Privacy</string>
+    <string name="profile_privacy">Profile privacy</string>
     <string name="year_of_birth">Year of Birth</string>
     <string name="text_public">Public</string>
     <string name="text_only_me">Me Only</string>
@@ -770,4 +770,7 @@
     <string name="text_org_resend_request">Resend Request</string>
     <string name="text_org_cancel_request">Cancel Request</string>
     <string name="text_search_no_data">No results for \"%s\"</string>
+    <string name="text_select_all">Select All</string>
+    <string name="text_privacy_internal_phone">Internal Phone Ext</string>
+    <string name="text_sign_up_detail_org"><Data><![CDATA[ Can\'t find your organisation? <font color="#0087FF">Create Here</font> Or you can leave the organisation field empty to join one later]]></Data></string>
 </resources>

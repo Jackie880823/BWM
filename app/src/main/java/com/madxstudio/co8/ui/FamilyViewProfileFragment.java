@@ -59,22 +59,23 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
     public static final int CHOOSE_RELATION_CODE = 1;
 
-    CircularNetworkImage cniMain;
-    NetworkImageView networkImageView;
-    ImageView ivBottomLeft;
-    ImageView ivBottomRight;
-    TextView tvName1;
-    TextView tvId1;
+    private CircularNetworkImage cniMain;
+    private NetworkImageView networkImageView;
+    private ImageView ivBottomLeft;
+    private ImageView ivBottomRight;
+    private TextView tvName1;
+    private TextView tvId1;
 
     private NoScrollListView tvPhone;
-    TextView tvFirstName;
-    TextView tvLastName;
+    private TextView tvFirstName;
+    private TextView tvLastName;
     //    TextView tvAge;
-    TextView tvBirthday;
-    TextView tvYearBirthday;
-    TextView tvGender;
-    TextView tvEmail;
-    TextView tvRegion;
+    private TextView tvBirthday;
+    private TextView tvYearBirthday;
+    private TextView tvGender;
+    private TextView tvEmail;
+    private TextView tvRegion;
+    private TextView tvOrganisationName;
     private View vProgress;
 
     private View rlFirstName;
@@ -88,6 +89,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private View flMember;
     private View rl_position;
     private View rl_department;
+    private View rl_organisation;
     private View rl_et_internal_phone;
     private TextView et_position;
     private TextView et_department;
@@ -228,6 +230,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         rlEmail = getViewById(R.id.rl_email);
         rlRegion = getViewById(R.id.rl_region);
         rlPhone = getViewById(R.id.rl_phone);
+        tvOrganisationName = getViewById(R.id.tv_organisation_name);
 
         flMember = getViewById(R.id.fl_member);
         btAddMember = getViewById(R.id.btn_add_member);
@@ -238,6 +241,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         et_position = getViewById(R.id.et_position);
         et_department = getViewById(R.id.et_department);
         et_internal_phone = getViewById(R.id.et_internal_phone);
+        rl_organisation = getViewById(R.id.rl_organisation);
 
         stFemale = getResources().getString(R.string.text_female);
         stMale = getResources().getString(R.string.text_male);
@@ -247,7 +251,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 //                    R.drawable.profile_background_3, R.drawable.profile_background_4, R.drawable.profile_background_5};
 //            profileBackgroundId = randomImageId(array);
 //        }
-            profileBackgroundId = R.drawable.profile_background_0;
+        profileBackgroundId = R.drawable.profile_background_0;
 
         btAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -307,6 +311,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             setDatePrivacy(userEntity.getEmail_flag(), rlEmail);
             setDatePrivacy(userEntity.getLocation_flag(), rlRegion);
             setDatePrivacy(userEntity.getMember_flag(), rlPhone);
+            tvOrganisationName.setText(userEntity.getOrganisation());
             et_position.setText(userEntity.getPosition());
             et_department.setText(userEntity.getDepartment());
             if (userEntity.getInt_phone_ext() != null && userEntity.getInt_phone_ext().size() > 0) {

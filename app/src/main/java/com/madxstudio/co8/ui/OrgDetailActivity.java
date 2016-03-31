@@ -50,12 +50,11 @@ import com.material.widget.Dialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by quankun on 16/3/8.
@@ -123,9 +122,9 @@ public class OrgDetailActivity extends BaseActivity {
     @Override
     protected void titleRightEvent() {
         if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
-            Intent intent = new Intent(mContext, InviteMemberActivity.class);
+            Intent intent = new Intent(mContext, SelectMemberActivity.class);
             intent.putExtra("isCreateNewGroup", true);
-            intent.putExtra("jumpIndex", 0);
+            intent.putExtra(Constant.SELECT_MEMBER_NORMAL_DATA, (Serializable) memberList);
             startActivityForResult(intent, CREATE_GROUP);
         } else if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
             startActivity(new Intent(mContext, AddMembersActivity.class));
@@ -457,6 +456,19 @@ public class OrgDetailActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
+    private void showSearchNoDataView(String string) {
+        refreshLayout.setVisibility(View.GONE);
+        emptyView.setVisibility(View.GONE);
+        searchTv.setVisibility(View.VISIBLE);
+        searchTv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
+    }
+
+    private void hideSearchNoDataView() {
+        refreshLayout.setVisibility(View.VISIBLE);
+        emptyView.setVisibility(View.GONE);
+        searchTv.setVisibility(View.GONE);
+    }
+
     @Override
     public void initView() {
         mContext = this;
@@ -480,7 +492,7 @@ public class OrgDetailActivity extends BaseActivity {
             memberList = new ArrayList<>();
             memberAdapter = new OrgMemberListAdapter(mContext, memberList, transmitData);
             gridView.setAdapter(memberAdapter);
-            tv_org_empty.setText("No Contacts");
+            tv_org_empty.setText(getString(R.string.text_org_no_contact));
         }
         userIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -493,17 +505,12 @@ public class OrgDetailActivity extends BaseActivity {
             memberAdapter.showNoData(new NoFoundDataListener() {
                 @Override
                 public void showFoundData(String string) {
-                    refreshLayout.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.GONE);
-                    searchTv.setVisibility(View.VISIBLE);
-                    searchTv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
+                    showSearchNoDataView(string);
                 }
 
                 @Override
                 public void showRefreshLayout() {
-                    refreshLayout.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.GONE);
-                    searchTv.setVisibility(View.GONE);
+                    hideSearchNoDataView();
                 }
             });
         }
@@ -511,17 +518,12 @@ public class OrgDetailActivity extends BaseActivity {
             groupAdapter.showNoData(new NoFoundDataListener() {
                 @Override
                 public void showFoundData(String string) {
-                    refreshLayout.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.GONE);
-                    searchTv.setVisibility(View.VISIBLE);
-                    searchTv.setText(String.format(mContext.getString(R.string.text_search_no_data), string));
+                    showSearchNoDataView(string);
                 }
 
                 @Override
                 public void showRefreshLayout() {
-                    refreshLayout.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.GONE);
-                    searchTv.setVisibility(View.GONE);
+                    hideSearchNoDataView();
                 }
             });
         }
@@ -623,42 +625,13 @@ public class OrgDetailActivity extends BaseActivity {
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
         if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
-            List<FamilyGroupEntity> familyGroupEntityList;
-            if (TextUtils.isEmpty(etImport)) {
-                familyGroupEntityList = groupEntityList;
-                groupAdapter.addNewData(familyGroupEntityList);
-            } else {
-                Filter filter = groupAdapter.getFilter();
-                filter.filter(etImport);
-            }
+            Filter filter = groupAdapter.getFilter();
+            filter.filter(etImport);
         } else {
-            List<FamilyMemberEntity> familyMemberEntityList;
-            if (!TextUtils.isEmpty(etImport)) {
-                memberAdapter.setSerach(memberList);
-                Filter filter = memberAdapter.getFilter();
-                filter.filter(etImport);
-            } else {
-                familyMemberEntityList = searchMemberList(etImport, memberList);
-                memberAdapter.addNewData(familyMemberEntityList);
-            }
+            memberAdapter.setSerach(memberList);
+            Filter filter = memberAdapter.getFilter();
+            filter.filter(etImport);
         }
-
-    }
-
-    private List<FamilyMemberEntity> searchMemberList(String name, List<FamilyMemberEntity> list) {
-        if (TextUtils.isEmpty(name)) {
-            return list;
-        }
-        List<FamilyMemberEntity> results = new ArrayList();
-        Pattern pattern = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
-        for (FamilyMemberEntity memberEntity : list) {
-            String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getUser_given_name());
-            Matcher matcher = pattern.matcher(userName);
-            if (matcher.find()) {
-                results.add(memberEntity);
-            }
-        }
-        return results;
     }
 
     private void finishReFresh() {
@@ -752,6 +725,19 @@ public class OrgDetailActivity extends BaseActivity {
                             if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
                                 List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
                                 }.getType());
+                                List<FamilyMemberEntity> memberEntityList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
+                                }.getType());
+                                if (memberEntityList != null && memberEntityList.size() > 0) {
+                                    if (memberList == null) {
+                                        memberList = new ArrayList<>();
+                                    }
+                                    memberList.clear();
+                                    for (FamilyMemberEntity memberEntity : memberEntityList) {
+                                        if (!"0".equals(memberEntity.getFam_accept_flag())) {
+                                            memberList.add(memberEntity);
+                                        }
+                                    }
+                                }
                                 if (groupList != null && groupList.size() > 0) {
                                     hideEmptyView();
                                     Message.obtain(handler, GET_DATA, groupList).sendToTarget();
@@ -780,13 +766,9 @@ public class OrgDetailActivity extends BaseActivity {
                                         }
                                     }
                                     if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
-//                                        if (staffList.size() > 0) {
                                         hideEmptyView();
                                         staffList.add(0, meMemberEntity);
                                         Message.obtain(handler, GET_DATA, staffList).sendToTarget();
-//                                        } else {
-//                                            showEmptyView();
-//                                        }
                                     } else {
                                         if (otherList.size() > 0) {
                                             hideEmptyView();
@@ -798,7 +780,7 @@ public class OrgDetailActivity extends BaseActivity {
                                 } else {
                                     if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
                                         hideEmptyView();
-                                        memberEntityList = new ArrayList<FamilyMemberEntity>();
+                                        memberEntityList = new ArrayList<>();
                                         memberEntityList.add(0, meMemberEntity);
                                         Message.obtain(handler, GET_DATA, memberEntityList).sendToTarget();
                                     } else {

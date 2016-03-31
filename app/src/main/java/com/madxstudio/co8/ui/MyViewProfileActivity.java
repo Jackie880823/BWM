@@ -23,6 +23,8 @@ import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
@@ -36,19 +38,13 @@ import com.madxstudio.co8.util.MyDateUtils;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 import com.madxstudio.co8.widget.DatePicker;
 import com.madxstudio.co8.widget.MyDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.material.widget.Dialog;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -82,6 +78,8 @@ public class MyViewProfileActivity extends BaseActivity {
     private EditText et_internal_phone;
     private UserEntity userEntity;
     private boolean isPreloadedUser;
+    private TextView et_organisation;
+    private View rl_organisation;
 
     private TextView tvChange;
     private NetworkImageView imProfileImages;
@@ -366,6 +364,15 @@ public class MyViewProfileActivity extends BaseActivity {
         imProfileImages = getViewById(R.id.iv_profile_images);
         imQrImages = getViewById(R.id.iv_profile_qr);
         vProgress = getViewById(R.id.rl_progress);
+        et_organisation = getViewById(R.id.et_organisation);
+        rl_organisation = getViewById(R.id.rl_organisation);
+
+        rl_organisation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id());
         backdropHeadUrl = String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id());
@@ -381,6 +388,7 @@ public class MyViewProfileActivity extends BaseActivity {
         etFirstName.setText(userEntity.getUser_given_name());
         etLastName.setText(userEntity.getUser_surname());
         tvTitle.setText(userEntity.getUser_given_name());
+        et_organisation.setText(userEntity.getOrganisation());
 
 //        tvAge.setText(userEntity.getUser_dob());//需要做处理，年转为岁数
         //1990-09-10   1990年

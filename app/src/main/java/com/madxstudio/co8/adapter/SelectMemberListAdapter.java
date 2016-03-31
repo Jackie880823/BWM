@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
@@ -16,7 +16,6 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.FamilyMemberEntity;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
-import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.CircularNetworkImage;
@@ -27,27 +26,55 @@ import java.util.List;
 /**
  * Created by quankun on 15/5/6.
  */
-public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
+public class SelectMemberListAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
     private List<FamilyMemberEntity> list;
     private List<FamilyMemberEntity> serachList;
 
     private PersonFilter filter;
-    private String transmitData;
+    private List<String> selectList = new ArrayList<>();
 
-    public OrgMemberListAdapter(Context mContext, List<FamilyMemberEntity> memberList, String transmitData) {
+    public SelectMemberListAdapter(Context mContext, List<FamilyMemberEntity> memberList) {
         list = memberList;
         if (list == null) {
             list = new ArrayList<>();
         }
         this.mContext = mContext;
-        this.transmitData = transmitData;
     }
 
     public void addNewData(List<FamilyMemberEntity> newList) {
         list.clear();
         if (null != newList && newList.size() > 0) {
             list.addAll(newList);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void addSelectData(String userId) {
+        if (!selectList.contains(userId)) {
+            selectList.add(userId);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void removeSelectData(String userId) {
+        if (selectList.contains(userId)) {
+            selectList.remove(userId);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void removeAllSelectData() {
+        selectList.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAllSelectData() {
+        selectList.clear();
+        if (list != null && list.size() > 0) {
+            for (FamilyMemberEntity memberEntity : list) {
+                selectList.add(memberEntity.getUser_id());
+            }
         }
         notifyDataSetChanged();
     }
@@ -75,14 +102,12 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.org_list_item, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.select_member_list_item, null);
             viewHolder = new ViewHolder();
             viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.org_icon_image);
             viewHolder.memberName = (TextView) convertView.findViewById(R.id.tv_org_name);
             viewHolder.orgPosition = (TextView) convertView.findViewById(R.id.tv_org_position);
-            viewHolder.orgAdmin = (TextView) convertView.findViewById(R.id.tv_org_admin);
-            viewHolder.meLine = convertView.findViewById(R.id.view_line);
-            viewHolder.orgRequest = (ImageView) convertView.findViewById(R.id.org_add_request);
+            viewHolder.selectMemberCheckBox = (CheckBox) convertView.findViewById(R.id.check_member_item);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -90,19 +115,13 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         FamilyMemberEntity memberEntity = list.get(position);
         String userId = memberEntity.getUser_id();
         BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userId), R.drawable.default_head_icon, R.drawable.default_head_icon);
-        if (!TextUtils.isEmpty(userId) && userId.equals(MainActivity.getUser().getUser_id()) && list.size() > 1) {
-            viewHolder.meLine.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.meLine.setVisibility(View.GONE);
-        }
-        if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData) && "0".equals(memberEntity.getFam_accept_flag())) {
-            viewHolder.orgRequest.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.orgRequest.setVisibility(View.GONE);
-        }
         viewHolder.memberName.setText(memberEntity.getUser_given_name());
         viewHolder.orgPosition.setText(memberEntity.getPosition());
-        viewHolder.orgAdmin.setText("");
+        if (selectList.contains(userId)) {
+            viewHolder.selectMemberCheckBox.setChecked(true);
+        } else {
+            viewHolder.selectMemberCheckBox.setChecked(false);
+        }
         return convertView;
     }
 
@@ -110,9 +129,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         CircularNetworkImage imageMain;
         TextView memberName;
         TextView orgPosition;
-        TextView orgAdmin;
-        View meLine;
-        ImageView orgRequest;
+        CheckBox selectMemberCheckBox;
     }
 
     public void setSerach(List<FamilyMemberEntity> list) {

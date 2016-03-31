@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tab_color_press1">
+
+    <ImageView
+        android:id="@+id/im_welcome_logo"
+        android:layout_width="@dimen/_120dp"
+        android:layout_height="@dimen/_120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_80dp"
+        android:src="@drawable/co8_welcome_logo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/im_welcome_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_40dp"
+        android:text="Well done!"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_25dp" />
+
+    <Button
+        android:id="@+id/br_next"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_30dp"
+        android:layout_marginLeft="@dimen/_20dp"
+        android:layout_marginRight="@dimen/_20dp"
+        android:layout_marginTop="@dimen/_40dp"
+        android:background="@drawable/btn_white_stroke"
+        android:text="Use the app now!"
+        android:textAllCaps="false"
+
+        android:textColor="@android:color/white" />
+</RelativeLayout>

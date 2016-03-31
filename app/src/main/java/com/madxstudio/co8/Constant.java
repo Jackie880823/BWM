@@ -83,15 +83,20 @@ public class Constant {
     public static final int ACTION_NEWS_CREATE = 24;
     public static final int INTENT_UPDATE_NEWS = 25;
 
+    public static final int ACTION_MESSAGE_CREATE = 26;
+
+    public final static int CREATE_NEW_ORG = 27;
+
     public static final String ACTION_SHOW_NOTIFY_USER = "ACTION_SHOW_NOTIFY_USER";
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
 
     public static final int MESSAGE_CHART_TYPE_MEMBER = 0;
     public static final int MESSAGE_CHART_TYPE_GROUP = 1;
-    public static final String MESSAGE_CHART_TYPE ="type";
-    public static final String MESSAGE_CHART_GROUP_ID ="groupId";
-    public static final String MESSAGE_CHART_TITLE_NAME ="titleName";
+    public static final String MESSAGE_CHART_TYPE = "type";
+    public static final String MESSAGE_CHART_GROUP_ID = "groupId";
+    public static final String MESSAGE_CHART_TITLE_NAME = "titleName";
+    public static final String SELECT_MEMBER_NORMAL_DATA = "normalData";
 
     public static final String GROUP_DEFAULT = "group_default";
 
@@ -110,6 +115,8 @@ public class Constant {
     public static final String FAMILY_PARENT = "Supervisor";
     public static final String FAMILY_CHILDREN = "Subordinate";
     public static final String FAMILY_SIBLING = "Colleague";
+
+    public static final String CREATE_COUNTRY_NAME = "CountryName";
 
     /**
      * 临时文件用户裁剪

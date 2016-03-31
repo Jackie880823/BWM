@@ -1,7 +1,7 @@
 package com.madxstudio.co8.adapter;
 
 import android.content.Context;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.android.volley.ext.tools.BitmapTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.entity.MsgEntity;
 import com.madxstudio.co8.entity.PrivateMessageEntity;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.util.MyDateUtils;
@@ -57,7 +56,6 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public Object getItem(int position) {
-
         return mUserEntityList.get(position);
     }
 
@@ -164,7 +162,7 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
-            if (constraint == null && constraint.length() == 0) {
+            if (TextUtils.isEmpty(constraint)) {
                 results.values = original;//原始数据
                 results.count = original.size();
             } else {
@@ -187,9 +185,11 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
             mUserEntityList = (List<PrivateMessageEntity>) results.values;
             notifyDataSetChanged();
             if (results.count == 0) {
-                showData.showFoundData(constraint.toString());
+                if (showData != null)
+                    showData.showFoundData(constraint.toString());
             } else {
-                showData.showRefreshLayout();
+                if (showData != null)
+                    showData.showRefreshLayout();
             }
         }
     }
