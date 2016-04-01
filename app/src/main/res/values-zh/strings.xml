@@ -747,4 +747,6 @@
     <!--<string name="text_org_create_new">Create New</string>-->
     <!--<string name="text_org_no_join">You have not joined any organisation</string>-->
     <!--<string name="text_org_have_join"><Data><![CDATA[ Your request to join \n<font color="#0087FF">%s</font>\nis pending for approval]]></Data></string>-->
+    <!--<string name="text_cancel_successful">Cancel request successful</string>-->
+    <!--<string name="text_resend_successful">Resend request successful</string>-->
 </resources>

@@ -800,5 +800,7 @@
     <string name="hint_company_address">Company address...</string>
     <string name="hint_company_phone">Company contact number...</string>
     <string name="hint_company_email">Company email address...</string>
+    <string name="text_cancel_successful">Cancel request successful</string>
+    <string name="text_resend_successful">Resend request successful</string>
 
 </resources>
