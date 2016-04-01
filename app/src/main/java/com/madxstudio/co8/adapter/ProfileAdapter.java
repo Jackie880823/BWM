@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.HttpTools;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.Admin;
 import com.madxstudio.co8.entity.OrganisationDetail;
@@ -87,9 +88,12 @@ public class ProfileAdapter extends RecyclerView.Adapter {
      */
     private String profileImageUrl;
 
+    private HttpTools mHttpTools;
+
     public ProfileAdapter(Context context, String companyID) {
         this.context = context;
         this.companyID = companyID;
+        mHttpTools = new HttpTools(context);
     }
 
     public void setData(OrganisationDetail organisationDetail) {
@@ -216,12 +220,6 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         builder.showImageOnLoading(R.drawable.ic_profile_title_bg);
         // 设置图片Uri为空或是错误的时候显示的图
         builder.showImageForEmptyUri(R.drawable.ic_profile_title_bg);
-        // 考虑JPEG图像EXIF参数（旋转，翻转）
-        builder.considerExifParams(true);
-        // 设置加载的图片缓存在内存中
-        builder.cacheInMemory(true);
-        // 设置加载的图片缓存在SD卡中
-        builder.cacheOnDisk(true);
 
         DisplayImageOptions options = builder.build();
 
@@ -480,13 +478,16 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                 ivProfileImage.requestFocus();
             } else {// 不可编辑状态所有内容显示在文本框中
                 if (etDescription.getVisibility() == View.VISIBLE) {// 说明是从编辑转入不可编辑需要上传编辑的内容
-                    profile = new Profile();
 
-                    profile.setName(String.valueOf(etCompanyName.getText()));
-                    profile.setDescription(String.valueOf(etDescription.getText()));
-                    profile.setAddress(String.valueOf(etAddress.getText()));
-                    profile.setPhone(String.valueOf(etPhone.getText()));
-                    profile.setEmail(String.valueOf(etEmail.getText()));
+                    if (checkEditText()) {
+                        profile = new Profile();
+
+                        profile.setName(String.valueOf(etCompanyName.getText()));
+                        profile.setDescription(String.valueOf(etDescription.getText()));
+                        profile.setAddress(String.valueOf(etAddress.getText()));
+                        profile.setPhone(String.valueOf(etPhone.getText()));
+                        profile.setEmail(String.valueOf(etEmail.getText()));
+                    }
                     if (listener != null) {
                         listener.confirmWrite(profile);
                     }
@@ -505,6 +506,39 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                 tvPhone.setVisibility(View.VISIBLE);
                 tvEmail.setVisibility(View.VISIBLE);
             }
+        }
+
+        /**
+         * 检测文本框与Profile对比是否有变化，有变化则表明有修改
+         * @return - {@code true}: 有变化<br/>
+         * - {@code false}: 没变化<br/>
+         */
+        private boolean checkEditText() {
+            if (profile == null) {
+                return true;
+            }
+
+            if (!etDescription.getText().toString().equals(profile.getDescription())) {
+                return true;
+            }
+
+            if (!etCompanyName.getText().toString().equals(profile.getName())) {
+                return true;
+            }
+
+            if (!etAddress.getText().toString().equals(profile.getAddress())) {
+                return true;
+            }
+
+            if (!etPhone.getText().toString().equals(profile.getPhone())) {
+                return true;
+            }
+
+            if (!etEmail.getText().toString().equals(profile.getEmail())) {
+                return true;
+            }
+
+            return false;
         }
     }
 

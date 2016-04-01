@@ -16,6 +16,7 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
+import com.madxstudio.co8.App;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.ProfileAdapter;
 import com.madxstudio.co8.entity.OrganisationDetail;
@@ -173,37 +174,39 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void requestData() {
         if (mHttpTools == null) {
-            mHttpTools = new HttpTools(this);
+            mHttpTools = new HttpTools(App.getContextInstance());
         }
 
         mHttpTools.get(String.format(OrganisationConstants.API_GET_ORGANISATION_DETAILS, OrganisationConstants.TEST_COMPANY_ID), null, GET_ORGANISATION_TAG, new HttpCallback() {
             @Override
             public void onStart() {
-
+                LogUtil.d(TAG, "onStart: ");
             }
 
             @Override
             public void onFinish() {
+                LogUtil.d(TAG, "onFinish: ");
             }
 
             @Override
             public void onResult(String string) {
+                LogUtil.d(TAG, "onResult() called with: " + "string = [" + string + "]");
                 parseDetail(string);
             }
 
             @Override
             public void onError(Exception e) {
-
+                LogUtil.e(TAG, "onError: ", e);
             }
 
             @Override
             public void onCancelled() {
-
+                LogUtil.d(TAG, "onCancelled: ");
             }
 
             @Override
             public void onLoading(long count, long current) {
-
+                LogUtil.d(TAG, "onLoading() called with: " + "count = [" + count + "], current = [" + current + "]");
             }
         });
     }
@@ -284,11 +287,13 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void confirmWrite(Profile profile) {
+        LogUtil.d(TAG, "confirmWrite: ");
         if (mHttpTools == null) {
-            mHttpTools = new HttpTools(this);
+            mHttpTools = new HttpTools(App.getContextInstance());
         }
 
         postCoverPhoto();
+
         if (!profile.equals(detail.getProfile())) {
             putProfile(profile);
         }
@@ -353,6 +358,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
      * - {@code false}:    不用上传图片 <br/>
      */
     private boolean postCoverPhoto() {
+        LogUtil.d(TAG, "postCoverPhoto: ");
         if (postImageUri == null || Uri.EMPTY == postImageUri) {
             // 不需要上传图片
             return false;
