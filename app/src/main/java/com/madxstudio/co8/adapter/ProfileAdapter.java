@@ -35,6 +35,7 @@ import java.util.List;
  * @version 1.0
  */
 public class ProfileAdapter extends RecyclerView.Adapter {
+    private static final String TAG = "ProfileAdapter";
     /**
      * 公司简介显示的Item类型
      */
@@ -52,7 +53,6 @@ public class ProfileAdapter extends RecyclerView.Adapter {
      * 最后一个Item的类型
      */
     private static final int LAST_VIEW = 3;
-    private static final String TAG = "ProfileAdapter";
 
     private Context context;
 
@@ -216,6 +216,12 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         builder.showImageOnLoading(R.drawable.ic_profile_title_bg);
         // 设置图片Uri为空或是错误的时候显示的图
         builder.showImageForEmptyUri(R.drawable.ic_profile_title_bg);
+        // 考虑JPEG图像EXIF参数（旋转，翻转）
+        builder.considerExifParams(true);
+        // 设置加载的图片缓存在内存中
+        builder.cacheInMemory(true);
+        // 设置加载的图片缓存在SD卡中
+        builder.cacheOnDisk(true);
 
         DisplayImageOptions options = builder.build();
 
@@ -473,7 +479,8 @@ public class ProfileAdapter extends RecyclerView.Adapter {
 
                 ivProfileImage.requestFocus();
             } else {// 不可编辑状态所有内容显示在文本框中
-                if (profile != null && etDescription.getVisibility() == View.VISIBLE) {
+                if (etDescription.getVisibility() == View.VISIBLE) {// 说明是从编辑转入不可编辑需要上传编辑的内容
+                    profile = new Profile();
 
                     profile.setName(String.valueOf(etCompanyName.getText()));
                     profile.setDescription(String.valueOf(etDescription.getText()));

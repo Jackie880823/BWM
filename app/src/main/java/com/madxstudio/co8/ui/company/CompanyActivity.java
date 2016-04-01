@@ -13,15 +13,18 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.ProfileAdapter;
 import com.madxstudio.co8.entity.OrganisationDetail;
 import com.madxstudio.co8.entity.Profile;
+import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.PickAndCropPictureActivity;
 import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
 
 import java.io.File;
@@ -59,6 +62,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     private HttpTools mHttpTools;
 
     private Uri postImageUri;
+    private OrganisationDetail detail;
 
     /**
      * 初始底部栏，没有可以不操作
@@ -229,11 +233,11 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     private void parseDetail(String string) {
         Gson gson = new Gson();
-        OrganisationDetail organisationDetail = gson.fromJson(string, OrganisationDetail.class);
-        if (organisationDetail == null) {
+        detail = gson.fromJson(string, OrganisationDetail.class);
+        if (detail == null) {
             LogUtil.w(TAG, "parseDetail: get Organisation Detail fail");
         } else {
-            adapter.setData(organisationDetail);
+            adapter.setData(detail);
             LogUtil.d(TAG, "get Organisation not null");
         }
     }
@@ -285,99 +289,119 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         }
 
         postCoverPhoto();
+        if (!profile.equals(detail.getProfile())) {
+            putProfile(profile);
+        }
+    }
 
-//        Map<String, String> map = new HashMap<>();
-//        map.put(OrganisationConstants.NAME, profile.getName());
-//        map.put(OrganisationConstants.DESCRIPTION, profile.getDescription());
-//        map.put(OrganisationConstants.ADDRESS, profile.getAddress());
-//        map.put(OrganisationConstants.PHONE, profile.getPhone());
-//        map.put(OrganisationConstants.EMAIL, profile.getEmail());
-//
-//        RequestInfo requestInfo = new RequestInfo();
-//        requestInfo.url = String.format(OrganisationConstants.API_PUT_ORGANISATION_DETAILS, OrganisationConstants.TEST_COMPANY_ID);
-//        requestInfo.jsonParam = UrlUtil.mapToJsonstring(map);
-//        Log.d(TAG, "confirmWrite: json param = " + requestInfo.jsonParam);
-//
-//        mHttpTools.put(requestInfo, PUT_UPDATE_ORGANISATION_TAG, new HttpCallback() {
-//            @Override
-//            public void onStart() {
-//
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//
-//            }
-//
-//            @Override
-//            public void onResult(String string) {
-//                Log.d(TAG, "onResult: " + string);
-//                parseDetail(string);
-//            }
-//
-//            @Override
-//            public void onError(Exception e) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled() {
-//
-//            }
-//
-//            @Override
-//            public void onLoading(long count, long current) {
-//
-//            }
-//        });
+    /**
+     * 上传公司资料
+     *
+     * @param profile
+     */
+    private void putProfile(Profile profile) {
+        Map<String, String> map = new HashMap<>();
+        map.put(OrganisationConstants.NAME, profile.getName());
+        map.put(OrganisationConstants.DESCRIPTION, profile.getDescription());
+        map.put(OrganisationConstants.ADDRESS, profile.getAddress());
+        map.put(OrganisationConstants.PHONE, profile.getPhone());
+        map.put(OrganisationConstants.EMAIL, profile.getEmail());
+
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.url = String.format(OrganisationConstants.API_PUT_ORGANISATION_DETAILS, OrganisationConstants.TEST_COMPANY_ID);
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(map);
+        Log.d(TAG, "confirmWrite: json param = " + requestInfo.jsonParam);
+
+        mHttpTools.put(requestInfo, PUT_UPDATE_ORGANISATION_TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                LogUtil.d(TAG, "onStart: ");
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "onFinish: ");
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, "onResult() called with: " + "string = [" + string + "]");
+                parseDetail(string);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: ", e);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: ");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading() called with: " + "count = [" + count + "], current = [" + current + "]");
+            }
+        });
     }
 
     /**
      * 上传更新公司图片
+     *
+     * @return - {@code true}:     需要上传图片 <br/>
+     * - {@code false}:    不用上传图片 <br/>
      */
-    private void postCoverPhoto() {
+    private boolean postCoverPhoto() {
         if (postImageUri == null || Uri.EMPTY == postImageUri) {
-            return;
+            // 不需要上传图片
+            return false;
         }
 
         Map<String, Object> map = new HashMap<>();
         map.put(OrganisationConstants.FILE_KEY, "file");
-        map.put(OrganisationConstants.FILE_NAME, "upload cover" + OrganisationConstants.TEST_COMPANY_ID);
-        map.put(OrganisationConstants.MIME_TYPE, "image/jpeg");
+        map.put(OrganisationConstants.FILE_NAME, "uploadCover" + OrganisationConstants.TEST_COMPANY_ID);
+        map.put(OrganisationConstants.MIME_TYPE, "image/png");
         map.put(OrganisationConstants.ORG_ID, OrganisationConstants.TEST_COMPANY_ID);
         map.put(OrganisationConstants.FILE, new File(postImageUri.getPath()));
 
         mHttpTools.upload(OrganisationConstants.API_POST_ORGANISATION_COVER, map, POST_COVER_PHOTO_TAG, new HttpCallback() {
             @Override
             public void onStart() {
-
+                LogUtil.d(TAG, "onStart: ");
             }
 
             @Override
             public void onFinish() {
-
+                LogUtil.d(TAG, "onFinish: ");
+                // 上传完成需要清除缓存，否则无法加载网络图片
+                UniversalImageLoaderUtil.clearCache();
             }
 
             @Override
             public void onResult(String string) {
-                Log.d(TAG, "onResult: " + string);
+                LogUtil.d(TAG, "onResult() called with: " + "string = [" + string + "]");
             }
 
             @Override
             public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: ", e);
                 e.printStackTrace();
             }
 
             @Override
             public void onCancelled() {
-
+                LogUtil.d(TAG, "onCancelled: ");
             }
 
             @Override
             public void onLoading(long count, long current) {
-                Log.d(TAG, "onLoading: count = " + count + "; current = " + current);
+                LogUtil.d(TAG, "onLoading() called with: " + "count = [" + count + "], current = [" + current + "]");
             }
         });
+
+        // 需要上传图片
+        return true;
     }
 
     private void showCameraAlbum(final int photoWidth, final int photoHeight) {

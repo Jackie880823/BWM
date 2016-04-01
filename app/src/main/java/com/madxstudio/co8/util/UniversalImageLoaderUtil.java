@@ -76,9 +76,9 @@ public class UniversalImageLoaderUtil {
         options = builder.build();
     }
 
-    public static DisplayImageOptions.Builder cloneFrom(DisplayImageOptions options) {
-        DisplayImageOptions.Builder result = new DisplayImageOptions.Builder().cloneFrom(options);
-        return result;
+    public static void clearCache() {
+        ImageLoader.getInstance().clearMemoryCache();
+        ImageLoader.getInstance().clearDiskCache();
     }
 
     /**
