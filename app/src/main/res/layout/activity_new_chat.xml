@@ -45,54 +45,71 @@
     <LinearLayout
         android:id="@+id/my_family_linear"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_45dp"
         android:layout_below="@+id/search_linear"
         android:background="#fff"
-        android:paddingTop="@dimen/_15dp">
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_30dp"
-            android:layout_marginBottom="@dimen/_10dp"
-            android:layout_marginLeft="@dimen/_20dp"
-            android:layout_marginRight="@dimen/_20dp"
-            android:background="@drawable/message_list_text_shape"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/message_member_tv"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/_1dp"
-                android:layout_marginLeft="@dimen/_1dp"
-                android:layout_marginTop="@dimen/_1dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/message_member_selected_shap"
                 android:gravity="center"
                 android:text="@string/text_new_member"
-                android:textColor="#fff"
-                android:textSize="@dimen/_13dp" />
+                android:textColor="@color/tab_color_press1"
+                android:textSize="@dimen/_18dp" />
+
+            <View
+                android:id="@+id/message_member_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_2dp"
+                android:background="@color/tab_color_press1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/message_group_tv"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/_1dp"
-                android:layout_marginRight="@dimen/_1dp"
-                android:layout_marginTop="@dimen/_1dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/message_group_normal_shap"
                 android:gravity="center"
                 android:text="@string/text_new_group"
-                android:textColor="#666"
-                android:textSize="@dimen/_13dp" />
+                android:textColor="@color/message_comment"
+                android:textSize="@dimen/_18dp" />
+
+            <View
+                android:id="@+id/message_group_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_2dp"
+                android:background="@color/tab_color_press1"
+                android:visibility="invisible" />
         </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:id="@+id/line_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_below="@id/my_family_linear"
+        android:background="@color/default_split_line" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/my_family_linear"
+        android:layout_below="@id/line_view"
         android:orientation="vertical">
 
         <android.support.v4.view.ViewPager

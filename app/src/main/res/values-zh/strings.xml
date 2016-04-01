@@ -741,4 +741,10 @@
     <!--<string name="text_select_all">Select All</string>-->
     <!--<string name="text_privacy_internal_phone">Internal Phone Ext</string>-->
     <!--<string name="text_sign_up_detail_org">Can\'t find your organisation? Create Here Or you can leave the organisation field empty to join one later</string>-->
+    <!--<string name="text_org_request_pend">Your request is pending</string>-->
+    <!--<string name="text_use_app_now">Use the app now!</string>-->
+    <!--<string name="text_org_join_now">Join Now</string>-->
+    <!--<string name="text_org_create_new">Create New</string>-->
+    <!--<string name="text_org_no_join">You have not joined any organisation</string>-->
+    <!--<string name="text_org_have_join"><Data><![CDATA[ Your request to join \n<font color="#0087FF">%s</font>\nis pending for approval]]></Data></string>-->
 </resources>

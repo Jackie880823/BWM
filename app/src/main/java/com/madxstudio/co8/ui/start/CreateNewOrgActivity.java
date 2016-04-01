@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -21,10 +20,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.GsonBuilder;
+import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.entity.MediaData;
+import com.madxstudio.co8.entity.AppTokenEntity;
+import com.madxstudio.co8.entity.OrgSearchEntity;
+import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.PicturesCacheUtil;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.CountryCodeActivity;
@@ -32,25 +36,22 @@ import com.madxstudio.co8.ui.share.SelectPhotosActivity;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LocalImageLoader;
 import com.madxstudio.co8.util.MyTextUtil;
-import com.madxstudio.co8.util.UniversalImageLoaderUtil;
-import com.madxstudio.co8.widget.CircularImageView;
 import com.madxstudio.co8.widget.MyDialog;
 import com.material.widget.Dialog;
 import com.material.widget.PaperButton;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
-import com.soundcloud.android.crop.Crop;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateNewOrgActivity extends BaseActivity implements View.OnClickListener {
     private final static String TAG = CreateNewOrgActivity.class.getSimpleName();
     private final static String COMPLETE_USER = TAG + "_COMPLETE_USER";
-    private final static int HANDLER_COMPLETE_PROFILE_SUCCESS = 100;
-    private final static int ERROR = -1;
-
     /**
      * 头像缓存文件名称
      */
@@ -63,6 +64,9 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
     private final static int REQUEST_HEAD_CAMERA = 2;
     private final static int REQUEST_HEAD_FINAL = 3;
     private static final int GET_COUNTRY_CODE = 0x11;
+    private final static int HANDLER_COMPLETE_PROFILE_SUCCESS = 0x12;
+    private final static int GET_CREATE_ORG_EXIST = 0x13;
+    private final static int GET_DATA_ERROR = 0x10;
 
     private Uri mCropImagedUri;
     private String imagePath;
@@ -80,24 +84,46 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
 
     private Dialog showCameraAlbum;
     private Context mContext;
+    private String userId;
+    private UserEntity userEntity;
 
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case HANDLER_COMPLETE_PROFILE_SUCCESS:
-                    //
+                    Intent intent = getIntent();
+                    boolean isSignUp = intent.getBooleanExtra(Constant.IS_SIGN_UP, false);
+                    if (isSignUp) {
+                        if (userEntity == null) {
+                            userEntity = (UserEntity) intent.getExtras().getSerializable(Constant.LOGIN_USER);
+                        }
+                        AppTokenEntity tokenEntity = (AppTokenEntity) intent.getExtras().getSerializable(Constant.HTTP_TOKEN);
+                        userEntity.setShow_tip(true);//从登陆流程进入的必须显示tip，此值作为判断依据。
+                        userEntity.setShow_add_member(true);
+                        App.userLoginSuccessed(CreateNewOrgActivity.this, userEntity, tokenEntity);
+                    } else {
+                        OrgSearchEntity searchEntity = (OrgSearchEntity) msg.obj;
+                        Intent intent1 = new Intent();
+                        intent1.putExtra(Constant.CREATE_COUNTRY_NAME, searchEntity);
+                        setResult(RESULT_OK, intent1);
+                        if (userEntity != null) {
+                            App.changeLoginedUser(userEntity);
+                        }
+                        finish();
+                    }
                     break;
 
-                case ERROR:
+                case GET_DATA_ERROR:
                     break;
-
+                case GET_CREATE_ORG_EXIST:
+                    break;
                 default:
                     break;
             }
+            return false;
         }
-    };
+    });
 
     @Override
     public int getLayout() {
@@ -144,7 +170,7 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
         etLast = getViewById(R.id.et_last_name);
         brNext = getViewById(R.id.br_next);
         rlProgress = getViewById(R.id.rl_progress);
-
+        userId = getIntent().getStringExtra(Constant.PARAM_USER_ID);
         rlPic.setOnClickListener(this);
 //        civPic.setOnClickListener(this);
         brNext.setOnClickListener(this);
@@ -299,12 +325,10 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
 //        Uri source = Uri.fromFile(new File(path));
 //        File f = PicturesCacheUtil.getCachePicFileByName(CreateNewOrgActivity.this, CACHE_PIC_NAME, true);
 //        ImageLoader.getInstance().displayImage(uri.toString(), rlPic, UniversalImageLoaderUtil.options);
-        Log.i("aaa111", uri.toString());
         String path = LocalImageLoader.compressBitmap(mContext, FileUtil.getRealPathFromURI(mContext, uri), 480, 800, false);
         File file = new File(path);
 
         mCropImagedUri = Uri.fromFile(file);
-        Log.i("aaa222", mCropImagedUri.toString());
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.RGB_565;
         Bitmap photo = BitmapFactory.decodeStream(CreateNewOrgActivity.this.getContentResolver().openInputStream(mCropImagedUri), null, options);
@@ -350,7 +374,6 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(CreateNewOrgActivity.this,
                             CACHE_PIC_NAME_TEMP, true));
 //                    uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
-                    Log.i("aaaaa", uri.toString());
                     if (new File(uri.getPath()).exists()) {
                         try {
                             startPhotoZoom(uri);
@@ -398,66 +421,75 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
     private void doHttpCompleteProfile() {
         strFirstName = etFirst.getText().toString();
         strLastName = etLast.getText().toString();
-
         if (checkInput()) {
-            Intent intent = new Intent();
-            intent.putExtra(Constant.CREATE_COUNTRY_NAME, strFirstName);
-            setResult(RESULT_OK, intent);
-            finish();
-//            Map<String, Object> params = new HashMap<>();
-//            params.put("user_id", "");
-//            params.put("user_given_name", strFirstName);
-//            params.put("user_surname", strLastName);
-//
-//            if (mCropImagedUri != null) {
-//                String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 480, 800, false);
-//                File file = new File(path);
-//                if (!file.exists()) {
-//                    return;
-//                }
-//                params.put("fileKey", "file");
-//                params.put("fileName", "");
-//                params.put("mimeType", "image/png");
-//                params.put("file", file);
-//            }
-//
-//            new HttpTools(this).upload(Constant.API_START_COMPLETE_PROFILE, params, COMPLETE_USER, new HttpCallback() {
-//                @Override
-//                public void onStart() {
-//                    doHttpChangeUI();
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    finishHttpChangeUI();
-//                }
-//
-//                @Override
-//                public void onResult(String response) {
-//                    GsonBuilder gsonb = new GsonBuilder();
-//                    Gson gson = gsonb.create();
-//
-//                    userEntity = gson.fromJson(response, UserEntity.class);
-//                    if (!TextUtils.isEmpty(userEntity.getUser_id())) {
-//                        handler.sendEmptyMessage(HANDLER_COMPLETE_PROFILE_SUCCESS);
-//                    }
-//                }
-//
-//                @Override
-//                public void onError(Exception e) {
-//
-//                }
-//
-//                @Override
-//                public void onCancelled() {
-//
-//                }
-//
-//                @Override
-//                public void onLoading(long count, long current) {
-//
-//                }
-//            });
+            Map<String, Object> params = new HashMap<>();
+            params.put("user_id", userId);
+            params.put("name", strFirstName);
+            params.put("country", strLastName);
+
+            if (mCropImagedUri != null) {
+                File file = new File(mCropImagedUri.getPath());
+                if (!file.exists()) {
+                    return;
+                }
+                params.put("fileKey", "file");
+                params.put("fileName", "");
+                params.put("mimeType", "image/png");
+                params.put("file", file);
+            }
+
+            new HttpTools(this).upload(Constant.API_ORG_CREATE, params, COMPLETE_USER, new HttpCallback() {
+                @Override
+                public void onStart() {
+                    doHttpChangeUI();
+                }
+
+                @Override
+                public void onFinish() {
+                    finishHttpChangeUI();
+                }
+
+                @Override
+                public void onResult(String response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String profile = jsonObject.optString("profile");
+                        if (!TextUtils.isEmpty(profile)) {
+                            JSONObject json = new JSONObject(profile);
+                            OrgSearchEntity searchEntity = new OrgSearchEntity();
+                            searchEntity.setName(json.optString("name", ""));
+                            searchEntity.setId(json.optString("id", ""));
+                            String user = jsonObject.optString("user");
+                            if (!TextUtils.isEmpty(user)) {
+                                userEntity = new GsonBuilder().create().fromJson(user, UserEntity.class);
+                            }
+                            Message.obtain(handler, HANDLER_COMPLETE_PROFILE_SUCCESS, searchEntity).sendToTarget();
+                        }
+                        String status_code = jsonObject.optString("response_status_code");
+                        String response_status = jsonObject.optString("response_status");
+                        if ("409".equals(status_code) && "NameExist".equalsIgnoreCase(response_status)) {
+                            handler.sendEmptyMessage(GET_CREATE_ORG_EXIST);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    handler.sendEmptyMessage(GET_DATA_ERROR);
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
 
         } else {
             if (TextUtils.isEmpty(strFirstName)) {

@@ -70,11 +70,9 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
     private boolean blnChooseCountryCode;//通过选择获得的国家区号。如果用户手动修改。把国家名称改回原始状态。这是用来判断的
 
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+        public boolean handleMessage(Message msg) {
             switch (msg.what)
             {
                 case SUCCESS_GET_CODE:
@@ -105,8 +103,9 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
                 default:
                     break;
             }
+            return false;
         }
-    };
+    });
 
     @Override
     public int getLayout() {

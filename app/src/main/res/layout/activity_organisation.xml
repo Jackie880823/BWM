@@ -1,20 +1,62 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_text_color_while"
     android:fillViewport="true">
 
-    <LinearLayout
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:id="@+id/rl_org_join"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_below="@id/fragment_main_top">
 
-        <include
-            android:id="@+id/fragment_main_top"
-            layout="@layout/title_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_join"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_150dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/text_org_have_join"
+            android:textSize="@dimen/_16dp" />
+
+        <Button
+            android:id="@+id/br_join_now"
+            android:layout_width="@dimen/_150dp"
+            android:layout_height="@dimen/_45dp"
+            android:layout_below="@id/tv_join"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_white_stroke"
+            android:text="@string/text_org_join_now"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/br_create_new"
+            android:layout_width="@dimen/_150dp"
+            android:layout_height="@dimen/_45dp"
+            android:layout_below="@id/br_join_now"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_20dp"
+            android:background="@drawable/btn_white_stroke"
+            android:text="@string/text_org_create_new"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_org_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fragment_main_top"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -221,5 +263,5 @@
 
         </LinearLayout>
     </LinearLayout>
-
-</ScrollView>
+    <include layout="@layout/progress_layout" />
+</RelativeLayout>

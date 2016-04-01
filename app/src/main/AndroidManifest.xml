@@ -599,6 +599,9 @@
             android:name="com.madxstudio.co8.ui.WelcomeActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.madxstudio.co8.ui.OrgSearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.madxstudio.co8.ui.start.SignUpUsernameActivity"
             android:screenOrientation="portrait" />
         <activity
