@@ -780,7 +780,7 @@
     <string name="text_org_create_new">Create New</string>
     <string name="text_org_no_join">You have not joined any organisation</string>
     <string name="text_org_have_join"><Data><![CDATA[ Your request to join <br/><font color="#0087FF">%s</font><br/>is pending for approval]]></Data></string>
-    <string name="text_org_sure_join"><Data><![CDATA[ 你确定加入 <font color="#0087FF">%s</font>吗]]></Data></string>
+    <string name="text_org_sure_join"><Data><![CDATA[ Confirm to join <font color="#0087FF">%s</font> ?]]></Data></string>
 
     <string name="text_leave_organisation">Leave Organisation</string>
     <string name="text_address">Address</string>

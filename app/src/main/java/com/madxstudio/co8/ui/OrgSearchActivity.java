@@ -146,7 +146,7 @@ public class OrgSearchActivity extends BaseActivity {
                 if (isFromOrg) {
                     if (myDialog == null) {
                         Spanned content = Html.fromHtml(String.format(getString(R.string.text_org_sure_join), name));
-                        myDialog = new MyDialog(mContext, R.string.text_tips_title, content.toString());
+                        myDialog = new MyDialog(mContext, R.string.text_tips_title, content);
                         myDialog.setCanceledOnTouchOutside(false);
                         myDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
                             @Override
@@ -171,8 +171,9 @@ public class OrgSearchActivity extends BaseActivity {
                             }
                         });
                     }
-                    if (!myDialog.isShowing())
+                    if (!myDialog.isShowing()) {
                         myDialog.show();
+                    }
 
                 } else {
                     Intent intent = new Intent();
