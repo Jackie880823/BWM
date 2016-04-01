@@ -154,8 +154,10 @@ public class MyViewProfileActivity extends BaseActivity {
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case RESEND_JOIN_ORG_SUCCESS:
+                    MessageUtil.showMessage(mContext, R.string.msg_action_successed);
                     break;
                 case CANCEL_JOIN_ORG_SUCCESS:
+                    MessageUtil.showMessage(mContext, R.string.msg_action_successed);
                     userEntity = App.getLoginedUser();
                     showOrgPic();
                     break;
@@ -632,7 +634,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
             }
 
             @Override
@@ -677,7 +679,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
             }
 
             @Override

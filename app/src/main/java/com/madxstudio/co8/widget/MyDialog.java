@@ -14,7 +14,7 @@ public class MyDialog extends Dialog {
 
 
     View mContentView;
-    String message;
+    CharSequence message;
     boolean isOnlyMessage;
 
     public void setCanceledOnTouchOutside(boolean canceledOnTouchOutside) {
@@ -26,7 +26,7 @@ public class MyDialog extends Dialog {
         this(context, context.getString(titleResource), context.getString(messageResource));
     }
 
-    public MyDialog(Context context, int titleResource, String messageResource) {
+    public MyDialog(Context context, int titleResource, CharSequence messageResource) {
         this(context, context.getString(titleResource), messageResource);
     }
 
@@ -42,7 +42,7 @@ public class MyDialog extends Dialog {
     }
 
     //using default layout
-    public MyDialog(Context context, String title, String message) {
+    public MyDialog(Context context, String title, CharSequence message) {
         super(context, title);
         this.context = context;// init Context
         this.title = title;

@@ -23,6 +23,7 @@ import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.ui.family.FamilyTreeActivity;
 import com.madxstudio.co8.ui.start.CreateNewOrgActivity;
+import com.madxstudio.co8.util.MessageUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -217,7 +218,7 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(Exception e) {
-
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
             }
 
             @Override
@@ -262,7 +263,7 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(Exception e) {
-
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
             }
 
             @Override
@@ -282,8 +283,10 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case RESEND_JOIN_ORG_SUCCESS:
+                    MessageUtil.showMessage(mContext, R.string.msg_action_successed);
                     break;
                 case CANCEL_JOIN_ORG_SUCCESS:
+                    MessageUtil.showMessage(mContext, R.string.msg_action_successed);
                     rl_org_join.setVisibility(View.VISIBLE);
                     ll_org_list.setVisibility(View.GONE);
                     br_join_now.setText(getString(R.string.text_org_join_now));
