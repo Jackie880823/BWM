@@ -112,6 +112,7 @@ public class Constant {
     public static final String REQUEST_TYPE = "REQUEST_TYPE";
     public static final String ADMIN_REQUEST = "ADMIN_REQUEST";
     public static final String GENERAL_REQUEST = "GENERAL_REQUEST";
+    public static final String REQUEST_ADD_ADMIN = "REQUEST_ADD_ADMIN";
 
     public static final String ORG_TRANSMIT_DATA = "ORG_TRANSMIT_DATA";
     public static final String ORG_TRANSMIT_GROUP = "ORG_TRANSMIT_GROUP";

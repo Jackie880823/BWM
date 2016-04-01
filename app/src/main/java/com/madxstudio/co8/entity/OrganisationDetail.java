@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class OrganisationDetail implements Serializable {
     private Profile profile;
-    private List<Admin> admin;
+    private List<UserEntity> admin;
 
     public Profile getProfile() {
         return profile;
@@ -21,11 +21,11 @@ public class OrganisationDetail implements Serializable {
         this.profile = profile;
     }
 
-    public List<Admin> getAdmin() {
+    public List<UserEntity> getAdmin() {
         return admin;
     }
 
-    public void setAdmin(List<Admin> admin) {
+    public void setAdmin(List<UserEntity> admin) {
         this.admin = admin;
     }
 }

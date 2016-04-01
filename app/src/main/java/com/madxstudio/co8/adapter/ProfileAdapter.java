@@ -2,6 +2,7 @@ package com.madxstudio.co8.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
@@ -15,19 +16,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.entity.Admin;
 import com.madxstudio.co8.entity.OrganisationDetail;
 import com.madxstudio.co8.entity.Profile;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.ui.FamilyProfileActivity;
+import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.ui.company.OrganisationConstants;
+import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.SDKUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created 16/3/21.
@@ -37,6 +46,14 @@ import java.util.List;
  */
 public class ProfileAdapter extends RecyclerView.Adapter {
     private static final String TAG = "ProfileAdapter";
+
+    private static final String TAG_REMOVE_ADMIN = "remove admin";
+
+    /**
+     * 头部项的个数，即为在管理员列表前项目的个数
+     */
+    private static final int HEAD_ITEMS = 2;
+
     /**
      * 公司简介显示的Item类型
      */
@@ -48,7 +65,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     /**
      * 默认的类型
      */
-    private static final int DEFAULT_VIEW = 2;
+    private static final int ADMIN_DEFAULT_VIEW = 2;
 
     /**
      * 最后一个Item的类型
@@ -69,7 +86,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     /**
      * 管理员列表
      */
-    private List<Admin> admins;
+    private List<UserEntity> admins;
 
     /**
      * 判断当前内容是否可以编辑的标识
@@ -123,7 +140,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                 return new HeadHolderView(view);
 
             case LAST_VIEW:// 最一个Item是不显示内容，这里只是为了给显示的Button预留空间
-            case DEFAULT_VIEW:// 默认的Admin显示
+            case ADMIN_DEFAULT_VIEW:// 默认的Admin显示
             case ADMIN_TITLE_VIEW:// Admin的标题显示
             default:
                 view = LayoutInflater.from(context).inflate(R.layout.company_admin_holder, null);
@@ -140,7 +157,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         } else if (position == getItemCount() - 1) {
             return LAST_VIEW;// 最后一项预留空位给离开点击按钮
         } else {
-            return DEFAULT_VIEW;// Admin名称显示项
+            return ADMIN_DEFAULT_VIEW;// Admin名称显示项
         }
     }
 
@@ -173,6 +190,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                     }
                 }
                 break;
+
             case ADMIN_TITLE_VIEW:
                 if (holder instanceof AdminHolder) {
                     ((AdminHolder) holder).tvAdminName.setText(context.getString(R.string.text_org_admin));
@@ -184,13 +202,18 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                     ((AdminHolder) holder).ivRight.setImageResource(R.drawable.add_member_icon);
                     holder.itemView.setBackgroundResource(R.color.default_wide_split_line);
                 }
+                setAdminView(holder, position);
                 break;
+
+            case ADMIN_DEFAULT_VIEW:
+                setAdminView(holder, position);
+                break;
+
             case LAST_VIEW:
                 holder.itemView.setVisibility(View.INVISIBLE);
                 break;
-            case DEFAULT_VIEW:
             default:
-                setAdminView((AdminHolder) holder, position);
+                LogUtil.e(TAG, "onBindViewHolder: View type is error, not find type that is " + holder.getItemViewType());
                 break;
         }
     }
@@ -228,11 +251,22 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public void setAdminView(AdminHolder holder, int position) {
+    /**
+     * 管理员相送的子项视图设置，包括设置
+     * @param holder
+     * @param position
+     */
+    public void setAdminView(RecyclerView.ViewHolder holder, int position) {
+        // 获取当管理员在管理员列表的索引
+        final int index = position - HEAD_ITEMS;
+        final int type = holder.getItemViewType();
 
-        if (admins != null && !admins.isEmpty()) {
-            holder.tvAdminName.setText(admins.get(position - 2).getUser_given_name());
+        if (type == ADMIN_DEFAULT_VIEW &&  admins != null && !admins.isEmpty()) {
+            UserEntity userEntity = admins.get(index);
+            ((AdminHolder) holder).tvAdminName.setText(userEntity.getUser_given_name());
+            LogUtil.d(TAG, "setAdminView: name => " + userEntity.getUser_given_name() + "; user id => " + userEntity.getUser_id());
         }
+
 
 
         View.OnClickListener clickListener = new View.OnClickListener() {
@@ -249,6 +283,10 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                 switch (v.getId()) {
                     case R.id.tv_view_admin_of_profile:
                         // TODO: 16/3/23 查看Admin简介
+                        Intent intent = new Intent(context, FamilyProfileActivity.class);
+                        intent.putExtra("userEntity", MainActivity.getUser());
+                        intent.putExtra("member_id", admins.get(index).getUser_id());
+                        context.startActivity(intent);
                         break;
 
                     case R.id.tv_message_admin:
@@ -256,15 +294,18 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                         break;
 
                     case R.id.iv_right:
-                        // TODO: 16/3/23 删除Admin
-                        listDialog = new MyDialog(context, null, "Remove Gary Liow as Admin?");
-                        listDialog.setButtonAccept(R.string.text_dialog_yes, this);
-                        listDialog.setButtonCancel(R.string.text_dialog_cancel, this);
-                        listDialog.show();
+                        if (type == ADMIN_DEFAULT_VIEW) {
+                            alertDialogRemove();
+                        } else if (type == ADMIN_TITLE_VIEW){
+                            if (listener != null) {
+                                listener.requestAddAdmin();
+                            }
+                        }
                         break;
 
                     case com.material.widget.R.id.button_accept:
                         // TODO: 16/3/23 dialog中点击了确认按钮
+                        removeAdmin(index);
                         break;
 
                     case com.material.widget.R.id.button_cancel:
@@ -286,9 +327,71 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                         break;
                 }
             }
+
+            /**
+             * 弹出删除管理员的确认提示选择框
+             */
+            private void alertDialogRemove() {
+                listDialog = new MyDialog(context, null, "Remove Gary Liow as Admin?");
+                listDialog.setButtonAccept(R.string.text_dialog_yes, this);
+                listDialog.setButtonCancel(R.string.text_dialog_cancel, this);
+                listDialog.show();
+            }
         };
         holder.itemView.findViewById(R.id.tv_admin).setOnClickListener(clickListener);
         holder.itemView.findViewById(R.id.iv_right).setOnClickListener(clickListener);
+    }
+
+    /**
+     * 删除管理员
+     * @param index - 管理员列表索引，请区别于本{@code adapter}子项的{@code position}，这两个意义不想同
+     */
+    private void removeAdmin(final int index) {
+        if (admins == null || admins.size() <= index) {
+            LogUtil.e(TAG, "removeAdmin: index is error");
+            return;
+        }
+
+        Map<String, String> map = new HashMap<>();
+        map.put(OrganisationConstants.USER_ID, MainActivity.getUser().getUser_id());
+        map.put(OrganisationConstants.MEMBER_ID, admins.get(index).getUser_id());
+
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(map);
+        LogUtil.d(TAG, "removeAdmin: json data => " + requestInfo.jsonParam);
+        requestInfo.url = String.format(OrganisationConstants.API_REMOVE_ADMIN, OrganisationConstants.TEST_COMPANY_ID);
+        mHttpTools.put(requestInfo, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                LogUtil.d(TAG, "onStart: remove Admin");
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "onFinish: remove Admin");
+            }
+
+            @Override
+            public void onResult(String string) {
+                notifyItemRemoved(index + HEAD_ITEMS);
+                LogUtil.d(TAG, "onResult() remove Admin called with: " + "string = [" + string + "]");
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: remove Admin", e);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: remove Admin");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading() called with: " + "count = [" + count + "], current = [" + current + "]");
+            }
+        });
     }
 
     /**
@@ -300,9 +403,9 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         int count;
         if (admins == null || admins.size() == 0) {
-            count = 2;
+            count = HEAD_ITEMS;
         } else {
-            count = 2 + admins.size() + 1;// 这里的总数要包含
+            count = HEAD_ITEMS + admins.size() + 1;// 这里的总数要包含
         }
         return count;
     }
@@ -317,7 +420,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     *
+     * 列表头的ViewHolder,这里包含了公司背影图片和资料的相关显示控件
      */
     private class HeadHolderView extends RecyclerView.ViewHolder {
         /**
@@ -542,6 +645,9 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         }
     }
 
+    /**
+     * 管理员的名称和相关操作控件的{@code ViewHolder}
+     */
     private static class AdminHolder extends RecyclerView.ViewHolder {
         /**
          * Admin的名称用这个控件显示
@@ -575,5 +681,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         void onClickProfileImage(View view);
 
         void confirmWrite(Profile profile);
+
+        void requestAddAdmin();
     }
 }

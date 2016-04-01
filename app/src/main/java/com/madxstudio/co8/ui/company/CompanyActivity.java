@@ -17,12 +17,15 @@ import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.ProfileAdapter;
+import com.madxstudio.co8.entity.FamilyMemberEntity;
 import com.madxstudio.co8.entity.OrganisationDetail;
 import com.madxstudio.co8.entity.Profile;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.OrgDetailActivity;
 import com.madxstudio.co8.ui.PickAndCropPictureActivity;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
@@ -42,10 +45,12 @@ import java.util.Map;
 public class CompanyActivity extends BaseActivity implements View.OnClickListener, ProfileAdapter.ProfileAdapterListener {
     private static final String TAG = "CompanyActivity";
     private static final String PUT_UPDATE_ORGANISATION_TAG = "put update organisation";
-    public static final String GET_ORGANISATION_TAG = "get organisation";
-    public static final String POST_COVER_PHOTO_TAG = "get organisation";
+    private static final String GET_ORGANISATION_TAG = "get organisation";
+    private static final String POST_COVER_PHOTO_TAG = "get organisation";
 
-    public static final int REQUEST_PICTURE = 1;
+    private static final int REQUEST_PICTURE_CODE = 1000;
+    private static final int REQUEST_ADD_ADMIN_CODE = 1001;
+    public static final String TAG_POST_ADD_ADMIN = "TAG_POST_ADD_ADMIN";
 
     private ImageButton ibTop;
 
@@ -223,17 +228,64 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQUEST_PICTURE:
+                case REQUEST_PICTURE_CODE:
                     rvProfile.scrollToPosition(0);
                     postImageUri = data.getParcelableExtra(PickAndCropPictureActivity.FINAL_PIC_URI);
                     LogUtil.d(TAG, "onActivityResult: mBackDropImagedUri: " + postImageUri);
                     RecyclerView.ViewHolder hodler = rvProfile.findViewHolderForAdapterPosition(0);
                     adapter.displayProfileImage(hodler, postImageUri.toString());
                     break;
+                case REQUEST_ADD_ADMIN_CODE:
+                    FamilyMemberEntity memberEntity = (FamilyMemberEntity) data.getSerializableExtra(OrganisationConstants.NEED_ADD_ADMIN_USER);
+                    addAdmin(memberEntity);
+                    break;
             }
         }
     }
 
+    private void addAdmin(FamilyMemberEntity memberEntity) {
+        LogUtil.d(TAG, "addAdmin() called with: " + "memberEntity = [" + memberEntity.getUser_given_name() + "]");
+        Map<String, String> paraMap = new HashMap<>();
+        paraMap.put(OrganisationConstants.USER_ID, OrganisationConstants.TEST_USER_ID);
+        paraMap.put(OrganisationConstants.MEMBER_ID, memberEntity.getUser_id());
+        paraMap.put(OrganisationConstants.ORG_ID, OrganisationConstants.TEST_COMPANY_ID);
+        mHttpTools.post(OrganisationConstants.API_POST_ADD_ADMIN, paraMap, TAG_POST_ADD_ADMIN, new HttpCallback() {
+            @Override
+            public void onStart() {
+                LogUtil.d(TAG, "onStart: add admin");
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "onFinish: add admin");
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, "onResult() called add admin with: " + "string = [" + string + "]");
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: add admin ", e);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: add admin");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading() called add admin with: " + "count = [" + count + "], current = [" + current + "]");
+            }
+        });
+    }
+
+    /**
+     * 解析公司资料
+     * @param string - 包含公司资料的JSON数据
+     */
     private void parseDetail(String string) {
         Gson gson = new Gson();
         detail = gson.fromJson(string, OrganisationDetail.class);
@@ -297,6 +349,14 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         if (!profile.equals(detail.getProfile())) {
             putProfile(profile);
         }
+    }
+
+    @Override
+    public void requestAddAdmin() {
+        Intent intent = new Intent(this, OrgDetailActivity.class);
+        intent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_STAFF);
+        intent.putExtra(Constant.REQUEST_TYPE, Constant.REQUEST_ADD_ADMIN);
+        startActivityForResult(intent, REQUEST_ADD_ADMIN_CODE);
     }
 
     /**
@@ -430,7 +490,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, photoHeight);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
-                startActivityForResult(intent, REQUEST_PICTURE);
+                startActivityForResult(intent, REQUEST_PICTURE_CODE);
                 myDialog = null;
             }
         });
@@ -445,7 +505,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, photoHeight);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
-                startActivityForResult(intent, REQUEST_PICTURE);
+                startActivityForResult(intent, REQUEST_PICTURE_CODE);
                 myDialog = null;
             }
         });

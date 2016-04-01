@@ -40,6 +40,7 @@ import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.ui.add.AddMembersActivity;
+import com.madxstudio.co8.ui.company.OrganisationConstants;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
@@ -65,7 +66,7 @@ public class OrgDetailActivity extends BaseActivity {
     /**
      * add by Jackie
      * 管理的类型：   -   {@link Constant#ADMIN_REQUEST}管理员的请求可以管理员工<br>
-     *    -   {@link Constant#GENERAL_REQUEST} 普通员工的请求，无法管理员工
+     * -   {@link Constant#GENERAL_REQUEST} 普通员工的请求，无法管理员工
      */
     private String requestType;
     private Context mContext;
@@ -539,6 +540,7 @@ public class OrgDetailActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
+
                 if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
                     showGroupDialog(groupAdapter.getList().get(arg2));
                 } else {
@@ -546,7 +548,13 @@ public class OrgDetailActivity extends BaseActivity {
                         return;
                     } else {
                         FamilyMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
-                        if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
+                        if (Constant.REQUEST_ADD_ADMIN.equals(requestType)) {
+                            // 将点击的Item中的FamilyMemberEntity返回给启动的Activity;
+                            Intent intent = new Intent();
+                            intent.putExtra(OrganisationConstants.NEED_ADD_ADMIN_USER, familyMemberEntity);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        } else if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
                             showNoFriendDialog(familyMemberEntity);
                         } else {
                             //put请求消除爱心
