@@ -130,9 +130,9 @@ public class GroupSettingActivity extends BaseActivity {
     @Override
     protected void titleRightEvent() {
         //是否会出现list数据还没下载完就点击进去了。此时不是最新数据。这里需要怎么处理呢？
-        Intent intent = new Intent(GroupSettingActivity.this, InviteMemberActivity.class);
+        Intent intent = new Intent(GroupSettingActivity.this, SelectMemberActivity.class);
         intent.putExtra("type", 1);
-        intent.putExtra("members_data", new Gson().toJson(userList));
+        intent.putExtra(Constant.SELECT_MEMBER_DATA, new Gson().toJson(userList));
         intent.putExtra("groups_data", "");
         intent.putExtra("selectNewData", 1);
         startActivityForResult(intent, GET_MEMBERS);

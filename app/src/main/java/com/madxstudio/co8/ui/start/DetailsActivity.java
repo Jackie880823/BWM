@@ -1,34 +1,23 @@
 package com.madxstudio.co8.ui.start;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -40,9 +29,11 @@ import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.AppTokenEntity;
+import com.madxstudio.co8.entity.OrgSearchEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.PicturesCacheUtil;
 import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.OrgSearchActivity;
 import com.madxstudio.co8.ui.share.SelectPhotosActivity;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LocalImageLoader;
@@ -57,9 +48,7 @@ import com.soundcloud.android.crop.Crop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DetailsActivity extends BaseActivity implements View.OnClickListener {
@@ -91,43 +80,52 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
 
     private String strFirstName;
     private String strLastName;
-    private String strGender;
+//    private String strGender;
 
     private CircularImageView civPic;
     private RelativeLayout rlPic;
     private EditText etFirst;
     private TextView tvFirstNameError;
     private EditText etLast;
-    private RelativeLayout rlRB;
-    private RadioGroup rgMain;
+    //    private RelativeLayout rlRB;
+//    private RadioGroup rgMain;
     private PaperButton brNext;
     private RelativeLayout rlProgress;
     private TextView detail_new_org;
 
-    private AutoCompleteTextView et_organisation_name;
-    private DetailAdapter<String> adapter;
+    private TextView et_organisation_name;
+    private OrgSearchEntity searchEntity;
 
     private Dialog showCameraAlbum;
+    private boolean isCreateNewOrg = false;
 
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case HANDLER_COMPLETE_PROFILE_SUCCESS:
-                    userEntity.setShow_tip(true);//从登陆流程进入的必须显示tip，此值作为判断依据。
-                    userEntity.setShow_add_member(true);
-                    App.userLoginSuccessed(DetailsActivity.this, userEntity, tokenEntity);
+                    if (isCreateNewOrg) {
+                        Intent intent = new Intent(DetailsActivity.this, CreateNewOrgActivity.class);
+                        intent.putExtra(Constant.LOGIN_USER, userEntity);
+                        intent.putExtra(Constant.HTTP_TOKEN, tokenEntity);
+                        intent.putExtra(Constant.IS_SIGN_UP, true);
+                        intent.putExtra(Constant.PARAM_USER_ID, userEntity.getUser_id());
+                        startActivity(intent);
+                    } else {
+                        userEntity.setShow_tip(true);//从登陆流程进入的必须显示tip，此值作为判断依据。
+                        userEntity.setShow_add_member(true);
+                        App.userLoginSuccessed(DetailsActivity.this, userEntity, tokenEntity);
+                    }
                     break;
 
                 case ERROR:
                     break;
-
                 default:
                     break;
             }
+            return false;
         }
-    };
+    });
 
     @Override
     public int getLayout() {
@@ -155,7 +153,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         rightButton.setVisibility(View.INVISIBLE);
         leftButton.setVisibility(View.INVISIBLE);
         changeTitleColor(R.color.btn_bg_color_login_normal);
-        tvTitle.setTextColor(getResources().getColor(R.color.login_text_bg_color));
+        tvTitle.setTextColor(ContextCompat.getColor(this, R.color.login_text_bg_color));
         leftButton.setImageResource(R.drawable.co8_back_button);
     }
 
@@ -181,8 +179,8 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         etFirst = getViewById(R.id.et_first_name);
         tvFirstNameError = getViewById(R.id.tv_first_name_error);
         etLast = getViewById(R.id.et_last_name);
-        rlRB = getViewById(R.id.rl_rb);
-        rgMain = getViewById(R.id.rg_main);
+//        rlRB = getViewById(R.id.rl_rb);
+//        rgMain = getViewById(R.id.rg_main);
         brNext = getViewById(R.id.br_next);
         rlProgress = getViewById(R.id.rl_progress);
         et_organisation_name = getViewById(R.id.et_organisation_name);
@@ -193,70 +191,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         civPic.setOnClickListener(this);
         brNext.setOnClickListener(this);
         detail_new_org.setOnClickListener(this);
-
-        adapter = new DetailAdapter<>(this, android.R.layout.simple_spinner_dropdown_item);
-        et_organisation_name.setAdapter(adapter);
-        List<String> list = new ArrayList<>();
-        list.add("B2BE GSS Malaysia");
-        list.add("B2BE GSS Australia");
-        list.add("B2BE New Zealand");
-        list.add("B2BE India");
-        adapter.addAll(list);
-
-        et_organisation_name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (et_organisation_name.isPerformingCompletion()) {
-//                    return;
-//                }
-//                if (s.length() < 3) {
-//                    return;
-//                }
-
-//                String query = s.toString();
-//                adapter.clear();
-
-//                List<NameValuePair> data = new ArrayList<NameValuePair>();
-//                data.add(new BasicNameValuePair("keyword", query));
-//
-//                String result = serverConnector.sendRequest(data, ServerConnector.SEARCH);
-//                result = result.substring(2, result.length() - 3);
-//
-//                JSONDecoder decoder = new JSONDecoder(result);
-//                JSONObject value = (JSONObject) decoder.decode();
-//                Map<String, JSONValue> values = value.getValue();
-//                if (values.size() != 0) {
-//
-//                    adapter.add(myPOJO);
-//                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        rgMain.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rb_male:
-                        strGender = "M";
-                        rlRB.setBackgroundColor(getResources().getColor(R.color.default_text_color_while));
-                        break;
-                    case R.id.rb_femal:
-                        rlRB.setBackgroundColor(getResources().getColor(R.color.default_text_color_while));
-                        strGender = "F";
-                        break;
-                }
-            }
-        });
+        et_organisation_name.setOnClickListener(this);
 
         etFirst.addTextChangedListener(new TextWatcher() {
             @Override
@@ -330,31 +265,14 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                 break;
 
             case R.id.detail_new_org:
-//                strFirstName = etFirst.getText().toString();
-//                strLastName = etLast.getText().toString();
-//                if (MyTextUtil.isHasEmpty(strFirstName, strLastName, strGender)) {
-//                    if (TextUtils.isEmpty(strFirstName)) {
-//                        etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-//                        tvFirstNameError.setVisibility(View.VISIBLE);
-//                    } else {
-//                        etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-//                        tvFirstNameError.setVisibility(View.GONE);
-//                    }
-//
-//                    if (TextUtils.isEmpty(strLastName)) {
-//                        etLast.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-//                    } else {
-//                        etLast.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-//                    }
-//
-//                    if (TextUtils.isEmpty(strGender)) {
-//                        rlRB.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-//                    } else {
-//                        rlRB.setBackgroundColor(getResources().getColor(R.color.default_text_color_while));
-//                    }
-//                } else {
-                    startActivityForResult(new Intent(DetailsActivity.this, CreateNewOrgActivity.class), Constant.CREATE_NEW_ORG);
-//                }
+//                Intent intent = new Intent(DetailsActivity.this, CreateNewOrgActivity.class);
+//                intent.putExtra(Constant.PARAM_USER_ID, userEntity.getUser_id());
+//                startActivityForResult(intent, Constant.CREATE_NEW_ORG);
+                isCreateNewOrg = true;
+                doHttpCompleteProfile();
+                break;
+            case R.id.et_organisation_name:
+                startActivityForResult(new Intent(DetailsActivity.this, OrgSearchActivity.class), Constant.SEARCH_ORG_DATA);
                 break;
             default:
                 break;
@@ -510,16 +428,25 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                                 }
                             }
                         } catch (FileNotFoundException e) {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                     }
                     break;
                 case Constant.CREATE_NEW_ORG:
                     if (data != null) {
-                        et_organisation_name.setText(data.getStringExtra(Constant.CREATE_COUNTRY_NAME));
+                        searchEntity = (OrgSearchEntity) data.getSerializableExtra(Constant.CREATE_COUNTRY_NAME);
+                        if (searchEntity != null) {
+                            et_organisation_name.setText(searchEntity.getName());
+                        }
                     }
                     break;
+                case Constant.SEARCH_ORG_DATA:
+                    if (data != null) {
+                        searchEntity = (OrgSearchEntity) data.getSerializableExtra(Constant.CREATE_COUNTRY_NAME);
+                        if (searchEntity != null) {
+                            et_organisation_name.setText(searchEntity.getName());
+                        }
+                    }
                 default:
                     break;
 
@@ -537,7 +464,9 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
             params.put("user_id", userEntity.getUser_id());
             params.put("user_given_name", strFirstName);
             params.put("user_surname", strLastName);
-            params.put("user_gender", strGender);
+            if (searchEntity != null) {
+                params.put("org_id", searchEntity.getId());
+            }
 
             if (mCropImagedUri != null) {
                 String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 480, 800, false);
@@ -604,16 +533,16 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                 etLast.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
 
-            if (TextUtils.isEmpty(strGender)) {
-                rlRB.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            } else {
-                rlRB.setBackgroundColor(getResources().getColor(R.color.default_text_color_while));
-            }
+//            if (TextUtils.isEmpty(strGender)) {
+//                rlRB.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+//            } else {
+//                rlRB.setBackgroundColor(getResources().getColor(R.color.default_text_color_while));
+//            }
         }
     }
 
     private boolean checkInput() {
-        return !MyTextUtil.isHasEmpty(strFirstName, strLastName, strGender);
+        return !MyTextUtil.isHasEmpty(strFirstName, strLastName);
     }
 
     @Override
@@ -624,37 +553,5 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         if (mCropImagedUri != null) {
             outState.putString("uri", mCropImagedUri.toString());
         }
-    }
-
-    public class DetailAdapter<T> extends ArrayAdapter<String> implements Filterable {
-        public DetailAdapter(Context context, int textViewResourceId) {
-            super(context, textViewResourceId);
-        }
-
-        @Override
-        public Filter getFilter() {
-            return filter;
-        }
-
-        private Filter filter = new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults filterResults = new FilterResults();
-                if (constraint != null) {
-                    filterResults.count = getCount();
-                }
-
-                // do some other stuff
-
-                return filterResults;
-            }
-
-            @Override
-            protected void publishResults(CharSequence contraint, FilterResults results) {
-                if (results != null && results.count > 0) {
-                    notifyDataSetChanged();
-                }
-            }
-        };
     }
 }

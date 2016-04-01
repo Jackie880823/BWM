@@ -80,13 +80,20 @@
                 android:layout_marginTop="@dimen/default_content_padding"
                 android:hint="@string/text_last_name" />
 
-            <AutoCompleteTextView
+            <TextView
                 android:id="@+id/et_organisation_name"
                 style="@style/et_start_details_name"
                 android:layout_marginTop="@dimen/_22dp"
                 android:drawablePadding="@dimen/default_view_margin"
                 android:drawableRight="@drawable/search"
                 android:hint="@string/text_new_family" />
+            <!--<AutoCompleteTextView-->
+            <!--android:id="@+id/et_organisation_name"-->
+            <!--style="@style/et_start_details_name"-->
+            <!--android:layout_marginTop="@dimen/_22dp"-->
+            <!--android:drawablePadding="@dimen/default_view_margin"-->
+            <!--android:drawableRight="@drawable/search"-->
+            <!--android:hint="@string/text_new_family" />-->
 
             <TextView
                 android:id="@+id/detail_new_org"
@@ -96,44 +103,44 @@
                 android:layout_marginTop="@dimen/default_content_padding"
                 android:text="@string/text_sign_up_detail_org" />
 
-            <RelativeLayout
-                android:id="@+id/rl_rb"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_tv"
-                android:layout_marginLeft="@dimen/default_content_padding"
-                android:layout_marginRight="@dimen/default_content_padding"
-                android:layout_marginTop="@dimen/_32dp"
-                android:orientation="horizontal">
+            <!--<RelativeLayout-->
+            <!--android:id="@+id/rl_rb"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/ll_tv"-->
+            <!--android:layout_marginLeft="@dimen/default_content_padding"-->
+            <!--android:layout_marginRight="@dimen/default_content_padding"-->
+            <!--android:layout_marginTop="@dimen/_32dp"-->
+            <!--android:orientation="horizontal">-->
 
-                <RadioGroup
-                    android:id="@+id/rg_main"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+            <!--<RadioGroup-->
+            <!--android:id="@+id/rg_main"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
 
-                    android:layout_centerHorizontal="true"
-                    android:orientation="horizontal">
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:orientation="horizontal">-->
 
-                    <RadioButton
-                        android:id="@+id/rb_male"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/text_male"
-                        android:textColor="@color/default_text_color_light"
-                        android:textSize="@dimen/text_medium_size" />
+            <!--<RadioButton-->
+            <!--android:id="@+id/rb_male"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/text_male"-->
+            <!--android:textColor="@color/default_text_color_light"-->
+            <!--android:textSize="@dimen/text_medium_size" />-->
 
-                    <RadioButton
-                        android:id="@+id/rb_femal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_80dp"
-                        android:gravity="center"
-                        android:text="@string/text_female"
-                        android:textColor="@color/default_text_color_light"
-                        android:textSize="@dimen/text_medium_size" />
-                </RadioGroup>
-            </RelativeLayout>
+            <!--<RadioButton-->
+            <!--android:id="@+id/rb_femal"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="@dimen/_80dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/text_female"-->
+            <!--android:textColor="@color/default_text_color_light"-->
+            <!--android:textSize="@dimen/text_medium_size" />-->
+            <!--</RadioGroup>-->
+            <!--</RelativeLayout>-->
 
             <com.material.widget.PaperButton
                 android:id="@+id/br_next"

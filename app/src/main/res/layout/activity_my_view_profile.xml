@@ -124,6 +124,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
+                        android:layout_marginRight="@dimen/_65dp"
                         android:orientation="vertical"
                         android:padding="10dp">
 
@@ -140,7 +141,6 @@
                             android:background="@null"
                             android:gravity="left"
                             android:singleLine="true"
-                            android:text=""
                             android:textColor="@color/drawer_arrow_color"
                             android:textSize="@dimen/text_small_size" />
                     </LinearLayout>
@@ -152,6 +152,16 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/_15dp"
                         android:src="@drawable/profile_right" />
+
+                    <ImageView
+                        android:id="@+id/iv_org_pend"
+                        android:layout_width="@dimen/_25dp"
+                        android:layout_height="@dimen/_25dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/_40dp"
+                        android:visibility="gone"
+                        android:src="@drawable/time" />
 
                     <View
                         android:layout_width="match_parent"

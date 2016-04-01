@@ -47,7 +47,7 @@ import de.greenrobot.event.EventBus;
 public class EventFragment extends BaseFragment<MainActivity> {
 
     private static final String Tag = EventFragment.class.getSimpleName();
-    public InteractivePopupWindow popupWindow,popupWindowAddPhoto;
+    public InteractivePopupWindow popupWindow, popupWindowAddPhoto;
     private static final int GET_DELAY_RIGHT = 0x28;
     private static final int GET_DELAY_ADD_PHOTO = 0x30;
 //    private ProgressDialog mProgressDialog;
@@ -102,9 +102,9 @@ public class EventFragment extends BaseFragment<MainActivity> {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case GET_DELAY_RIGHT:
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_create_event),0);
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, getParentActivity().getResources().getString(R.string.text_tip_create_event), 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
@@ -114,7 +114,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     popupWindow.showPopupWindow(true);
                     break;
                 case GET_DELAY_ADD_PHOTO:
-                    if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+                    if (MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)) {
                         popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
                         popupWindowAddPhoto.showPopupWindowUp();
                     }
@@ -189,33 +189,34 @@ public class EventFragment extends BaseFragment<MainActivity> {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if(MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT,false)){
+            if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT, false)) {
                 handler.sendEmptyMessage(GET_DELAY_RIGHT);
             }
             EventBus.getDefault().registerSticky(this);
 
-        }else {
+        } else {
             EventBus.getDefault().unregister(this);
         }
     }
 
     public void onEventMainThread(UpdateEvent event) {
-        if(event.getCount() == Constant.ACTION_EVENT_UPDATE_BIRTHDAY){
+        if (event.getCount() == Constant.ACTION_EVENT_UPDATE_BIRTHDAY) {
             EventBus.getDefault().removeStickyEvent(event);
             handler.sendEmptyMessage(Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
         }
     }
 
-    private void newPopAddPhoto(){
-        if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+    private void newPopAddPhoto() {
+        if (MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)) {
             popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
             popupWindowAddPhoto.showPopupWindowUp();
-        }else {
+        } else {
             handler.sendEmptyMessageDelayed(GET_DELAY_ADD_PHOTO, 500);
         }
 
     }
-            @Override
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
@@ -243,7 +244,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_MAIN, params);
 
-        new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -251,7 +252,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
             @Override
             public void onFinish() {
-                if(vProgress!=null)
+                if (vProgress != null)
                     vProgress.setVisibility(View.GONE);
                 loading = false;
             }
@@ -270,12 +271,17 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     }.getType());
 //                    birthdayEvents = gson.fromJson(jsonArray.getString("birthday_alert"), new TypeToken<ArrayList<BirthdayEntity>>() {
 //                    }.getType());
+                    if (startIndex == 0 && (data == null || data.size() == 0)) {
+                        eventStart.setVisibility(View.VISIBLE);
+                        swipeRefreshLayout.setVisibility(View.GONE);
+                    } else {
+                        eventStart.setVisibility(View.GONE);
+                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+                    }
                     currentPage = 1;
                     startIndex = data.size();
 //                    Log.i("startIndex=======================1", startIndex+"");
-                    if(startIndex<=0){
-                        eventStart.setVisibility(View.VISIBLE);
-                    }
+
                     finishReFresh();
                     adapter = new EventAdapter(getParentActivity(), data, birthdayEvents);
                     adapter.setItemClickListener(new EventAdapter.ItemClickListener() {
@@ -313,6 +319,9 @@ public class EventFragment extends BaseFragment<MainActivity> {
                 } catch (JSONException e) {
                     if (isRefresh) {
                         finishReFresh();
+                    } else {
+                        eventStart.setVisibility(View.VISIBLE);
+                        swipeRefreshLayout.setVisibility(View.GONE);
                     }
                 }
             }
@@ -321,6 +330,9 @@ public class EventFragment extends BaseFragment<MainActivity> {
             public void onError(Exception e) {
                 if (isRefresh) {
                     finishReFresh();
+                } else {
+                    eventStart.setVisibility(View.VISIBLE);
+                    swipeRefreshLayout.setVisibility(View.GONE);
                 }
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
@@ -351,7 +363,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
         params.put("limit", offset + "");
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_MAIN, params);
-        new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 

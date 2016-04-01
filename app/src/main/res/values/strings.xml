@@ -266,8 +266,8 @@
     <string name="text_all_field_compulsory">Please complete all fields</string>
     <string name="text_pending_approval">Pending approval.</string>
     <string name="diary_comments">Comments</string>
-    <string name="text_new_member">CONTACT</string>
-    <string name="text_new_group">GROUP</string>
+    <string name="text_new_member">Contacts</string>
+    <string name="text_new_group">Group</string>
     <string name="text_new_family_tree">Organisation Chart</string>
     <string name="text_group_name_here">Type group name here</string>
     <string name="text_dialog_no">NO</string>
@@ -773,6 +773,15 @@
     <string name="text_select_all">Select All</string>
     <string name="text_privacy_internal_phone">Internal Phone Ext</string>
     <string name="text_sign_up_detail_org"><Data><![CDATA[ Can\'t find your organisation? <font color="#0087FF">Create Here</font> Or you can leave the organisation field empty to join one later]]></Data></string>
+<<<<<<< HEAD
+    <string name="text_org_request_pend">Your request is pending</string>
+    <string name="text_use_app_now">Use the app now!</string>
+    <string name="text_org_join_now">Join Now</string>
+    <string name="text_org_create_new">Create New</string>
+    <string name="text_org_no_join">You have not joined any organisation</string>
+    <string name="text_org_have_join"><Data><![CDATA[ Your request to join <br/><font color="#0087FF">%s</font><br/>is pending for approval]]></Data></string>
+    <string name="text_org_sure_join"><Data><![CDATA[ 你确定加入 <font color="#0087FF">%s</font>吗]]></Data></string>
+=======
     <string name="text_leave_organisation">Leave Organisation</string>
     <string name="text_address">Address</string>
     <string name="attention_leave_organisation_description">Are you sure you want to leave the organisation?</string>
@@ -791,4 +800,5 @@
     <string name="hint_company_address">Company address...</string>
     <string name="hint_company_phone">Company contact number...</string>
     <string name="hint_company_email">Company email address...</string>
+>>>>>>> ff9332617015d7539f5464176e3276f8d6270e41
 </resources>

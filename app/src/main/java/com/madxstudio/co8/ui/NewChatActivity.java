@@ -2,11 +2,11 @@ package com.madxstudio.co8.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -53,8 +53,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by quankun on 15/5/12.
@@ -65,6 +63,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
     private ViewPager pager;
     private TextView message_member_tv;
     private TextView message_group_tv;
+    private View message_member_view, message_group_view;
     private Context mContext;
     private View serachLinear;
     private boolean isMemberRefresh, isGroupRefresh;
@@ -117,6 +116,8 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
         pager = getViewById(R.id.family_list_viewpager);
         message_member_tv = getViewById(R.id.message_member_tv);
         message_group_tv = getViewById(R.id.message_group_tv);
+        message_member_view = getViewById(R.id.message_member_view);
+        message_group_view = getViewById(R.id.message_group_view);
         etSearch = getViewById(R.id.et_search);
         serachLinear = getViewById(R.id.search_linear);
 
@@ -398,10 +399,12 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
         @Override
         public void onPageSelected(int arg0) {
             if (arg0 == 0) {
-                message_member_tv.setBackgroundResource(R.drawable.message_member_selected_shap);
-                message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
-                message_group_tv.setTextColor(Color.parseColor("#666666"));
-                message_member_tv.setTextColor(Color.parseColor("#ffffff"));
+//                message_member_tv.setBackgroundResource(R.drawable.message_member_selected_shap);
+//                message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
+                message_member_view.setVisibility(View.VISIBLE);
+                message_group_view.setVisibility(View.INVISIBLE);
+                message_group_tv.setTextColor(ContextCompat.getColor(mContext, R.color.message_comment));
+                message_member_tv.setTextColor(ContextCompat.getColor(mContext, R.color.tab_color_press1));
                 rightButton.setImageResource(R.drawable.org_search_icon);
                 rightSearchButton.setVisibility(View.GONE);
                 if (!TextUtils.isEmpty(MemeberSearch)) {
@@ -411,10 +414,12 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
                 }
                 etSearch.setSelection(etSearch.length());
             } else {
-                message_member_tv.setBackgroundResource(R.drawable.message_member_normal_shap);
-                message_group_tv.setBackgroundResource(R.drawable.message_group_selected_shap);
-                message_group_tv.setTextColor(Color.parseColor("#ffffff"));
-                message_member_tv.setTextColor(Color.parseColor("#666666"));
+//                message_member_tv.setBackgroundResource(R.drawable.message_member_normal_shap);
+//                message_group_tv.setBackgroundResource(R.drawable.message_group_selected_shap);
+                message_group_tv.setTextColor(ContextCompat.getColor(mContext, R.color.tab_color_press1));
+                message_member_tv.setTextColor(ContextCompat.getColor(mContext, R.color.message_comment));
+                message_member_view.setVisibility(View.INVISIBLE);
+                message_group_view.setVisibility(View.VISIBLE);
                 rightButton.setImageResource(R.drawable.add_group_icon);
                 rightSearchButton.setVisibility(View.VISIBLE);
                 if (!TextUtils.isEmpty(GroupSearch)) {

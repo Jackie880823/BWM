@@ -77,6 +77,33 @@ public class UserEntity implements Serializable {
     private List<String> int_phone_ext;
     private List<String> office_phone;
     private List<String> mobile_phone;
+    private String admin;
+    private String demo;
+    private String pending_org;
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
+    }
+
+    public String getDemo() {
+        return demo;
+    }
+
+    public void setDemo(String demo) {
+        this.demo = demo;
+    }
+
+    public String getPending_org() {
+        return pending_org;
+    }
+
+    public void setPending_org(String pending_org) {
+        this.pending_org = pending_org;
+    }
 
     public List<String> getUser_phone_number() {
         return user_phone_number;

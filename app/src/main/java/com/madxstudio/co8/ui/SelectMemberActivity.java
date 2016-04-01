@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -191,6 +192,15 @@ public class SelectMemberActivity extends BaseActivity {
         memberAdapter = new SelectMemberListAdapter(mContext, memberList);
         listView.setAdapter(memberAdapter);
         selectMemberEntityList = new ArrayList<>();
+        String memberData = getIntent().getStringExtra(Constant.SELECT_MEMBER_DATA);
+        if (memberData != null) {
+            selectMemberEntityList = new Gson().fromJson(memberData, new TypeToken<ArrayList<FamilyMemberEntity>>() {
+            }.getType());
+            if (null != selectMemberEntityList && selectMemberEntityList.size() > 0) {
+                memberAdapter.addNewData(selectMemberEntityList);
+            }
+        }
+
         tv_org_empty.setText(getString(R.string.text_org_no_contact));
 
         if (memberList == null) {

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -30,6 +32,7 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LocalImageLoader;
 import com.madxstudio.co8.util.LogUtil;
@@ -91,6 +94,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private Boolean isUploadName = false;
     private Boolean isEit = false;
     private int headOrBackdropImage;
+    private ImageView iv_org_pend;
 
     private Boolean isUploadNameSuccess = true;
     private Boolean isUploadImageSuccess = false;
@@ -109,6 +113,10 @@ public class MyViewProfileActivity extends BaseActivity {
     private int profileBackgroundId;
 
     String strDOB;
+
+    private String Tag = OrganisationActivity.class.getName();
+    private static final int CANCEL_JOIN_ORG_SUCCESS = 0X10;
+    private static final int RESEND_JOIN_ORG_SUCCESS = 0X11;
     /**
      * 头像缓存文件名称
      */
@@ -140,6 +148,21 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     private boolean banBack;
+
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case RESEND_JOIN_ORG_SUCCESS:
+                    break;
+                case CANCEL_JOIN_ORG_SUCCESS:
+                    userEntity = App.getLoginedUser();
+                    showOrgPic();
+                    break;
+            }
+            return false;
+        }
+    });
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -325,12 +348,12 @@ public class MyViewProfileActivity extends BaseActivity {
         return null;
     }
 
-    String headUrl;
-    String backdropHeadUrl;
-    String qrUrl;
-    BitmapTools mBitmapTools;
-    BitmapTools mBackdropBitmapTools;
-    BitmapTools mQrBitmapTools;
+    private String headUrl;
+    private String backdropHeadUrl;
+    private String qrUrl;
+    private BitmapTools mBitmapTools;
+    private BitmapTools mBackdropBitmapTools;
+    private BitmapTools mQrBitmapTools;
 
     @Override
     public void initView() {
@@ -366,11 +389,19 @@ public class MyViewProfileActivity extends BaseActivity {
         vProgress = getViewById(R.id.rl_progress);
         et_organisation = getViewById(R.id.et_organisation);
         rl_organisation = getViewById(R.id.rl_organisation);
+        iv_org_pend = getViewById(R.id.iv_org_pend);
 
         rl_organisation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if ("0".equals(userEntity.getDemo()) && "0".equals(userEntity.getPending_org())) {
+                    Intent companyIntent = new Intent(mContext, CompanyActivity.class);
+                    startActivity(companyIntent);
+                } else if ("1".equals(userEntity.getDemo()) && "1".equals(userEntity.getPending_org())) {
+                    showPendDialog();
+                } else {
+                    startActivity(new Intent(mContext, OrganisationActivity.class));
+                }
             }
         });
 
@@ -389,6 +420,7 @@ public class MyViewProfileActivity extends BaseActivity {
         etLastName.setText(userEntity.getUser_surname());
         tvTitle.setText(userEntity.getUser_given_name());
         et_organisation.setText(userEntity.getOrganisation());
+        showOrgPic();
 
 //        tvAge.setText(userEntity.getUser_dob());//需要做处理，年转为岁数
         //1990-09-10   1990年
@@ -494,6 +526,17 @@ public class MyViewProfileActivity extends BaseActivity {
         ableEdit(false, RlView);
     }
 
+    private void showOrgPic(){
+        if ("0".equals(userEntity.getDemo()) && "0".equals(userEntity.getPending_org())) {
+            iv_org_pend.setVisibility(View.INVISIBLE);
+        } else if ("1".equals(userEntity.getDemo()) && "1".equals(userEntity.getPending_org())) {
+            iv_org_pend.setVisibility(View.VISIBLE);
+        } else {
+            iv_org_pend.setImageResource(R.drawable.org_is_pend);
+            iv_org_pend.setVisibility(View.VISIBLE);
+        }
+    }
+
     //设置生日
     private void setTvBirthday(String strDOB) {
         if (strDOB != null && !strDOB.equals("0000-00-00")) {
@@ -524,6 +567,130 @@ public class MyViewProfileActivity extends BaseActivity {
         }
     }
 
+    private void showPendDialog() {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        profileView.setText(R.string.text_org_request_pend);
+        messageView.setText(R.string.text_org_resend_request);
+        leaveView.setText(R.string.text_org_cancel_request);
+
+        messageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                resendJoinOrg();
+            }
+        });
+        leaveView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                cancelJoinOrg();
+            }
+        });
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
+    }
+
+    private void cancelJoinOrg() {
+        RequestInfo info = new RequestInfo();
+        info.url = String.format(Constant.API_ORG_CANCEL_JOIN, userEntity.getUser_id());
+        new HttpTools(this).put(info, Tag, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    UserEntity userEntity = new GsonBuilder().create().fromJson(jsonObject.optString(Constant.LOGIN_USER), UserEntity.class);
+                    if (userEntity != null) {
+                        App.changeLoginedUser(userEntity);
+                    }
+                    handler.sendEmptyMessage(CANCEL_JOIN_ORG_SUCCESS);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
+    private void resendJoinOrg() {
+        RequestInfo info = new RequestInfo();
+        info.url = String.format(Constant.API_ORG_RESEND_JOIN, userEntity.getUser_id());
+        new HttpTools(this).put(info, Tag, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    UserEntity userEntity = new GsonBuilder().create().fromJson(jsonObject.optString(Constant.LOGIN_USER), UserEntity.class);
+                    if (userEntity != null) {
+                        App.changeLoginedUser(userEntity);
+                    }
+                    handler.sendEmptyMessage(RESEND_JOIN_ORG_SUCCESS);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
 
     @Override
     public void requestData() {
