@@ -1,5 +1,6 @@
 package com.madxstudio.co8.ui;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -24,6 +26,9 @@ import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.ui.family.FamilyTreeActivity;
 import com.madxstudio.co8.ui.start.CreateNewOrgActivity;
 import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.SDKUtil;
+import com.madxstudio.co8.widget.MyDialog;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -278,15 +283,34 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
+    private void showJoinDialog(String showContent){
+        View selectIntention = LayoutInflater.from(mContext).inflate(R.layout.dialog_message_delete, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView copyText = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        copyText.setText(showContent);
+        cancelTv.setText(R.string.ok);
+        selectIntention.findViewById(R.id.tv_create_new_group).setVisibility(View.GONE);
+        selectIntention.findViewById(R.id.message_copy_view).setVisibility(View.GONE);
+        selectIntention.findViewById(R.id.message_cancel_linear).setVisibility(View.VISIBLE);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
+    }
+
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case RESEND_JOIN_ORG_SUCCESS:
-                    MessageUtil.showMessage(mContext, R.string.msg_action_successed);
+                    showJoinDialog(getString(R.string.text_resend_successful));
                     break;
                 case CANCEL_JOIN_ORG_SUCCESS:
-                    MessageUtil.showMessage(mContext, R.string.msg_action_successed);
+                    showJoinDialog(getString(R.string.text_cancel_successful));
                     rl_org_join.setVisibility(View.VISIBLE);
                     ll_org_list.setVisibility(View.GONE);
                     br_join_now.setText(getString(R.string.text_org_join_now));

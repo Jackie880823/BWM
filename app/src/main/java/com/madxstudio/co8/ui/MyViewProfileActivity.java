@@ -113,8 +113,6 @@ public class MyViewProfileActivity extends BaseActivity {
     private int profileBackgroundId;
 
     String strDOB;
-
-    private String Tag = OrganisationActivity.class.getName();
     private static final int CANCEL_JOIN_ORG_SUCCESS = 0X10;
     private static final int RESEND_JOIN_ORG_SUCCESS = 0X11;
     /**
@@ -154,10 +152,10 @@ public class MyViewProfileActivity extends BaseActivity {
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case RESEND_JOIN_ORG_SUCCESS:
-                    MessageUtil.showMessage(mContext, R.string.msg_action_successed);
+                    showJoinDialog(getString(R.string.text_resend_successful));
                     break;
                 case CANCEL_JOIN_ORG_SUCCESS:
-                    MessageUtil.showMessage(mContext, R.string.msg_action_successed);
+                    showJoinDialog(getString(R.string.text_cancel_successful));
                     userEntity = App.getLoginedUser();
                     showOrgPic();
                     break;
@@ -254,6 +252,25 @@ public class MyViewProfileActivity extends BaseActivity {
 
     }
 
+    private void showJoinDialog(String showContent) {
+        View selectIntention = LayoutInflater.from(mContext).inflate(R.layout.dialog_message_delete, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView copyText = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        copyText.setText(showContent);
+        cancelTv.setText(R.string.ok);
+        selectIntention.findViewById(R.id.tv_create_new_group).setVisibility(View.GONE);
+        selectIntention.findViewById(R.id.message_copy_view).setVisibility(View.GONE);
+        selectIntention.findViewById(R.id.message_cancel_linear).setVisibility(View.VISIBLE);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
+    }
+
     private void showNoFriendDialog() {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
@@ -346,6 +363,13 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        userEntity = MainActivity.getUser();
+        showOrgPic();
+    }
+
+    @Override
     protected Fragment getFragment() {
         return null;
     }
@@ -359,10 +383,6 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        userEntity = MainActivity.getUser();
-        if (TextUtils.isEmpty(userEntity.getOrganisation())) {
-            isPreloadedUser = true;
-        }
 //        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         mContext = this;
         TAG = mContext.getClass().getSimpleName();
@@ -393,6 +413,11 @@ public class MyViewProfileActivity extends BaseActivity {
         rl_organisation = getViewById(R.id.rl_organisation);
         iv_org_pend = getViewById(R.id.iv_org_pend);
 
+        userEntity = MainActivity.getUser();
+        if (TextUtils.isEmpty(userEntity.getOrganisation())) {
+            isPreloadedUser = true;
+        }
+
         rl_organisation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -421,8 +446,6 @@ public class MyViewProfileActivity extends BaseActivity {
         etFirstName.setText(userEntity.getUser_given_name());
         etLastName.setText(userEntity.getUser_surname());
         tvTitle.setText(userEntity.getUser_given_name());
-        et_organisation.setText(userEntity.getOrganisation());
-        showOrgPic();
 
 //        tvAge.setText(userEntity.getUser_dob());//需要做处理，年转为岁数
         //1990-09-10   1990年
@@ -528,10 +551,12 @@ public class MyViewProfileActivity extends BaseActivity {
         ableEdit(false, RlView);
     }
 
-    private void showOrgPic(){
+    private void showOrgPic() {
+        et_organisation.setText(userEntity.getOrganisation());
         if ("0".equals(userEntity.getDemo()) && "0".equals(userEntity.getPending_org())) {
             iv_org_pend.setVisibility(View.INVISIBLE);
         } else if ("1".equals(userEntity.getDemo()) && "1".equals(userEntity.getPending_org())) {
+            iv_org_pend.setImageResource(R.drawable.time);
             iv_org_pend.setVisibility(View.VISIBLE);
         } else {
             iv_org_pend.setImageResource(R.drawable.org_is_pend);
@@ -607,7 +632,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private void cancelJoinOrg() {
         RequestInfo info = new RequestInfo();
         info.url = String.format(Constant.API_ORG_CANCEL_JOIN, userEntity.getUser_id());
-        new HttpTools(this).put(info, Tag, new HttpCallback() {
+        new HttpTools(this).put(info, TAG, new HttpCallback() {
             @Override
             public void onStart() {
                 vProgress.setVisibility(View.VISIBLE);
@@ -652,7 +677,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private void resendJoinOrg() {
         RequestInfo info = new RequestInfo();
         info.url = String.format(Constant.API_ORG_RESEND_JOIN, userEntity.getUser_id());
-        new HttpTools(this).put(info, Tag, new HttpCallback() {
+        new HttpTools(this).put(info, TAG, new HttpCallback() {
             @Override
             public void onStart() {
                 vProgress.setVisibility(View.VISIBLE);
