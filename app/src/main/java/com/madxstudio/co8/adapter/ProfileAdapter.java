@@ -152,7 +152,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        LogUtil.d(TAG, "onBindViewHolder() called with:  position = [" + position + "]");
         switch (holder.getItemViewType()) {
             case HEAD_VIEW:
                 if (holder instanceof HeadHolderView) {
@@ -361,8 +361,8 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         int count;
-        if (admins == null || admins.size() == 0) {
-            count = HEAD_ITEMS;
+        if (admins == null || admins.isEmpty()) {
+            count = HEAD_ITEMS + 1;
         } else {
             count = HEAD_ITEMS + admins.size() + 1;// 这里的总数要包含
         }
@@ -374,9 +374,14 @@ public class ProfileAdapter extends RecyclerView.Adapter {
      *
      * @param index 删除了的管理员在管理员列表的下标位置
      */
-    public void removedAdmin(int index) {
+    public void removedAdmin(int index, RecyclerView recyclerView) {
         admins.remove(index);
-        notifyItemRemoved(index + HEAD_ITEMS);
+        int position = index + HEAD_ITEMS;
+        notifyItemRemoved(position);
+        LogUtil.d(TAG, "removedAdmin: count = " + getItemCount());
+        for (int i = position; i < getItemCount(); i++) {
+            notifyItemChanged(i);
+        }
     }
 
     /**
