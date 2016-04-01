@@ -2,7 +2,6 @@ package com.madxstudio.co8.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
@@ -16,16 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.ext.HttpCallback;
-import com.android.volley.ext.RequestInfo;
-import com.android.volley.ext.tools.HttpTools;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.OrganisationDetail;
 import com.madxstudio.co8.entity.Profile;
 import com.madxstudio.co8.entity.UserEntity;
-import com.madxstudio.co8.http.UrlUtil;
-import com.madxstudio.co8.ui.FamilyProfileActivity;
-import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.ui.company.OrganisationConstants;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.SDKUtil;
@@ -34,9 +27,7 @@ import com.madxstudio.co8.widget.MyDialog;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created 16/3/21.
@@ -105,12 +96,9 @@ public class ProfileAdapter extends RecyclerView.Adapter {
      */
     private String profileImageUrl;
 
-    private HttpTools mHttpTools;
-
     public ProfileAdapter(Context context, String companyID) {
         this.context = context;
         this.companyID = companyID;
-        mHttpTools = new HttpTools(context);
     }
 
     public void setData(OrganisationDetail organisationDetail) {
@@ -174,19 +162,11 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                         if (TextUtils.isEmpty(profileImageUrl)) {
                             profileImageUrl = String.format(OrganisationConstants.API_GET_ORGANISATION_COVER, companyID);
                         }
+
+                        // 公司背影图片显示
                         displayProfileImage(holder);
-
-                        ((HeadHolderView) holder).tvDescription.setText(profile.getDescription());
-                        ((HeadHolderView) holder).tvCompanyName.setText(profile.getName());
-                        ((HeadHolderView) holder).tvAddress.setText(profile.getAddress());
-                        ((HeadHolderView) holder).tvEmail.setText(profile.getEmail());
-                        ((HeadHolderView) holder).tvPhone.setText(profile.getPhone());
-
-                        setEditText(((HeadHolderView) holder).etDescription, profile.getDescription());
-                        setEditText(((HeadHolderView) holder).etCompanyName, profile.getName());
-                        setEditText(((HeadHolderView) holder).etAddress, profile.getAddress());
-                        setEditText(((HeadHolderView) holder).etEmail, profile.getEmail());
-                        setEditText(((HeadHolderView) holder).etPhone, profile.getPhone());
+                        // 公司描述资料显示
+                        displayProfileText((HeadHolderView) holder);
                     }
                 }
                 break;
@@ -218,6 +198,25 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         }
     }
 
+    /**
+     * 公司描述资料显示
+     *
+     * @param holder 相应控件的持有实例
+     */
+    private void displayProfileText(HeadHolderView holder) {
+        holder.tvDescription.setText(profile.getDescription());
+        holder.tvCompanyName.setText(profile.getName());
+        holder.tvAddress.setText(profile.getAddress());
+        holder.tvEmail.setText(profile.getEmail());
+        holder.tvPhone.setText(profile.getPhone());
+
+        setEditText(holder.etDescription, profile.getDescription());
+        setEditText(holder.etCompanyName, profile.getName());
+        setEditText(holder.etAddress, profile.getAddress());
+        setEditText(holder.etEmail, profile.getEmail());
+        setEditText(holder.etPhone, profile.getPhone());
+    }
+
     private void setEditText(EditText et, String desc) {
         if (TextUtils.isEmpty(et.getText())) {
             et.setText(desc);
@@ -227,14 +226,19 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     /**
      * 显示公司背影图片
      *
-     * @param holder
-     * @param strUrl
+     * @param holder 相应资料详情显示控件的持有实例
+     * @param strUrl 背影图片的URL
      */
     public void displayProfileImage(RecyclerView.ViewHolder holder, String strUrl) {
         this.profileImageUrl = strUrl;
         displayProfileImage(holder);
     }
 
+    /**
+     * 显示公司背影图片
+     *
+     * @param holder 相应资料详情显示控件的持有实例
+     */
     private void displayProfileImage(RecyclerView.ViewHolder holder) {
         DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder().cloneFrom(UniversalImageLoaderUtil.options);
         // 设置图片加载/解码过程中错误时候显示的图片
@@ -253,6 +257,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
 
     /**
      * 管理员相送的子项视图设置，包括设置
+     *
      * @param holder
      * @param position
      */
@@ -261,13 +266,11 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         final int index = position - HEAD_ITEMS;
         final int type = holder.getItemViewType();
 
-        if (type == ADMIN_DEFAULT_VIEW &&  admins != null && !admins.isEmpty()) {
+        if (type == ADMIN_DEFAULT_VIEW && admins != null && !admins.isEmpty()) {
             UserEntity userEntity = admins.get(index);
             ((AdminHolder) holder).tvAdminName.setText(userEntity.getUser_given_name());
             LogUtil.d(TAG, "setAdminView: name => " + userEntity.getUser_given_name() + "; user id => " + userEntity.getUser_id());
         }
-
-
 
         View.OnClickListener clickListener = new View.OnClickListener() {
             private MyDialog listDialog;
@@ -283,20 +286,26 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                 switch (v.getId()) {
                     case R.id.tv_view_admin_of_profile:
                         // TODO: 16/3/23 查看Admin简介
-                        Intent intent = new Intent(context, FamilyProfileActivity.class);
-                        intent.putExtra("userEntity", MainActivity.getUser());
-                        intent.putExtra("member_id", admins.get(index).getUser_id());
-                        context.startActivity(intent);
+                        if (ADMIN_DEFAULT_VIEW == type) {
+                            if (listener != null) {
+                                listener.viewAdminProfile(admins.get(index));
+                            }
+                        }
                         break;
 
                     case R.id.tv_message_admin:
                         // TODO: 16/3/23 给Admin发送信息
+                        if (ADMIN_DEFAULT_VIEW == type) {
+                            if (listener != null) {
+                                listener.sendMessageToAdmin(admins.get(index));
+                            }
+                        }
                         break;
 
                     case R.id.iv_right:
                         if (type == ADMIN_DEFAULT_VIEW) {
                             alertDialogRemove();
-                        } else if (type == ADMIN_TITLE_VIEW){
+                        } else if (type == ADMIN_TITLE_VIEW) {
                             if (listener != null) {
                                 listener.requestAddAdmin();
                             }
@@ -305,7 +314,9 @@ public class ProfileAdapter extends RecyclerView.Adapter {
 
                     case com.material.widget.R.id.button_accept:
                         // TODO: 16/3/23 dialog中点击了确认按钮
-                        removeAdmin(index);
+                        if (listener != null) {
+                            listener.removeAdmin(admins.get(index));
+                        }
                         break;
 
                     case com.material.widget.R.id.button_cancel:
@@ -343,58 +354,6 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     * 删除管理员
-     * @param index - 管理员列表索引，请区别于本{@code adapter}子项的{@code position}，这两个意义不想同
-     */
-    private void removeAdmin(final int index) {
-        if (admins == null || admins.size() <= index) {
-            LogUtil.e(TAG, "removeAdmin: index is error");
-            return;
-        }
-
-        Map<String, String> map = new HashMap<>();
-        map.put(OrganisationConstants.USER_ID, MainActivity.getUser().getUser_id());
-        map.put(OrganisationConstants.MEMBER_ID, admins.get(index).getUser_id());
-
-        RequestInfo requestInfo = new RequestInfo();
-        requestInfo.jsonParam = UrlUtil.mapToJsonstring(map);
-        LogUtil.d(TAG, "removeAdmin: json data => " + requestInfo.jsonParam);
-        requestInfo.url = String.format(OrganisationConstants.API_REMOVE_ADMIN, OrganisationConstants.TEST_COMPANY_ID);
-        mHttpTools.put(requestInfo, TAG, new HttpCallback() {
-            @Override
-            public void onStart() {
-                LogUtil.d(TAG, "onStart: remove Admin");
-            }
-
-            @Override
-            public void onFinish() {
-                LogUtil.d(TAG, "onFinish: remove Admin");
-            }
-
-            @Override
-            public void onResult(String string) {
-                notifyItemRemoved(index + HEAD_ITEMS);
-                LogUtil.d(TAG, "onResult() remove Admin called with: " + "string = [" + string + "]");
-            }
-
-            @Override
-            public void onError(Exception e) {
-                LogUtil.e(TAG, "onError: remove Admin", e);
-            }
-
-            @Override
-            public void onCancelled() {
-                LogUtil.d(TAG, "onCancelled: remove Admin");
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-                LogUtil.d(TAG, "onLoading() called with: " + "count = [" + count + "], current = [" + current + "]");
-            }
-        });
-    }
-
-    /**
      * Returns the total number of items in the data set hold by the adapter.
      *
      * @return The total number of items in this adapter.
@@ -408,6 +367,16 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             count = HEAD_ITEMS + admins.size() + 1;// 这里的总数要包含
         }
         return count;
+    }
+
+    /**
+     * 已经删除了管理员
+     *
+     * @param index 删除了的管理员在管理员列表的下标位置
+     */
+    public void removedAdmin(int index) {
+        admins.remove(index);
+        notifyItemRemoved(index + HEAD_ITEMS);
     }
 
     /**
@@ -563,6 +532,13 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             }
         }
 
+        /**
+         * 状态切换显示资料控件转换和转换确认相关操作<br/>
+         * <br/>
+         * <br/>
+         * 非编辑状态 - 用{@link TextView}来显示资料<br/>
+         * 编辑状态 - 用{@link EditText}来显示资料<br/>
+         */
         public void changeText() {
             if (write) {// 编辑状态所有内容在编辑框中显示
                 tvChangeText.setVisibility(View.VISIBLE);
@@ -613,6 +589,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
 
         /**
          * 检测文本框与Profile对比是否有变化，有变化则表明有修改
+         *
          * @return - {@code true}: 有变化<br/>
          * - {@code false}: 没变化<br/>
          */
@@ -680,8 +657,37 @@ public class ProfileAdapter extends RecyclerView.Adapter {
          */
         void onClickProfileImage(View view);
 
+        /**
+         * 确认编辑，对编辑内容提交时调用
+         *
+         * @param profile - 公司资料
+         */
         void confirmWrite(Profile profile);
 
+        /**
+         * 删除管理员
+         *
+         * @param userEntity 管理员,封装内容并不全，只饮食{@code user_id}和{@code user_given_name}
+         */
+        void removeAdmin(UserEntity userEntity);
+
+        /**
+         * 请求添加管理员
+         */
         void requestAddAdmin();
+
+        /**
+         * 查看管理员详情
+         *
+         * @param userEntity 管理员,封装内容并不全，只饮食{@code user_id}和{@code user_given_name}
+         */
+        void viewAdminProfile(UserEntity userEntity);
+
+        /**
+         * 给管理员发送信息
+         *
+         * @param userEntity 管理员,封装内容并不全，只封装{@code user_id}和{@code user_given_name}
+         */
+        void sendMessageToAdmin(UserEntity userEntity);
     }
 }

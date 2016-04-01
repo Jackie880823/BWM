@@ -23,8 +23,12 @@ import com.madxstudio.co8.adapter.ProfileAdapter;
 import com.madxstudio.co8.entity.FamilyMemberEntity;
 import com.madxstudio.co8.entity.OrganisationDetail;
 import com.madxstudio.co8.entity.Profile;
+import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.FamilyProfileActivity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.MessageChatActivity;
 import com.madxstudio.co8.ui.OrgDetailActivity;
 import com.madxstudio.co8.ui.PickAndCropPictureActivity;
 import com.madxstudio.co8.util.LogUtil;
@@ -50,7 +54,10 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     private static final int REQUEST_PICTURE_CODE = 1000;
     private static final int REQUEST_ADD_ADMIN_CODE = 1001;
+
     public static final String TAG_POST_ADD_ADMIN = "TAG_POST_ADD_ADMIN";
+
+    private static final String TAG_REMOVE_ADMIN = "remove admin";
 
     private ImageButton ibTop;
 
@@ -332,11 +339,20 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     }
 
+    /**
+     * 公司简介图片被点
+     *
+     * @param view 被点击的控件
+     */
     @Override
     public void onClickProfileImage(View view) {
         showCameraAlbum(view.getWidth(), view.getHeight());
     }
 
+    /**
+     * 确认编辑，对编辑内容提交时调用
+     * @param profile - 公司资料
+     */
     @Override
     public void confirmWrite(Profile profile) {
         LogUtil.d(TAG, "confirmWrite: ");
@@ -351,12 +367,96 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    /**
+     * 删除管理员
+     *
+     * @param userEntity 管理员,封装内容并不全，只饮食{@code user_id}和{@code user_given_name}
+     */
+    @Override
+    public void removeAdmin(final UserEntity userEntity) {
+
+        Map<String, String> map = new HashMap<>();
+        map.put(OrganisationConstants.USER_ID, MainActivity.getUser().getUser_id());
+        map.put(OrganisationConstants.MEMBER_ID, userEntity.getUser_id());
+        final int index = detail.getAdmin().indexOf(userEntity);
+
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(map);
+        LogUtil.d(TAG, "removedAdmin: json data => " + requestInfo.jsonParam);
+        requestInfo.url = String.format(OrganisationConstants.API_REMOVE_ADMIN, OrganisationConstants.TEST_COMPANY_ID);
+        mHttpTools.put(requestInfo, TAG_REMOVE_ADMIN, new HttpCallback() {
+            @Override
+            public void onStart() {
+                LogUtil.d(TAG, "onStart: remove Admin");
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "onFinish: remove Admin");
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, "onResult() remove Admin called with: " + "string = [" + string + "]");
+                adapter.removedAdmin(index);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: remove Admin", e);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: remove Admin");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading() called with: " + "count = [" + count + "], current = [" + current + "]");
+            }
+        });
+    }
+
+    /**
+     * 请求添加管理员
+     */
     @Override
     public void requestAddAdmin() {
         Intent intent = new Intent(this, OrgDetailActivity.class);
         intent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_STAFF);
         intent.putExtra(Constant.REQUEST_TYPE, Constant.REQUEST_ADD_ADMIN);
         startActivityForResult(intent, REQUEST_ADD_ADMIN_CODE);
+    }
+
+    /**
+     * 查看管理员详情
+     *
+     * @param userEntity 管理员,封装内容并不全，只饮食{@code user_id}和{@code user_given_name}
+     */
+    @Override
+    public void viewAdminProfile(UserEntity userEntity) {
+        Intent intent = new Intent(this, FamilyProfileActivity.class);
+        intent.putExtra("userEntity", MainActivity.getUser());
+        intent.putExtra("member_id", userEntity.getUser_id());
+        startActivity(intent);
+    }
+
+    /**
+     * 给管理员发送信息
+     *
+     * @param userEntity 管理员,封装内容并不全，只封装{@code user_id}和{@code user_given_name}
+     */
+    @Override
+    public void sendMessageToAdmin(UserEntity userEntity) {
+        Intent intent = new Intent(this, MessageChatActivity.class);
+        if (userEntity != null) {
+            intent.putExtra("type", 0);
+            //如果上个页面没有groupId或者groupName
+            intent.putExtra("groupId", userEntity.getGroup_id());
+            intent.putExtra("titleName", userEntity.getUser_given_name());
+            startActivity(intent);
+        }
     }
 
     /**
