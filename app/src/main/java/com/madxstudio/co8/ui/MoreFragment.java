@@ -15,7 +15,6 @@ import com.android.volley.ext.tools.HttpTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.ui.add.AddMembersActivity;
-import com.madxstudio.co8.ui.family.FamilyActivity;
 import com.madxstudio.co8.ui.more.AboutActivity;
 import com.madxstudio.co8.ui.more.ArchiveActivity;
 import com.madxstudio.co8.ui.more.MoreSettingActivity;
@@ -111,6 +110,8 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 //        getViewById(R.id.btn_alert_recommend).setOnClickListener(this);
         getViewById(R.id.btn_rewards).setOnClickListener(this);
         getViewById(R.id.btn_add_member).setOnClickListener(this);
+        /*add by Jackie */
+        getViewById(R.id.linear_admin_setting).setOnClickListener(this);
 
         news_alert_num = getViewById(R.id.news_alert_num);
 //        member_alert_num = getViewById(R.id.member_alert_num);
@@ -310,7 +311,16 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
             case R.id.btn_add_member:
                 goAddMember();
                 break;
+
+            case R.id.linear_admin_setting:
+                goAdminSetting();
+                break;
         }
+    }
+
+    private void goAdminSetting() {
+        Intent adminIntent = new Intent(getActivity(), AdminSettingActivity.class);
+        startActivity(adminIntent);
     }
 
     private void goAddMember() {

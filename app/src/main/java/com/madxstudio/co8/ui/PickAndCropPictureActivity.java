@@ -232,7 +232,7 @@ public class PickAndCropPictureActivity extends Activity {
             }
             String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
             Uri source = Uri.fromFile(new File(path));
-            File f = PicturesCacheUtil.getCachePicFileByName(this, headCache,true);
+            File f = PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME + System.currentTimeMillis() + ".png",true);
             mCropImagedUri = Uri.fromFile(f);
 
             Crop.of(source, mCropImagedUri).withAspect(picAspectWidth,picAspectHeight).start(this, REQUEST_PIC_FINAL);

@@ -109,6 +109,9 @@ public class Constant {
     public final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
     public static final String EXTRA_CHECK_ITEM_INDEX = "check_item_index";
 
+    public static final String REQUEST_TYPE = "REQUEST_TYPE";
+    public static final String ADMIN_REQUEST = "ADMIN_REQUEST";
+    public static final String GENERAL_REQUEST = "GENERAL_REQUEST";
 
     public static final String ORG_TRANSMIT_DATA = "ORG_TRANSMIT_DATA";
     public static final String ORG_TRANSMIT_GROUP = "ORG_TRANSMIT_GROUP";
@@ -497,4 +500,5 @@ public class Constant {
     public static final String API_ORG_JOIN = API_SERVER +"/co8/index.php/api/joinOrg";//申请加入公司
     public static final String API_ORG_RESEND_JOIN = API_SERVER +"/co8/index.php/api/resendJoinOrgReq/%s";//重发申请加入公司
     public static final String API_ORG_CANCEL_JOIN = API_SERVER +"/co8/index.php/api/cancelJoinOrgReq/%s";//取消加入公司
+
 }

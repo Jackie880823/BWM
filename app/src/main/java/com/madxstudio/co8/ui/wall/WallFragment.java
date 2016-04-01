@@ -13,12 +13,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.WallAdapter;
@@ -36,9 +37,6 @@ import com.madxstudio.co8.util.WallUtil;
 import com.madxstudio.co8.widget.InteractivePopupWindow;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +57,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     private static final String GET_WALL = TAG + "_GET_WALL";
     private static final String PUT_REMOVE = TAG + "_PUT_REMOVE";
     private WallHolder holder;
+    private View ibTop;
 
     public static WallFragment newInstance(String... params) {
         return createInstance(new WallFragment(), params);
@@ -135,6 +134,14 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
             member_id = getArguments().getString(ARG_PARAM_PREFIX + 0);
         }
 
+        ibTop = getViewById(R.id.ib_top);
+        ibTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rvList.scrollToPosition(0);
+            }
+        });
+
         flWallStartUp = getViewById(R.id.tv_no_data);
         tvNoData = getViewById(R.id.workspace_tv_no_data);
 
@@ -147,9 +154,10 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         rvList.setItemAnimator(null);
         rvList.setHasFixedSize(true);
         initAdapter();
-        rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        rvList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItem = llm.findLastVisibleItemPosition();
                 int totalItemCount = llm.getItemCount();
@@ -159,6 +167,13 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 if (data.size() >= offset && !loading && lastVisibleItem >= count && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
+                }
+
+                int firstVisibleItem = llm.findFirstVisibleItemPosition();
+                if (firstVisibleItem != 0) {
+                    ibTop.setVisibility(View.VISIBLE);
+                } else {
+                    ibTop.setVisibility(View.GONE);
                 }
             }
         });

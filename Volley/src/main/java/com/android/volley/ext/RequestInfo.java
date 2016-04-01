@@ -21,6 +21,10 @@ public class RequestInfo {
     public RequestInfo() {
     }
 
+    /**
+     * @param url 请求的URL路径
+     * @param params 非Json格式的参数对，若用Json格式的请求请将map转为Json格式的字符再赋值给{@link #jsonParam}
+     */
     public RequestInfo(String url, Map<String, String> params) {
         this.url = url;
         this.params = params;

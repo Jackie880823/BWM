@@ -32,6 +32,7 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LocalImageLoader;
 import com.madxstudio.co8.util.LogUtil;
@@ -394,7 +395,8 @@ public class MyViewProfileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if ("0".equals(userEntity.getDemo()) && "0".equals(userEntity.getPending_org())) {
-//                    startActivity(new Intent(mContext,OrgListActivity.class));
+                    Intent companyIntent = new Intent(mContext, CompanyActivity.class);
+                    startActivity(companyIntent);
                 } else if ("1".equals(userEntity.getDemo()) && "1".equals(userEntity.getPending_org())) {
                     showPendDialog();
                 } else {

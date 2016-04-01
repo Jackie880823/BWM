@@ -20,6 +20,7 @@ import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.ui.family.FamilyTreeActivity;
 import com.madxstudio.co8.ui.start.CreateNewOrgActivity;
 
@@ -142,6 +143,8 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
         super.onClick(v);
         switch (v.getId()) {
             case R.id.linear_company_profile:
+                Intent companyIntent = new Intent(mContext, CompanyActivity.class);
+                startActivity(companyIntent);
                 break;
             case R.id.linear_org_chart:
                 Intent intent = new Intent(mContext, FamilyTreeActivity.class);
