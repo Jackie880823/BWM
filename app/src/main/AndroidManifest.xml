@@ -750,7 +750,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.AdminSettingActivity"
+            android:name=".ui.admin.AdminSettingActivity"
             android:parentActivityName=".ui.OrganisationActivity"
             android:screenOrientation="portrait">
         </activity>

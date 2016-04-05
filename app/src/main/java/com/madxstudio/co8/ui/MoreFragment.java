@@ -15,6 +15,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.ui.add.AddMembersActivity;
+import com.madxstudio.co8.ui.admin.AdminSettingActivity;
 import com.madxstudio.co8.ui.more.AboutActivity;
 import com.madxstudio.co8.ui.more.ArchiveActivity;
 import com.madxstudio.co8.ui.more.MoreSettingActivity;
