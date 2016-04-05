@@ -45,6 +45,14 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
         }
     }
 
+    public void addData(List<PrivateMessageEntity> userEntityList) {
+        if (null != userEntityList && userEntityList.size() > 0) {
+            mUserEntityList.addAll(userEntityList);
+            notifyDataSetChanged();
+        }
+    }
+
+
     public List<PrivateMessageEntity> getmUserEntityList() {
         return mUserEntityList;
     }
@@ -67,7 +75,6 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.message_main_listview_item, null);
             viewHolder = new ViewHolder();
@@ -83,18 +90,18 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         PrivateMessageEntity userEntity = mUserEntityList.get(position);
-
-        viewHolder.memberName.setText(userEntity.getUser_given_name());
-        if (1 == 2) {
+        if ("group".equals(userEntity.getMessage_type())) {
             BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()),
                     R.drawable.b2be_normal, R.drawable.b2be_normal);
-            viewHolder.lastMessageName.setText("");
+            viewHolder.lastMessageName.setText(userEntity.getMember_name());
             viewHolder.groupSign.setVisibility(View.VISIBLE);
+            viewHolder.memberName.setText(userEntity.getGroup_name());
         } else {
             BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()),
                     R.drawable.default_head_icon, R.drawable.default_head_icon);
             viewHolder.lastMessageName.setText("");
             viewHolder.groupSign.setVisibility(View.GONE);
+            viewHolder.memberName.setText(userEntity.getUser_given_name());
         }
 
         int messageNum = 0;
@@ -126,7 +133,7 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
         } else if (PrivateMessageEntity.POST_VIDEO.equals(type)) {
             viewHolder.lastMessage.setText(R.string.text_message_chat_post_video);
         } else {
-            viewHolder.lastMessage.setText("");
+            viewHolder.lastMessage.setText(userEntity.getMessage());
         }
         viewHolder.lastData.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, userEntity.getGroup_active_date()));
         return convertView;

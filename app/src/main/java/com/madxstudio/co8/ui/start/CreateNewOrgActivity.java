@@ -35,6 +35,7 @@ import com.madxstudio.co8.ui.CountryCodeActivity;
 import com.madxstudio.co8.ui.share.SelectPhotosActivity;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LocalImageLoader;
+import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.material.widget.Dialog;
@@ -117,6 +118,10 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
                 case GET_DATA_ERROR:
                     break;
                 case GET_CREATE_ORG_EXIST:
+                    String message = (String) msg.obj;
+                    if (!TextUtils.isEmpty(message)) {
+                        MessageUtil.getInstance(mContext).showShortToast(message);
+                    }
                     break;
                 default:
                     break;
@@ -464,11 +469,13 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
                                 userEntity = new GsonBuilder().create().fromJson(user, UserEntity.class);
                             }
                             Message.obtain(handler, HANDLER_COMPLETE_PROFILE_SUCCESS, searchEntity).sendToTarget();
+                            return;
                         }
-                        String status_code = jsonObject.optString("response_status_code");
+//                        String status_code = jsonObject.optString("response_status_code");
                         String response_status = jsonObject.optString("response_status");
-                        if ("409".equals(status_code) && "NameExist".equalsIgnoreCase(response_status)) {
-                            handler.sendEmptyMessage(GET_CREATE_ORG_EXIST);
+                        String response_message = jsonObject.optString("response_message");
+                        if ("Fail".equalsIgnoreCase(response_status)) {
+                            Message.obtain(handler, GET_CREATE_ORG_EXIST, response_message).sendToTarget();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

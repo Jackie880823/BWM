@@ -2,7 +2,6 @@ package com.madxstudio.co8.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
@@ -10,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -74,10 +72,12 @@ public class MessageFragment extends BaseFragment<MainActivity> {
     private boolean isPullData = false;
     private static final int GET_NEW_DATA = 0x11;
     private static final int GET_PULL_DATA = 0x12;
+    private static final int GET_REMOVE_DATA = 0x13;
     private String TAG;
     private static final int DEF_DATA_NUM = 20;
     private InputMethodManager imm;
     private TextView searchTv;
+    private int removePosition = 0;
 
     public static MessageFragment newInstance(String... params) {
 
@@ -129,7 +129,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                 }
                 startIndex = 1;
                 isUserRefresh = true;
-                getData(0);
+                getData(0, "");
             }
 
         });
@@ -157,16 +157,17 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                                     int arg2, long arg3) {
                 PrivateMessageEntity messageEntity = privateAdapter.getmUserEntityList().get(arg2);
                 Intent intent = new Intent(mContext, MessageChatActivity.class);
-                intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);
-                intent.putExtra(UserEntity.EXTRA_GROUP_ID, messageEntity.getGroup_id());
-                intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, messageEntity.getUser_given_name());
+                if ("group".equals(messageEntity.getMessage_type())) {
+                    intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_GROUP);
+                    intent.putExtra(Constant.MESSAGE_CHART_GROUP_ID, messageEntity.getGroup_id());
+                    intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, messageEntity.getGroup_name());
+                    intent.putExtra(Constant.GROUP_DEFAULT, "");
+                } else {
+                    intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);
+                    intent.putExtra(UserEntity.EXTRA_GROUP_ID, messageEntity.getGroup_id());
+                    intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, messageEntity.getUser_given_name());
+                }
                 startActivity(intent);
-//                Intent intent = new Intent(mContext, MessageChatActivity.class);
-//                intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_GROUP);
-//                intent.putExtra(Constant.MESSAGE_CHART_GROUP_ID, groupEntity.getGroup_id());
-//                intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, groupEntity.getGroup_name());
-//                intent.putExtra(Constant.GROUP_DEFAULT, groupEntity.getGroup_default());
-//                startActivity(intent);
             }
         });
 
@@ -185,9 +186,9 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                     @Override
                     public void onClick(View v) {
                         showSelectDialog.dismiss();
+                        removePosition = position;
                         PrivateMessageEntity messageEntity = privateAdapter.getmUserEntityList().get(position);
-                        privateAdapter.getmUserEntityList().remove(position);
-                        privateAdapter.notifyDataSetChanged();
+                        removeData(messageEntity.getGroup_id());
                     }
                 });
                 cancelTv.setOnClickListener(new View.OnClickListener() {
@@ -226,7 +227,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                 int adapterCount = privateAdapter.getCount();
                 if (adapterCount == DEF_DATA_NUM * startIndex && listView.getFirstVisiblePosition() < (adapterCount - 5)
                         && (listView.getLastVisiblePosition() > (adapterCount - 5)) && !isPullData) {
-                    getData(startIndex);
+                    getData(startIndex, "");
                     isPullData = true;
                 }
             }
@@ -286,13 +287,67 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
     }
 
+    private void removeData(String groupId) {
+        if (!NetworkUtil.isNetworkConnected(getActivity())) {
+            MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+            userFinishReFresh();
+            return;
+        }
+        final RequestInfo requestInfo = new RequestInfo();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("group_id", groupId);
+        requestInfo.putAllParams(params);
+        requestInfo.url = String.format(Constant.API_GET_REMOVE_MESSAGE, MainActivity.getUser().getUser_id());
+        new HttpTools(getActivity()).put(requestInfo, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String code = jsonObject.optString("response_status_code");
+                    if ("200".equals(code)) {
+                        handler.sendEmptyMessage(GET_REMOVE_DATA);
+                    }
+                } catch (JSONException e) {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                userFinishReFresh();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        getData(0);
+        getData(0, "");
     }
 
-    private void getData(int beginIndex) {
+    private void getData(int beginIndex, String search) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
             MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
             userFinishReFresh();
@@ -303,9 +358,9 @@ public class MessageFragment extends BaseFragment<MainActivity> {
         params.put("limit", DEF_DATA_NUM + "");
         int start = beginIndex * DEF_DATA_NUM;
         params.put("start", start + "");
+        params.put("search", search);
         requestInfo.putAllParams(params);
-        Log.i(TAG, beginIndex + "");
-        requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "member");
+        requestInfo.url = String.format(Constant.API_GET_ALL_MAIN_MESSAGE, MainActivity.getUser().getUser_id());
         new Thread() {
             @Override
             public void run() {
@@ -332,9 +387,9 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                         Gson gson = new GsonBuilder().create();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            List<PrivateMessageEntity> userList = gson.fromJson(jsonObject.getString("member"), new TypeToken<ArrayList<PrivateMessageEntity>>() {
+                            List<PrivateMessageEntity> userList = gson.fromJson(jsonObject.getString("message"), new TypeToken<ArrayList<PrivateMessageEntity>>() {
                             }.getType());
-                            String totalUnread = jsonObject.optString("memberUnread", "");//私聊的消息总共有多少未读"groupUnread","memberUnread","totalUnread"
+                            String totalUnread = jsonObject.optString("totalUnread", "");//私聊的消息总共有多少未读"groupUnread","memberUnread","totalUnread"
                             Map<String, Object> map = new HashMap<>();
                             map.put(MESSAGE_DATA, userList);
                             map.put(MESSAGE_UNREAD_NUM, totalUnread);
@@ -348,8 +403,8 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                                     showMemberEmptyView();
                                 } else {
                                     hideMemberEmptyView();
+                                    Message.obtain(handler, GET_NEW_DATA, map).sendToTarget();
                                 }
-                                Message.obtain(handler, GET_NEW_DATA, map).sendToTarget();
                             }
                         } catch (JSONException e) {
                             if (isPullData) {
@@ -388,6 +443,9 @@ public class MessageFragment extends BaseFragment<MainActivity> {
             switch (msg.what) {
                 case GET_NEW_DATA:
                     Map<String, Object> pullPrivateMapNew = (Map) msg.obj;
+                    if (userEntityList != null) {
+                        userEntityList.clear();
+                    }
                     userEntityList = (List<PrivateMessageEntity>) pullPrivateMapNew.get(MESSAGE_DATA);
                     privateAdapter.addNewData(userEntityList);
                     break;
@@ -395,13 +453,17 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                     Map<String, Object> pullPrivateMap = (Map) msg.obj;
                     List<PrivateMessageEntity> userEntityListPull1 = (List<PrivateMessageEntity>) pullPrivateMap.get(MESSAGE_DATA);
                     userEntityList.addAll(userEntityListPull1);
-                    privateAdapter.addNewData(userEntityList);
+                    privateAdapter.addData(userEntityList);
                     break;
                 case GET_DELAY_ADD_PHOTO:
                     if (MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)) {
                         popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
                         popupWindowAddPhoto.showPopupWindowUp();
                     }
+                    break;
+                case GET_REMOVE_DATA:
+                    privateAdapter.getmUserEntityList().remove(removePosition);
+                    privateAdapter.notifyDataSetChanged();
                     break;
             }
             return false;
@@ -424,83 +486,6 @@ public class MessageFragment extends BaseFragment<MainActivity> {
             handler.sendEmptyMessageDelayed(GET_DELAY_ADD_PHOTO, 500);
         }
 
-    }
-
-    private void getDataGroup(int beginIndex) {
-//        final RequestInfo requestInfo = new RequestInfo();
-//        HashMap<String, Object> params = new HashMap<>();
-//        params.put("limit", DEF_DATA_NUM + "");
-//        int start = beginIndex * DEF_DATA_NUM;
-//        params.put("start", start + "");
-//        requestInfo.putAllParams(params);
-//        requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "group");
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//                new HttpTools(getActivity()).get(requestInfo, TAG, new HttpCallback() {
-//                    @Override
-//                    public void onStart() {
-//                    }
-//
-//                    @Override
-//                    public void onFinish() {
-//                        isPullDataGroup = false;
-//                    }
-//
-//                    @Override
-//                    public void onResult(String response) {
-//                        groupFinishReFresh();
-//                        Gson gson = new GsonBuilder().create();
-//                        try {
-//                            JSONObject jsonObject = new JSONObject(response);
-//                            List<GroupMessageEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupMessageEntity>>() {
-//                            }.getType());
-//                            String totalUnread = jsonObject.optString("groupUnread", "");//私聊的消息总共有多少未读
-//                            Map<String, Object> map = new HashMap<>();
-//                            map.put(MESSAGE_DATA, groupList);
-//                            map.put(MESSAGE_UNREAD_NUM, totalUnread);
-//                            if (isPullDataGroup) {
-//                                if (groupList != null && groupList.size() == DEF_DATA_NUM) {
-//                                    startIndexGroup++;
-//                                }
-//                                Message.obtain(handler, GET_PULL_DATA_GROUP, map).sendToTarget();
-//                            } else {
-//                                if (null == groupList || groupList.size() == 0) {
-//                                    showGroupEmptyView();
-//                                } else {
-//                                    hideGroupEmptyView();
-//                                }
-//                                Message.obtain(handler, GET_NEW_DATA_GROUP, map).sendToTarget();
-//                            }
-//                        } catch (JSONException e) {
-//                            if (isPullDataGroup) {
-//                                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-//                            } else {
-//                                showGroupEmptyView();
-//                            }
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Exception e) {
-//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-//                        groupFinishReFresh();
-//                    }
-//
-//                    @Override
-//                    public void onCancelled() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onLoading(long count, long current) {
-//
-//                    }
-//                });
-//            }
-//        }.start();
     }
 
     private void userFinishReFresh() {

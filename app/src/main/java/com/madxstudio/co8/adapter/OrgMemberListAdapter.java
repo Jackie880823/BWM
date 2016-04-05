@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.android.volley.ext.tools.BitmapTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.entity.FamilyMemberEntity;
+import com.madxstudio.co8.entity.OrgMemberEntity;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.util.MyTextUtil;
@@ -29,13 +29,13 @@ import java.util.List;
  */
 public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
-    private List<FamilyMemberEntity> list;
-    private List<FamilyMemberEntity> serachList;
+    private List<OrgMemberEntity> list;
+    private List<OrgMemberEntity> serachList;
 
     private PersonFilter filter;
     private String transmitData;
 
-    public OrgMemberListAdapter(Context mContext, List<FamilyMemberEntity> memberList, String transmitData) {
+    public OrgMemberListAdapter(Context mContext, List<OrgMemberEntity> memberList, String transmitData) {
         list = memberList;
         if (list == null) {
             list = new ArrayList<>();
@@ -44,7 +44,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         this.transmitData = transmitData;
     }
 
-    public void addNewData(List<FamilyMemberEntity> newList) {
+    public void addNewData(List<OrgMemberEntity> newList) {
         list.clear();
         if (null != newList && newList.size() > 0) {
             list.addAll(newList);
@@ -52,7 +52,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         notifyDataSetChanged();
     }
 
-    public List<FamilyMemberEntity> getList() {
+    public List<OrgMemberEntity> getList() {
         return list;
     }
 
@@ -87,7 +87,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        FamilyMemberEntity memberEntity = list.get(position);
+        OrgMemberEntity memberEntity = list.get(position);
         String userId = memberEntity.getUser_id();
         BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userId), R.drawable.default_head_icon, R.drawable.default_head_icon);
         if (!TextUtils.isEmpty(userId) && userId.equals(MainActivity.getUser().getUser_id()) && list.size() > 1) {
@@ -97,12 +97,14 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         }
         if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData) && "0".equals(memberEntity.getFam_accept_flag())) {
             viewHolder.orgRequest.setVisibility(View.VISIBLE);
+        } else if ("1".equals(memberEntity.getAdmin_flag())) {
+            viewHolder.orgRequest.setVisibility(View.VISIBLE);
+            viewHolder.orgRequest.setImageResource(R.drawable.org_admin_icon);
         } else {
             viewHolder.orgRequest.setVisibility(View.GONE);
         }
         viewHolder.memberName.setText(memberEntity.getUser_given_name());
         viewHolder.orgPosition.setText(memberEntity.getPosition());
-        viewHolder.orgAdmin.setText("");
         return convertView;
     }
 
@@ -115,7 +117,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         ImageView orgRequest;
     }
 
-    public void setSerach(List<FamilyMemberEntity> list) {
+    public void setSerach(List<OrgMemberEntity> list) {
         this.serachList = list;
     }
 
@@ -130,9 +132,9 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
     //自定义Filer类
     private class PersonFilter extends Filter {
 
-        private List<FamilyMemberEntity> original;
+        private List<OrgMemberEntity> original;
 
-        public PersonFilter(List<FamilyMemberEntity> list) {
+        public PersonFilter(List<OrgMemberEntity> list) {
             this.original = list;
         }
 
@@ -145,9 +147,9 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
                 results.values = original;//原始数据
                 results.count = original.size();
             } else {
-                List<FamilyMemberEntity> mList = new ArrayList<FamilyMemberEntity>();
+                List<OrgMemberEntity> mList = new ArrayList<OrgMemberEntity>();
                 String filterString = MyTextUtil.ToDBC(constraint.toString().trim().toLowerCase());
-                for (FamilyMemberEntity memberEntity : original) {
+                for (OrgMemberEntity memberEntity : original) {
                     String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getUser_given_name());
                     if (-1 != userName.toLowerCase().indexOf(filterString)) {
                         mList.add(memberEntity);
@@ -161,7 +163,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            list = (List<FamilyMemberEntity>) results.values;
+            list = (List<OrgMemberEntity>) results.values;
             if (list == null) {
                 list = new ArrayList<>();
             }

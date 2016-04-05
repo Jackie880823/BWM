@@ -502,4 +502,9 @@ public class Constant {
     public static final String API_ORG_RESEND_JOIN = API_SERVER +"/co8/index.php/api/resendJoinOrgReq/%s";//重发申请加入公司
     public static final String API_ORG_CANCEL_JOIN = API_SERVER +"/co8/index.php/api/cancelJoinOrgReq/%s";//取消加入公司
 
+    public static final String API_GET_GROUP_LIST = API_SERVER +"/co8/index.php/api/myGroup/%s";//获取组群列表
+    public static final String API_GET_ALL_STAFF = API_SERVER +"/co8/index.php/api/allStaff/%s";//所有同事列表
+    public static final String API_GET_ALL_OTHER = API_SERVER +"/co8/index.php/api/myOthers/%s";//所有其他成员列表
+    public static final String API_GET_ALL_MAIN_MESSAGE = API_SERVER +"/co8/index.php/api/messages/%s/type/all";//所有消息列表
+    public static final String API_GET_REMOVE_MESSAGE = API_SERVER +"/co8/index.php/api/hidePost/%s";//删除消息列表
 }

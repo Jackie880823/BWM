@@ -10,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,7 +33,7 @@ import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.SelectMemberListAdapter;
-import com.madxstudio.co8.entity.FamilyMemberEntity;
+import com.madxstudio.co8.entity.OrgMemberEntity;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.NetworkUtil;
@@ -42,9 +41,6 @@ import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
 import com.material.widget.Dialog;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +53,7 @@ import java.util.regex.Pattern;
 public class SelectMemberActivity extends BaseActivity {
     private Context mContext;
     private View vProgress;
-    private List<FamilyMemberEntity> memberList;//不包括family_tree
+    private List<OrgMemberEntity> memberList;//不包括family_tree
     private static final int GET_DATA = 0x11;
     private SelectMemberListAdapter memberAdapter;
     private MySwipeRefreshLayout refreshLayout;
@@ -71,7 +67,7 @@ public class SelectMemberActivity extends BaseActivity {
     private TextView tv_org_empty;
     private TextView searchTv;
     private CheckBox selectAllMember;
-    private List<FamilyMemberEntity> selectMemberEntityList;
+    private List<OrgMemberEntity> selectMemberEntityList;
 
     @Override
     protected void initBottomBar() {
@@ -187,14 +183,14 @@ public class SelectMemberActivity extends BaseActivity {
         searchTv = getViewById(R.id.message_search);
         selectAllMember = getViewById(R.id.check_member_item);
         serachLinear.setVisibility(View.GONE);
-        memberList = (List<FamilyMemberEntity>) getIntent().getSerializableExtra(Constant.SELECT_MEMBER_NORMAL_DATA);
+        memberList = (List<OrgMemberEntity>) getIntent().getSerializableExtra(Constant.SELECT_MEMBER_NORMAL_DATA);
 
         memberAdapter = new SelectMemberListAdapter(mContext, memberList);
         listView.setAdapter(memberAdapter);
         selectMemberEntityList = new ArrayList<>();
         String memberData = getIntent().getStringExtra(Constant.SELECT_MEMBER_DATA);
         if (memberData != null) {
-            selectMemberEntityList = new Gson().fromJson(memberData, new TypeToken<ArrayList<FamilyMemberEntity>>() {
+            selectMemberEntityList = new Gson().fromJson(memberData, new TypeToken<ArrayList<OrgMemberEntity>>() {
             }.getType());
             if (null != selectMemberEntityList && selectMemberEntityList.size() > 0) {
                 memberAdapter.addNewData(selectMemberEntityList);
@@ -252,7 +248,7 @@ public class SelectMemberActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
-                FamilyMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
+                OrgMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
                 String userId = familyMemberEntity.getUser_id();
                 if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
 //                    showNoFriendDialog();
@@ -334,7 +330,7 @@ public class SelectMemberActivity extends BaseActivity {
 
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
-        List<FamilyMemberEntity> familyMemberEntityList;
+        List<OrgMemberEntity> familyMemberEntityList;
         if (!TextUtils.isEmpty(etImport)) {
             memberAdapter.setSerach(memberList);
             Filter filter = memberAdapter.getFilter();
@@ -345,13 +341,13 @@ public class SelectMemberActivity extends BaseActivity {
         }
     }
 
-    private List<FamilyMemberEntity> searchMemberList(String name, List<FamilyMemberEntity> list) {
+    private List<OrgMemberEntity> searchMemberList(String name, List<OrgMemberEntity> list) {
         if (TextUtils.isEmpty(name)) {
             return list;
         }
-        List<FamilyMemberEntity> results = new ArrayList();
+        List<OrgMemberEntity> results = new ArrayList();
         Pattern pattern = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
-        for (FamilyMemberEntity memberEntity : list) {
+        for (OrgMemberEntity memberEntity : list) {
             String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getUser_given_name());
             Matcher matcher = pattern.matcher(userName);
             if (matcher.find()) {
@@ -383,7 +379,7 @@ public class SelectMemberActivity extends BaseActivity {
             @Override
             public void run() {
                 super.run();
-                new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
+                new HttpTools(mContext).get(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -399,34 +395,27 @@ public class SelectMemberActivity extends BaseActivity {
                         GsonBuilder gsonb = new GsonBuilder();
                         Gson gson = gsonb.create();
                         finishReFresh();
-                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                        if (TextUtils.isEmpty(response) || "[]".equals(response)) {
                             showEmptyView();
                             return;
                         }
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            List<FamilyMemberEntity> memberEntityList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
-                            }.getType());
-                            if (memberEntityList != null && memberEntityList.size() > 0) {
-                                List<FamilyMemberEntity> list = new ArrayList<>();
-                                for (FamilyMemberEntity memberEntity : memberEntityList) {
-                                    if (!"0".equals(memberEntity.getFam_accept_flag())) {
-                                        list.add(memberEntity);
-                                    }
+                        List<OrgMemberEntity> memberEntityList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
+                        }.getType());
+                        if (memberEntityList != null && memberEntityList.size() > 0) {
+                            List<OrgMemberEntity> list = new ArrayList<>();
+                            for (OrgMemberEntity memberEntity : memberEntityList) {
+                                if (!"0".equals(memberEntity.getFam_accept_flag())) {
+                                    list.add(memberEntity);
                                 }
-                                if (list.size() > 0) {
-                                    hideEmptyView();
-                                    Message.obtain(handler, GET_DATA, list).sendToTarget();
-                                } else {
-                                    showEmptyView();
-                                }
+                            }
+                            if (list.size() > 0) {
+                                hideEmptyView();
+                                Message.obtain(handler, GET_DATA, list).sendToTarget();
                             } else {
                                 showEmptyView();
                             }
-                        } catch (JSONException e) {
-                            finishReFresh();
+                        } else {
                             showEmptyView();
-                            e.printStackTrace();
                         }
                     }
 
@@ -457,7 +446,7 @@ public class SelectMemberActivity extends BaseActivity {
                     if (memberList != null) {
                         memberList.clear();
                     }
-                    memberList = (List<FamilyMemberEntity>) msg.obj;
+                    memberList = (List<OrgMemberEntity>) msg.obj;
                     memberAdapter.addNewData(memberList);
                     break;
             }
