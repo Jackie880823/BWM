@@ -53,4 +53,5 @@
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:visibility="gone"/>
+    <include layout="@layout/progress_layout" />
 </RelativeLayout>

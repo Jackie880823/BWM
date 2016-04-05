@@ -23,6 +23,7 @@ public class OrganisationConstants {
     public static final String API_POST_ORGANISATION_COVER = CO8_API_SERVER + "orgCoverPic";
     public static final String API_REMOVE_ADMIN = CO8_API_SERVER + "removedAdmin/%s";
     public static final String API_POST_ADD_ADMIN = CO8_API_SERVER + "addAdmin";
+    public static final String API_POST_LEAVE_ORGANISATION = CO8_API_SERVER + "leaveOrg";
 
     public static final String NEED_ADD_ADMIN_USER = "need_add_admin_user";
 
@@ -41,6 +42,7 @@ public class OrganisationConstants {
     public static final String ORG_ID = "org_id";
 
     public static final String USER_ID = "user_id";
+    public static final String USER_GIVEN_NAME = "user_given_name";
     public static final String MEMBER_ID = "member_id";
 
 }

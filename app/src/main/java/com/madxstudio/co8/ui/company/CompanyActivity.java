@@ -58,8 +58,10 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     public static final String TAG_POST_ADD_ADMIN = "TAG_POST_ADD_ADMIN";
 
     private static final String TAG_REMOVE_ADMIN = "remove admin";
+    private static final String LEAVE_COMPANY = "leave company";
 
     private ImageButton ibTop;
+    private View vProgress;
 
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView rvProfile;
@@ -76,6 +78,8 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     private Uri postImageUri;
     private OrganisationDetail detail;
+
+    private UserEntity currentUser;
 
     /**
      * 初始底部栏，没有可以不操作
@@ -123,14 +127,18 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void initView() {
+        currentUser = MainActivity.getUser();
+
         ibTop = getViewById(R.id.ib_top);
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.GONE);
         btnLeaveGroup = getViewById(R.id.btn_leave_group);
         rvProfile = getViewById(R.id.rv_profile);
 
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvProfile.setLayoutManager(linearLayoutManager);
-        adapter = new ProfileAdapter(this, OrganisationConstants.TEST_COMPANY_ID);
+        adapter = new ProfileAdapter(this, currentUser.getOrg_id());
         rvProfile.setAdapter(adapter);
         adapter.setListener(this);
         rvProfile.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -185,19 +193,25 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void requestData() {
+        if (currentUser == null) {
+            currentUser = MainActivity.getUser();
+        }
+
         if (mHttpTools == null) {
             mHttpTools = new HttpTools(App.getContextInstance());
         }
 
-        mHttpTools.get(String.format(OrganisationConstants.API_GET_ORGANISATION_DETAILS, OrganisationConstants.TEST_COMPANY_ID), null, GET_ORGANISATION_TAG, new HttpCallback() {
+        mHttpTools.get(String.format(OrganisationConstants.API_GET_ORGANISATION_DETAILS, currentUser.getOrg_id()), null, GET_ORGANISATION_TAG, new HttpCallback() {
             @Override
             public void onStart() {
                 LogUtil.d(TAG, "onStart: ");
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
                 LogUtil.d(TAG, "onFinish: ");
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -253,18 +267,20 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     private void addAdmin(FamilyMemberEntity memberEntity) {
         LogUtil.d(TAG, "addAdmin() called with: " + "memberEntity = [" + memberEntity.getUser_given_name() + "]");
         Map<String, String> paraMap = new HashMap<>();
-        paraMap.put(OrganisationConstants.USER_ID, OrganisationConstants.TEST_USER_ID);
+        paraMap.put(OrganisationConstants.USER_ID, currentUser.getUser_id());
         paraMap.put(OrganisationConstants.MEMBER_ID, memberEntity.getUser_id());
-        paraMap.put(OrganisationConstants.ORG_ID, OrganisationConstants.TEST_COMPANY_ID);
+        paraMap.put(OrganisationConstants.ORG_ID, currentUser.getOrg_id());
         mHttpTools.post(OrganisationConstants.API_POST_ADD_ADMIN, paraMap, TAG_POST_ADD_ADMIN, new HttpCallback() {
             @Override
             public void onStart() {
                 LogUtil.d(TAG, "onStart: add admin");
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
                 LogUtil.d(TAG, "onFinish: add admin");
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -304,6 +320,50 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    /**
+     * 离开公司
+     */
+    private void leaveCompany() {
+        Map<String, String> paraMap = new HashMap<>();
+        paraMap.put(OrganisationConstants.USER_ID, currentUser.getUser_id());
+        paraMap.put(OrganisationConstants.USER_GIVEN_NAME, currentUser.getUser_given_name());
+        paraMap.put(OrganisationConstants.ORG_ID, currentUser.getOrg_id());
+        mHttpTools.post(OrganisationConstants.API_POST_LEAVE_ORGANISATION, paraMap, LEAVE_COMPANY, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+                LogUtil.d(TAG, "onStart: leave company");
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "onFinish: leave company");
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, "onResult() called with: leave company " + "string = [" + string + "]");
+                finish();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: leave company", e);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: leave company");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading() called with: leave company " + "count = [" + count + "], current = [" + current + "]");
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -316,6 +376,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                         // TODO: 16/3/22 leave group
                         myDialog.dismiss();
                         myDialog = null;
+                        leaveCompany();
                     }
                 });
                 myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
@@ -376,23 +437,25 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     public void removeAdmin(final UserEntity userEntity) {
 
         Map<String, String> map = new HashMap<>();
-        map.put(OrganisationConstants.USER_ID, MainActivity.getUser().getUser_id());
+        map.put(OrganisationConstants.USER_ID, currentUser.getUser_id());
         map.put(OrganisationConstants.MEMBER_ID, userEntity.getUser_id());
         final int index = detail.getAdmin().indexOf(userEntity);
 
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(map);
         LogUtil.d(TAG, "removedAdmin: json data => " + requestInfo.jsonParam);
-        requestInfo.url = String.format(OrganisationConstants.API_REMOVE_ADMIN, OrganisationConstants.TEST_COMPANY_ID);
+        requestInfo.url = String.format(OrganisationConstants.API_REMOVE_ADMIN, currentUser.getOrg_id());
         mHttpTools.put(requestInfo, TAG_REMOVE_ADMIN, new HttpCallback() {
             @Override
             public void onStart() {
                 LogUtil.d(TAG, "onStart: remove Admin");
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
                 LogUtil.d(TAG, "onFinish: remove Admin");
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -437,7 +500,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void viewAdminProfile(UserEntity userEntity) {
         Intent intent = new Intent(this, FamilyProfileActivity.class);
-        intent.putExtra("userEntity", MainActivity.getUser());
+        intent.putExtra("userEntity", currentUser);
         intent.putExtra("member_id", userEntity.getUser_id());
         startActivity(intent);
     }
@@ -473,7 +536,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         map.put(OrganisationConstants.EMAIL, profile.getEmail());
 
         RequestInfo requestInfo = new RequestInfo();
-        requestInfo.url = String.format(OrganisationConstants.API_PUT_ORGANISATION_DETAILS, OrganisationConstants.TEST_COMPANY_ID);
+        requestInfo.url = String.format(OrganisationConstants.API_PUT_ORGANISATION_DETAILS, currentUser.getOrg_id());
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(map);
         Log.d(TAG, "confirmWrite: json param = " + requestInfo.jsonParam);
 
@@ -481,11 +544,13 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onStart() {
                 LogUtil.d(TAG, "onStart: ");
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
                 LogUtil.d(TAG, "onFinish: ");
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -526,9 +591,9 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
         Map<String, Object> map = new HashMap<>();
         map.put(OrganisationConstants.FILE_KEY, "file");
-        map.put(OrganisationConstants.FILE_NAME, "uploadCover" + OrganisationConstants.TEST_COMPANY_ID);
+        map.put(OrganisationConstants.FILE_NAME, "uploadCover" + currentUser.getOrg_id());
         map.put(OrganisationConstants.MIME_TYPE, "image/png");
-        map.put(OrganisationConstants.ORG_ID, OrganisationConstants.TEST_COMPANY_ID);
+        map.put(OrganisationConstants.ORG_ID, currentUser.getOrg_id());
         map.put(OrganisationConstants.FILE, new File(postImageUri.getPath()));
 
         mHttpTools.upload(OrganisationConstants.API_POST_ORGANISATION_COVER, map, POST_COVER_PHOTO_TAG, new HttpCallback() {
@@ -540,6 +605,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onFinish() {
                 LogUtil.d(TAG, "onFinish: ");
+                vProgress.setVisibility(View.VISIBLE);
                 // 上传完成需要清除缓存，否则无法加载网络图片
                 UniversalImageLoaderUtil.clearCache();
             }
@@ -547,6 +613,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onResult(String string) {
                 LogUtil.d(TAG, "onResult() called with: " + "string = [" + string + "]");
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
