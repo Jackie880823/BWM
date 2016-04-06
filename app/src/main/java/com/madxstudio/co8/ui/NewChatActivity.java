@@ -36,8 +36,8 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.OrgGroupListAdapter;
 import com.madxstudio.co8.adapter.OrgMemberListAdapter;
-import com.madxstudio.co8.entity.FamilyGroupEntity;
-import com.madxstudio.co8.entity.FamilyMemberEntity;
+import com.madxstudio.co8.entity.OrgGroupEntity;
+import com.madxstudio.co8.entity.OrgMemberEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.util.MessageUtil;
@@ -45,14 +45,9 @@ import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by quankun on 15/5/12.
@@ -67,10 +62,11 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
     private Context mContext;
     private View serachLinear;
     private boolean isMemberRefresh, isGroupRefresh;
-    private List<FamilyMemberEntity> memberEntityList;//只有成员，不包括亲人
-    private List<FamilyGroupEntity> groupEntityList;
+    private List<OrgMemberEntity> memberEntityList;//只有成员，不包括亲人
+    private List<OrgGroupEntity> groupEntityList;
     private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
     private static final int GET_DATA = 0x11;
+    private static final int GET_GROUP_DATA = 0x12;
     private OrgMemberListAdapter memberAdapter;
     private OrgGroupListAdapter groupAdapter;
 
@@ -80,7 +76,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
     private ListView groupListView;
     private String MemeberSearch;
     private String GroupSearch;
-    private List<FamilyMemberEntity> allMemberList;
+    private List<OrgMemberEntity> allMemberList;
 
     @Override
     public int getLayout() {
@@ -92,17 +88,17 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_DATA:
-                    Map<String, List> map = (Map<String, List>) msg.obj;
                     if (memberEntityList != null) {
                         memberEntityList.clear();
                     }
+                    memberEntityList = (List<OrgMemberEntity>) msg.obj;
+                    memberAdapter.addNewData(memberEntityList);
+                    break;
+                case GET_GROUP_DATA:
                     if (groupEntityList != null) {
                         groupEntityList.clear();
                     }
-                    memberEntityList = map.get("private");
-                    memberAdapter.addNewData(memberEntityList);
-
-                    groupEntityList = map.get("group");
+                    groupEntityList = (List<OrgGroupEntity>) msg.obj;
                     groupAdapter.addNewData(groupEntityList);
                     break;
             }
@@ -249,7 +245,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
-                FamilyMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
+                OrgMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
                 if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
 
                 } else {
@@ -320,7 +316,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onRefresh() {
                 isGroupRefresh = true;
-                getData();
+                getGroupData();
             }
 
         });
@@ -328,7 +324,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
-                FamilyGroupEntity groupEntity = groupAdapter.getList().get(arg2);
+                OrgGroupEntity groupEntity = groupAdapter.getList().get(arg2);
                 Intent intent = new Intent(mContext, MessageChatActivity.class);
                 intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_GROUP);
                 intent.putExtra(Constant.MESSAGE_CHART_GROUP_ID, groupEntity.getGroup_id());
@@ -379,6 +375,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
     public void onResume() {
         super.onResume();
         getData();
+        getGroupData();
     }
 
     @Override
@@ -490,53 +487,82 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
                         GsonBuilder gsonb = new GsonBuilder();
                         Gson gson = gsonb.create();
                         finishReFresh();
-                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                        if (TextUtils.isEmpty(response) || "[]".equals(response)) {
                             showMemberEmptyView();
-                            showGroupEmptyView();
                         }
-                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
-                            showMemberEmptyView();
-                            showGroupEmptyView();
-                        }
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            List<FamilyMemberEntity> memberList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
-                            }.getType());
-                            List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
-                            }.getType());
-                            Map<String, List> map = new HashMap<>();
-                            if (memberList != null && memberList.size() > 0) {
-                                hideMemberEmptyView();
-                                List<FamilyMemberEntity> list = new ArrayList<>();
-                                allMemberList.clear();
-                                for (FamilyMemberEntity memberEntity : memberList) {
-                                    String tree_type = memberEntity.getTree_type();
-                                    if (Constant.FAMILY_PARENT.equalsIgnoreCase(tree_type) || Constant.FAMILY_CHILDREN.equalsIgnoreCase(tree_type)
-                                            || Constant.FAMILY_SIBLING.equalsIgnoreCase(tree_type)) {
-                                        list.add(memberEntity);
-                                    }
-                                    if (!"0".equals(memberEntity.getFam_accept_flag())) {
-                                        allMemberList.add(memberEntity);
-                                    }
+                        List<OrgMemberEntity> memberList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
+                        }.getType());
+                        if (memberList != null && memberList.size() > 0) {
+                            hideMemberEmptyView();
+                            allMemberList.clear();
+                            for (OrgMemberEntity memberEntity : memberList) {
+                                if (!"0".equals(memberEntity.getFam_accept_flag())) {
+                                    allMemberList.add(memberEntity);
                                 }
-                                map.put("private", list);
-                            } else {
-                                showMemberEmptyView();
                             }
-                            if (groupList != null && groupList.size() > 0) {
-                                hideGroupEmptyView();
-                                map.put("group", groupList);
-                            } else {
-                                showGroupEmptyView();
-                            }
-                            if (map.size() > 0) {
-                                Message.obtain(handler, GET_DATA, map).sendToTarget();
-                            }
-                        } catch (JSONException e) {
-                            finishReFresh();
-                            showGroupEmptyView();
+                            Message.obtain(handler, GET_DATA, memberList).sendToTarget();
+                        } else {
                             showMemberEmptyView();
-                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                        finishReFresh();
+                    }
+
+                    @Override
+                    public void onCancelled() {
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+            }
+        }.start();
+    }
+
+    private void getGroupData() {
+        if (!NetworkUtil.isNetworkConnected(mContext)) {
+            Toast.makeText(mContext, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+            finishReFresh();
+            return;
+        }
+
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                new HttpTools(mContext).get(String.format(Constant.API_GET_GROUP_LIST, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        vProgress.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onResult(String response) {
+                        GsonBuilder gsonb = new GsonBuilder();
+                        Gson gson = gsonb.create();
+                        finishReFresh();
+                        if (TextUtils.isEmpty(response) || "[]".equals(response)) {
+                            showGroupEmptyView();
+                        }
+                        List<OrgGroupEntity> groupList = gson.fromJson(response, new TypeToken<ArrayList<OrgGroupEntity>>() {
+                        }.getType());
+
+                        if (groupList != null && groupList.size() > 0) {
+                            hideGroupEmptyView();
+                            Message.obtain(handler, GET_GROUP_DATA, groupList).sendToTarget();
+                        } else {
+                            showGroupEmptyView();
                         }
                     }
 

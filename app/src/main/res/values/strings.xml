@@ -803,4 +803,13 @@
     <string name="text_cancel_successful">Cancel request successful</string>
     <string name="text_resend_successful">Resend request successful</string>
 
+    <string name="text_bir_no">No Reminder</string>
+    <string name="text_bir_5_min">5 minutes before</string>
+    <string name="text_bir_15_min">15 minutes before</string>
+    <string name="text_bir_30_min">30 minutes before</string>
+    <string name="text_bir_1_h">1 hour before</string>
+    <string name="text_bir_2_h">2 hours before</string>
+    <string name="text_bir_1_d">1 day before</string>
+    <string name="text_bir_2_d">2 days before</string>
+    <string name="text_bir_1_w">1 week before</string>
 </resources>

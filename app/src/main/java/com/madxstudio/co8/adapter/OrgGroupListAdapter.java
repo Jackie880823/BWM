@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.android.volley.ext.tools.BitmapTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.entity.FamilyGroupEntity;
+import com.madxstudio.co8.entity.OrgGroupEntity;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
@@ -27,11 +27,11 @@ import java.util.List;
  */
 public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
-    private List<FamilyGroupEntity> list;
+    private List<OrgGroupEntity> list;
 
     private PersonFilter filter;
 
-    public OrgGroupListAdapter(Context mContext, List<FamilyGroupEntity> memberList) {
+    public OrgGroupListAdapter(Context mContext, List<OrgGroupEntity> memberList) {
         list = memberList;
         if (list == null) {
             list = new ArrayList<>();
@@ -39,7 +39,7 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
         this.mContext = mContext;
     }
 
-    public void addNewData(List<FamilyGroupEntity> newList) {
+    public void addNewData(List<OrgGroupEntity> newList) {
         list.clear();
         if (null != newList && newList.size() > 0) {
             list.addAll(newList);
@@ -47,12 +47,12 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
         notifyDataSetChanged();
     }
 
-    public void removeData(FamilyGroupEntity groupEntity) {
+    public void removeData(OrgGroupEntity groupEntity) {
         list.remove(groupEntity);
         notifyDataSetChanged();
     }
 
-    public List<FamilyGroupEntity> getList() {
+    public List<OrgGroupEntity> getList() {
         return list;
     }
 
@@ -85,10 +85,10 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        FamilyGroupEntity memberEntity = list.get(position);
+        OrgGroupEntity memberEntity = list.get(position);
         BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, memberEntity.getGroup_id()), R.drawable.b2be_normal, R.drawable.b2be_normal);
         viewHolder.memberName.setText(memberEntity.getGroup_name());
-        viewHolder.orgPosition.setText("");
+        viewHolder.orgPosition.setText(String.format(mContext.getString(R.string.text_members_num),memberEntity.getTotal_member()));
         viewHolder.orgAdmin.setText("");
         return convertView;
     }
@@ -110,9 +110,9 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
 
     //自定义Filer类
     private class PersonFilter extends Filter {
-        private List<FamilyGroupEntity> original;
+        private List<OrgGroupEntity> original;
 
-        public PersonFilter(List<FamilyGroupEntity> groupList) {
+        public PersonFilter(List<OrgGroupEntity> groupList) {
             this.original = groupList;
         }
 
@@ -123,9 +123,9 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
                 results.values = original;//原始数据
                 results.count = original.size();
             } else {
-                List<FamilyGroupEntity> mList = new ArrayList<>();
+                List<OrgGroupEntity> mList = new ArrayList<>();
                 String filterString = MyTextUtil.ToDBC(constraint.toString().trim().toLowerCase());
-                for (FamilyGroupEntity groupEntity : original) {
+                for (OrgGroupEntity groupEntity : original) {
                     String userName = PinYin4JUtil.getPinyinWithMark(groupEntity.getGroup_name());
                     if (-1 != userName.toLowerCase().indexOf(filterString)) {
                         mList.add(groupEntity);
@@ -139,7 +139,7 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            list = (List<FamilyGroupEntity>) results.values;
+            list = (List<OrgGroupEntity>) results.values;
             if (list == null) {
                 list = new ArrayList<>();
             }

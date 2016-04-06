@@ -69,7 +69,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private TextView etFirstName;
     private TextView etLastName;
     private TextView tvBirthday;
-    private TextView tvYearBirthday;
+    private EditText tvYearBirthday;
     private TextView rlBirthday;
     private TextView tvGender;
     private TextView rlGender;
@@ -80,7 +80,6 @@ public class MyViewProfileActivity extends BaseActivity {
     private EditText et_department;
     private EditText et_internal_phone;
     private UserEntity userEntity;
-    private boolean isPreloadedUser;
     private TextView et_organisation;
     private View rl_organisation;
 
@@ -237,13 +236,9 @@ public class MyViewProfileActivity extends BaseActivity {
             if (view instanceof EditText) {
                 view.setFocusable(isEit);
                 view.setFocusableInTouchMode(isEit);
-                if (!isPreloadedUser && isEit) {
-                    if (view.getId() == R.id.et_position || view.getId() == R.id.et_department
-                            || view.getId() == R.id.et_internal_phone
-                            || view.getId() == R.id.et_region || view.getId() == R.id.et_email) {
-                        view.setFocusable(false);
-                        view.setFocusableInTouchMode(false);
-                    }
+                if (isEit && (view.getId() == R.id.et_phone || view.getId() == R.id.tv_year_birthday)) {
+                    view.setFocusable(false);
+                    view.setFocusableInTouchMode(false);
                 }
             } else if (view instanceof ViewGroup) {
                 this.ableEdit(isEit, (ViewGroup) view);
@@ -345,19 +340,18 @@ public class MyViewProfileActivity extends BaseActivity {
         if (userEntity != null && !etEmail.getText().toString().trim().equals(userEntity.getUser_email())) {
             return true;
         }
+
         if (!etRegion.getText().toString().trim().equals(userEntity.getUser_location_name())) {
             return true;
         }
-        if (isPreloadedUser) {
-            if (!et_department.getText().toString().trim().equals(userEntity.getDepartment())) {
-                return true;
-            }
-            if (!et_position.getText().toString().trim().equals(userEntity.getPosition())) {
-                return true;
-            }
-            if (!et_internal_phone.getText().toString().trim().equals(userEntity.getInt_phone_ext())) {
-                return true;
-            }
+        if (!et_department.getText().toString().trim().equals(userEntity.getDepartment())) {
+            return true;
+        }
+        if (!et_position.getText().toString().trim().equals(userEntity.getPosition())) {
+            return true;
+        }
+        if (!et_internal_phone.getText().toString().trim().equals(userEntity.getInt_phone_ext().get(0))) {
+            return true;
         }
         return false;
     }
@@ -414,9 +408,6 @@ public class MyViewProfileActivity extends BaseActivity {
         iv_org_pend = getViewById(R.id.iv_org_pend);
 
         userEntity = MainActivity.getUser();
-        if (TextUtils.isEmpty(userEntity.getOrganisation())) {
-            isPreloadedUser = true;
-        }
 
         rl_organisation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -749,16 +740,16 @@ public class MyViewProfileActivity extends BaseActivity {
         jsonParams.put("user_dob", strDOB);
         jsonParams.put("user_email", etEmail.getText().toString());
         jsonParams.put("user_location_name", etRegion.getText().toString());
-        if (isPreloadedUser) {
-            jsonParams.put("department", et_position.getText().toString());
-            jsonParams.put("position", et_department.getText().toString());
+
+        jsonParams.put("position", et_position.getText().toString());
+        jsonParams.put("department", et_department.getText().toString());
 //            jsonParams.put("int_phone_ext", "[\"" + et_internal_phone.getText().toString() + "\"]");
-        }
+
         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-        if (isPreloadedUser) {
-            jsonParamsString = jsonParamsString.substring(0, jsonParamsString.length() - 1);
-            jsonParamsString = jsonParamsString + ",\"int_phone_ext\":[\"" + et_internal_phone.getText().toString() + "\"]}";
-        }
+
+        jsonParamsString = jsonParamsString.substring(0, jsonParamsString.length() - 1);
+        jsonParamsString = jsonParamsString + ",\"int_phone_ext\":[\"" + et_internal_phone.getText().toString() + "\"]}";
+
         requestInfo.url = String.format(Constant.API_UPDATE_MY_PROFILE, userEntity.getUser_id());
         requestInfo.jsonParam = jsonParamsString;
 

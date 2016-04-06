@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.android.volley.ext.tools.BitmapTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.entity.FamilyMemberEntity;
+import com.madxstudio.co8.entity.OrgMemberEntity;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
@@ -28,13 +28,13 @@ import java.util.List;
  */
 public class SelectMemberListAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
-    private List<FamilyMemberEntity> list;
-    private List<FamilyMemberEntity> serachList;
+    private List<OrgMemberEntity> list;
+    private List<OrgMemberEntity> serachList;
 
     private PersonFilter filter;
     private List<String> selectList = new ArrayList<>();
 
-    public SelectMemberListAdapter(Context mContext, List<FamilyMemberEntity> memberList) {
+    public SelectMemberListAdapter(Context mContext, List<OrgMemberEntity> memberList) {
         list = memberList;
         if (list == null) {
             list = new ArrayList<>();
@@ -42,7 +42,7 @@ public class SelectMemberListAdapter extends BaseAdapter implements Filterable {
         this.mContext = mContext;
     }
 
-    public void addNewData(List<FamilyMemberEntity> newList) {
+    public void addNewData(List<OrgMemberEntity> newList) {
         list.clear();
         if (null != newList && newList.size() > 0) {
             list.addAll(newList);
@@ -72,14 +72,14 @@ public class SelectMemberListAdapter extends BaseAdapter implements Filterable {
     public void addAllSelectData() {
         selectList.clear();
         if (list != null && list.size() > 0) {
-            for (FamilyMemberEntity memberEntity : list) {
+            for (OrgMemberEntity memberEntity : list) {
                 selectList.add(memberEntity.getUser_id());
             }
         }
         notifyDataSetChanged();
     }
 
-    public List<FamilyMemberEntity> getList() {
+    public List<OrgMemberEntity> getList() {
         return list;
     }
 
@@ -112,7 +112,7 @@ public class SelectMemberListAdapter extends BaseAdapter implements Filterable {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        FamilyMemberEntity memberEntity = list.get(position);
+        OrgMemberEntity memberEntity = list.get(position);
         String userId = memberEntity.getUser_id();
         BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userId), R.drawable.default_head_icon, R.drawable.default_head_icon);
         viewHolder.memberName.setText(memberEntity.getUser_given_name());
@@ -132,7 +132,7 @@ public class SelectMemberListAdapter extends BaseAdapter implements Filterable {
         CheckBox selectMemberCheckBox;
     }
 
-    public void setSerach(List<FamilyMemberEntity> list) {
+    public void setSerach(List<OrgMemberEntity> list) {
         this.serachList = list;
     }
 
@@ -147,9 +147,9 @@ public class SelectMemberListAdapter extends BaseAdapter implements Filterable {
     //自定义Filer类
     private class PersonFilter extends Filter {
 
-        private List<FamilyMemberEntity> original;
+        private List<OrgMemberEntity> original;
 
-        public PersonFilter(List<FamilyMemberEntity> list) {
+        public PersonFilter(List<OrgMemberEntity> list) {
             this.original = list;
         }
 
@@ -162,9 +162,9 @@ public class SelectMemberListAdapter extends BaseAdapter implements Filterable {
                 results.values = original;//原始数据
                 results.count = original.size();
             } else {
-                List<FamilyMemberEntity> mList = new ArrayList<FamilyMemberEntity>();
+                List<OrgMemberEntity> mList = new ArrayList<OrgMemberEntity>();
                 String filterString = MyTextUtil.ToDBC(constraint.toString().trim().toLowerCase());
-                for (FamilyMemberEntity memberEntity : original) {
+                for (OrgMemberEntity memberEntity : original) {
                     String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getUser_given_name());
                     if (-1 != userName.toLowerCase().indexOf(filterString)) {
                         mList.add(memberEntity);
@@ -178,7 +178,7 @@ public class SelectMemberListAdapter extends BaseAdapter implements Filterable {
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            list = (List<FamilyMemberEntity>) results.values;
+            list = (List<OrgMemberEntity>) results.values;
             if (list == null) {
                 list = new ArrayList<>();
             }

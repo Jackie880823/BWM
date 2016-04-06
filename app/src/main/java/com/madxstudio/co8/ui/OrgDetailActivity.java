@@ -34,8 +34,8 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.OrgGroupListAdapter;
 import com.madxstudio.co8.adapter.OrgMemberListAdapter;
-import com.madxstudio.co8.entity.FamilyGroupEntity;
-import com.madxstudio.co8.entity.FamilyMemberEntity;
+import com.madxstudio.co8.entity.OrgGroupEntity;
+import com.madxstudio.co8.entity.OrgMemberEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
@@ -71,8 +71,8 @@ public class OrgDetailActivity extends BaseActivity {
     private String requestType;
     private Context mContext;
     private View vProgress;
-    private List<FamilyMemberEntity> memberList;//不包括family_tree
-    private List<FamilyGroupEntity> groupEntityList;
+    private List<OrgMemberEntity> memberList;//不包括family_tree
+    private List<OrgGroupEntity> groupEntityList;
     private static final int GET_DATA = 0x11;
     private final static int ADD_MEMBER = 0x12;
     private final static int CREATE_GROUP = 0x13;
@@ -236,7 +236,7 @@ public class OrgDetailActivity extends BaseActivity {
         });
     }
 
-    private void showNoFriendDialog(final FamilyMemberEntity familyMemberEntity) {
+    private void showNoFriendDialog(final OrgMemberEntity familyMemberEntity) {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
         final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
@@ -280,7 +280,7 @@ public class OrgDetailActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
-    private void showGroupDialog(final FamilyGroupEntity groupEntity) {
+    private void showGroupDialog(final OrgGroupEntity groupEntity) {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
         final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
@@ -404,7 +404,7 @@ public class OrgDetailActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
-    private void showStaffDialog(final FamilyMemberEntity memberEntity) {
+    private void showStaffDialog(final OrgMemberEntity memberEntity) {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
         final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
@@ -547,7 +547,7 @@ public class OrgDetailActivity extends BaseActivity {
                     if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData) && arg2 == 0) {
                         return;
                     } else {
-                        FamilyMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
+                        OrgMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
                         if (Constant.REQUEST_ADD_ADMIN.equals(requestType)) {
                             // 将点击的Item中的FamilyMemberEntity返回给启动的Activity;
                             Intent intent = new Intent();
@@ -711,123 +711,124 @@ public class OrgDetailActivity extends BaseActivity {
             finishReFresh();
             return;
         }
+        if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
+            getGroupList();
+        } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+            getMemberList(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()));
+        } else {
+            getMemberList(String.format(Constant.API_GET_ALL_OTHER, MainActivity.getUser().getUser_id()));
+        }
+    }
 
-        new Thread() {
+    private void getMemberList(String url) {
+        new HttpTools(mContext).get(url, null, Tag, new HttpCallback() {
             @Override
-            public void run() {
-                super.run();
-                new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
-                    @Override
-                    public void onStart() {
+            public void onStart() {
 
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        vProgress.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onResult(String response) {
-                        GsonBuilder gsonb = new GsonBuilder();
-                        Gson gson = gsonb.create();
-                        finishReFresh();
-                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
-                            showEmptyView();
-                            return;
-                        }
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
-                                List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
-                                }.getType());
-                                List<FamilyMemberEntity> memberEntityList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
-                                }.getType());
-                                if (memberEntityList != null && memberEntityList.size() > 0) {
-                                    if (memberList == null) {
-                                        memberList = new ArrayList<>();
-                                    }
-                                    memberList.clear();
-                                    for (FamilyMemberEntity memberEntity : memberEntityList) {
-                                        if (!"0".equals(memberEntity.getFam_accept_flag())) {
-                                            memberList.add(memberEntity);
-                                        }
-                                    }
-                                }
-                                if (groupList != null && groupList.size() > 0) {
-                                    hideEmptyView();
-                                    Message.obtain(handler, GET_DATA, groupList).sendToTarget();
-                                } else {
-                                    showEmptyView();
-                                }
-                            } else {
-                                List<FamilyMemberEntity> memberEntityList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
-                                }.getType());
-                                FamilyMemberEntity meMemberEntity = new FamilyMemberEntity();
-                                UserEntity userEntity = MainActivity.getUser();
-                                meMemberEntity.setGroup_id(userEntity.getGroup_id());
-                                meMemberEntity.setUser_id(userEntity.getUser_id());
-                                meMemberEntity.setPosition(userEntity.getPosition());
-                                meMemberEntity.setUser_given_name(mContext.getString(R.string.text_me));
-                                if (memberEntityList != null && memberEntityList.size() > 0) {
-                                    List<FamilyMemberEntity> staffList = new ArrayList<FamilyMemberEntity>();
-                                    List<FamilyMemberEntity> otherList = new ArrayList<FamilyMemberEntity>();
-                                    for (FamilyMemberEntity memberEntity : memberEntityList) {
-                                        String tree_type = memberEntity.getTree_type();
-                                        if (Constant.FAMILY_PARENT.equalsIgnoreCase(tree_type) || Constant.FAMILY_CHILDREN.equalsIgnoreCase(tree_type)
-                                                || Constant.FAMILY_SIBLING.equalsIgnoreCase(tree_type)) {
-                                            staffList.add(memberEntity);
-                                        } else {
-                                            otherList.add(memberEntity);
-                                        }
-                                    }
-                                    if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
-                                        hideEmptyView();
-                                        staffList.add(0, meMemberEntity);
-                                        Message.obtain(handler, GET_DATA, staffList).sendToTarget();
-                                    } else {
-                                        if (otherList.size() > 0) {
-                                            hideEmptyView();
-                                            Message.obtain(handler, GET_DATA, otherList).sendToTarget();
-                                        } else {
-                                            showEmptyView();
-                                        }
-                                    }
-                                } else {
-                                    if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
-                                        hideEmptyView();
-                                        memberEntityList = new ArrayList<>();
-                                        memberEntityList.add(0, meMemberEntity);
-                                        Message.obtain(handler, GET_DATA, memberEntityList).sendToTarget();
-                                    } else {
-                                        showEmptyView();
-                                    }
-                                }
-                            }
-                        } catch (JSONException e) {
-                            finishReFresh();
-                            showEmptyView();
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        MessageUtil.showMessage(mContext, R.string.msg_action_failed);
-                        finishReFresh();
-                    }
-
-                    @Override
-                    public void onCancelled() {
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
             }
-        }.start();
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                finishReFresh();
+                List<OrgMemberEntity> list = new ArrayList<>();
+                if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+                    OrgMemberEntity meMemberEntity = new OrgMemberEntity();
+                    UserEntity userEntity = MainActivity.getUser();
+                    meMemberEntity.setGroup_id(userEntity.getGroup_id());
+                    meMemberEntity.setUser_id(userEntity.getUser_id());
+                    meMemberEntity.setPosition(userEntity.getPosition());
+                    meMemberEntity.setDepartment(userEntity.getDepartment());
+                    meMemberEntity.setUser_given_name(mContext.getString(R.string.text_me));
+                    list.add(meMemberEntity);
+                }
+                if ((TextUtils.isEmpty(response) || "[]".equals(response)) && list.size() == 0) {
+                    showEmptyView();
+                    return;
+                }
+                List<OrgMemberEntity> memberEntityList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
+                }.getType());
+
+                if (memberEntityList != null && memberEntityList.size() > 0) {
+                    list.addAll(memberEntityList);
+                }
+                if (list.size() > 0) {
+                    hideEmptyView();
+                    Message.obtain(handler, GET_DATA, list).sendToTarget();
+                } else {
+                    showEmptyView();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                finishReFresh();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
+    private void getGroupList() {
+        new HttpTools(mContext).get(String.format(Constant.API_GET_GROUP_LIST, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                finishReFresh();
+                if (TextUtils.isEmpty(response) || "[]".equals(response)) {
+                    showEmptyView();
+                    return;
+                }
+                List<OrgGroupEntity> groupList = gson.fromJson(response, new TypeToken<ArrayList<OrgGroupEntity>>() {
+                }.getType());
+                if (groupList != null && groupList.size() > 0) {
+                    hideEmptyView();
+                    Message.obtain(handler, GET_DATA, groupList).sendToTarget();
+                } else {
+                    showEmptyView();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                finishReFresh();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     Handler handler = new Handler(new Handler.Callback() {
@@ -839,13 +840,13 @@ public class OrgDetailActivity extends BaseActivity {
                         if (groupEntityList != null) {
                             groupEntityList.clear();
                         }
-                        groupEntityList = (List<FamilyGroupEntity>) msg.obj;
+                        groupEntityList = (List<OrgGroupEntity>) msg.obj;
                         groupAdapter.addNewData(groupEntityList);
                     } else {
                         if (memberList != null) {
                             memberList.clear();
                         }
-                        memberList = (List<FamilyMemberEntity>) msg.obj;
+                        memberList = (List<OrgMemberEntity>) msg.obj;
                         memberAdapter.addNewData(memberList);
                     }
                     break;
