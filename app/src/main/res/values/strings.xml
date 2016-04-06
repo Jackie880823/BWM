@@ -812,4 +812,8 @@
     <string name="text_bir_1_d">1 day before</string>
     <string name="text_bir_2_d">2 days before</string>
     <string name="text_bir_1_w">1 week before</string>
+    <string name="text_org_no_request">no request</string>
+    <string name="wants_to_leave">wants to leave</string>
+    <string name="want_to_join">wants to join</string>
+    <string name="text_approve">Approve</string>
 </resources>

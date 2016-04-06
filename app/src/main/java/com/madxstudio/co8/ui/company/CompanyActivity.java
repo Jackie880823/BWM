@@ -32,6 +32,8 @@ import com.madxstudio.co8.ui.MessageChatActivity;
 import com.madxstudio.co8.ui.OrgDetailActivity;
 import com.madxstudio.co8.ui.PickAndCropPictureActivity;
 import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
 
@@ -223,6 +225,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: ", e);
+                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
             }
 
             @Override
@@ -291,6 +294,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: add admin ", e);
+                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
             }
 
             @Override
@@ -350,6 +354,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: leave company", e);
+                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
             }
 
             @Override
@@ -467,6 +472,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: remove Admin", e);
+                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
             }
 
             @Override
@@ -562,6 +568,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: ", e);
+                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
             }
 
             @Override
@@ -620,6 +627,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: ", e);
                 e.printStackTrace();
+                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
             }
 
             @Override

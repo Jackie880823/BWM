@@ -68,7 +68,7 @@ public class AdminSettingActivity extends BaseActivity {
                 switch (position) {
                     case 0:
                         Intent pendingRequestsIntent = new Intent(AdminSettingActivity.this, OrgDetailActivity.class);
-                        pendingRequestsIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
+                        pendingRequestsIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_PENDING_REQUEST);
                         pendingRequestsIntent.putExtra(Constant.REQUEST_TYPE, Constant.ADMIN_REQUEST);
                         startActivity(pendingRequestsIntent);
                         break;

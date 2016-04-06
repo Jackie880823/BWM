@@ -10,7 +10,9 @@
         style="@style/text_dark_default"
         android:layout_width="@dimen/_0dp"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1.0"/>
+        android:layout_weight="1.0"
+        android:textColor="@color/primary_dark_material_dark"
+        android:textSize="@dimen/text_medium_size"/>
 
     <ImageView
         android:id="@+id/iv_right"

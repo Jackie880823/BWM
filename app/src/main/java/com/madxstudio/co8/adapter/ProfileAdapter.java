@@ -19,7 +19,7 @@ import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.OrganisationDetail;
 import com.madxstudio.co8.entity.Profile;
 import com.madxstudio.co8.entity.UserEntity;
-import com.madxstudio.co8.ui.company.OrganisationConstants;
+import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.SDKUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;

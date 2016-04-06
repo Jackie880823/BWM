@@ -118,6 +118,7 @@ public class Constant {
     public static final String ORG_TRANSMIT_GROUP = "ORG_TRANSMIT_GROUP";
     public static final String ORG_TRANSMIT_STAFF = "ORG_TRANSMIT_STAFF";
     public static final String ORG_TRANSMIT_OTHER = "ORG_TRANSMIT_OTHER";
+    public static final String ORG_TRANSMIT_PENDING_REQUEST = "ORG_TRANSMIT_PENDING_REQUEST";
     public static final String FAMILY_PARENT = "Supervisor";
     public static final String FAMILY_CHILDREN = "Subordinate";
     public static final String FAMILY_SIBLING = "Colleague";
