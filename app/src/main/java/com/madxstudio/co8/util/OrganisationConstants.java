@@ -46,6 +46,11 @@ public class OrganisationConstants {
      * 第二个%s匹配{@code org_id}
      */
     public static final String API_GET_ADMIN_ALL_OTHER = CO8_API_SERVER + "allOthers/%s/org/%s";
+    /**
+     * GET - Admin state
+     * %s匹配{@code user_id}
+     */
+    public static final String API_GET_ADMIN_STATE = CO8_API_SERVER + "orgAdmin/%s";
 
     /**
      * PUT – Update organization details 更新公司资料 <br/>
@@ -127,6 +132,7 @@ public class OrganisationConstants {
     public static final String USER_ID = "user_id";
     public static final String USER_GIVEN_NAME = "user_given_name";
     public static final String MEMBER_ID = "member_id";
+    public static final String ADMIN = "admin";
 
     public static final String MODULE_ACTION_LEAVE = "leave";
     public static final String MODULE_ACTION_JOIN = "join";

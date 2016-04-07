@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.ui.add.AddMembersActivity;
@@ -22,6 +24,7 @@ import com.madxstudio.co8.ui.more.MoreSettingActivity;
 import com.madxstudio.co8.ui.more.sticker.StickerStoreActivity;
 import com.madxstudio.co8.util.AppInfoUtil;
 import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.widget.InteractivePopupWindow;
 
 import org.json.JSONException;
@@ -38,6 +41,7 @@ import org.json.JSONObject;
 public class MoreFragment extends BaseFragment<MainActivity> implements View.OnClickListener {
 
 
+    public static final String CHECK_ADMIN_STATE_TAG = "check admin state";
     private TextView tv_num;
     private TextView tvVersion;
 
@@ -111,8 +115,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 //        getViewById(R.id.btn_alert_recommend).setOnClickListener(this);
         getViewById(R.id.btn_rewards).setOnClickListener(this);
         getViewById(R.id.btn_add_member).setOnClickListener(this);
+
         /*add by Jackie */
-        getViewById(R.id.linear_admin_setting).setOnClickListener(this);
+        setAdminSetting();
 
         news_alert_num = getViewById(R.id.news_alert_num);
 //        member_alert_num = getViewById(R.id.member_alert_num);
@@ -123,6 +128,66 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         tvVersion.setText("V " + AppInfoUtil.getAppVersionName(getActivity()));
         tv_num = getViewById(R.id.tv_num);
 
+    }
+
+    /**
+     * 判断是否为管理员然后设置是否显示管理员设置
+     */
+    private void setAdminSetting() {
+        if ("1".equals(MainActivity.getUser().getAdmin())) {
+            getViewById(R.id.ll_admin_setting).setVisibility(View.VISIBLE);
+            getViewById(R.id.linear_admin_setting).setOnClickListener(this);
+        } else {
+            getViewById(R.id.ll_admin_setting).setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * 检测管理员状态
+     */
+    private void checkAdminState(){
+        new HttpTools(App.getContextInstance()).get(String.format(OrganisationConstants.API_GET_ADMIN_STATE, MainActivity.getUser().getUser_id()), null, CHECK_ADMIN_STATE_TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                LogUtil.d(TAG, "onStart: check admin state");
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "onFinish: check admin state");
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, "onResult() check admin state called with: " + "string = [" + string + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    String adminState = jsonObject.getString(OrganisationConstants.ADMIN);
+                    if (!TextUtils.isEmpty(adminState) && !adminState.equals(MainActivity.getUser().getAdmin())) {
+                        MainActivity.getUser().setAdmin(adminState);
+                        setAdminSetting();
+                        App.changeLoginedUser(MainActivity.getUser());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: check admin state", e);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: check admin state");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading() check admin state called with: " + "count = [" + count + "], current = [" + current + "]");
+            }
+        });
     }
 
 
@@ -208,6 +273,8 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 
     @Override
     public void requestData() {
+        checkAdminState();
+
         new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_ALL_COUNT, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
             @Override
             public void onStart() {

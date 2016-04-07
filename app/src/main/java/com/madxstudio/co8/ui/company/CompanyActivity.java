@@ -475,8 +475,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
      * @param userEntity 管理员,封装内容并不全，只饮食{@code user_id}和{@code user_given_name}
      */
     @Override
-    public void removeAdmin(final UserEntity userEntity) {
-
+    public void removeAdmin(UserEntity userEntity) {
         Map<String, String> map = new HashMap<>();
         map.put(OrganisationConstants.USER_ID, currentUser.getUser_id());
         map.put(OrganisationConstants.MEMBER_ID, userEntity.getUser_id());
@@ -503,7 +502,6 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             public void onResult(String string) {
                 LogUtil.d(TAG, "onResult() remove Admin called with: " + "string = [" + string + "]");
                 adapter.removedAdmin(index);
-                parseDetail(string);
             }
 
             @Override
@@ -644,20 +642,20 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onStart() {
                 LogUtil.d(TAG, "onStart: ");
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
                 LogUtil.d(TAG, "onFinish: ");
-                vProgress.setVisibility(View.VISIBLE);
                 // 上传完成需要清除缓存，否则无法加载网络图片
                 UniversalImageLoaderUtil.clearCache();
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
             public void onResult(String string) {
                 LogUtil.d(TAG, "onResult() called with: " + "string = [" + string + "]");
-                vProgress.setVisibility(View.GONE);
             }
 
             @Override

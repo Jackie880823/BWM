@@ -359,7 +359,6 @@ public class ProfileAdapter extends RecyclerView.Adapter {
 
         } else {
             // 非管理员不能添加或删除管理员
-            holder.itemView.findViewById(R.id.tv_admin).setVisibility(View.INVISIBLE);
             holder.itemView.findViewById(R.id.iv_right).setVisibility(View.INVISIBLE);
         }
     }
@@ -462,7 +461,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
 
         private boolean needFull;
 
-        public HeadHolderView(final View itemView) {
+        public HeadHolderView(View itemView) {
             super(itemView);
             ivProfileImage = (ImageView) itemView.findViewById(R.id.iv_profile_images);
             tvChangeText = (TextView) itemView.findViewById(R.id.tv_change_text);
