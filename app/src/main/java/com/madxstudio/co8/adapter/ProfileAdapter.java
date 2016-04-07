@@ -19,8 +19,9 @@ import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.OrganisationDetail;
 import com.madxstudio.co8.entity.Profile;
 import com.madxstudio.co8.entity.UserEntity;
-import com.madxstudio.co8.util.OrganisationConstants;
+import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.util.SDKUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
@@ -37,8 +38,6 @@ import java.util.List;
  */
 public class ProfileAdapter extends RecyclerView.Adapter {
     private static final String TAG = "ProfileAdapter";
-
-    private static final String TAG_REMOVE_ADMIN = "remove admin";
 
     /**
      * 头部项的个数，即为在管理员列表前项目的个数
@@ -258,8 +257,8 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     /**
      * 管理员相送的子项视图设置，包括设置
      *
-     * @param holder
-     * @param position
+     * @param holder   子视图的{@link RecyclerView.ViewHolder}
+     * @param position 对应{@code holder}在列表的位置下标
      */
     public void setAdminView(RecyclerView.ViewHolder holder, int position) {
         // 获取当管理员在管理员列表的索引
@@ -272,85 +271,97 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             LogUtil.d(TAG, "setAdminView: name => " + userEntity.getUser_given_name() + "; user id => " + userEntity.getUser_id());
         }
 
-        View.OnClickListener clickListener = new View.OnClickListener() {
-            private MyDialog listDialog;
+        if ("1".equals(MainActivity.getUser().getAdmin())) { // 管理员才能有权力对管理列表进行操作
 
-            @Override
-            public void onClick(View v) {
+            View.OnClickListener clickListener = new View.OnClickListener() {
+                private MyDialog listDialog;
 
-                if (listDialog != null && listDialog.isShowing()) {
-                    listDialog.dismiss();
-                    listDialog = null;
+                @Override
+                public void onClick(View v) {
+
+                    if (listDialog != null && listDialog.isShowing()) {
+                        listDialog.dismiss();
+                        listDialog = null;
+                    }
+
+                    switch (v.getId()) {
+                        case R.id.tv_view_admin_of_profile:
+                            // TODO: 16/3/23 查看Admin简介
+                            if (ADMIN_DEFAULT_VIEW == type) {
+                                if (listener != null) {
+                                    listener.viewAdminProfile(admins.get(index));
+                                }
+                            }
+                            break;
+
+                        case R.id.tv_message_admin:
+                            // TODO: 16/3/23 给Admin发送信息
+                            if (ADMIN_DEFAULT_VIEW == type) {
+                                if (listener != null) {
+                                    listener.sendMessageToAdmin(admins.get(index));
+                                }
+                            }
+                            break;
+
+                        case R.id.iv_right:
+                            if (type == ADMIN_DEFAULT_VIEW) {
+                                alertDialogRemove();
+                            } else if (type == ADMIN_TITLE_VIEW) {
+                                if (listener != null) {
+                                    listener.requestAddAdmin();
+                                }
+                            }
+                            break;
+
+                        case com.material.widget.R.id.button_accept:
+                            // TODO: 16/3/23 dialog中点击了确认按钮
+                            if (listener != null) {
+                                listener.removeAdmin(admins.get(index));
+                            }
+                            break;
+
+                        case com.material.widget.R.id.button_cancel:
+                            // TODO: 16/3/23 dialog中点击了取消按钮
+                            break;
+
+                        case R.id.tv_cancel:
+                            // TODO: 16/3/23 取消操作
+                            break;
+
+                        default:
+                            View askOptions = LayoutInflater.from(context).inflate(R.layout.layout_ask_admin_operation, null);
+                            listDialog = new MyDialog(context, null, askOptions);
+                            listDialog.show();
+                            // 这里的 this是指当道匿名内部类，这里不在去多创建点击监听，可以使用同一个
+                            askOptions.findViewById(R.id.tv_view_admin_of_profile).setOnClickListener(this);
+                            askOptions.findViewById(R.id.tv_message_admin).setOnClickListener(this);
+                            askOptions.findViewById(R.id.tv_cancel).setOnClickListener(this);
+                            break;
+                    }
                 }
 
-                switch (v.getId()) {
-                    case R.id.tv_view_admin_of_profile:
-                        // TODO: 16/3/23 查看Admin简介
-                        if (ADMIN_DEFAULT_VIEW == type) {
-                            if (listener != null) {
-                                listener.viewAdminProfile(admins.get(index));
-                            }
-                        }
-                        break;
-
-                    case R.id.tv_message_admin:
-                        // TODO: 16/3/23 给Admin发送信息
-                        if (ADMIN_DEFAULT_VIEW == type) {
-                            if (listener != null) {
-                                listener.sendMessageToAdmin(admins.get(index));
-                            }
-                        }
-                        break;
-
-                    case R.id.iv_right:
-                        if (type == ADMIN_DEFAULT_VIEW) {
-                            alertDialogRemove();
-                        } else if (type == ADMIN_TITLE_VIEW) {
-                            if (listener != null) {
-                                listener.requestAddAdmin();
-                            }
-                        }
-                        break;
-
-                    case com.material.widget.R.id.button_accept:
-                        // TODO: 16/3/23 dialog中点击了确认按钮
-                        if (listener != null) {
-                            listener.removeAdmin(admins.get(index));
-                        }
-                        break;
-
-                    case com.material.widget.R.id.button_cancel:
-                        // TODO: 16/3/23 dialog中点击了取消按钮
-                        break;
-
-                    case R.id.tv_cancel:
-                        // TODO: 16/3/23 取消操作
-                        break;
-
-                    default:
-                        View askOptions = LayoutInflater.from(context).inflate(R.layout.layout_ask_admin_operation, null);
-                        listDialog = new MyDialog(context, null, askOptions);
-                        listDialog.show();
-                        // 这里的 this是指当道匿名内部类，这里不在去多创建点击监听，可以使用同一个
-                        askOptions.findViewById(R.id.tv_view_admin_of_profile).setOnClickListener(this);
-                        askOptions.findViewById(R.id.tv_message_admin).setOnClickListener(this);
-                        askOptions.findViewById(R.id.tv_cancel).setOnClickListener(this);
-                        break;
+                /**
+                 * 弹出删除管理员的确认提示选择框
+                 */
+                private void alertDialogRemove() {
+                    listDialog = new MyDialog(context, null, "Remove Gary Liow as Admin?");
+                    listDialog.setButtonAccept(R.string.text_dialog_yes, this);
+                    listDialog.setButtonCancel(R.string.text_dialog_cancel, this);
+                    listDialog.show();
                 }
-            }
+            };
 
-            /**
-             * 弹出删除管理员的确认提示选择框
-             */
-            private void alertDialogRemove() {
-                listDialog = new MyDialog(context, null, "Remove Gary Liow as Admin?");
-                listDialog.setButtonAccept(R.string.text_dialog_yes, this);
-                listDialog.setButtonCancel(R.string.text_dialog_cancel, this);
-                listDialog.show();
-            }
-        };
-        holder.itemView.findViewById(R.id.tv_admin).setOnClickListener(clickListener);
-        holder.itemView.findViewById(R.id.iv_right).setOnClickListener(clickListener);
+            holder.itemView.findViewById(R.id.tv_admin).setVisibility(View.VISIBLE);
+            holder.itemView.findViewById(R.id.tv_admin).setOnClickListener(clickListener);
+
+            holder.itemView.findViewById(R.id.iv_right).setVisibility(View.VISIBLE);
+            holder.itemView.findViewById(R.id.iv_right).setOnClickListener(clickListener);
+
+        } else {
+            // 非管理员不能添加或删除管理员
+            holder.itemView.findViewById(R.id.tv_admin).setVisibility(View.INVISIBLE);
+            holder.itemView.findViewById(R.id.iv_right).setVisibility(View.INVISIBLE);
+        }
     }
 
     /**
@@ -374,7 +385,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
      *
      * @param index 删除了的管理员在管理员列表的下标位置
      */
-    public void removedAdmin(int index, RecyclerView recyclerView) {
+    public void removedAdmin(int index) {
         admins.remove(index);
         int position = index + HEAD_ITEMS;
         notifyItemRemoved(position);
@@ -387,7 +398,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     /**
      * Adapter自定义的监听接口，可根据需要自由修改、增、删接口函数
      *
-     * @param listener
+     * @param listener {@link ProfileAdapterListener}监听本{@code adapter}
      */
     public void setListener(ProfileAdapterListener listener) {
         this.listener = listener;
@@ -524,6 +535,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
 
             if (!needFull) {
                 // 不显示全部内容只显示5九行
+                tvDescription.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
                 tvDescription.setMaxLines(5);
                 tvDescription.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
             } else {
@@ -599,31 +611,12 @@ public class ProfileAdapter extends RecyclerView.Adapter {
          * - {@code false}: 没变化<br/>
          */
         private boolean checkEditText() {
-            if (profile == null) {
-                return true;
-            }
-
-            if (!etDescription.getText().toString().equals(profile.getDescription())) {
-                return true;
-            }
-
-            if (!etCompanyName.getText().toString().equals(profile.getName())) {
-                return true;
-            }
-
-            if (!etAddress.getText().toString().equals(profile.getAddress())) {
-                return true;
-            }
-
-            if (!etPhone.getText().toString().equals(profile.getPhone())) {
-                return true;
-            }
-
-            if (!etEmail.getText().toString().equals(profile.getEmail())) {
-                return true;
-            }
-
-            return false;
+            return profile == null // 传入的公司简介为空，所以编辑内容有效
+                    || !etDescription.getText().toString().equals(profile.getDescription()) // 编辑后的简介与公司原简介不一样，所以编辑内容有效
+                    || !etCompanyName.getText().toString().equals(profile.getName()) // 编辑后的公司名称与公司原名称不同，所以编辑内容有效
+                    || !etAddress.getText().toString().equals(profile.getAddress()) // 编辑后的地址与公司原地址不同，所以编辑内容有效
+                    || !etPhone.getText().toString().equals(profile.getPhone()) // 编辑后的电话与公司原电话不同，所以编辑内容有效
+                    || !etEmail.getText().toString().equals(profile.getEmail()); // 编辑后的Email与公司原Email不同，所以编辑的内容有效
         }
     }
 
@@ -665,7 +658,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         /**
          * 确认编辑，对编辑内容提交时调用
          *
-         * @param profile - 公司资料
+         * @param profile 公司资料
          */
         void confirmWrite(Profile profile);
 
@@ -684,14 +677,14 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         /**
          * 查看管理员详情
          *
-         * @param userEntity 管理员,封装内容并不全，只饮食{@code user_id}和{@code user_given_name}
+         * @param userEntity 管理员,封装内容并不全，只包含{@code user_id}和{@code user_given_name}
          */
         void viewAdminProfile(UserEntity userEntity);
 
         /**
          * 给管理员发送信息
          *
-         * @param userEntity 管理员,封装内容并不全，只封装{@code user_id}和{@code user_given_name}
+         * @param userEntity 管理员,封装内容并不全，只包含{@code user_id}和{@code user_given_name}
          */
         void sendMessageToAdmin(UserEntity userEntity);
     }
