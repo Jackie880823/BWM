@@ -11,68 +11,85 @@ import com.madxstudio.co8.R;
  */
 public class OrganisationConstants {
     public static final String CO8_API_SERVER = App.getContextInstance().getString(R.string.co8_api_server);
+
     /**
-     * 测试所用的公司ID正式版时要删除
+     * 测试所用的{@code org_id}正式版时要删除
      */
     public static final String TEST_COMPANY_ID = "2";
+
+    /**
+     * 测试所用的{@code user_id}正式版时要删除
+     */
     public static final String TEST_USER_ID = "3";
 
     /**
      * GET – Get organization details 获取公司资料 <br/>
-     * %s匹配公司ID
+     * %s匹配{@code org_id}
      */
     public static final String API_GET_ORGANISATION_DETAILS = CO8_API_SERVER + "organisation/%s";
 
     /**
      * GET - Organization Cover  获取公司背景图片 <br/>
-     * %s匹配公司ID
+     * %s匹配{@code org_id}
      */
     public static final String API_GET_ORGANISATION_COVER = CO8_API_SERVER + "photo_profile/%s/fid/organisation";
 
     /**
-     * Admin Pending Request list 获取管理员待批准列表
+     * Admin Pending Request list 获取管理员待批准列表 <br/>
+     * %s匹配{@code org_id}
      */
     public static final String API_GET_ADMIN_PENDING_REQUEST_LIST = CO8_API_SERVER + "pendingRequest/%s/type/admin";
+
+    /**
+     * GET – All Others(Admin) 公司管理员获取全部其它成员列表 <br/>
+     * 第一个%s匹配为当前登陆用户的{@code user_id} <br/>
+     * 第二个%s匹配{@code org_id}
+     */
     public static final String API_GET_ADMIN_ALL_OTHER = CO8_API_SERVER + "allOthers/%s/org/%s";
 
     /**
      * PUT – Update organization details 更新公司资料 <br/>
-     * %s匹配公司ID
+     * %s匹配{@code org_id}
      */
     public static final String API_PUT_ORGANISATION_DETAILS = CO8_API_SERVER + "organisation/%s";
 
     /**
      * PUT – Approve user to join organization 同意加入公司 <br/>
-     * %s匹配公司ID
+     * %s匹配{@code org_id}
      */
     public static final String API_PUT_ACCEPT_JOIN_ORG_REQ = CO8_API_SERVER + "acceptJoinOrgReq/%s";
     /**
      * PUT – Approve user to leave organization 同意离开公司 <br/>
-     * %s匹配公司ID
+     * %s匹配{@code org_id}
      */
     public static final String API_PUT_ACCEPT_LEAVE_ORG_REQ = CO8_API_SERVER + "acceptLeaveOrgReq/%s";
     /**
      * PUT – Reject user to join organization 拒绝成员加入公司 <br/>
-     * %s匹配公司ID
+     * %s匹配{@code org_id}
      */
     public static final String API_PUT_REJECT_JOIN_ORG_REQ = CO8_API_SERVER + "rejectJoinOrgReq/%s";
 
     /**
      * PUT – Remove member from organization 删除公司员工 <br/>
-     * %s匹配公司ID
+     * %s匹配{@code org_id}
      */
     public static final String API_PUT_REMOVE_ORG_MEMBER = CO8_API_SERVER + "removeOrgMember/%s";
+
+    /**
+     * PUT – Remove supplier and customer for staff from organization 删除公司员工的供应商和客户 <br/>
+     * %s匹配{@code org_id}
+     */
     public static final String API_PUT_REMOVE_ORG_OTHER = CO8_API_SERVER + "removeOrgOther/%s";
 
     /**
      * PUT – Remove own supplier and customer 删除自己的供应商和客户<br/>
-     * %s匹配为当前登陆用户ID
+     * %s匹配为当前登陆用户的{@code user_id}
      */
     public static final String API_PUT_REMOVE_OTHER = CO8_API_SERVER + "removeOther/%s";
 
     /**
      * PUT – Remove Admin  删除公司管理员 <br/>
-     * %s匹配公司ID
+     * %s匹配{@code org_id}
      */
     public static final String API_REMOVE_ADMIN = CO8_API_SERVER + "removedAdmin/%s";
 
