@@ -123,7 +123,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
         serachLinear.setVisibility(View.GONE);
-        memberAdapter = new OrgMemberListAdapter(mContext, memberEntityList, Constant.ORG_TRANSMIT_STAFF);
+        memberAdapter = new OrgMemberListAdapter(mContext, memberEntityList, Constant.ORG_TRANSMIT_STAFF, Constant.GENERAL_REQUEST);
         groupAdapter = new OrgGroupListAdapter(mContext, groupEntityList);
         //绑定自定义适配器
         pager.setAdapter(new FamilyPagerAdapter(initPagerView()));

@@ -18,12 +18,14 @@ public class OrganisationConstants {
     public static final String TEST_USER_ID = "3";
 
     /**
-     * GET – Get organization details 获取公司资料
+     * GET – Get organization details 获取公司资料 <br/>
+     * %s匹配公司ID
      */
     public static final String API_GET_ORGANISATION_DETAILS = CO8_API_SERVER + "organisation/%s";
 
     /**
-     * GET - Organization Cover  获取公司背景图片
+     * GET - Organization Cover  获取公司背景图片 <br/>
+     * %s匹配公司ID
      */
     public static final String API_GET_ORGANISATION_COVER = CO8_API_SERVER + "photo_profile/%s/fid/organisation";
 
@@ -31,9 +33,11 @@ public class OrganisationConstants {
      * Admin Pending Request list 获取管理员待批准列表
      */
     public static final String API_GET_ADMIN_PENDING_REQUEST_LIST = CO8_API_SERVER + "pendingRequest/%s/type/admin";
+    public static final String API_GET_ADMIN_ALL_OTHER = CO8_API_SERVER + "allOthers/%s/org/%s";
 
     /**
-     * PUT – Update organization details 更新公司资料
+     * PUT – Update organization details 更新公司资料 <br/>
+     * %s匹配公司ID
      */
     public static final String API_PUT_ORGANISATION_DETAILS = CO8_API_SERVER + "organisation/%s";
 
@@ -52,14 +56,23 @@ public class OrganisationConstants {
      * %s匹配公司ID
      */
     public static final String API_PUT_REJECT_JOIN_ORG_REQ = CO8_API_SERVER + "rejectJoinOrgReq/%s";
+
     /**
      * PUT – Remove member from organization 删除公司员工 <br/>
      * %s匹配公司ID
      */
     public static final String API_PUT_REMOVE_ORG_MEMBER = CO8_API_SERVER + "removeOrgMember/%s";
+    public static final String API_PUT_REMOVE_ORG_OTHER = CO8_API_SERVER + "removeOrgOther/%s";
 
     /**
-     * PUT – Remove Admin  删除公司管理员
+     * PUT – Remove own supplier and customer 删除自己的供应商和客户<br/>
+     * %s匹配为当前登陆用户ID
+     */
+    public static final String API_PUT_REMOVE_OTHER = CO8_API_SERVER + "removeOther/%s";
+
+    /**
+     * PUT – Remove Admin  删除公司管理员 <br/>
+     * %s匹配公司ID
      */
     public static final String API_REMOVE_ADMIN = CO8_API_SERVER + "removedAdmin/%s";
 

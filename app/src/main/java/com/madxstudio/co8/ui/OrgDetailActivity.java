@@ -2,6 +2,7 @@ package com.madxstudio.co8.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -64,7 +65,7 @@ import java.util.Map;
 /**
  * Created by quankun on 16/3/8.
  */
-public class OrgDetailActivity extends BaseActivity {
+public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdapter.AdminAdapterListener{
     private static final String TAG = "OrgDetailActivity";
     private static final String PENDING_REQUEST_LIST = "Pending request list";
     public static final String ACCEPT_REQUEST_TAG = "accept request";
@@ -516,7 +517,8 @@ public class OrgDetailActivity extends BaseActivity {
             tv_org_empty.setText(R.string.text_org_no_group);
         } else {
             memberList = new ArrayList<>();
-            memberAdapter = new OrgMemberListAdapter(mContext, memberList, transmitData);
+            memberAdapter = new OrgMemberListAdapter(mContext, memberList, transmitData, requestType);
+            memberAdapter.setListener(this);
             gridView.setAdapter(memberAdapter);
             tv_org_empty.setText(getString(R.string.text_org_no_contact));
         }
@@ -689,15 +691,16 @@ public class OrgDetailActivity extends BaseActivity {
 
         tvApprove.setText(R.string.text_approve);
         tvReject.setText(R.string.text_item_reject);
+        tvReject.setTextColor(Color.RED);
 
         tvApprove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String url = null;
                 if (OrganisationConstants.MODULE_ACTION_JOIN.equals(pendingRequest.getModule_action())) {
-                    url = String.format(OrganisationConstants.API_PUT_ACCEPT_JOIN_ORG_REQ, OrganisationConstants.TEST_COMPANY_ID);
+                    url = String.format(OrganisationConstants.API_PUT_ACCEPT_JOIN_ORG_REQ, MainActivity.getUser().getOrg_id());
                 } else if (OrganisationConstants.MODULE_ACTION_LEAVE.equals(pendingRequest.getModule_action())) {
-                    url = String.format(OrganisationConstants.API_PUT_ACCEPT_LEAVE_ORG_REQ, OrganisationConstants.TEST_COMPANY_ID);
+                    url = String.format(OrganisationConstants.API_PUT_ACCEPT_LEAVE_ORG_REQ, MainActivity.getUser().getOrg_id());
                 }
                 if (url != null) {
                     dealRequest(url, pendingRequest);
@@ -711,9 +714,9 @@ public class OrgDetailActivity extends BaseActivity {
             public void onClick(View v) {
                 String url = null;
                 if (OrganisationConstants.MODULE_ACTION_JOIN.equals(pendingRequest.getModule_action())) {
-                    url = String.format(OrganisationConstants.API_PUT_REJECT_JOIN_ORG_REQ, OrganisationConstants.TEST_COMPANY_ID);
+                    url = String.format(OrganisationConstants.API_PUT_REJECT_JOIN_ORG_REQ, MainActivity.getUser().getOrg_id());
                 } else if (OrganisationConstants.MODULE_ACTION_LEAVE.equals(pendingRequest.getModule_action())) {
-                    url = String.format(OrganisationConstants.API_PUT_REMOVE_ORG_MEMBER, OrganisationConstants.TEST_COMPANY_ID);
+                    url = String.format(OrganisationConstants.API_PUT_REMOVE_ORG_MEMBER, MainActivity.getUser().getOrg_id());
                 }
                 if (url != null) {
                     dealRequest(url, pendingRequest);
@@ -873,13 +876,18 @@ public class OrgDetailActivity extends BaseActivity {
         }
 
         if (Constant.ORG_TRANSMIT_PENDING_REQUEST.equals(transmitData)) {
-            getPendingList(String.format(OrganisationConstants.API_GET_ADMIN_PENDING_REQUEST_LIST, OrganisationConstants.TEST_COMPANY_ID));
+            getPendingList(String.format(OrganisationConstants.API_GET_ADMIN_PENDING_REQUEST_LIST, MainActivity.getUser().getOrg_id()));
         } else if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
             getGroupList();
         } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
             getMemberList(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()));
         } else {
-            getMemberList(String.format(Constant.API_GET_ALL_OTHER, MainActivity.getUser().getUser_id()));
+            UserEntity current = MainActivity.getUser();
+            if (Constant.ADMIN_REQUEST.equals(requestType)) { // 管理员管理其它成员列表
+                getMemberList(String.format(OrganisationConstants.API_GET_ADMIN_ALL_OTHER, current.getUser_id(), current.getOrg_id()));
+            } else {
+                getMemberList(String.format(Constant.API_GET_ALL_OTHER, current.getUser_id()));
+            }
         }
     }
 
@@ -1104,5 +1112,78 @@ public class OrgDetailActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * 删除联系人
+     *
+     * @param memberEntity 被删除对象的实例
+     */
+    @Override
+    public void removeMember(final OrgMemberEntity memberEntity) {
+        UserEntity currentUser = MainActivity.getUser();
+        String url;
+        Map<String, String> params = new HashMap<>();
+        if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData) && "1".equals(memberEntity.getAdded_flag())) {
+            // 管理员删除自己的供应商和客户
+            url = String.format(OrganisationConstants.API_PUT_REMOVE_OTHER, currentUser.getUser_id());
+            params.put(OrganisationConstants.MEMBER_ID, memberEntity.getUser_id());
+        } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)){
+            url = String.format(OrganisationConstants.API_PUT_REMOVE_ORG_MEMBER, currentUser.getOrg_id());
+            params.put(OrganisationConstants.USER_ID, currentUser.getUser_id());
+            params.put(OrganisationConstants.MEMBER_ID, memberEntity.getUser_id());
+        } else if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
+            url = String.format(OrganisationConstants.API_PUT_REMOVE_ORG_OTHER, currentUser.getOrg_id());
+            params.put(OrganisationConstants.USER_ID, currentUser.getUser_id());
+            params.put(OrganisationConstants.MEMBER_ID, memberEntity.getUser_id());
+        } else {
+            return;
+        }
+
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+        requestInfo.url = url;
+        new HttpTools(mContext).put(requestInfo, "remove member", new HttpCallback() {
+            @Override
+            public void onStart() {
+                LogUtil.d(TAG, "onStart: remove member");
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "onFinish: remove member");
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, "onResult() called with: remove member " + "string = [" + string + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("200".equals(jsonObject.optString("response_status_code", ""))) {
+                        Toast.makeText(mContext, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
+                        memberAdapter.getList().remove(memberEntity);
+                        memberAdapter.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: remove member", e);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: remove member");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading() called with: remove member " + "count = [" + count + "], current = [" + current + "]");
+            }
+        });
     }
 }
