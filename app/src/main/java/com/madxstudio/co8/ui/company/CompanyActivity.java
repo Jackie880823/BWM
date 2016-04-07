@@ -289,6 +289,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onResult(String string) {
                 LogUtil.d(TAG, "onResult() called add admin with: " + "string = [" + string + "]");
+                requestData();
             }
 
             @Override
@@ -467,6 +468,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             public void onResult(String string) {
                 LogUtil.d(TAG, "onResult() remove Admin called with: " + "string = [" + string + "]");
                 adapter.removedAdmin(index, rvProfile);
+                parseDetail(string);
             }
 
             @Override
