@@ -1,4 +1,4 @@
-package com.madxstudio.co8.ui;
+package com.madxstudio.co8.ui.admin;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.OrgDetailActivity;
 
 public class AdminSettingActivity extends BaseActivity {
 
@@ -66,7 +68,7 @@ public class AdminSettingActivity extends BaseActivity {
                 switch (position) {
                     case 0:
                         Intent pendingRequestsIntent = new Intent(AdminSettingActivity.this, OrgDetailActivity.class);
-                        pendingRequestsIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
+                        pendingRequestsIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_PENDING_REQUEST);
                         pendingRequestsIntent.putExtra(Constant.REQUEST_TYPE, Constant.ADMIN_REQUEST);
                         startActivity(pendingRequestsIntent);
                         break;

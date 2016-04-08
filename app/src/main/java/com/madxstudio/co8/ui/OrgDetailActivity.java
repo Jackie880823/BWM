@@ -2,6 +2,7 @@ package com.madxstudio.co8.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -30,19 +31,23 @@ import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.OrgGroupListAdapter;
 import com.madxstudio.co8.adapter.OrgMemberListAdapter;
+import com.madxstudio.co8.adapter.PendingRequestAdapter;
+import com.madxstudio.co8.entity.AdminPendingRequest;
 import com.madxstudio.co8.entity.OrgGroupEntity;
 import com.madxstudio.co8.entity.OrgMemberEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.ui.add.AddMembersActivity;
-import com.madxstudio.co8.ui.company.OrganisationConstants;
+import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.NetworkUtil;
+import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
@@ -60,7 +65,10 @@ import java.util.Map;
 /**
  * Created by quankun on 16/3/8.
  */
-public class OrgDetailActivity extends BaseActivity {
+public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdapter.AdminAdapterListener{
+    private static final String TAG = "OrgDetailActivity";
+    private static final String PENDING_REQUEST_LIST = "Pending request list";
+    public static final String ACCEPT_REQUEST_TAG = "accept request";
     private String transmitData;
 
     /**
@@ -71,11 +79,14 @@ public class OrgDetailActivity extends BaseActivity {
     private String requestType;
     private Context mContext;
     private View vProgress;
+    private List<AdminPendingRequest> pendingRequestList;
     private List<OrgMemberEntity> memberList;//不包括family_tree
     private List<OrgGroupEntity> groupEntityList;
     private static final int GET_DATA = 0x11;
     private final static int ADD_MEMBER = 0x12;
     private final static int CREATE_GROUP = 0x13;
+    private static final int GET_PENDING_REQUEST = 0x14;
+    private PendingRequestAdapter requestAdapter;
     private OrgMemberListAdapter memberAdapter;
     private OrgGroupListAdapter groupAdapter;
     private MySwipeRefreshLayout refreshLayout;
@@ -101,7 +112,9 @@ public class OrgDetailActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
+        if (Constant.ORG_TRANSMIT_PENDING_REQUEST.equals(transmitData)) {
+            tvTitle.setText(R.string.pending_requests);
+        } else if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
             tvTitle.setText(R.string.text_org_my_group);
         } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
             tvTitle.setText(R.string.text_org_all_staff);
@@ -532,14 +545,20 @@ public class OrgDetailActivity extends BaseActivity {
         serachLinear = getViewById(R.id.search_linear);
         tv_org_empty = getViewById(R.id.tv_org_empty);
         searchTv = getViewById(R.id.message_search);
-        if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
+        if (Constant.ORG_TRANSMIT_PENDING_REQUEST.equals(transmitData)) {
+            pendingRequestList = new ArrayList<>();
+            requestAdapter = new PendingRequestAdapter(mContext, pendingRequestList);
+            gridView.setAdapter(requestAdapter);
+            tv_org_empty.setText(R.string.text_org_no_request);
+        } else if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
             groupEntityList = new ArrayList<>();
             groupAdapter = new OrgGroupListAdapter(mContext, groupEntityList);
             gridView.setAdapter(groupAdapter);
             tv_org_empty.setText(R.string.text_org_no_group);
         } else {
             memberList = new ArrayList<>();
-            memberAdapter = new OrgMemberListAdapter(mContext, memberList, transmitData);
+            memberAdapter = new OrgMemberListAdapter(mContext, memberList, transmitData, requestType);
+            memberAdapter.setListener(this);
             gridView.setAdapter(memberAdapter);
             tv_org_empty.setText(getString(R.string.text_org_no_contact));
         }
@@ -549,6 +568,20 @@ public class OrgDetailActivity extends BaseActivity {
                 gridView.setSelection(0);
             }
         });
+
+        if (requestAdapter != null) {
+            requestAdapter.showNoData(new NoFoundDataListener() {
+                @Override
+                public void showFoundData(String string) {
+                    showSearchNoDataView(string);
+                }
+
+                @Override
+                public void showRefreshLayout() {
+                    hideSearchNoDataView();
+                }
+            });
+        }
 
         if (memberAdapter != null) {
             memberAdapter.showNoData(new NoFoundDataListener() {
@@ -581,7 +614,9 @@ public class OrgDetailActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
 
-                if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
+                if (Constant.ORG_TRANSMIT_PENDING_REQUEST.equals(transmitData)) {
+                    showRequestDialog(requestAdapter.getList().get(arg2));
+                } else if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
                     showGroupDialog(groupAdapter.getList().get(arg2));
                 } else {
                     if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData) && arg2 == 0) {
@@ -678,9 +713,137 @@ public class OrgDetailActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 弹出需要处理请求的对话框
+     *
+     * @param pendingRequest - 被处理的请求对象封装实例
+     */
+    private void showRequestDialog(final AdminPendingRequest pendingRequest) {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+
+        selectIntention.findViewById(R.id.tv_leave_or_delete).setVisibility(View.GONE);
+        selectIntention.findViewById(R.id.leave_line).setVisibility(View.GONE);
+
+        tvApprove.setText(R.string.text_approve);
+        tvReject.setText(R.string.text_item_reject);
+        tvReject.setTextColor(Color.RED);
+
+        tvApprove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = null;
+                if (OrganisationConstants.MODULE_ACTION_JOIN.equals(pendingRequest.getModule_action())) {
+                    url = String.format(OrganisationConstants.API_PUT_ACCEPT_JOIN_ORG_REQ, MainActivity.getUser().getOrg_id());
+                } else if (OrganisationConstants.MODULE_ACTION_LEAVE.equals(pendingRequest.getModule_action())) {
+                    url = String.format(OrganisationConstants.API_PUT_ACCEPT_LEAVE_ORG_REQ, MainActivity.getUser().getOrg_id());
+                }
+                if (url != null) {
+                    dealRequest(url, pendingRequest);
+                }
+                showSelectDialog.dismiss();
+            }
+        });
+
+        tvReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = null;
+                if (OrganisationConstants.MODULE_ACTION_JOIN.equals(pendingRequest.getModule_action())) {
+                    url = String.format(OrganisationConstants.API_PUT_REJECT_JOIN_ORG_REQ, MainActivity.getUser().getOrg_id());
+                } else if (OrganisationConstants.MODULE_ACTION_LEAVE.equals(pendingRequest.getModule_action())) {
+                    url = String.format(OrganisationConstants.API_PUT_REMOVE_ORG_MEMBER, MainActivity.getUser().getOrg_id());
+                }
+                if (url != null) {
+                    dealRequest(url, pendingRequest);
+                }
+                showSelectDialog.dismiss();
+            }
+        });
+
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
+    }
+
+    /**
+     * 处理成员的请求
+     *
+     * @param url            请求路径：可以是拒绝，接受
+     * @param pendingRequest 请求成员封装实例
+     */
+    private void dealRequest(String url, final AdminPendingRequest pendingRequest) {
+        LogUtil.d(TAG, "dealRequest() called with: " + "url = [" + url + "]");
+        Map<String, String> params = new HashMap<>();
+        params.put(OrganisationConstants.USER_ID, MainActivity.getUser().getUser_id());
+        params.put(OrganisationConstants.MEMBER_ID, pendingRequest.getAction_user_id());
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+        requestInfo.url = url;
+        new HttpTools(mContext).put(requestInfo, ACCEPT_REQUEST_TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                LogUtil.d(TAG, "onStart: accept request");
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "onFinish: accept request");
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, "onResult() called with: accept request " + "string = [" + string + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("200".equals(jsonObject.optString("response_status_code", ""))) {
+                        Toast.makeText(mContext, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
+                        requestAdapter.getList().remove(pendingRequest);
+                        requestAdapter.notifyDataSetChanged();
+                        if (requestAdapter.getList().isEmpty()) {
+                            showEmptyView();
+                        }
+                    }
+                } catch (JSONException e) {
+                    MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: accept request", e);
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: accept request");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading() called with: accept request " + "count = [" + count + "], current = [" + current + "]");
+            }
+        });
+    }
+
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
-        if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
+        if (Constant.ORG_TRANSMIT_PENDING_REQUEST.equals(transmitData)) {
+            Filter filter = requestAdapter.getFilter();
+            filter.filter(etImport);
+        } else if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
             Filter filter = groupAdapter.getFilter();
             filter.filter(etImport);
         } else {
@@ -751,13 +914,87 @@ public class OrgDetailActivity extends BaseActivity {
             finishReFresh();
             return;
         }
-        if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
+
+        if (Constant.ORG_TRANSMIT_PENDING_REQUEST.equals(transmitData)) {
+            getPendingList(String.format(OrganisationConstants.API_GET_ADMIN_PENDING_REQUEST_LIST, MainActivity.getUser().getOrg_id()));
+        } else if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
             getGroupList();
         } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
             getMemberList(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()));
         } else {
-            getMemberList(String.format(Constant.API_GET_ALL_OTHER, MainActivity.getUser().getUser_id()));
+            UserEntity current = MainActivity.getUser();
+            if (Constant.ADMIN_REQUEST.equals(requestType)) { // 管理员管理其它成员列表
+                getMemberList(String.format(OrganisationConstants.API_GET_ADMIN_ALL_OTHER, current.getUser_id(), current.getOrg_id()));
+            } else {
+                getMemberList(String.format(Constant.API_GET_ALL_OTHER, current.getUser_id()));
+            }
         }
+    }
+
+    /**
+     * 获取请求获取管理员待批准列表
+     *
+     * @param url 获取的网络路径
+     */
+    private void getPendingList(String url) {
+        LogUtil.d(TAG, "getPendingList() called with: " + "url = [" + url + "]");
+
+        new HttpTools(App.getContextInstance()).get(url, null, PENDING_REQUEST_LIST, new HttpCallback() {
+            @Override
+            public void onStart() {
+                LogUtil.d(TAG, "onStart: pending request list");
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "onFinish: pending request list");
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, "onResult() called with: pending request list " + "string = [" + string + "]");
+
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                finishReFresh();
+
+                if ((TextUtils.isEmpty(string) || "[]".equals(string))) {
+                    showEmptyView();
+                    return;
+                }
+
+                List<AdminPendingRequest> list = new ArrayList<>();
+                List<AdminPendingRequest> adminPendingRequests = gson.fromJson(string, new TypeToken<ArrayList<AdminPendingRequest>>() {
+                }.getType());
+
+                if (adminPendingRequests != null && adminPendingRequests.size() > 0) {
+                    list.addAll(adminPendingRequests);
+                }
+                if (list.size() > 0) {
+                    hideEmptyView();
+                    Message.obtain(handler, GET_PENDING_REQUEST, list).sendToTarget();
+                } else {
+                    showEmptyView();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: pending request list", e);
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: pending request list");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading: pending request list");
+            }
+        });
     }
 
     private void getMemberList(String url) {
@@ -890,6 +1127,14 @@ public class OrgDetailActivity extends BaseActivity {
                         memberAdapter.addNewData(memberList);
                     }
                     break;
+
+                case GET_PENDING_REQUEST:
+                    if (pendingRequestList != null) {
+                        pendingRequestList.clear();
+                    }
+                    pendingRequestList = (List<AdminPendingRequest>) msg.obj;
+                    requestAdapter.addNewData(pendingRequestList);
+                    break;
             }
             return false;
         }
@@ -907,5 +1152,78 @@ public class OrgDetailActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * 删除联系人
+     *
+     * @param memberEntity 被删除对象的实例
+     */
+    @Override
+    public void removeMember(final OrgMemberEntity memberEntity) {
+        UserEntity currentUser = MainActivity.getUser();
+        String url;
+        Map<String, String> params = new HashMap<>();
+        if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData) && "1".equals(memberEntity.getAdded_flag())) {
+            // 管理员删除自己的供应商和客户
+            url = String.format(OrganisationConstants.API_PUT_REMOVE_OTHER, currentUser.getUser_id());
+            params.put(OrganisationConstants.MEMBER_ID, memberEntity.getUser_id());
+        } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)){
+            url = String.format(OrganisationConstants.API_PUT_REMOVE_ORG_MEMBER, currentUser.getOrg_id());
+            params.put(OrganisationConstants.USER_ID, currentUser.getUser_id());
+            params.put(OrganisationConstants.MEMBER_ID, memberEntity.getUser_id());
+        } else if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
+            url = String.format(OrganisationConstants.API_PUT_REMOVE_ORG_OTHER, currentUser.getOrg_id());
+            params.put(OrganisationConstants.USER_ID, currentUser.getUser_id());
+            params.put(OrganisationConstants.MEMBER_ID, memberEntity.getUser_id());
+        } else {
+            return;
+        }
+
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+        requestInfo.url = url;
+        new HttpTools(mContext).put(requestInfo, "remove member", new HttpCallback() {
+            @Override
+            public void onStart() {
+                LogUtil.d(TAG, "onStart: remove member");
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "onFinish: remove member");
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, "onResult() called with: remove member " + "string = [" + string + "]");
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("200".equals(jsonObject.optString("response_status_code", ""))) {
+                        Toast.makeText(mContext, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
+                        memberAdapter.getList().remove(memberEntity);
+                        memberAdapter.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: remove member", e);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: remove member");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading() called with: remove member " + "count = [" + count + "], current = [" + current + "]");
+            }
+        });
     }
 }
