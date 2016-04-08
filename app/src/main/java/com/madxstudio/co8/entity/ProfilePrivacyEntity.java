@@ -21,6 +21,7 @@ public class ProfilePrivacyEntity {
     private String dob_alert_7;
     private String dob_alert_30;
     private String group_add;
+    private String int_phone_ext;
 
     public ProfilePrivacyEntity() {
 
@@ -169,6 +170,14 @@ public class ProfilePrivacyEntity {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getInt_phone_ext() {
+        return int_phone_ext;
+    }
+
+    public void setInt_phone_ext(String int_phone_ext) {
+        this.int_phone_ext = int_phone_ext;
     }
 
     @Override

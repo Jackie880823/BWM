@@ -151,7 +151,7 @@ public class GroupPrivacyActivity extends BaseActivity {
                     setProfilePrivacy(getString(R.string.text_phone), profilePrivacyEntity.getPhone(), tvPhone);
                     break;
                 case R.id.ll_internal_phone_privacy:
-                    setProfilePrivacy(getString(R.string.text_privacy_internal_phone), "0", tvExtPhone);
+                    setProfilePrivacy(getString(R.string.text_privacy_internal_phone), profilePrivacyEntity.getInt_phone_ext(), tvExtPhone);
                     break;
             }
         }
@@ -209,7 +209,7 @@ public class GroupPrivacyActivity extends BaseActivity {
                         displayPrivacyLevel(str, tvPhone);
                         break;
                     case R.id.tv_internal_phone_privacy:
-//                        profilePrivacyEntity.setPhone(str);
+                        profilePrivacyEntity.setInt_phone_ext(str);
                         displayPrivacyLevel(str, tvExtPhone);
                         break;
 
@@ -266,6 +266,8 @@ public class GroupPrivacyActivity extends BaseActivity {
         params.put("email", profilePrivacyEntity.getEmail());
         params.put("phone", profilePrivacyEntity.getPhone());
         params.put("location", profilePrivacyEntity.getLocation());
+        params.put("int_phone_ext", profilePrivacyEntity.getInt_phone_ext());
+
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id());
@@ -379,6 +381,7 @@ public class GroupPrivacyActivity extends BaseActivity {
         displayPrivacyLevel(profilePrivacyEntity.getEmail(), tvEmail);
         displayPrivacyLevel(profilePrivacyEntity.getPhone(), tvPhone);
         displayPrivacyLevel(profilePrivacyEntity.getLocation(), tvRegion);
+        displayPrivacyLevel(profilePrivacyEntity.getInt_phone_ext(), tvExtPhone);
     }
 
     private void displayPrivacyLevel(Object level, TextView tv) {
