@@ -124,7 +124,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     private ImageButton ibAgree;
     private View flLove;
-    private final String accountUserId;
+    private String accountUserId;
     private BaseFragment fragment;
     private CallBack callBack = new CallBack();
     private HttpTools mHttpTools;
@@ -132,6 +132,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     private String imageUrl;
     private String videoUrl;
+    private View rl_category_name;
 
     private boolean isDisplayMore;
     private int defaultLineCount = 5;
@@ -166,7 +167,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         newsGoodMember = (TextView) itemView.findViewById(R.id.new_good_job);
         newsCommentMember = (TextView) itemView.findViewById(R.id.new_comment);
-
+        rl_category_name = itemView.findViewById(R.id.rl_category_name);
         llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
         ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
         tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
@@ -211,9 +212,9 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         if (accountUserId.equals(newsEntity.getUser_id())) {
-            btnOption.setVisibility(View.VISIBLE);
+            rl_category_name.setVisibility(View.VISIBLE);
         } else {
-            btnOption.setVisibility(View.GONE);
+            rl_category_name.setVisibility(View.GONE);
         }
 
         if (TextUtils.isEmpty(newsEntity.getLove_id())) {
