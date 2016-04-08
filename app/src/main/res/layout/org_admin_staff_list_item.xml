@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/org_relative"
@@ -20,7 +19,7 @@
             android:layout_height="@dimen/_60dp"
             android:layout_centerInParent="true"
             android:src="@drawable/default_head_icon"
-            app:border="false"/>
+            app:border="false" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -37,10 +36,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginRight="@dimen/_40dp"
-            android:layout_toLeftOf="@+id/tv_org_admin"
+            android:layout_marginRight="@dimen/_45dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
 
             <TextView
                 android:id="@+id/tv_org_name"
@@ -48,63 +47,41 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textColor="#333"
-                android:textSize="@dimen/_18dp"
-                tools:text="skldsdsdcsvsdcvsvsvddsvsdvdsvdsfjal"/>
+                android:textSize="@dimen/_18dp" />
+
 
             <ImageView
                 android:id="@+id/org_add_request"
                 android:layout_width="@dimen/_25dp"
                 android:layout_height="@dimen/_25dp"
-                android:layout_gravity="center_vertical"
-                android:paddingRight="@dimen/_10dp"
-                android:paddingLeft="@dimen/_10dp"
+                android:layout_marginRight="@dimen/_10dp"
                 android:src="@drawable/time"
-                android:scaleType="centerInside"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_org_admin"
+            android:id="@+id/textv_org_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/tv_org_position"
-            android:layout_marginRight="@dimen/_10dp"
-            android:gravity="center_vertical"
-            android:textColor="#ff3333"
-            android:textSize="@dimen/_10dp"
-            android:visibility="gone"
-            tools:text="@string/text_admin"/>
-
-        <TextView
-            android:id="@+id/tv_org_position"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/ll_org_name"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/_10dp"
-            android:layout_marginTop="@dimen/_2dp"
-            android:gravity="center_vertical"
+            android:layout_below="@id/ll_org_name"
+            android:layout_marginRight="@dimen/_45dp"
+            android:layout_marginTop="@dimen/_4dp"
             android:singleLine="true"
             android:textColor="@color/message_comment"
-            android:textSize="@dimen/_15dp"
-            tools:text="skldfjal"/>
-
+            android:textSize="@dimen/_15dp" />
     </RelativeLayout>
 
     <ImageView
         android:id="@+id/iv_right"
         android:layout_width="wrap_content"
-        android:padding="@dimen/default_content_padding"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:paddingRight="@dimen/_10dp"
-        android:background="@drawable/bg_null_press"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/icon_remove"/>
+        android:background="@drawable/bg_null_press"
+        android:padding="@dimen/default_content_padding"
+        android:paddingRight="@dimen/_10dp"
+        android:src="@drawable/icon_remove" />
 
     <View
         android:id="@+id/view_line"
@@ -112,5 +89,5 @@
         android:layout_height="@dimen/_5dp"
         android:layout_below="@id/org_relative"
         android:background="#c9c9c9"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </RelativeLayout>
