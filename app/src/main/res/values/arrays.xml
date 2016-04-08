@@ -608,14 +608,15 @@
     </string-array>
 
     <array name="reminder_item">
-        <item>None</item>
-        <item>0 minutes</item>
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>2 hours</item>
-        <item>1 day</item>
-        <item>2 days</item>
+        <item>No Reminder</item>
+        <item>5 minutes before</item>
+        <item>15 minutes before</item>
+        <item>30 minutes before</item>
+        <item>1 hour before</item>
+        <item>2 hours before</item>
+        <item>1 day before</item>
+        <item>2 days before</item>
+        <item>1 week before</item>
     </array>
     <array name="category_item">
         <item>General</item>

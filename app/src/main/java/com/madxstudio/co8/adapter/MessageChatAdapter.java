@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -29,6 +31,7 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.MsgEntity;
 import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.entity.PrivateMessageEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.VolleyUtil;
 import com.madxstudio.co8.task.DownloadStickerTask;
@@ -281,6 +284,14 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             if (isGroupChat) {
                 holder.leftName.setVisibility(View.VISIBLE);
                 holder.leftName.setText(msgEntity.getUser_given_name());
+                if (PrivateMessageEntity.STATUS_DE_ACTIVE.equalsIgnoreCase(msgEntity.getStatus())) {
+                    Drawable drawable = ContextCompat.getDrawable(context, R.drawable.user_left_minilcon);
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    holder.leftName.setCompoundDrawables(drawable, null, null, null);
+                    holder.leftName.setCompoundDrawablePadding(10);
+                } else {
+                    holder.leftName.setCompoundDrawables(null, null, null, null);
+                }
             } else {
                 holder.leftName.setVisibility(View.GONE);
             }

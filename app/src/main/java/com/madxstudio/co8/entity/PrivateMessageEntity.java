@@ -12,6 +12,9 @@ public class PrivateMessageEntity implements Serializable {
     public static final String POST_PHOTO = "postPhoto";
     public static final String POST_AUDIO = "postAudio";
     public static final String POST_VIDEO = "postVideo";
+    public static final String STATUS_ACTIVE = "active";
+    public static final String STATUS_DE_ACTIVE = "deactive";
+
 
     private String message_type; // 群组的聊天室
     private String group_name; // 群组名

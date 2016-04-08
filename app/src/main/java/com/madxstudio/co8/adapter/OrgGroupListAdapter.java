@@ -79,8 +79,7 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
             viewHolder = new ViewHolder();
             viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.org_icon_image);
             viewHolder.memberName = (TextView) convertView.findViewById(R.id.tv_org_name);
-            viewHolder.orgPosition = (TextView) convertView.findViewById(R.id.tv_org_position);
-            viewHolder.orgAdmin = (TextView) convertView.findViewById(R.id.tv_org_admin);
+            viewHolder.orgPosition = (TextView) convertView.findViewById(R.id.textv_org_position);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -89,7 +88,6 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
         BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, memberEntity.getGroup_id()), R.drawable.b2be_normal, R.drawable.b2be_normal);
         viewHolder.memberName.setText(memberEntity.getGroup_name());
         viewHolder.orgPosition.setText(String.format(mContext.getString(R.string.text_members_num),memberEntity.getTotal_member()));
-        viewHolder.orgAdmin.setText("");
         return convertView;
     }
 
@@ -97,7 +95,6 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
         CircularNetworkImage imageMain;
         TextView memberName;
         TextView orgPosition;
-        TextView orgAdmin;
     }
 
     @Override
@@ -145,7 +142,7 @@ public class OrgGroupListAdapter extends BaseAdapter implements Filterable {
             }
             notifyDataSetChanged();
             if (results.count == 0) {
-                if (showData != null)
+                if (showData != null && !TextUtils.isEmpty(constraint))
                     showData.showFoundData(constraint.toString());
             } else {
                 if (showData != null)

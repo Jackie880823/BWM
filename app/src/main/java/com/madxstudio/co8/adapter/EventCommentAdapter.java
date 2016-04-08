@@ -149,6 +149,32 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
+    private String getReminderTime(int minu) {
+        String[] reminderArrayUs = mContext.getResources().getStringArray(R.array.reminder_item);
+        for (int i = 0; i < reminderArrayUs.length; i++) {
+            if (minu == 0 && i == 0) {
+                return reminderArrayUs[i];
+            } else if (minu == 5 && i == 1) {
+                return reminderArrayUs[i];
+            } else if (minu == 15 && i == 2) {
+                return reminderArrayUs[i];
+            } else if (minu == 30 && i == 3) {
+                return reminderArrayUs[i];
+            } else if (minu == 60 && i == 4) {
+                return reminderArrayUs[i];
+            } else if (minu == 120 && i == 5) {
+                return reminderArrayUs[i];
+            } else if (minu == 60 * 24 && i == 6) {
+                return reminderArrayUs[i];
+            } else if (minu == 60 * 24 * 2 && i == 7) {
+                return reminderArrayUs[i];
+            } else if (minu == 60 * 24 * 7 && i == 8) {
+                return reminderArrayUs[i];
+            }
+        }
+        return reminderArrayUs[0];
+    }
+
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -174,6 +200,13 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             header.TvLocation.setText(detail.getLoc_name());
             header.tvMaybe.setText(detail.getTotal_maybe());
             header.tvNotGoing.setText(detail.getTotal_no());
+            int reminder_minute = 0;
+            try {
+                reminder_minute = Integer.parseInt(detail.getReminder_minute());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+            header.reminder_desc.setText(getReminderTime(reminder_minute));
             if (MainActivity.getUser().getUser_id().equals(detail.getGroup_owner_id())) {
                 try {
                     header.tvGoing.setText((Integer.valueOf(detail.getTotal_yes()) - 1) + "");
@@ -482,6 +515,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView tvMaybe;
         private TextView tvNotGoing;
         private View intenAll;
+        private TextView reminder_desc;
 //        private View defaultComment;
 
         public VHHeader(View itemView) {
@@ -493,7 +527,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             eventMapCation = (NetworkImageView) itemView.findViewById(R.id.event_picture_4_location);
             tvContent = (FreedomSelectionTextView) itemView.findViewById(R.id.event_desc);
             tvDate = (TextView) itemView.findViewById(R.id.event_date);
-            tvEndDate= (TextView) itemView.findViewById(R.id.date_end_desc);
+            tvEndDate = (TextView) itemView.findViewById(R.id.date_end_desc);
             TvLocation = (TextView) itemView.findViewById(R.id.location_desc);
             intentAll = (RelativeLayout) itemView.findViewById(R.id.btn_intent_all);
             intentAgree = (LinearLayout) itemView.findViewById(R.id.iv_intent_agree);
@@ -502,6 +536,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tvGoing = (TextView) itemView.findViewById(R.id.going_count);
             tvMaybe = (TextView) itemView.findViewById(R.id.maybe_count);
             tvNotGoing = (TextView) itemView.findViewById(R.id.not_going_count);
+            reminder_desc = (TextView) itemView.findViewById(R.id.reminder_desc);
             intenAll = itemView.findViewById(R.id.btn_intent_all);
 //            defaultComment = itemView.findViewById(R.id.default_comment);
             intenAll.setOnClickListener(this);

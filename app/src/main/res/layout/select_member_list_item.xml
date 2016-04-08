@@ -40,23 +40,19 @@
             android:layout_marginRight="@dimen/_45dp"
             android:singleLine="true"
             android:textColor="#333"
-            android:textSize="@dimen/_18dp"
-            tools:text="skldsdsdcsvsdcvsvsvddsvsdvdsvdsfjal" />
+            android:textSize="@dimen/_18dp" />
 
         <TextView
             android:id="@+id/tv_org_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tv_org_name"
-            android:layout_centerVertical="true"
+            android:layout_below="@id/tv_org_name"
             android:layout_marginRight="@dimen/_10dp"
-            android:layout_marginTop="@dimen/_2dp"
-            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/_5dp"
             android:singleLine="true"
             android:textColor="@color/message_comment"
-            android:textSize="@dimen/_15dp"
-            tools:text="skldfjal" />
+            android:textSize="@dimen/_15dp"/>
 
         <CheckBox
             android:id="@+id/check_member_item"

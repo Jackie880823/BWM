@@ -749,4 +749,6 @@
     <!--<string name="text_org_have_join"><Data><![CDATA[ Your request to join \n<font color="#0087FF">%s</font>\nis pending for approval]]></Data></string>-->
     <!--<string name="text_cancel_successful">Cancel request successful</string>-->
     <!--<string name="text_resend_successful">Resend request successful</string>-->
+    <!--<string name="text_dialog_remove_message">Remove Message</string>-->
+    <!--<string name="text_sure_remove_message">Are you sure you want to remove these message?</string>-->
 </resources>

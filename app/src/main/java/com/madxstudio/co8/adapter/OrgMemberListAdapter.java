@@ -79,8 +79,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
             viewHolder = new ViewHolder();
             viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.org_icon_image);
             viewHolder.memberName = (TextView) convertView.findViewById(R.id.tv_org_name);
-            viewHolder.orgPosition = (TextView) convertView.findViewById(R.id.tv_org_position);
-            viewHolder.orgAdmin = (TextView) convertView.findViewById(R.id.tv_org_admin);
+            viewHolder.orgPosition = (TextView) convertView.findViewById(R.id.textv_org_position);
             viewHolder.meLine = convertView.findViewById(R.id.view_line);
             viewHolder.orgRequest = (ImageView) convertView.findViewById(R.id.org_add_request);
             convertView.setTag(viewHolder);
@@ -112,7 +111,6 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         CircularNetworkImage imageMain;
         TextView memberName;
         TextView orgPosition;
-        TextView orgAdmin;
         View meLine;
         ImageView orgRequest;
     }
@@ -169,7 +167,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
             }
             notifyDataSetChanged();
             if (results.count == 0) {
-                if (showData != null)
+                if (showData != null && !TextUtils.isEmpty(constraint))
                     showData.showFoundData(constraint.toString());
             } else {
                 if (showData != null)

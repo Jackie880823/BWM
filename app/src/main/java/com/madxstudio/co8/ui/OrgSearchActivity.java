@@ -346,7 +346,7 @@ public class OrgSearchActivity extends BaseActivity {
                 adapter.addAll(mList);
                 notifyDataSetChanged();
                 if (results.count == 0) {
-                    if (showData != null)
+                    if (showData != null && !TextUtils.isEmpty(constraint))
                         showData.showFoundData(constraint.toString());
                 } else {
                     if (showData != null)

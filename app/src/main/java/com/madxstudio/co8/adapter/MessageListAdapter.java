@@ -1,6 +1,8 @@
 package com.madxstudio.co8.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,18 +98,28 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
             viewHolder.lastMessageName.setText(userEntity.getMember_name());
             viewHolder.groupSign.setVisibility(View.VISIBLE);
             viewHolder.memberName.setText(userEntity.getGroup_name());
+            viewHolder.memberName.setCompoundDrawables(null, null, null, null);
         } else {
             BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()),
                     R.drawable.default_head_icon, R.drawable.default_head_icon);
             viewHolder.lastMessageName.setText("");
             viewHolder.groupSign.setVisibility(View.GONE);
             viewHolder.memberName.setText(userEntity.getUser_given_name());
+            if (PrivateMessageEntity.STATUS_DE_ACTIVE.equalsIgnoreCase(userEntity.getStatus())) {
+                Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.user_left_minilcon);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                viewHolder.memberName.setCompoundDrawables(drawable, null, null, null);
+                viewHolder.memberName.setCompoundDrawablePadding(10);
+            } else {
+                viewHolder.memberName.setCompoundDrawables(null, null, null, null);
+            }
         }
 
         int messageNum = 0;
         try {
             messageNum = Integer.parseInt(userEntity.getUnread().toString());
         } catch (NumberFormatException e) {
+            viewHolder.tvNum.setVisibility(View.GONE);
             e.printStackTrace();
         }
         if (messageNum > 0 && messageNum < 100) {
@@ -192,7 +204,7 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
             mUserEntityList = (List<PrivateMessageEntity>) results.values;
             notifyDataSetChanged();
             if (results.count == 0) {
-                if (showData != null)
+                if (showData != null && !TextUtils.isEmpty(constraint))
                     showData.showFoundData(constraint.toString());
             } else {
                 if (showData != null)

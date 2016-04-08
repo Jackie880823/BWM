@@ -27,12 +27,15 @@ import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.MessageListAdapter;
 import com.madxstudio.co8.entity.PrivateMessageEntity;
 import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
+import com.madxstudio.co8.ui.more.MoreSettingActivity;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
@@ -78,6 +81,8 @@ public class MessageFragment extends BaseFragment<MainActivity> {
     private InputMethodManager imm;
     private TextView searchTv;
     private int removePosition = 0;
+    private String searchData = "";
+    private boolean isGeData = false;
 
     public static MessageFragment newInstance(String... params) {
 
@@ -129,7 +134,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                 }
                 startIndex = 1;
                 isUserRefresh = true;
-                getData(0, "");
+                getData(0, searchData);
             }
 
         });
@@ -165,6 +170,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                 } else {
                     intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);
                     intent.putExtra(UserEntity.EXTRA_GROUP_ID, messageEntity.getGroup_id());
+                    intent.putExtra(Constant.MESSAGE_CHART_STATUS, messageEntity.getStatus());
                     intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, messageEntity.getUser_given_name());
                 }
                 startActivity(intent);
@@ -174,30 +180,51 @@ public class MessageFragment extends BaseFragment<MainActivity> {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                LayoutInflater factory = LayoutInflater.from(mContext);
-                View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-                final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
-                TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
-                tv_no_member.setText(getString(R.string.text_delete));
-                tv_no_member.setTextColor(ContextCompat.getColor(mContext, R.color.delete_text_color));
-                TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
-                cancelTv.setText(R.string.text_start_cancle);
-                tv_no_member.setOnClickListener(new View.OnClickListener() {
+//                LayoutInflater factory = LayoutInflater.from(mContext);
+//                View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+//                final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+//                TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+//                tv_no_member.setText(getString(R.string.text_delete));
+//                tv_no_member.setTextColor(ContextCompat.getColor(mContext, R.color.delete_text_color));
+//                TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+//                cancelTv.setText(R.string.text_start_cancle);
+//                tv_no_member.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showSelectDialog.dismiss();
+//                        removePosition = position;
+//                        PrivateMessageEntity messageEntity = privateAdapter.getmUserEntityList().get(position);
+//                        removeData(messageEntity.getGroup_id());
+//                    }
+//                });
+//                cancelTv.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showSelectDialog.dismiss();
+//                    }
+//                });
+//                showSelectDialog.show();
+                final MyDialog myDialog = new MyDialog(mContext, mContext.getString(R.string.text_dialog_remove_message), mContext.getString(R.string.text_sure_remove_message));
+                myDialog.setCanceledOnTouchOutside(false);
+                myDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showSelectDialog.dismiss();
+                        if (myDialog != null) {
+                            myDialog.dismiss();
+                        }
+                    }
+                });
+                myDialog.setButtonAccept(R.string.remove, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
                         removePosition = position;
                         PrivateMessageEntity messageEntity = privateAdapter.getmUserEntityList().get(position);
                         removeData(messageEntity.getGroup_id());
                     }
                 });
-                cancelTv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showSelectDialog.dismiss();
-                    }
-                });
-                showSelectDialog.show();
+                if (!myDialog.isShowing())
+                    myDialog.show();
                 return true;
             }
         });
@@ -227,7 +254,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                 int adapterCount = privateAdapter.getCount();
                 if (adapterCount == DEF_DATA_NUM * startIndex && listView.getFirstVisiblePosition() < (adapterCount - 5)
                         && (listView.getLastVisiblePosition() > (adapterCount - 5)) && !isPullData) {
-                    getData(startIndex, "");
+                    getData(startIndex, searchData);
                     isPullData = true;
                 }
             }
@@ -264,8 +291,15 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String etImport = et_search.getText().toString();
-                setSearchData(etImport);
+//                String etImport = et_search.getText().toString();
+//                setSearchData(etImport);
+                if (TextUtils.isEmpty(s)) {
+                    searchData = "";
+                } else {
+                    searchData = et_search.getText().toString();
+                }
+                startIndex = 1;
+                getData(0, searchData);
             }
         });
     }
@@ -290,13 +324,12 @@ public class MessageFragment extends BaseFragment<MainActivity> {
     private void removeData(String groupId) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
             MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
-            userFinishReFresh();
             return;
         }
         final RequestInfo requestInfo = new RequestInfo();
-        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("group_id", groupId);
-        requestInfo.putAllParams(params);
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_GET_REMOVE_MESSAGE, MainActivity.getUser().getUser_id());
         new HttpTools(getActivity()).put(requestInfo, TAG, new HttpCallback() {
             @Override
@@ -326,7 +359,6 @@ public class MessageFragment extends BaseFragment<MainActivity> {
             @Override
             public void onError(Exception e) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                userFinishReFresh();
             }
 
             @Override
@@ -344,13 +376,16 @@ public class MessageFragment extends BaseFragment<MainActivity> {
     @Override
     public void onResume() {
         super.onResume();
-        getData(0, "");
+        getData(0, searchData);
     }
 
     private void getData(int beginIndex, String search) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
             MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
             userFinishReFresh();
+            return;
+        }
+        if (isGeData) {
             return;
         }
         final RequestInfo requestInfo = new RequestInfo();
@@ -368,6 +403,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                 new HttpTools(getActivity()).get(requestInfo, TAG, new HttpCallback() {
                     @Override
                     public void onStart() {
+                        isGeData = true;
                     }
 
                     @Override
@@ -376,6 +412,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                             vProgress.setVisibility(View.GONE);
                         }
                         isPullData = false;
+                        isGeData = false;
                     }
 
                     @Override
@@ -496,10 +533,18 @@ public class MessageFragment extends BaseFragment<MainActivity> {
     }
 
     private void showMemberEmptyView() {
-        if (refreshLayout.getVisibility() == View.VISIBLE) {
+        if (!TextUtils.isEmpty(searchData)) {
+            emptyView.setVisibility(View.GONE);
             refreshLayout.setVisibility(View.GONE);
+            searchTv.setVisibility(View.VISIBLE);
+            searchTv.setText(String.format(mContext.getString(R.string.text_search_no_data), searchData));
+        } else {
+            if (refreshLayout.getVisibility() == View.VISIBLE) {
+                refreshLayout.setVisibility(View.GONE);
+            }
+            emptyView.setVisibility(View.VISIBLE);
+            searchTv.setVisibility(View.GONE);
         }
-        emptyView.setVisibility(View.VISIBLE);
     }
 
     private void hideMemberEmptyView() {
@@ -507,5 +552,6 @@ public class MessageFragment extends BaseFragment<MainActivity> {
             refreshLayout.setVisibility(View.VISIBLE);
         }
         emptyView.setVisibility(View.GONE);
+        searchTv.setVisibility(View.GONE);
     }
 }

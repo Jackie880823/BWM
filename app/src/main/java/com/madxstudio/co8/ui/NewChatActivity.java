@@ -471,7 +471,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void run() {
                 super.run();
-                new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
+                new HttpTools(mContext).get(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -539,7 +539,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
                 new HttpTools(mContext).get(String.format(Constant.API_GET_GROUP_LIST, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
-
+                        vProgress.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -624,6 +624,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
         } else {
             Intent intent = new Intent(mContext, SelectMemberActivity.class);
             intent.putExtra(Constant.SELECT_MEMBER_NORMAL_DATA, (Serializable) allMemberList);
+            intent.putExtra("isCreateNewGroup", true);
             startActivity(intent);
         }
     }

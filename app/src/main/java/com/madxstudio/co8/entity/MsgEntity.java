@@ -88,6 +88,15 @@ public class MsgEntity implements Serializable {
     private String video_thumbnail;
     private String sendStatus;
     private Uri failUri;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Uri getFailUri() {
         return failUri;

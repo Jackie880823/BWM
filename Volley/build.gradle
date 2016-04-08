@@ -10,7 +10,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:2.0.0'
     }
 }
 apply plugin: 'com.android.library'
@@ -28,4 +28,5 @@ apply from: 'rules.gradle'
 
 
 dependencies {
+testCompile 'junit:junit:4.12'
 }

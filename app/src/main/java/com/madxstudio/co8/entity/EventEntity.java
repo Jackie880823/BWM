@@ -36,6 +36,15 @@ public class EventEntity implements Serializable {
     private String group_new_post;
     private List<String> event_member;
     private String group_end_date;
+    private String reminder_minute;
+
+    public String getReminder_minute() {
+        return reminder_minute;
+    }
+
+    public void setReminder_minute(String reminder_minute) {
+        this.reminder_minute = reminder_minute;
+    }
 
     public String getGroup_end_date() {
         return group_end_date;

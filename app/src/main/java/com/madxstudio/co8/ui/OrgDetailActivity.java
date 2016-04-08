@@ -441,6 +441,7 @@ public class OrgDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showSelectDialog.dismiss();
+                removeOwnSupplier(memberEntity.getUser_id());
             }
         });
         messageView.setOnClickListener(new View.OnClickListener() {
@@ -462,6 +463,45 @@ public class OrgDetailActivity extends BaseActivity {
             }
         });
         showSelectDialog.show();
+    }
+
+    private void removeOwnSupplier(String member_id){
+        RequestInfo requestInfo = new RequestInfo();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("member_id", member_id);
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+        requestInfo.url = String.format(Constant.API_REMOVE_OWN_SUPPLIER, MainActivity.getUser().getUser_id());
+        new HttpTools(mContext).put(requestInfo, Tag, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String string) {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     private void showSearchNoDataView(String string) {
@@ -658,7 +698,7 @@ public class OrgDetailActivity extends BaseActivity {
     }
 
     public void updateMiss(String member_id) {
-        final RequestInfo requestInfo = new RequestInfo();
+        RequestInfo requestInfo = new RequestInfo();
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("member_id", member_id);
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);

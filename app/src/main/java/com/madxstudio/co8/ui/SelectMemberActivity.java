@@ -68,6 +68,7 @@ public class SelectMemberActivity extends BaseActivity {
     private TextView searchTv;
     private CheckBox selectAllMember;
     private List<OrgMemberEntity> selectMemberEntityList;
+    private boolean isCreateNewGroup;
 
     @Override
     protected void initBottomBar() {
@@ -102,7 +103,8 @@ public class SelectMemberActivity extends BaseActivity {
     @Override
     protected void titleRightEvent() {
         Intent intent = new Intent();
-//        if (isCreateNewGroup) {
+        intent.putExtra("members_data", new Gson().toJson(selectMemberEntityList));
+        if (isCreateNewGroup) {
         if (selectMemberEntityList.size() > 0) {
             intent.putExtra("members_data", new Gson().toJson(selectMemberEntityList));
             intent.setClass(mContext, CreateGroupDialogActivity.class);
@@ -123,10 +125,10 @@ public class SelectMemberActivity extends BaseActivity {
             });
             showSelectDialog.show();
         }
-//        } else {
-//            setResult(RESULT_OK, intent);
-//            finish();
-//        }
+        } else {
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     @Override
@@ -184,7 +186,7 @@ public class SelectMemberActivity extends BaseActivity {
         selectAllMember = getViewById(R.id.check_member_item);
         serachLinear.setVisibility(View.GONE);
         memberList = (List<OrgMemberEntity>) getIntent().getSerializableExtra(Constant.SELECT_MEMBER_NORMAL_DATA);
-
+        isCreateNewGroup = getIntent().getBooleanExtra("isCreateNewGroup", false);
         memberAdapter = new SelectMemberListAdapter(mContext, memberList);
         listView.setAdapter(memberAdapter);
         selectMemberEntityList = new ArrayList<>();

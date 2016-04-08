@@ -25,6 +25,9 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
@@ -43,9 +46,6 @@ import com.madxstudio.co8.widget.DatePicker;
 import com.madxstudio.co8.widget.InteractivePopupWindow;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.TimePicker;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -116,6 +116,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private String users_date;
     private Long endMeetingTime;
     private boolean isChooseEndTime;
+    private String reminderContent;
 
     private static final int MAX_COUNT = 300;
 
@@ -417,6 +418,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         members = PreferencesUtil.getValue(getParentActivity(), "members_data", "").toString();
         groups = PreferencesUtil.getValue(getParentActivity(), "Groups_date", "").toString();
         users_date = PreferencesUtil.getValue(getParentActivity(), "users_date", "").toString();
+        reminderContent = PreferencesUtil.getValue(getParentActivity(), "reminder", "").toString();
 
         setText();
         latitude = TextUtils.isEmpty(mEevent.getLoc_latitude()) ? -1000 : Double.valueOf(mEevent.getLoc_latitude());
@@ -522,6 +524,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("user_id", MainActivity.getUser().getUser_id());
             params.put("event_member", gson.toJson(setGetMembersIds(userList)));
             params.put("group_end_date", mEevent.getGroup_end_date());
+            params.put("reminder_minute", mEevent.getReminder_minute());
             requestInfo.putAllParams(params);
 
             new HttpTools(getActivity()).post(requestInfo, Tag, new HttpCallback() {
@@ -589,6 +592,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             position_name.setText(location);
 
         }
+        if (!TextUtils.isEmpty(reminderContent)) {
+            reminder_desc.setText(reminderContent);
+            mEevent.setReminder_minute(getReminderTime(reminderContent));
+        }
         if (date != null && date != 0L) {
             date_desc.setText(MyDateUtils.getEventLocalDateStringFromLocal(getParentActivity(), date));
             mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
@@ -629,7 +636,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         PreferencesUtil.saveValue(getParentActivity(), "users_date", "");
         PreferencesUtil.saveValue(getParentActivity(), "latitude", "-1000");
         PreferencesUtil.saveValue(getParentActivity(), "longitude", "-1000");
-
+        PreferencesUtil.saveValue(getParentActivity(), "reminder", "");
     }
 
     @Override
@@ -697,6 +704,34 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
     }
 
+    private String getReminderTime(String string) {
+        String[] reminderArrayUs = getActivity().getResources().getStringArray(R.array.reminder_item);
+        for (int i = 0; i < reminderArrayUs.length; i++) {
+            if (string.equals(reminderArrayUs[i])) {
+                if (i == 0) {
+                    return 0 + "";
+                } else if (i == 1) {
+                    return "" + 5;
+                } else if (i == 2) {
+                    return "" + 15;
+                } else if (i == 3) {
+                    return "" + 30;
+                } else if (i == 4) {
+                    return "" + 60;
+                } else if (i == 5) {
+                    return "" + 120;
+                } else if (i == 6) {
+                    return "" + 60 * 24;
+                } else if (i == 7) {
+                    return "" + 60 * 24 * 2;
+                } else if (i == 8) {
+                    return "" + 60 * 24 * 7;
+                }
+            }
+        }
+        return "0";
+    }
+
     private void showReminderDialog() {
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View reminderView = factory.inflate(R.layout.meeting_reminder_list, null);
@@ -710,9 +745,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 item_reminderDialog.dismiss();
                 reminder_desc.setText(list.get(i));
+                mEevent.setReminder_minute(getReminderTime(list.get(i)));
             }
         });
-        item_reminderDialog = new MyDialog(getParentActivity(), "", reminderView);
+        item_reminderDialog = new MyDialog(getParentActivity(), getString(R.string.text_meeting_reminder), reminderView);
         if (!item_reminderDialog.isShowing()) {
             item_reminderDialog.show();
         }
@@ -740,6 +776,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     if (userList.size() > 0) {
                         Gson gson = new Gson();
                         PreferencesUtil.saveValue(getParentActivity(), "users_date", gson.toJson(userList));
+                    }
+                    if (!TextUtils.isEmpty(reminder_desc.getText().toString().trim())) {
+                        PreferencesUtil.saveValue(getParentActivity(), "reminder", reminder_desc.getText().toString());
                     }
                     getParentActivity().finish();
                 }
@@ -908,7 +947,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private void goChooseMembers() {
         //        Intent intent = new Intent(getActivity(), SelectPeopleActivity.class);
-        Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
+        Intent intent = new Intent(getActivity(), SelectMemberActivity.class);
         intent.putExtra("members_data", gson.toJson(userList));
         intent.putExtra("groups_data", "");
         intent.putExtra("type", 0);
@@ -952,8 +991,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     userList.clear();
                     userList.addAll(members_data);
                     List groupIdList = new ArrayList();
-                    for (int i = 0; i < at_groups_data.size(); i++) {
-                        groupIdList.add(at_groups_data.get(i).getGroup_id());
+                    if (at_groups_data != null) {
+                        for (int i = 0; i < at_groups_data.size(); i++) {
+                            groupIdList.add(at_groups_data.get(i).getGroup_id());
+                        }
                     }
                     if (groupIdList.size() != 0) {
                         //                        Log.i("groupsid====", gson.toJson(groupIdList));
@@ -1010,6 +1051,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
         if (endMeetingTime / 1000 / 60 <= startMeetingTime / 1000 / 60) {
             MessageUtil.showMessage(getActivity(), R.string.text_meeting_end_time);
+            return false;
+        }
+        if (TextUtils.isEmpty(reminder_desc.getText())) {
+            MessageUtil.showMessage(getParentActivity(), "请选择reminder");
             return false;
         }
 

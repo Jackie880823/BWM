@@ -120,7 +120,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
 //        intent.putExtra("members_data", gson.toJson(adapter.getData()));
 //        intent.putExtra("type", 1);
 //        startActivityForResult(intent, INTENT_REQUEST_GET_MEMBERS);
-        Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
+        Intent intent = new Intent(getActivity(), SelectMemberActivity.class);
         intent.putExtra("members_data", gson.toJson(userList));
         intent.putExtra("groups_data", "");
         intent.putExtra("type", 1);
@@ -285,8 +285,10 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                         //TODO show waitting
 //                        submitAddMember(members);
                         List memberList = new ArrayList();
-                        for (int i = 0; i < at_groups_data.size(); i++) {
-                            memberList.add(at_groups_data.get(i).getGroup_id());
+                        if (at_groups_data != null) {
+                            for (int i = 0; i < at_groups_data.size(); i++) {
+                                memberList.add(at_groups_data.get(i).getGroup_id());
+                            }
                         }
                         if (memberList.size() != 0) {
 //                            Log.i("groupsid====", gson.toJson(memberList));

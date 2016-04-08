@@ -268,7 +268,7 @@ public class MemberActivity extends BaseActivity {
         });
 
         TextView item1 = (TextView) selectIntention.findViewById(R.id.subject_1);
-        item1.setText(R.string.accept);
+        item1.setText(R.string.text_dialog_accept);
         item1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

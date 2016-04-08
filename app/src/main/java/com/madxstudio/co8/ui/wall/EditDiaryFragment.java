@@ -19,6 +19,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -59,6 +60,7 @@ import com.madxstudio.co8.interfaces.ImagesRecyclerListener;
 import com.madxstudio.co8.ui.BaseFragment;
 import com.madxstudio.co8.ui.InviteMemberActivity;
 import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.SelectMemberActivity;
 import com.madxstudio.co8.ui.share.PreviewVideoActivity;
 import com.madxstudio.co8.ui.share.SelectPhotosActivity;
 import com.madxstudio.co8.util.FileUtil;
@@ -678,7 +680,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         rvImages.setAdapter(mAdapter);
         tvPrivacy = getViewById(R.id.tv_privacy);
         if (TextUtils.isEmpty(MainActivity.getUser().getOrganisation())) {
-            Drawable drawable = getResources().getDrawable(R.drawable.privacy_lock);
+            Drawable drawable = ContextCompat.getDrawable(getActivity(),R.drawable.privacy_lock);
             tvPrivacy.setText(R.string.text_only_me);
 //            Drawable[] drawables = tvPrivacy.getCompoundDrawables();
 //            if (drawable != null) {
@@ -1386,7 +1388,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 跳至选择TAG用户
      */
     private void goChooseMembers() {
-        Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
+        Intent intent = new Intent(getActivity(), SelectMemberActivity.class);
         if (at_groups_data == null) {
             at_groups_data = new ArrayList<>();
         }

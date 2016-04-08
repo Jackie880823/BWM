@@ -93,11 +93,13 @@ public class AddMemberWorkFlow extends Activity {
                     } else {
                         //失败
                         MessageUtil.showMessage(AddMemberWorkFlow.this, R.string.msg_action_failed);
+                        cancle();
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                     MessageUtil.showMessage(AddMemberWorkFlow.this, R.string.msg_action_failed);
+                    cancle();
                 }
 
             }

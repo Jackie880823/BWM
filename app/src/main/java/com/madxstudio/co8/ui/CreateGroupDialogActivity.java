@@ -128,11 +128,10 @@ public class CreateGroupDialogActivity extends BaseActivity {
         for (UserEntity eventEntity : selectUserEntityList) {
             Log.i("selectUserEntityList===", eventEntity.getUser_id());
         }
-        Intent intent = new Intent(mContext, InviteMemberActivity.class);
+        Intent intent = new Intent(mContext, SelectMemberActivity.class);
         String selectMemberData = new Gson().toJson(selectUserEntityList);
 //        Log.i("selectUserEntityList====",new Gson().toJson(selectUserEntityList));
 
-        Log.i("selectUserEntityList_bakc", selectUserEntityList.size() + "");
         intent.putExtra("members_data", selectMemberData);
         intent.putExtra("type", 0);
 //        if (selectGroupEntityList.size() > 0) {
@@ -207,7 +206,6 @@ public class CreateGroupDialogActivity extends BaseActivity {
                 selectUserEntityList.addAll(userList);
             }
             Log.i("selectUserList====2", selectUserList.size() + "");
-            Log.i("selectUserEntityList====2", selectUserEntityList.size() + "");
         }
 
         if (flagEntityList != null && flagEntityList.size() > 0) {
@@ -218,7 +216,6 @@ public class CreateGroupDialogActivity extends BaseActivity {
             }
         }
         Log.i("selectUserList====3", selectUserList.size() + "");
-        Log.i("selectUserEntityList====3", selectUserEntityList.size() + "");
         String groups_data = data.getStringExtra("groups_data");
         List<FamilyGroupEntity> groupEntityList = null;
         if (null != groups_data) {
@@ -284,12 +281,6 @@ public class CreateGroupDialogActivity extends BaseActivity {
         if (mCropImagedUri != null) {
             f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
         }
-//        if (!f.exists()) {
-//            rightButton.setEnabled(true);
-//            return;
-//        }
-//        progressDialog.setCanceledOnTouchOutside(false);
-//        progressDialog.show();
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
         String fileName = MD5Util.string2MD5(System.currentTimeMillis() + "");
@@ -417,10 +408,9 @@ public class CreateGroupDialogActivity extends BaseActivity {
         showCameraAlbum.show();
     }
 
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_DATA:
                     List<UserEntity> userList = (List<UserEntity>) msg.obj;
@@ -452,12 +442,12 @@ public class CreateGroupDialogActivity extends BaseActivity {
                     selectUserEntityList.addAll(addedEntityList);
                     Log.i("flagEntityList====1", flagEntityList.size() + "");
                     Log.i("selectUserList====1", selectUserList.size() + "");
-                    Log.i("selectUserEntityList====1", selectUserEntityList.size() + "");
                     changeData();
                     break;
             }
+            return false;
         }
-    };
+    });
 
     @Override
     public void initView() {

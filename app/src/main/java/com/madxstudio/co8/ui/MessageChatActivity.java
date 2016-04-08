@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,6 +19,7 @@ import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +45,7 @@ import com.madxstudio.co8.action.MessageAction;
 import com.madxstudio.co8.adapter.MessageChatAdapter;
 import com.madxstudio.co8.entity.MediaData;
 import com.madxstudio.co8.entity.MsgEntity;
+import com.madxstudio.co8.entity.PrivateMessageEntity;
 import com.madxstudio.co8.http.PicturesCacheUtil;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.interfaces.StickerViewClickListener;
@@ -67,7 +70,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,6 +199,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private SensorManager sensorManager;
     private HeadsetReceiver receiver;
     private String groupDefault;
+    private String userStauts;
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -396,6 +399,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     @Override
     protected void setTitle() {
+        if (userOrGroupType == 0 && PrivateMessageEntity.STATUS_DE_ACTIVE.equalsIgnoreCase(userStauts)) {
+            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.user_left_minilcon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            tvTitle.setCompoundDrawables(drawable, null, null, null);
+            tvTitle.setCompoundDrawablePadding(10);
+        }
         tvTitle.setText(titleName);
     }
 
@@ -477,7 +486,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         msgList = new ArrayList<>();
         groupId = getIntent().getStringExtra(MESSAGE_GROUP_ID);
         titleName = getIntent().getStringExtra(MESSAGE_TITLE_NAME);
-        groupDefault=getIntent().getStringExtra(Constant.GROUP_DEFAULT);
+        groupDefault = getIntent().getStringExtra(Constant.GROUP_DEFAULT);
+        userStauts = getIntent().getStringExtra(Constant.MESSAGE_CHART_STATUS);
         mRecorder = new AudioMediaRecorder();
         setView();
         setAllListener();
@@ -611,6 +621,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             playerManager.stop();
         }
         unregisterReceiver(stickerReceiver);
+        unregisterReceiver(receiver);
     }
 
     private void setView() {
@@ -1271,7 +1282,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP,true));
+                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP, true));
                     handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
                     break;
 
@@ -1340,7 +1351,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         // 下面这句指定调用相机拍照后的照片存储的路径
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
                 .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
-                        CACHE_PIC_NAME_TEMP,true)));
+                        CACHE_PIC_NAME_TEMP, true)));
         // 图片质量为高
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         intent.putExtra("return-data", false);

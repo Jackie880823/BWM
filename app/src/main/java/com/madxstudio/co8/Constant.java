@@ -96,6 +96,7 @@ public class Constant {
     public static final int MESSAGE_CHART_TYPE_GROUP = 1;
     public static final String MESSAGE_CHART_TYPE = "type";
     public static final String MESSAGE_CHART_GROUP_ID = "groupId";
+    public static final String MESSAGE_CHART_STATUS = "status";
     public static final String MESSAGE_CHART_TITLE_NAME = "titleName";
     public static final String SELECT_MEMBER_NORMAL_DATA = "normalData";
     public static final String SELECT_MEMBER_DATA = "members_data";
@@ -507,4 +508,6 @@ public class Constant {
     public static final String API_GET_ALL_OTHER = API_SERVER +"/co8/index.php/api/myOthers/%s";//所有其他成员列表
     public static final String API_GET_ALL_MAIN_MESSAGE = API_SERVER +"/co8/index.php/api/messages/%s/type/all";//所有消息列表
     public static final String API_GET_REMOVE_MESSAGE = API_SERVER +"/co8/index.php/api/hidePost/%s";//删除消息列表
+    public static final String API_REMOVE_OWN_SUPPLIER  = API_SERVER +"/co8/index.php/api/removeOther/%s";//删除自己的客户或供应商
+
 }

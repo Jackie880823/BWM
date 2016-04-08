@@ -28,11 +28,6 @@ public class BirthdayAlertActivity extends BaseActivity {
     private CheckBox dob_alert_3;
     private CheckBox dob_alert_7;
     private CheckBox dob_alert_30;
-    private CheckBox dob_alert_1_h;
-    private CheckBox dob_alert_2_h;
-    private CheckBox dob_alert_1_d;
-    private CheckBox dob_alert_2_d;
-    private CheckBox dob_alert_1_w;
     private LinearLayout llBirthdayAlert;
 
     @Override
@@ -79,11 +74,7 @@ public class BirthdayAlertActivity extends BaseActivity {
         dob_alert_3 = getViewById(R.id.dob_alert_3);
         dob_alert_7 = getViewById(R.id.dob_alert_7);
         dob_alert_30 = getViewById(R.id.dob_alert_30);
-        dob_alert_1_h= getViewById(R.id.dob_alert_1_h);
-        dob_alert_2_h= getViewById(R.id.dob_alert_2_h);
-        dob_alert_1_d= getViewById(R.id.dob_alert_1_d);
-        dob_alert_2_d= getViewById(R.id.dob_alert_2_d);
-        dob_alert_1_w= getViewById(R.id.dob_alert_1_w);
+
     }
 
     boolean result;
@@ -159,32 +150,6 @@ public class BirthdayAlertActivity extends BaseActivity {
             dob_alert_30.setChecked(true);
         }else{
             dob_alert_30.setChecked(false);
-        }
-        //
-        if("1".equals(birthdayConfig.get("dob_alert_30"))){
-            dob_alert_1_h.setChecked(true);
-        }else{
-            dob_alert_1_h.setChecked(false);
-        }
-        if("1".equals(birthdayConfig.get("dob_alert_30"))){
-            dob_alert_2_h.setChecked(true);
-        }else{
-            dob_alert_2_h.setChecked(false);
-        }
-        if("1".equals(birthdayConfig.get("dob_alert_30"))){
-            dob_alert_1_d.setChecked(true);
-        }else{
-            dob_alert_1_d.setChecked(false);
-        }
-        if("1".equals(birthdayConfig.get("dob_alert_30"))){
-            dob_alert_2_d.setChecked(true);
-        }else{
-            dob_alert_2_d.setChecked(false);
-        }
-        if("1".equals(birthdayConfig.get("dob_alert_30"))){
-            dob_alert_1_w.setChecked(true);
-        }else{
-            dob_alert_1_w.setChecked(false);
         }
     }
 

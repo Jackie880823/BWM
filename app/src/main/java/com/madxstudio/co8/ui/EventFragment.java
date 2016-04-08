@@ -98,10 +98,9 @@ public class EventFragment extends BaseFragment<MainActivity> {
     private View vProgress;
 
 
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_DELAY_RIGHT:
                     popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, getParentActivity().getResources().getString(R.string.text_tip_create_event), 0);
@@ -128,8 +127,9 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     break;
 
             }
+            return false;
         }
-    };
+    }) ;
 
     @Override
     public void initView() {
@@ -354,7 +354,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
     private void loadMoreEvent() {
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
-        jsonParams.put("show_birthday", "0");
+        jsonParams.put("show_birthday", "1");
         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
         HashMap<String, String> params = new HashMap<String, String>();

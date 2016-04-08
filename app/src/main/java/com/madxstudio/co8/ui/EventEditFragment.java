@@ -183,7 +183,39 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         date_end_desc.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), mEevent.getGroup_end_date()));
         latitude = TextUtils.isEmpty(mEevent.getLoc_latitude()) ? -1000 : Double.valueOf(mEevent.getLoc_latitude());
         longitude = TextUtils.isEmpty(mEevent.getLoc_longitude()) ? -1000 : Double.valueOf(mEevent.getLoc_longitude());
+        int reminder_minute = 0;
+        try {
+            reminder_minute = Integer.parseInt(mEevent.getReminder_minute());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        reminder_desc.setText(getReminderTime(reminder_minute));
+    }
 
+    private String getReminderTime(int minu) {
+        String[] reminderArrayUs = getResources().getStringArray(R.array.reminder_item);
+        for (int i = 0; i < reminderArrayUs.length; i++) {
+            if (minu == 0 && i == 0) {
+                return reminderArrayUs[i];
+            } else if (minu == 5 && i == 1) {
+                return reminderArrayUs[i];
+            } else if (minu == 15 && i == 2) {
+                return reminderArrayUs[i];
+            } else if (minu == 30 && i == 3) {
+                return reminderArrayUs[i];
+            } else if (minu == 60 && i == 4) {
+                return reminderArrayUs[i];
+            } else if (minu == 120 && i == 5) {
+                return reminderArrayUs[i];
+            } else if (minu == 60 * 24 && i == 6) {
+                return reminderArrayUs[i];
+            } else if (minu == 60 * 24 * 2 && i == 7) {
+                return reminderArrayUs[i];
+            } else if (minu == 60 * 24 * 7 && i == 8) {
+                return reminderArrayUs[i];
+            }
+        }
+        return reminderArrayUs[0];
     }
 
     private List<String> setGetMembersIds(List<UserEntity> users) {
@@ -210,6 +242,27 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 item_reminderDialog.dismiss();
                 reminder_desc.setText(list.get(i));
+                int min = 0;
+                if (i == 0) {
+                    min = 0;
+                } else if (i == 1) {
+                    min = 5;
+                } else if (i == 2) {
+                    min = 15;
+                } else if (i == 3) {
+                    min = 30;
+                } else if (i == 4) {
+                    min = 60;
+                } else if (i == 5) {
+                    min = 120;
+                } else if (i == 6) {
+                    min = 60 * 24;
+                } else if (i == 7) {
+                    min = 60 * 24 * 2;
+                } else if (i == 8) {
+                    min = 60 * 24 * 7;
+                }
+                mEevent.setReminder_minute(min + "");
             }
         });
         item_reminderDialog = new MyDialog(getParentActivity(), "", reminderView);
@@ -724,6 +777,10 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         }
         if (endData <= startData) {
             MessageUtil.showMessage(getActivity(), R.string.text_meeting_end_time);
+            return false;
+        }
+        if (TextUtils.isEmpty(reminder_desc.getText())) {
+            MessageUtil.showMessage(getParentActivity(), "请选择reminder");
             return false;
         }
         mEevent.setText_description(event_desc.getText().toString());
