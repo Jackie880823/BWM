@@ -28,5 +28,5 @@ apply from: 'rules.gradle'
 
 
 dependencies {
-testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
 }
