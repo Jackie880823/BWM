@@ -2,319 +2,403 @@
 <items version="2" >
 
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4c93d99d454c975536bbe3b42283eee847f03ea3">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-b2307a7af54b94d125dc3003220d605baf0d379a.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.android.support/multidex/1.0.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.android.support-multidex-1.0.1_c4cbd5e45a5b1407e52467b017b089bbdab971b5/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="41b3870cbe5fa546d8095b5b89d42cb69f3dd175">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-ea701c46a5795124cc8c85a1a5af042b27d5cae3.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="cb4af597d079ffdc0984a3ec2c03cbf6a1b9f869">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-cast-8.3.0_ca752f652add473f89db4bb4e882d456acdbf798/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
-        <dex dex="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/pre-dexed/debug/classes-ffaba127a120a3326ac33d6480d2003a84d7645f.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.2.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="dcf8c83c3dead00a6c4fe313e95f7aaca20dc641">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.android.support-mediarouter-v7-22.2.0_4fedb6da6aea555b8e17d1e437a0acfef1070c25/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="17f8750d5c0749e44dd7c54aa390d9c937803825">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-646239f04b98ceea8bfdebdaf4dd88f78a6c7be5.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="345a1b5cf5b144ce18ba6962bc66a7e2f26c1c1b">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-basement-8.3.0_72291a0b803e9e22472963268edabcf98bd1bbbd/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/.gradle/caches/modules-2/files-2.1/com.j256.ormlite/ormlite-android/4.48/afa06f539a4026c10b247386312aa67404b80a16/ormlite-android-4.48.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="afa06f539a4026c10b247386312aa67404b80a16">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/ormlite-android-4.48-d67293cd87d97a4882eaa31727fd578cfd17f1b4.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/me.leolin/ShortcutBadger/1.1.3/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="ef141c106b87541eb23ae56bad6c68b369e78a73">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/me.leolin-ShortcutBadger-1.1.3_8f1f78a71ec9df71fe40fee2d217223a718ca5e5/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="055783146ba9654a725442563be78cad303aad1f">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-4cce38f7c9ab0964d74a29e28164243bc4dfbf36.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="697679619b00837e3d09e9988a2e1e2a9009d502">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-fitness-8.3.0_3a1ac7fb1a7aedf602ed4cfc8be901639cf4b1c0/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="c976518693e89ad44fbfccfc654941eaec198d08">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-9331e946d88a54bbe277e37cf12966723bdf78e3.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="b000ecceb9877fefcdc7ab1959ff03df91551656">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-measurement-8.3.0_2f2bafd40b488bf0943b4d092c65c62a029527f6/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="ef5f051e7308febe289dc93c67c5f32785b4260a">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-b5e6170b17e89f6128342290aa630a4639ac83de.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/appconversionsdk.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="0f2577d381a320d0d4ca29eae647f7c3c27dccef">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/appconversionsdk_5306a9b6250d63c150b6756680d84d477828e30f/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
-        <dex dex="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/pre-dexed/debug/library-2.4.0-bfde4936166c7b569f1dd5aa045e92e7b86412e3.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.android.support-appcompat-v7-23.1.1_4241dc9411153d760d86e3772b6176670af4e467/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.3.5/1dd0d38df9c6d21e893f2e52403f1cd99e91cd81/httpmime-4.3.5.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="1dd0d38df9c6d21e893f2e52403f1cd99e91cd81">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/httpmime-4.3.5-04f26cf04b10f79bbbf9223f0b3fed6b19928a52.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="27775d59b16610ac76f1b83693fedd9520396332">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-ads-8.3.0_751ae79c0931efc42a5a548f7b990588105ed787/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/libs/jpush-sdk-release1.7.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="60d6ab0c8767ceef6bf652b97b35fc508535b28a">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/jpush-sdk-release1.7.3-5b7c4d378c63a46442defc73045e8c05def45ded.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0-alpha1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="9aaaea3a89040f8176f810c85e288fc74d5d1f12">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.android.support-support-v4-24.0.0-alpha1_f4a1cf86a09c443c4a78e67e41ed43b2c25c0e72/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/exploded-aar/com.android.support/cardview-v7/22.1.1/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="22886d910315028a2b34b1ba068c265534ade87a">
-        <dex dex="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/pre-dexed/debug/classes-9c667f713d1f565ee1c4d39691a693197241ee7c.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="0af4f577b4a21eb9be2a7f52e33b077b67e6d9f8">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-plus-8.3.0_961320d7f4b919953b1185fd4ba88cb23f612be2/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/libs/asmack-android-6.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="3d0153304081a3a9ddb15c93082e2664b94746e9">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/asmack-android-6-d217c0e8ae1851bf0c48864880f1a932d3112aa7.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/incremental-runtime-classes/appinchina/debug/instant-run.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="07a6b24fbeda3019fe76ccd4a6245bc1f2939231">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/instant-run_df5d2151d5553f66128d61863fc0a52176f163fc/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="3033cc3a2c68dff3e5b646d6d084bdbdf7d00b25">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-ea6d4616177c1d9cf6e084277fed5ed383c73ff8.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/mail.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="e880497affe331a8fae02c84c701fddde8954f18">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/mail_84538c4ae309e0382f4a29f4e2f6d2a30eeb4763/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/.gradle/caches/modules-2/files-2.1/com.j256.ormlite/ormlite-core/4.48/e579bd2905d0399af5029aaaf9817d5fa0ca88a5/ormlite-core-4.48.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="e579bd2905d0399af5029aaaf9817d5fa0ca88a5">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/ormlite-core-4.48-864ba47749c5ce412e232368d698f4cabb4951f8.jar" />
+        jar="/Users/zhuweiping/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/24.0.0-alpha1/support-annotations-24.0.0-alpha1.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="b8062546971a3d196343232a19a3c0016272ba47">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/support-annotations-24.0.0-alpha1_71fdf68ca1090e7653be0a6ada9157819e108b62/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="4cd0b093824b3228fffc21ea369b98d0b1db6566">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-cf79c7ac879f65efc1b88d36dd88ba3a7d918cf3.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="fd76d95678a6b2b8a49bb8a9fb5bcef7aedb70e7">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-auth-8.3.0_1ddac8ecf98ac6120fddaa8917316a0ba330de3a/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="1c5a76debf0c2857ccad422c4a80ed785982f8df">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-014177ca4095e5232acf5c2088888aa4fe2f891a.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appinvite/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="58adcfbe2c8393765e84c5489d01bba6a5159eb2">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-appinvite-8.3.0_4be4718460ac9c8eed03e3485491d221008f5ce9/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.1.1/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="e0b0c35d02308b270015a74cada4887e2e49b889">
-        <dex dex="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/pre-dexed/debug/classes-a17cd9c5defe27f4c3d9314556e53193ae1c6243.jar" />
+        jar="/Users/zhuweiping/.gradle/caches/modules-2/files-2.1/com.nostra13.universalimageloader/universal-image-loader/1.9.4/dd9eeb557650c4ad7394df23f0f5cf27a7cfc697/universal-image-loader-1.9.4.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="dd9eeb557650c4ad7394df23f0f5cf27a7cfc697">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/universal-image-loader-1.9.4_1bcae0820ce3c1390e9a729a61724bcc9b1342b6/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="3c0b099f9de16b265ecd6122fcb603e7d0d29f90">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-4e0941c96d59c42046d04524671d048bdada7be6.jar" />
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="0a1897426566e408a5c20a3d931f77d89771d07f">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-drive-8.3.0_ef217439e72d485096a49ec04f7a4683cb651a13/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/gson-2.3.1-8bb7933444422e41c9ac0d0b130dc682645c90e0.jar" />
-    </item>
-    <item
-        jar="/Users/wing/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.1.1/support-annotations-22.1.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="01d051a6bfb1218b1db2d3a5af0480ac2c25c42a">
-        <dex dex="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/pre-dexed/debug/support-annotations-22.1.1-d6a82abbde32f00b9920bdc491d031484b4aa79d.jar" />
-    </item>
-    <item
-        jar="/Users/wing/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/support-annotations-22.2.0-f9a6253cad3d619d13fef4fef317980f377031f3.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="73ccb92b70112f2e463e415ef8d7275de7da6516">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-5b7de39d8f34bfb1f5a8debeae43910394303f8e.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="a08d65794b844d8e7540bf9a33859bf3b2482d7f">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-e4bd2aa2c94b4177f00ec81b19bdd4bd880e5f69.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/BWM/MaterialDesign/unspecified/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="37c887d06874ebb7eccd9d93ef72e5417d1784f4">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-71a8e70d466b6af50ab5f6afda4686e5fa3ed469.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/22.2.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="97f7e239e86ef994de894818fdd8a71d2e89d6aa">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-095455af1035f08cdce1661db52b5555d1c37530.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/libs/pinyin4j-2.5.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/pinyin4j-2.5.0.jar"
+        jumboMode="true"
+        revision="23.0.0"
         sha1="3e03fe596036f172959244b7ba658b1639dde342">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/pinyin4j-2.5.0-608702bd40e6daff2c8a5f72bf261ef6667745e5.jar" />
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/pinyin4j-2.5.0_1c958058c583bfd1d534a5ac046bfa6fbc1ecd5b/classes.dex" />
     </item>
     <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/pl.droidsonroids.gif/android-gif-drawable/1.1.6/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="01a90bbb9495a8bbf6f3cfdf12f1b35caaa9524b">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-base-8.3.0_ff20f225d326a94c4056ca94fbd3885f0832f80d/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/activation.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="d1257cbff6faa44c1f325ae0d9413522d4644383">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/activation_af7a73a3be385ce8979a4317fcf861afb3f1df5b/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/ormlite-android-4.49-SNAPSHOT.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="ecfae85e17f2472852fa8298952f9d52f6a6bfa4">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/ormlite-android-4.49-SNAPSHOT_bbb2f5e08048681d883c055a01e1d95becbf49a6/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="77f9593d979f4347344be233bd0d888315f79517">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-maps-8.3.0_c3a86ac6efc24088e7e70f0fcf168fb8c4f49e2d/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/ormlite-core-4.49-SNAPSHOT.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="9a8b276da6dada8141f614d3feba25a0e8589db7">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/ormlite-core-4.49-SNAPSHOT_95a5073d78c236b6bbc503b78c3ca84ec05d0646/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/AF-Android-SDK-v2.3.1.18.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="43b08c12ae622987b165ede9b3ba099913d2552f">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/AF-Android-SDK-v2.3.1.18_23cd611aaa5dc3bc54ecb9d8dc6fbc759224de8b/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-android/1.2.0/6ee2953ccf51ce72b6d548c30c4633b99eb4f9dd/bolts-android-1.2.0.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="6ee2953ccf51ce72b6d548c30c4633b99eb4f9dd">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/bolts-android-1.2.0_c54e8510a00e309bc60c1498bda24f67139afd9b/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="2c6fcd6267cbac6509a2e72a61127534a1d616cf">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-games-8.3.0_a109d598d51851acdf1914ead1dec13d17a0d029/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0-alpha1/jars/libs/internal_impl-24.0.0-alpha1.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="e57fba0a2d57d3501d8f4ff44c23092978804845">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/internal_impl-24.0.0-alpha1_95069a8aaac21e5dcd1ffa2b16616e3c41766ace/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/locSDK_5.2.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="389047997db28fcb848dc4247c5590a08b7ff769">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/locSDK_5.2_a9715102adcf8f220856c18f4ef9d05fc59e13f0/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/baidumapapi_v3_5_0.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="ba79500bb64218f10b5fd0d5ea54503b2bf6b3bb">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/baidumapapi_v3_5_0_2751d60032b42182880929b62e5d0d9d9ffd9289/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="af6ee25641df3142059c0828517aa7ee6eba08d6">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-analytics-8.3.0_2c5933dbe6fcddf1182a771a5a53fc58908c792c/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="9aedc597d74c6d77258ce5236e9abff0c3cc65e3">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-wearable-8.3.0_4d3209b13362326f379ee7f6939886bc0869aa89/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="6d9ed9a288364688e7fcf6704776284dac1eb42e">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-location-8.3.0_46723827ff7bc74f327e39d147d58c274b26c8a8/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/asmack-android-6.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="3d0153304081a3a9ddb15c93082e2664b94746e9">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/asmack-android-6_8bffe1496cec7d9b4c888474f7bd8960501eaa93/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="71eda10e33212e44245524b5087366ff8d805825">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-gcm-8.3.0_f81a1b2e42c9286bd40162bc53d86c1db4362166/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/library-2.4.0_860f48a2b781448f859e0f3738f47f5f7c62899e/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/cce0823396aa693798f8882e64213b1772032b09/guava-18.0.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="cce0823396aa693798f8882e64213b1772032b09">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/guava-18.0_829b202facdbee3d3576218e13c2d15f60573b76/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.5/7bdb321e86724b16af6134a0fd22fec649eda971/httpmime-4.5.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="7bdb321e86724b16af6134a0fd22fec649eda971">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/httpmime-4.5_965662276e927f656ba3f1af8f4e588332cb9d9b/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/24.0.0-alpha1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="5305936738497fe4a5d89fc4f13015931c0fd402">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.android.support-cardview-v7-24.0.0-alpha1_5ce8e7439146cdff43e8bacd9d798dd707aec041/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-vision/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="724ce977487ab3a215d4d2eb47d8dccd9f30013f">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-vision-8.3.0_4ed6235746486b1d5dff257939815e63be681bdf/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/jpush-sdk-release1.7.4.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="3c85f598c111fd4d7b3b9f9fa1f8f10bfc31a898">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/jpush-sdk-release1.7.4_f1635ae6dbf311c557ef0add9cc5786fc577cbe0/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/additionnal.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="bd9e8dc422bb8c8405359947fe9f4282b49f57f4">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/additionnal_71490e634248296eeea4ce0c15a05018b65095b8/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="0c3e81d3eb86b86d194b5cdb6a4de78203f6f7fd">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-appindexing-8.3.0_b3641a903ae53d5b7856c82db23bf7373e9faeb9/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/24.0.0-alpha1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="1f1c7067e22acf05bddbca9f94422050cd848a86">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.android.support-recyclerview-v7-24.0.0-alpha1_462df42d20aafd6ad3f52767ce3f33af4dfde0c9/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="744c49c02a27569cc4cc049685d3649e4ef439f2">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-panorama-8.3.0_7eaff5cf7debf4057a55a66b17e0967554b53944/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="eb576427887e497cd958a475475f9206e38dc314">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-nearby-8.3.0_9a8a8564ccacc772a3de4a2f5333ae4287675bcb/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="ea34579b1be157cd792376362157e9c54ebb4cd7">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-safetynet-8.3.0_02b82a7096a2282d2cf272d0a407bf798c831ee9/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.soundcloud.android/android-crop/1.0.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="11a65cf2b30c192b38a881d626fa771a78a2293d">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.soundcloud.android-android-crop-1.0.1_d4e294b93a87303192fdcc29f54718bb3c3d5399/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="9c9bdb4b2497465a6cf7d5e8f57c5298f828a380">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-wallet-8.3.0_ef815a259f4596a2196a62b9f7a9cd9da3adc8d9/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.2.0/jars/libs/internal_impl-22.2.0.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="0632f06970823b7e3436f649bfa65b47035c91d0">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/internal_impl-22.2.0_d82d290acbc5680263067ecc5155ad05b7fa441d/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/gson-2.3.1_4f7b69500b4ea7623a835e850aafee35ff1a6ee5/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/.gradle/caches/modules-2/files-2.1/de.greenrobot/eventbus/2.4.0/ddd166d01b3158d1c00576d29f7ed15c030df719/eventbus-2.4.0.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="ddd166d01b3158d1c00576d29f7ed15c030df719">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/eventbus-2.4.0_c6baec6b32867b8d38178a54f6e81931cab6d9e8/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/8.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="4b8df1b1e51fe14b0e89b3845dc2e215a024a09f">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/com.google.android.gms-play-services-identity-8.3.0_91363fb034eb290826d822d0adf99cf19a6fb5dc/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/libs/zxing.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="e88c14e6e7daa0fa65172a62b54ee6a16ff4162d">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/2/zxing_28dcb57232ca8f7459e9bd4b3b7adb4135a94190/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/incremental-classes/appinchina/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.0"
+        sha1="b8284ea4984a4eba3bed2362ddb15c1da2e2bf92">
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/instant-run-bootstrap_2d8eb39368f326929a6ff1a4f9eadae27182d33d/classes.dex" />
+    </item>
+    <item
+        jar="/Users/zhuweiping/Documents/BWM/app/build/intermediates/exploded-aar/pl.droidsonroids.gif/android-gif-drawable/1.1.6/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.0"
         sha1="8578764ea76295d4ae08117b127b37564bfdd120">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-b343dac762a4d21f8a50ab95090134dc185de4e3.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="fb04b12526b0073c7fb1ebb70c5842d82ee95596">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-c6b63429d3e3d7218830e8bc6dfe4c7bfe154ce3.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="d84409890828e07d344a3b9b1da545dba9897b51">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-711be32f328779dbe72a39224d3e908eb912f2f9.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/libs/BaiduLBS_Android.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="868c060abfa9778e598e631f93f94037edbe8996">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/BaiduLBS_Android-8b4b503136dbfcd9f4ae5f472b1761c54efd7477.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/BWM/PhotoView/unspecified/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="dcd445d7757874461e2db4bbf43949e1cba88ce7">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-1cd91a56b7a038c3b1bba38b588c8709f89a1cd5.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appstate/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="7ff613bf78ab057293892fdbd4169eda899c89b9">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-ed25fe7c66c681adb44f91459b36f8f8a074c363.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/libs/internal_impl-22.1.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
-        <dex dex="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-9a82b849ac3b90a272402e27054066a979d59e10.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="e3d791b42eaa90416cd0b2d2e608092794a3baa4">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-6aa70332f506c976533de22a09bd2348c86fd21f.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.android.support/multidex/1.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="6666dd525c3da197e7d07f4f23ef5fc7881a697b">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-47f8e709e48eeee210f929a35789555b1426a825.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/BWM/Volley/unspecified/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="fdb1a9869d73b1870072cf8b3ab9c031aac0e932">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-879e9610c2917b77e4218b2e0d5ce5e310140b2b.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="29fd6d3794b71491c2789708cd8d03c71feb8954">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-ba2e4501125c9058760fe6318c8803f18f4c8077.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="a96b762bde4139de855735f175ec4d17dca55a6d">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-94901e38af66726cde2aab1f15a959d13d8e9179.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/exploded-aar/Bwm/MaterialDesign/unspecified/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="fb4a49aeacdc800d91d27fa95d664e614b81ecb6">
-        <dex dex="/Users/wing/work/BWM/MaterialDesignDemo/build/intermediates/pre-dexed/debug/classes-a97e570b84557a67bdc6b5d86d408f379e0ab092.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="0e8228b4bc69c6a2c8d7c18498a77e53417d2574">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-ead18101f1bc265c6366473ca76440ea4deb5bb7.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/7.0.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="9224bc4c54ba95147c7eabd874573763c07cb6be">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-c8de1cbf736e34f7795577e8bfa694411e4b67c7.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.2.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="5b37cf49773f7f17aca9830efd3053b0cac56728">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-a358447466070db7432f9ad86c69ab2adb806103.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/libs/internal_impl-22.2.0.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/internal_impl-22.2.0-07d87222fa48d0b1bcd775150c6a4039ab13e28e.jar" />
-    </item>
-    <item
-        jar="/Users/wing/work/BWM/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
-        <dex dex="/Users/wing/work/BWM/app/build/intermediates/pre-dexed/_360/debug/classes-a0197f95484b2d05a96d62750226335a6a57dd4d.jar" />
+        <dex dex="/Users/zhuweiping/Documents/BWM/app/build/intermediates/transforms/dex/appinchina/debug/folders/1000/10/pl.droidsonroids.gif-android-gif-drawable-1.1.6_9a7537aba5bef949c9bf6d28e820631b4e0cf454/classes.dex" />
     </item>
 
 </items>

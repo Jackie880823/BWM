@@ -739,4 +739,5 @@
     <string name="text_sec">Src</string>
     <string name="left">Left!</string>
     <string name="alert_deleter_member">Are you sure you want to remove this member?</string>
+    <string name="photo_saved">Photo Saved to Album</string>
 </resources>

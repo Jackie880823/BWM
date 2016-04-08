@@ -735,4 +735,5 @@
     <string name="text_sec">秒</string>
     <string name="left">后!</string>
     <string name="alert_deleter_member">确定要删除吗？</string>
+    <string name="photo_saved">照片已保存到设备上</string>
 </resources>
