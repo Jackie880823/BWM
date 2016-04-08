@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/org_relative"
@@ -48,6 +49,26 @@
             android:layout_below="@id/tv_org_name"
             android:layout_marginRight="@dimen/_45dp"
             android:layout_marginTop="@dimen/_4dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/tv_org_position"
+            android:gravity="center_vertical"
+            android:textColor="#ff3333"
+            android:layout_toRightOf="@id/tv_org_name"
+            android:textSize="@dimen/_10dp"
+            android:visibility="gone"
+            tools:text="@string/text_admin" />
+
+        <TextView
+            android:id="@+id/tv_org_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tv_org_name"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_2dp"
+            android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/message_comment"
             android:textSize="@dimen/_15dp" />
