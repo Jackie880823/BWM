@@ -117,7 +117,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         @Override
                         public void popDismiss() {
                             //存储本地
-                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, true);
+                            PreferencesUtil.saveValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, true);
 
                         }
                     });
@@ -297,7 +297,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, false)) {
+            if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, false)) {
                 handler.sendEmptyMessage(GET_DELAY);
             }
 

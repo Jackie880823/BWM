@@ -411,7 +411,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (TextUtils.isEmpty(strings.get(j))) return;
 
         if (j < strings.size() - 1) {
-            interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j), 1);
+            interactivePopupWindow = new InteractivePopupWindow(getActivity(), views.get(j), strings.get(j), 1);
             final int finalJ = j + 1;
             interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                 @Override
@@ -422,12 +422,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             });
             interactivePopupWindow.showPopupWindowUp();
         } else {
-            interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j), 0);
+            interactivePopupWindow = new InteractivePopupWindow(getActivity(), views.get(j), strings.get(j), 0);
             interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                 @Override
                 public void popDismiss() {
                     //存储本地
-                    PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, true);
+                    PreferencesUtil.saveValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, true);
                 }
             });
             interactivePopupWindow.showPopupWindow(true);
@@ -793,7 +793,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void onResume() {
         super.onResume();
         if (MainActivity.IS_INTERACTIVE_USE &&
-                !PreferencesUtil.getValue(App.getContextInstance(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
+                !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
             mHandler.sendEmptyMessage(GET_DELAY);
         }
@@ -804,7 +804,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         super.onPause();
         if (App.isInteractiveTipFinish()) {
             LogUtil.i("diary_new====", "true");
-            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_START, false);
+            PreferencesUtil.saveValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_START, false);
         } else {
             LogUtil.i("diary_new====", "false");
         }

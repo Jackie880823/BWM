@@ -32,6 +32,15 @@ public class WallCommentEntity implements Serializable {
     private String sticker_name;
     private String sticker_type;
     private String comment_edited;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getContent_group_id() {
         return content_group_id;

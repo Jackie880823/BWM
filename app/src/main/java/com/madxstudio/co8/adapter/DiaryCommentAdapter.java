@@ -3,10 +3,13 @@ package com.madxstudio.co8.adapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +22,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.entity.PrivateMessageEntity;
 import com.madxstudio.co8.entity.WallCommentEntity;
 import com.madxstudio.co8.exception.StickerTypeException;
 import com.madxstudio.co8.ui.BaseFragment;
@@ -85,6 +89,15 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 //            WallUtil.getLoveList(new HttpTools(mContext), item.tv_agree, MainActivity.getUser().getUser_id(), comment.getComment_id(), WallUtil.LOVE_MEMBER_COMMENT_TYPE);
         BitmapTools.getInstance(mContext).display(item.civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, comment.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         item.tv_comment_owner_name.setText(comment.getUser_given_name());
+        if (PrivateMessageEntity.STATUS_DE_ACTIVE.equalsIgnoreCase(comment.getStatus())) {
+            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.user_left_minilcon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            item.tv_comment_owner_name.setCompoundDrawables(drawable, null, null, null);
+            item.tv_comment_owner_name.setCompoundDrawablePadding(10);
+            item.tv_comment_owner_name.setGravity(Gravity.CENTER_VERTICAL);
+        } else {
+            item.tv_comment_owner_name.setCompoundDrawables(null, null, null, null);
+        }
         item.tv_comment_content.setText(comment.getComment_content());
         int count = TextUtils.isEmpty(comment.getLove_count()) ? 0 : Integer.valueOf(comment.getLove_count());
         item.tv_agree_count.setText(String.format(mContext.getString(R.string.loves_count), count));

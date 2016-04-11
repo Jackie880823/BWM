@@ -818,4 +818,5 @@
     <string name="wants_to_leave">wants to leave</string>
     <string name="want_to_join">wants to join</string>
     <string name="text_approve">Approve</string>
+    <string name="posted_by">Posted by:</string>
 </resources>

@@ -107,7 +107,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
-                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT, true);
+                            PreferencesUtil.saveValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT, true);
                         }
                     });
                     popupWindow.showPopupWindow(true);
@@ -189,7 +189,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT, false)) {
+            if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT, false)) {
                 handler.sendEmptyMessage(GET_DELAY_RIGHT);
             }
             EventBus.getDefault().registerSticky(this);

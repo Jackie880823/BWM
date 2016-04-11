@@ -81,6 +81,15 @@ public class UserEntity implements Serializable {
     private String demo;
     private String pending_org;
     private String org_id;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getOrg_id() {
         return org_id;

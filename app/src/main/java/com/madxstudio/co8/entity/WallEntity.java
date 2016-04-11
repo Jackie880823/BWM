@@ -190,6 +190,16 @@ public class WallEntity implements Serializable {
 
     private String track_url;
 
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getContent_creation_date() {
         return content_creation_date;
     }

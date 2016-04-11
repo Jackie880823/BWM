@@ -2,7 +2,10 @@ package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 import com.android.volley.ext.tools.BitmapTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.PrivateMessageEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.ui.AddMemberWorkFlow;
 import com.madxstudio.co8.ui.BaseFragment;
@@ -24,10 +28,9 @@ import com.madxstudio.co8.widget.MyDialog;
 import java.util.List;
 
 /**
- * @的用户详细Adpater
- * Created by zhuweiping on 4/28/15.
+ * @的用户详细Adpater Created by zhuweiping on 4/28/15.
  */
-public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MGItem>{
+public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MGItem> {
 
     private final static String TAG = WallMemberAdapter.class.getSimpleName();
 
@@ -35,13 +38,13 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
     private List<UserEntity> mData;
     private BaseFragment mFragment;
 
-    public WallMemberAdapter(Context context, List<UserEntity> data, BaseFragment fragment){
+    public WallMemberAdapter(Context context, List<UserEntity> data, BaseFragment fragment) {
         mContext = context;
         mData = data;
         mFragment = fragment;
     }
 
-    public void add(List<UserEntity> data){
+    public void add(List<UserEntity> data) {
         mData.addAll(data);
     }
 
@@ -93,6 +96,15 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
         UserEntity entity = mData.get(position);
         BitmapTools.getInstance(mContext).display(holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         holder.name.setText(entity.getUser_given_name());
+        if (PrivateMessageEntity.STATUS_DE_ACTIVE.equalsIgnoreCase(entity.getStatus())) {
+            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.user_left_minilcon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            holder.name.setCompoundDrawables(drawable, null, null, null);
+            holder.name.setCompoundDrawablePadding(10);
+            holder.name.setGravity(Gravity.CENTER_VERTICAL);
+        } else {
+            holder.name.setCompoundDrawables(null, null, null, null);
+        }
     }
 
     /**
@@ -121,22 +133,26 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     final UserEntity userEntity = mData.get(position);
+                    if (PrivateMessageEntity.STATUS_DE_ACTIVE.equalsIgnoreCase(userEntity.getStatus())) {
+                        return;
+                    }
                     String own = userEntity.getOwn_flag();
-                    if("1".equals(own)) {
+                    if ("1".equals(own)) {
                         // 是自己跳转至me界面
                         Intent intent = new Intent(mContext, MeActivity.class);
                         mContext.startActivity(intent);
-                    } else if("0".equals(own)) {
+                    } else if ("0".equals(own)) {
                         // 不是自己显示用户详情或者提示添加
                         String added = userEntity.getAdded_flag();
-                        if("1".equals(added)) {
+                        if ("1".equals(added)) {
                             // 已经添加为好友，显示用户详情
                             Intent intent = new Intent(mContext, FamilyProfileActivity.class);
                             intent.putExtra(UserEntity.EXTRA_MEMBER_ID, userEntity.getUser_id());
                             intent.putExtra(UserEntity.EXTRA_GROUP_ID, userEntity.getGroup_id());
                             intent.putExtra(UserEntity.EXTRA_GROUP_NAME, userEntity.getUser_given_name());
                             mContext.startActivity(intent);
-                        } if("0".equals(added)) {
+                        }
+                        if ("0".equals(added)) {
                             // 没有添加好友，弹出添加好友界面提示框由用户选择是否添加
                             final MyDialog myDialog = new MyDialog(mContext, "", mContext.getString(R.string.alert_ask_add_member));
                             myDialog.setButtonAccept(R.string.ok, new View.OnClickListener() {
