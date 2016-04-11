@@ -82,7 +82,7 @@
 
     <color name="Year">#ffffff</color><!--  65% -->
 
-    <color name="drawer_arrow_color">#000000</color>
+    <color name="drawer_arrow_color">#FFFFFF</color>
     <color name="archive_comment_background">#f2f4f6</color>
 
     <color name="family_tree_relationship_sibling_background_color">#d9f8ff</color>
