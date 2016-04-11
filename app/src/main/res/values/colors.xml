@@ -82,7 +82,7 @@
 
     <color name="Year">#ffffff</color><!--  65% -->
 
-    <color name="drawer_arrow_color">#FFFFFF</color>
+    <color name="drawer_arrow_color">#000000</color>
     <color name="archive_comment_background">#f2f4f6</color>
 
     <color name="family_tree_relationship_sibling_background_color">#d9f8ff</color>
@@ -129,5 +129,6 @@
     <color name="new_title">#dc7400</color>
     <color name="ok_button_color">#ffffff</color>
     <color name="delete_text_color">#ff3333</color>
+    <color name="select_photos_menu_color">#FFFFFF</color>
 
 </resources>

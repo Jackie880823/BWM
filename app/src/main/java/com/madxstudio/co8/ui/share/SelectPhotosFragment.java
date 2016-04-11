@@ -214,7 +214,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
         final Resources resources = getResources();
         drawerArrowDrawable = new DrawerArrowDrawable(resources);
-        drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.drawer_arrow_color));
+        drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.select_photos_menu_color));
         ImageButton imageButton = getParentActivity().getViewById(R.id.ib_top_button_left);
         imageButton.setImageDrawable(drawerArrowDrawable);
 
@@ -241,7 +241,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 drawerArrowDrawable = new DrawerArrowDrawable(resources, true);
                 drawerArrowDrawable.setParameter(offset);
                 drawerArrowDrawable.setFlip(flipped);
-                drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.drawer_arrow_color));
+                drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.select_photos_menu_color));
                 selectImageUirListener.onDrawerOpened(drawerArrowDrawable);
             }
 
@@ -250,7 +250,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 drawerArrowDrawable = new DrawerArrowDrawable(resources, false);
                 drawerArrowDrawable.setParameter(offset);
                 drawerArrowDrawable.setFlip(flipped);
-                drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.drawer_arrow_color));
+                drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.select_photos_menu_color));
                 selectImageUirListener.onDrawerClose(drawerArrowDrawable);
             }
 

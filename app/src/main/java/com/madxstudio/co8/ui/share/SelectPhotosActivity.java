@@ -460,7 +460,7 @@ public class SelectPhotosActivity extends BaseActivity {
         if (f instanceof SelectPhotosFragment) {
             Resources resources = getResources();
             DrawerArrowDrawable drawerArrowDrawable = new DrawerArrowDrawable(resources);
-            drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.drawer_arrow_color));
+            drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.select_photos_menu_color));
             leftButton.setImageDrawable(drawerArrowDrawable);
             if (mSelectedImages.isEmpty()) {
                 switchRightTitleView(false);
