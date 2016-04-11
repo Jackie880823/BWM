@@ -1236,10 +1236,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 public void onResult(String string) {
                     LogUtil.d(TAG, "debug onResult& response: " + string);
                     /**wing modified*/
-                    String path = null;
+                    String path;
                     try {
                         path = PicturesCacheUtil.saveImageToGallery(context, new File(string), "wall");
                         LogUtil.d(TAG, "download photo to path: " + path);
+                        MessageUtil.showMessage(context, R.string.photo_saved);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
