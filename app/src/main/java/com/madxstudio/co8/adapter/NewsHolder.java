@@ -3,13 +3,16 @@ package com.madxstudio.co8.adapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -25,6 +28,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.NewsEntity;
+import com.madxstudio.co8.entity.PrivateMessageEntity;
 import com.madxstudio.co8.entity.WallEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.http.VolleyUtil;
@@ -198,7 +202,16 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //        LogUtil.d(TAG, "date======" + newsEntity.getContent_creation_date());
 //        tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, newsEntity.getRelease_date()));
         tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, newsEntity.getContent_creation_date()));
-        tvUser.setText("Posted by: " + newsEntity.getUser_given_name());
+        tvUser.setText(newsEntity.getUser_given_name());
+        if (PrivateMessageEntity.STATUS_DE_ACTIVE.equalsIgnoreCase(newsEntity.getStatus())) {
+            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.user_left_minilcon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            tvUser.setCompoundDrawables(drawable, null, null, null);
+            tvUser.setCompoundDrawablePadding(10);
+            tvUser.setGravity(Gravity.CENTER_VERTICAL);
+        } else {
+            tvUser.setCompoundDrawables(null, null, null, null);
+        }
         tvContent.setText(newsEntity.getText_description());
         if (Integer.valueOf(newsEntity.getComment_count()).intValue() > 0) {
             newsCommentMember.setText(newsEntity.getComment_count());

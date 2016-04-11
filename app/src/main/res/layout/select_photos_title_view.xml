@@ -39,7 +39,7 @@
                 android:layout_gravity="center"
                 android:ellipsize="marquee"
                 android:singleLine="true"
-                android:textColor="#333333"
+                android:textColor="@color/ok_button_color"
                 android:textStyle="bold" />
 
             <ImageView

@@ -501,6 +501,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
+        if (userOrGroupType == 0 && PrivateMessageEntity.STATUS_DE_ACTIVE.equalsIgnoreCase(userStauts)) {
+            getViewById(R.id.ll_chat).setVisibility(View.INVISIBLE);
+        }
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override

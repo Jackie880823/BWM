@@ -57,6 +57,15 @@ public class NewsEntity implements Serializable {
     private String photo_max;
     private String track_url;
     private String video_url;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getUser_given_name() {
         return user_given_name;

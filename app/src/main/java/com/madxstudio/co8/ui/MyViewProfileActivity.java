@@ -303,26 +303,22 @@ public class MyViewProfileActivity extends BaseActivity {
 
 
     private boolean isProfileChanged() {
-        if (!TextUtils.isEmpty(etFirstName.getText().toString().trim()) && !etFirstName.getText().toString().trim().equals(userEntity.getUser_given_name())) {
+        if (!TextUtils.isEmpty(etFirstName.getText()) && !etFirstName.getText().toString().trim().equals(userEntity.getUser_given_name())) {
             return true;
         } else {
-            if (TextUtils.isEmpty(etFirstName.getText().toString().trim())) {
+            if (TextUtils.isEmpty(etFirstName.getText())) {
                 return true;
             }
         }
-        if (!TextUtils.isEmpty(etLastName.getText().toString().trim()) && !etLastName.getText().toString().trim().equals(userEntity.getUser_surname())) {
+        if (!TextUtils.isEmpty(etLastName.getText()) && !etLastName.getText().toString().trim().equals(userEntity.getUser_surname())) {
             return true;
         } else {
-            if (TextUtils.isEmpty(etLastName.getText().toString().trim())) {
+            if (TextUtils.isEmpty(etLastName.getText())) {
                 return true;
             }
         }
-        if (!TextUtils.isEmpty(userEntity.getUser_dob()) && !strDOB.equals(userEntity.getUser_dob())) {
+        if (!TextUtils.isEmpty(strDOB) && !strDOB.equals(userEntity.getUser_dob())) {
             return true;
-        } else {
-            if (!TextUtils.isEmpty(strDOB) && !strDOB.equals(userEntity.getUser_dob())) {
-                return true;
-            }
         }
         //性别简写
         String simpleSex = userEntity.getUser_gender();
@@ -334,23 +330,23 @@ public class MyViewProfileActivity extends BaseActivity {
         } else if (tempSex.equals(getResources().getString(R.string.text_male))) {
             simpleRealitySex = "M";
         }
-        if (!simpleSex.equals(simpleRealitySex)) {
+        if (simpleRealitySex != null && !simpleRealitySex.equals(simpleSex)) {
             return true;
         }
-        if (userEntity != null && !etEmail.getText().toString().trim().equals(userEntity.getUser_email())) {
+        if (!TextUtils.isEmpty(etEmail.getText()) && !etEmail.getText().toString().trim().equals(userEntity.getUser_email())) {
             return true;
         }
 
-        if (!etRegion.getText().toString().trim().equals(userEntity.getUser_location_name())) {
+        if (!TextUtils.isEmpty(etRegion.getText()) && !etRegion.getText().toString().trim().equals(userEntity.getUser_location_name())) {
             return true;
         }
-        if (!et_department.getText().toString().trim().equals(userEntity.getDepartment())) {
+        if (!TextUtils.isEmpty(et_department.getText()) && !et_department.getText().toString().trim().equals(userEntity.getDepartment())) {
             return true;
         }
-        if (!et_position.getText().toString().trim().equals(userEntity.getPosition())) {
+        if (!TextUtils.isEmpty(et_position.getText()) && !et_position.getText().toString().trim().equals(userEntity.getPosition())) {
             return true;
         }
-        if (!et_internal_phone.getText().toString().trim().equals(userEntity.getInt_phone_ext().get(0))) {
+        if (!TextUtils.isEmpty(et_internal_phone.getText()) && !et_internal_phone.getText().toString().trim().equals(userEntity.getInt_phone_ext().get(0))) {
             return true;
         }
         return false;

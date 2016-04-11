@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,6 +111,7 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 viewHolder.memberName.setCompoundDrawables(drawable, null, null, null);
                 viewHolder.memberName.setCompoundDrawablePadding(10);
+                viewHolder.memberName.setGravity(Gravity.CENTER_VERTICAL);
             } else {
                 viewHolder.memberName.setCompoundDrawables(null, null, null, null);
             }

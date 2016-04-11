@@ -251,7 +251,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
-                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_MEMBER, true);
+                            PreferencesUtil.saveValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_MEMBER, true);
                             newPopAddPhoto();
                         }
                     });
@@ -339,7 +339,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
         popupWindowAddPhoto.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
             @Override
             public void popDismiss() {
-                PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO, true);
+                PreferencesUtil.saveValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO, true);
 
             }
         });

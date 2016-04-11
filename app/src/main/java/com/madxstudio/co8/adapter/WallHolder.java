@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -11,11 +12,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -33,6 +36,7 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.MediaData;
 import com.madxstudio.co8.entity.PhotoEntity;
+import com.madxstudio.co8.entity.PrivateMessageEntity;
 import com.madxstudio.co8.entity.WallEntity;
 import com.madxstudio.co8.http.PicturesCacheUtil;
 import com.madxstudio.co8.http.UrlUtil;
@@ -529,6 +533,15 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
         // 用户名
         tvUserName.setText(this.wallEntity.getUser_given_name());
+        if (PrivateMessageEntity.STATUS_DE_ACTIVE.equalsIgnoreCase(this.wallEntity.getStatus())) {
+            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.user_left_minilcon);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            tvUserName.setCompoundDrawables(drawable, null, null, null);
+            tvUserName.setCompoundDrawablePadding(10);
+            tvUserName.setGravity(Gravity.CENTER_VERTICAL);
+        } else {
+            tvUserName.setCompoundDrawables(null, null, null, null);
+        }
 
         // file_id 为空表示没有发表图片，有则需要显示图片
         if (TextUtils.isEmpty(this.wallEntity.getFile_id()) && TextUtils.isEmpty(wallEntity.getVideo_thumbnail())) {

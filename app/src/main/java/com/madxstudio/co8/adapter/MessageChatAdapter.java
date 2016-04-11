@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -289,6 +290,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                     holder.leftName.setCompoundDrawables(drawable, null, null, null);
                     holder.leftName.setCompoundDrawablePadding(10);
+                    holder.leftName.setGravity(Gravity.CENTER_VERTICAL);
                 } else {
                     holder.leftName.setCompoundDrawables(null, null, null, null);
                 }

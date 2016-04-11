@@ -145,7 +145,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                         public void popDismiss() {
                             LogUtil.i("==============event_save", "onDismiss");
                             //存储本地
-                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT, true);
+                            PreferencesUtil.saveValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT, true);
                         }
                     });
                     popupWindow.showPopupWindow(true);
@@ -248,7 +248,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     public void onResume() {
         super.onResume();
         if (MainActivity.IS_INTERACTIVE_USE &&
-                !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT, false)) {
+                !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT, false)) {
             getParentActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN |
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
             handler.sendEmptyMessageDelayed(GET_DELAY, 1000);
@@ -260,7 +260,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         super.onPause();
         if (App.isInteractiveTipFinish()) {
             LogUtil.i("event_new====", "true");
-            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_START, false);
+            PreferencesUtil.saveValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_START, false);
         } else {
             LogUtil.i("event_new====", "false");
         }
