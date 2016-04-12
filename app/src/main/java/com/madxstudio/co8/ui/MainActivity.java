@@ -30,7 +30,6 @@ import com.madxstudio.co8.adapter.MyFragmentPagerAdapter;
 import com.madxstudio.co8.dao.LocalStickerInfoDao;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.receiver_service.ReportIntentService;
-import com.madxstudio.co8.ui.add.AddMembersActivity;
 import com.madxstudio.co8.ui.wall.NewDiaryActivity;
 import com.madxstudio.co8.ui.wall.WallFragment;
 import com.madxstudio.co8.util.FileUtil;
@@ -887,6 +886,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     protected void onDestroy() {
         if (snackBar != null) {
             snackBar.dismiss();
+        }
+        if (errorReportDialog != null) {
+            errorReportDialog.dismiss();
         }
         unregisterReceiver(mReceiver);
 //        MainActivity.this.getApplication().onTerminate();
