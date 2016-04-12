@@ -132,11 +132,16 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
-            rightButton.setImageResource(R.drawable.org_search_icon);
+        if (Constant.ORG_TRANSMIT_PENDING_REQUEST.equals(transmitData)) {
+            rightButton.setVisibility(View.GONE);
             rightSearchButton.setVisibility(View.GONE);
         } else {
-            rightSearchButton.setVisibility(View.VISIBLE);
+            if (Constant.ADMIN_REQUEST.equals(requestType) || Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+                rightButton.setImageResource(R.drawable.org_search_icon);
+                rightSearchButton.setVisibility(View.GONE);
+            } else {
+                rightSearchButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -147,9 +152,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             intent.putExtra("isCreateNewGroup", true);
             intent.putExtra(Constant.SELECT_MEMBER_NORMAL_DATA, (Serializable) memberList);
             startActivityForResult(intent, CREATE_GROUP);
-        } else if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
-            startActivity(new Intent(mContext, AddMembersActivity.class));
-        } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+        } else if (Constant.ADMIN_REQUEST.equals(requestType) || Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
             if (serachLinear.getVisibility() == View.VISIBLE) {
                 serachLinear.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.org_up_from_bottom));
                 serachLinear.setVisibility(View.GONE);
@@ -157,6 +160,8 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 serachLinear.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.up_from_top));
                 serachLinear.setVisibility(View.VISIBLE);
             }
+        } else if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
+            startActivity(new Intent(mContext, AddMembersActivity.class));
         }
     }
 
