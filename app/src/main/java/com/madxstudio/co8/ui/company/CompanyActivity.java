@@ -565,9 +565,11 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
      */
     @Override
     public void viewAdminProfile(UserEntity userEntity) {
+        LogUtil.d(TAG, "viewAdminProfile() called with: " + "group_id = [" + userEntity.getGroup_id() + "]; name = [" + userEntity.getUser_given_name() + "]");
         Intent intent = new Intent(this, FamilyProfileActivity.class);
-        intent.putExtra("userEntity", currentUser);
-        intent.putExtra("member_id", userEntity.getUser_id());
+        intent.putExtra(UserEntity.EXTRA_MEMBER_ID, userEntity.getUser_id());
+        intent.putExtra(UserEntity.EXTRA_GROUP_ID, userEntity.getGroup_id());
+        intent.putExtra(UserEntity.EXTRA_GROUP_NAME, userEntity.getUser_given_name());
         startActivity(intent);
     }
 
@@ -578,12 +580,12 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
      */
     @Override
     public void sendMessageToAdmin(UserEntity userEntity) {
+        LogUtil.d(TAG, "sendMessageToAdmin() called with: " + "group_id = [" + userEntity.getGroup_id() + "]; name = [" + userEntity.getUser_given_name() + "]");
         Intent intent = new Intent(this, MessageChatActivity.class);
         if (userEntity != null) {
-            intent.putExtra("type", 0);
-            //如果上个页面没有groupId或者groupName
-            intent.putExtra("groupId", userEntity.getGroup_id());
-            intent.putExtra("titleName", userEntity.getUser_given_name());
+            intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);
+            intent.putExtra(UserEntity.EXTRA_GROUP_ID, userEntity.getGroup_id());
+            intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, userEntity.getUser_given_name());
             startActivity(intent);
         }
     }
