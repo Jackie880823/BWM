@@ -398,7 +398,8 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                         // 修改登陆的用户公司状态，没有加入公司，也没有创建公司
                         currentUser.setPending_org("1");
                         currentUser.setDemo("1");
-                        currentUser.setOrg_id(null);
+                        currentUser.setOrg_id("");
+                        currentUser.setOrganisation("");
                         // 保存修改
                         App.changeLoginedUser(currentUser);
                         finish();
