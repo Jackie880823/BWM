@@ -255,7 +255,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     * 管理员相送的子项视图设置，包括设置
+     * 管理员相送的子项视图设置，包括Admin设置标题
      *
      * @param holder   子视图的{@link RecyclerView.ViewHolder}
      * @param position 对应{@code holder}在列表的位置下标
@@ -344,7 +344,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                  * 弹出删除管理员的确认提示选择框
                  */
                 private void alertDialogRemove() {
-                    listDialog = new MyDialog(context, null, "Remove Gary Liow as Admin?");
+                    listDialog = new MyDialog(context, null, String.format(context.getString(R.string.alert_remove_admin), admins.get(index).getUser_given_name()));
                     listDialog.setButtonAccept(R.string.text_dialog_yes, this);
                     listDialog.setButtonCancel(R.string.text_dialog_cancel, this);
                     listDialog.show();

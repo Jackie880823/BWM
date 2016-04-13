@@ -393,11 +393,12 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                     String status = jsonObject.getString(Constant.RESPONSE_STATUS);
                     if ("200".equals(statusCode) // 请求连接没有问题
                             && !TextUtils.isEmpty(status) // 返回的状态不为空
-                            && !Constant.STATUS_SUCCESS.equalsIgnoreCase(status) // 返回为成功的状态
+                            && Constant.STATUS_SUCCESS.equalsIgnoreCase(status) // 返回为成功的状态
                             ) {
                         // 修改登陆的用户公司状态，没有加入公司，也没有创建公司
                         currentUser.setPending_org("1");
                         currentUser.setDemo("1");
+                        currentUser.setOrg_id(null);
                         // 保存修改
                         App.changeLoginedUser(currentUser);
                         finish();
