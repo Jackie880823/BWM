@@ -51,7 +51,7 @@
     <color name="btn_bg_color_co8"> #FFFF47</color>
     <color name="btn_bg_color_login_normal"> #24518A</color>
     <color name="login_text_bg_color">#FFFFFF</color>
-    <color name="btn_bg_color_red_normal">#FF5833</color>
+    <color name="btn_bg_color_red_normal">#F91928</color>
     <color name="btn_bg_color_gray_normal">#989898</color>
 
     <color name="btn_bg_color_green_press">#0077AE</color>

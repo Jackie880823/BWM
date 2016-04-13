@@ -105,26 +105,26 @@ public class SelectMemberActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.putExtra("members_data", new Gson().toJson(selectMemberEntityList));
         if (isCreateNewGroup) {
-        if (selectMemberEntityList.size() > 0) {
-            intent.putExtra("members_data", new Gson().toJson(selectMemberEntityList));
-            intent.setClass(mContext, CreateGroupDialogActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            LayoutInflater factory = LayoutInflater.from(mContext);
-            View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-            final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
-            TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
-            tv_no_member.setText(getString(R.string.text_create_group_members_least_two));
-            TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
-            cancelTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showSelectDialog.dismiss();
-                }
-            });
-            showSelectDialog.show();
-        }
+            if (selectMemberEntityList.size() > 0) {
+                intent.putExtra("members_data", new Gson().toJson(selectMemberEntityList));
+                intent.setClass(mContext, CreateGroupDialogActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                LayoutInflater factory = LayoutInflater.from(mContext);
+                View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+                final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+                TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+                tv_no_member.setText(getString(R.string.text_create_group_members_least_two));
+                TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+                cancelTv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showSelectDialog.dismiss();
+                    }
+                });
+                showSelectDialog.show();
+            }
         } else {
             setResult(RESULT_OK, intent);
             finish();
@@ -377,67 +377,61 @@ public class SelectMemberActivity extends BaseActivity {
             return;
         }
 
-        new Thread() {
+        new HttpTools(mContext).get(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
             @Override
-            public void run() {
-                super.run();
-                new HttpTools(mContext).get(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
-                    @Override
-                    public void onStart() {
+            public void onStart() {
 
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        vProgress.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onResult(String response) {
-                        GsonBuilder gsonb = new GsonBuilder();
-                        Gson gson = gsonb.create();
-                        finishReFresh();
-                        if (TextUtils.isEmpty(response) || "[]".equals(response)) {
-                            showEmptyView();
-                            return;
-                        }
-                        List<OrgMemberEntity> memberEntityList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
-                        }.getType());
-                        if (memberEntityList != null && memberEntityList.size() > 0) {
-                            List<OrgMemberEntity> list = new ArrayList<>();
-                            for (OrgMemberEntity memberEntity : memberEntityList) {
-                                if (!"0".equals(memberEntity.getFam_accept_flag())) {
-                                    list.add(memberEntity);
-                                }
-                            }
-                            if (list.size() > 0) {
-                                hideEmptyView();
-                                Message.obtain(handler, GET_DATA, list).sendToTarget();
-                            } else {
-                                showEmptyView();
-                            }
-                        } else {
-                            showEmptyView();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        MessageUtil.showMessage(mContext, R.string.msg_action_failed);
-                        finishReFresh();
-                    }
-
-                    @Override
-                    public void onCancelled() {
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
             }
-        }.start();
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                finishReFresh();
+                if (TextUtils.isEmpty(response) || "[]".equals(response)) {
+                    showEmptyView();
+                    return;
+                }
+                List<OrgMemberEntity> memberEntityList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
+                }.getType());
+                if (memberEntityList != null && memberEntityList.size() > 0) {
+                    List<OrgMemberEntity> list = new ArrayList<>();
+                    for (OrgMemberEntity memberEntity : memberEntityList) {
+                        if (!"0".equals(memberEntity.getFam_accept_flag())) {
+                            list.add(memberEntity);
+                        }
+                    }
+                    if (list.size() > 0) {
+                        hideEmptyView();
+                        Message.obtain(handler, GET_DATA, list).sendToTarget();
+                    } else {
+                        showEmptyView();
+                    }
+                } else {
+                    showEmptyView();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                finishReFresh();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     Handler handler = new Handler(new Handler.Callback() {

@@ -9,29 +9,43 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.BitmapTools;
+import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.gson.GsonBuilder;
+import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.EventCommentEntity;
 import com.madxstudio.co8.entity.EventEntity;
+import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.exception.StickerTypeException;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.ui.wall.WallMembersOrGroupsActivity;
 import com.madxstudio.co8.util.DensityUtil;
 import com.madxstudio.co8.util.LocationUtil;
+import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyDateUtils;
 import com.madxstudio.co8.util.SDKUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.util.WallUtil;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 import com.madxstudio.co8.widget.FreedomSelectionTextView;
+import com.madxstudio.co8.widget.MyDialog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,6 +53,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -517,6 +532,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView tvNotGoing;
         private View intenAll;
         private TextView reminder_desc;
+        private View item_reminder;
 //        private View defaultComment;
 
         public VHHeader(View itemView) {
@@ -538,6 +554,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tvMaybe = (TextView) itemView.findViewById(R.id.maybe_count);
             tvNotGoing = (TextView) itemView.findViewById(R.id.not_going_count);
             reminder_desc = (TextView) itemView.findViewById(R.id.reminder_desc);
+            item_reminder=itemView.findViewById(R.id.item_reminder);
             intenAll = itemView.findViewById(R.id.btn_intent_all);
 //            defaultComment = itemView.findViewById(R.id.default_comment);
             intenAll.setOnClickListener(this);
@@ -548,6 +565,9 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             intentAgree.setOnClickListener(this);
             intentMaybe.setOnClickListener(this);
             intentNo.setOnClickListener(this);
+            if (item_reminder != null) {
+                item_reminder.setOnClickListener(this);
+            }
         }
 
         @Override
@@ -577,6 +597,11 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 case R.id.iv_intent_no:
                     if (mCommentActionListener != null) {
                         mCommentActionListener.setIntentAll(detailData, 3);
+                    }
+                    break;
+                case R.id.item_reminder:
+                    if (setReminderListener != null) {
+                        setReminderListener.putReminder(detailData.getGroup_id());
                     }
                     break;
             }
@@ -746,6 +771,16 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void showOriginalPic(String User_id, String File_id);
 
         void setIntentAll(EventEntity entity, int member);
+    }
+
+    private ReminderListener setReminderListener;
+
+    public void setReminderListener(ReminderListener setReminderListener) {
+        this.setReminderListener = setReminderListener;
+    }
+
+    public interface ReminderListener {
+        void putReminder(String groupId);
     }
 
     private ListViewItemViewUpdateListener updateListener;

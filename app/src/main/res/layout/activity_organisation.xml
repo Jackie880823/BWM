@@ -14,7 +14,8 @@
         android:id="@+id/rl_org_join"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/fragment_main_top">
+        android:layout_below="@id/fragment_main_top"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_join"

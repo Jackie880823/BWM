@@ -166,49 +166,43 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     }
 
     public void updateSticker(final StickerGroupEntity stickerGroupEntity) {
-        new Thread() {
+        String urlString = String.format(Constant.API_DOWNLOAD_STICKER_ZIP, MainActivity.getUser().getUser_id(), "1", stickerGroupEntity.getPath());
+        final String target = FileUtil.getCacheFilePath(StickerStoreActivity.this, false) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
+        new HttpTools(StickerStoreActivity.this).download(App.getContextInstance(), urlString, target, true, new HttpCallback() {
             @Override
-            public void run() {
-                super.run();
-                String urlString = String.format(Constant.API_DOWNLOAD_STICKER_ZIP, MainActivity.getUser().getUser_id(), "1", stickerGroupEntity.getPath());
-                final String target = FileUtil.getCacheFilePath(StickerStoreActivity.this, false) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
-                new HttpTools(StickerStoreActivity.this).download(App.getContextInstance(), urlString, target, true, new HttpCallback() {
-                    @Override
-                    public void onStart() {
-                    }
-
-                    @Override
-                    public void onFinish() {
-                    }
-
-                    @Override
-                    public void onResult(String response) {
-                        File zipFile = new File(target);
-                        //解压
-                        try {
-                            ZipUtils.unZipFile(zipFile, MainActivity.STICKERS_NAME);
-                            zipFile.delete();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        e.printStackTrace();
-
-                    }
-
-                    @Override
-                    public void onCancelled() {
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-                    }
-                });
+            public void onStart() {
             }
-        }.start();
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onResult(String response) {
+                File zipFile = new File(target);
+                //解压
+                try {
+                    ZipUtils.unZipFile(zipFile, MainActivity.STICKERS_NAME);
+                    zipFile.delete();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+            }
+        });
     }
 
     //获取广告图对应的表情包的position

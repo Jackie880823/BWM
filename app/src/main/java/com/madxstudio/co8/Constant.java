@@ -510,5 +510,7 @@ public class Constant {
     public static final String API_GET_ALL_MAIN_MESSAGE = API_SERVER +"/co8/index.php/api/messages/%s/type/all";//所有消息列表
     public static final String API_GET_REMOVE_MESSAGE = API_SERVER +"/co8/index.php/api/hidePost/%s";//删除消息列表
     public static final String API_REMOVE_OWN_SUPPLIER  = API_SERVER +"/co8/index.php/api/removeOther/%s";//删除自己的客户或供应商
+    public static final String API_GET_USER_ORG  = API_SERVER +"/co8/index.php/api/userOrgStatus/%s";//获取自己是否加入公司
+    public static final String API_SET_MEETING_REMINDER  = API_SERVER +"/co8/index.php/api/setReminder/%s";//设置会议reminder
 
 }
