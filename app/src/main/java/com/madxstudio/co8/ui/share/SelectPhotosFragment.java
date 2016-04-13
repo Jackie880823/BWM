@@ -670,7 +670,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         if (index < buckets.size() && index >= 0) {
             String bucket = buckets.get(index);
             if (index == 1 && bucket.equals(getString(R.string.text_video))) {
-                MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.show_video_limit));
+                MessageUtil.getInstance().showShortToast(R.string.show_video_limit);
             }
 
             mImageUriList = mMediaUris.get(bucket);

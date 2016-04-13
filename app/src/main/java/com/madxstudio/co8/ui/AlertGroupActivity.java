@@ -175,13 +175,13 @@ public class AlertGroupActivity extends BaseActivity{
 
             @Override
             public void onResult(String response) {
-                MessageUtil.showMessage(AlertGroupActivity.this,R.string.msg_action_successed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                 requestData();
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(AlertGroupActivity.this,R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 e.printStackTrace();
 
             }
@@ -223,13 +223,13 @@ public class AlertGroupActivity extends BaseActivity{
             @Override
             public void onResult(String response) {
 
-                MessageUtil.showMessage(AlertGroupActivity.this,R.string.msg_action_successed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                 requestData();
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(AlertGroupActivity.this,R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
 
             }
 
@@ -280,7 +280,7 @@ public class AlertGroupActivity extends BaseActivity{
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(AlertGroupActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }

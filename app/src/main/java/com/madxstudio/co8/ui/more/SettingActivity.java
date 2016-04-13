@@ -170,13 +170,13 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckedC
 
             @Override
             public void onResult(String string) {
-                MessageUtil.showMessage(SettingActivity.this,R.string.msg_action_successed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                 SettingActivity.this.finish();
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(SettingActivity.this,R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -220,12 +220,12 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckedC
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                MessageUtil.showMessage(SettingActivity.this,R.string.msg_load_config_successed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_load_config_successed);
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(SettingActivity.this,R.string.msg_load_config_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_load_config_failed);
             }
 
             @Override

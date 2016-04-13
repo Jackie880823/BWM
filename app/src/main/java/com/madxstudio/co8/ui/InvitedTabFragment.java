@@ -170,10 +170,10 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
         switch (requestCode) {
             case ADD_MEMBER:
                 if (resultCode == getActivity().RESULT_OK) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                     requestData();
                 } else {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_canceled);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_canceled);
                 }
                 break;
         }

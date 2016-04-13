@@ -60,7 +60,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
                     break;
 
                 case FAIL_UPDATA:
-                    MessageUtil.showMessage(ResetPasswordActivity.this, getString(R.string.text_start_no_changes_found));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.text_start_no_changes_found));
                     break;
             }
         }

@@ -36,7 +36,7 @@ public class CrashActivity extends Activity {
             public boolean handleMessage(Message msg) {
                 switch (msg.what) {
                     case SEND_FINISH:
-                        MessageUtil.showMessage(CrashActivity.this, R.string.say_thanks_for_report);
+                        MessageUtil.getInstance().showShortToast(R.string.say_thanks_for_report);
                         if (msg.arg1 == SUCCESED) {
                             FileUtil.clearCrashFiles(CrashActivity.this);
                         }

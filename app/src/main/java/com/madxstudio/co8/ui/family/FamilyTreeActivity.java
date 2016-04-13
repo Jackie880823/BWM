@@ -131,7 +131,7 @@ public class FamilyTreeActivity extends BaseActivity {
                             downloadTree(urlString);
                         }
                     } else {
-                        MessageUtil.showMessage(FamilyTreeActivity.this, R.string.msg_action_failed);
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     }
                 } catch(JSONException e) {
                     e.printStackTrace();
@@ -188,7 +188,7 @@ public class FamilyTreeActivity extends BaseActivity {
 
             @Override
             public void onResult(String response) {
-                MessageUtil.showMessage(FamilyTreeActivity.this, target);
+                MessageUtil.getInstance().showShortToast(target);
             }
 
             @Override

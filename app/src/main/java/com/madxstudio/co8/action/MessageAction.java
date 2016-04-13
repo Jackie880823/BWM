@@ -125,7 +125,7 @@ public class MessageAction {
                     }
                     mHandler.sendMessage(mHandler.obtainMessage(handlerWhat, jsonObject));
                 } catch (JSONException e) {
-                    MessageUtil.getInstance(mContext).showShortToast(mContext.getResources().getString(R.string.text_error));
+                    MessageUtil.getInstance().showShortToast(mContext.getResources().getString(R.string.text_error));
                     e.printStackTrace();
                 }
             }
@@ -196,7 +196,7 @@ public class MessageAction {
                     }
                     mHandler.sendMessage(mHandler.obtainMessage(handlerWhat, jsonObject));
                 } catch (JSONException e) {
-                    MessageUtil.getInstance(mContext).showShortToast(mContext.getResources().getString(R.string.text_error));
+                    MessageUtil.getInstance().showShortToast(mContext.getResources().getString(R.string.text_error));
                     e.printStackTrace();
                 }
             }
@@ -248,7 +248,7 @@ public class MessageAction {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.getInstance(mContext).showShortToast(mContext.getResources().getString(R.string.text_error));
+                MessageUtil.getInstance().showShortToast(mContext.getResources().getString(R.string.text_error));
             }
 
             @Override

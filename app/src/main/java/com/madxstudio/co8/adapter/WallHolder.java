@@ -888,7 +888,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             callBack.setLinkType(CallBack.LINK_TYPE_SAVE_PHOTOS);
             new HttpTools(context).get(url, null, SAVE_PHOTO, callBack);
         } else {
-            MessageUtil.showMessage(context, R.string.no_photo_2_save);
+            MessageUtil.getInstance().showShortToast( R.string.no_photo_2_save);
             LogUtil.e(TAG, "save Photo Fail");
         }
 //        String.format(Constant.API_GET_PIC, Constant.Module_Original, userId, photoEntity.getFile_id());
@@ -1154,7 +1154,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                             intent.setData(Uri.fromFile(saveFile));
                             context.sendBroadcast(intent);
 
-                            MessageUtil.showMessage(context, context.getString(R.string.saved_to_path) + saveFile.getPath());
+                            MessageUtil.getInstance().showShortToast( context.getString(R.string.saved_to_path) + saveFile.getPath());
                         } catch (IOException e) {
                             mViewClickListener.saved(wallEntity, false);
                             e.printStackTrace();
@@ -1167,7 +1167,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         intent.setData(Uri.fromFile(new File(response)));
                         context.sendBroadcast(intent);
 
-                        MessageUtil.showMessage(context, context.getString(R.string.saved_to_path) + response);
+                        MessageUtil.getInstance().showShortToast( context.getString(R.string.saved_to_path) + response);
                     }
                     break;
 
@@ -1240,7 +1240,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     try {
                         path = PicturesCacheUtil.saveImageToGallery(context, new File(string), "wall");
                         LogUtil.d(TAG, "download photo to path: " + path);
-                        MessageUtil.showMessage(context, R.string.photo_saved);
+                        MessageUtil.getInstance().showShortToast( R.string.photo_saved);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

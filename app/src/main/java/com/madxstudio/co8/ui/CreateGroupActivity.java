@@ -266,14 +266,14 @@ public class CreateGroupActivity extends BaseActivity {
                     progressBar.setVisibility(View.GONE);
 
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(CreateGroupActivity.this, getResources().getString(R.string.text_error));
+                    MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(CreateGroupActivity.this, getResources().getString(R.string.text_error));
+                MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
             }
 
             @Override

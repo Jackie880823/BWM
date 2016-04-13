@@ -153,7 +153,7 @@ public class ViewPDFActivity extends BaseActivity {
             try {
                 startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                MessageUtil.showMessage(this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
             finish();
             //调用api实现
@@ -311,15 +311,15 @@ public class ViewPDFActivity extends BaseActivity {
                                 getPdf(urlString);
                             }
                         } else {
-                            MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+                            MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                         }
                     } catch (Exception e) {
-                        MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                         e.printStackTrace();
                     }
                     break;
                 case REQUEST_ERROR:
-                    MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     vProgress.setVisibility(View.GONE);
                     break;
 
@@ -366,7 +366,7 @@ public class ViewPDFActivity extends BaseActivity {
 //                    try {
 //                        startActivity(intent);
 //                    } catch (ActivityNotFoundException e) {
-//                        MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+//                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
 //                    }
 //                }
             }

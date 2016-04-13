@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerLib;
 import com.madxstudio.co8.App;
+import com.madxstudio.co8.AppControler;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.interfaces.IViewCommon;
 import com.madxstudio.co8.interfaces.NetChangeObserver;
@@ -70,6 +71,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppControler.getAppControler().addActivity(this);
         mSavedInstanceState = savedInstanceState;
         // 打开Activity隐藏软键盘；
         //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -284,6 +286,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onDestroy() {
         super.onDestroy();
         NetWorkStateReceiver.unRegisterNetStateObserver(this);
+        AppControler.getAppControler().finishActivity(this);
     }
 
     @Override

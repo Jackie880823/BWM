@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -27,7 +25,6 @@ import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.MessageListAdapter;
@@ -35,14 +32,12 @@ import com.madxstudio.co8.entity.PrivateMessageEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
-import com.madxstudio.co8.ui.more.MoreSettingActivity;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.InteractivePopupWindow;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
-import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -128,7 +123,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
             @Override
             public void onRefresh() {
                 if (!NetworkUtil.isNetworkConnected(getActivity())) {
-                    MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.text_no_network));
                     refreshLayout.setRefreshing(false);
                     return;
                 }
@@ -323,7 +318,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
     private void removeData(String groupId) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
-            MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+            MessageUtil.getInstance().showShortToast(getString(R.string.text_no_network));
             return;
         }
         final RequestInfo requestInfo = new RequestInfo();
@@ -351,14 +346,14 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                         handler.sendEmptyMessage(GET_REMOVE_DATA);
                     }
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -381,7 +376,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
     private void getData(int beginIndex, String search) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
-            MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+            MessageUtil.getInstance().showShortToast(getString(R.string.text_no_network));
             userFinishReFresh();
             return;
         }
@@ -445,7 +440,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                             }
                         } catch (JSONException e) {
                             if (isPullData) {
-                                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                             } else {
                                 showMemberEmptyView();
                             }
@@ -455,7 +450,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
                     @Override
                     public void onError(Exception e) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                         userFinishReFresh();
                     }
 

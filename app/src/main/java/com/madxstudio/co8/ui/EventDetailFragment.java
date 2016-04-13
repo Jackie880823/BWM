@@ -191,7 +191,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 if (false) {
                     getParentActivity().finish();
                 } else {
-                    //                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                    //                    MessageUtil.getInstance().showShortToast(R.string.msg_date_not_commentbim_now);
                 }
             }
         });
@@ -352,7 +352,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         if (isCommentBim) {
                             getParentActivity().finish();
                         } else {
-                            //                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                            //                            MessageUtil.getInstance().showShortToast(R.string.msg_date_not_commentbim_now);
                         }
 
                     }
@@ -587,7 +587,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         //        String commentText = et.getText().toString();
         //        if(TextUtils.isEmpty(etChat.getText().toString().trim()) && isStickerItemClick==false) {
         //            // 如果没有输入字符且没有添加表情，不发送评论
-        //            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+        //            MessageUtil.getInstance().showShortToast(R.string.msg_no_content);
         //            return;
         //        }
 //        isComment = false;
@@ -598,7 +598,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         }
         if (TextUtils.isEmpty(commentText)) {
             // 如果没有输入字不发送评论
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            MessageUtil.getInstance().showShortToast(R.string.msg_no_content);
 //            isComment = true;
             return;
         } else {
@@ -682,7 +682,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     }
                 });
             } else {
-                MessageUtil.showMessage(getActivity(), R.string.msg_no_internet);
+                MessageUtil.getInstance().showShortToast(R.string.msg_no_internet);
             }
         }
 
@@ -947,7 +947,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 }
             });
         } else {
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_internet);
+            MessageUtil.getInstance().showShortToast(R.string.msg_no_internet);
         }
     }
 

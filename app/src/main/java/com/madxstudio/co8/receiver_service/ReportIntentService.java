@@ -3,6 +3,7 @@ package com.madxstudio.co8.receiver_service;
 import android.app.IntentService;
 import android.content.Intent;
 
+import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.mail.MailSender;
 import com.madxstudio.co8.mail.MailSenderModel;
@@ -35,7 +36,17 @@ public class ReportIntentService extends IntentService {
     public void onDestroy() {
         //所有任务执行完后,自动关闭
         super.onDestroy();
-        FileUtil.clearCrashFiles(this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5*1000);
+                    FileUtil.clearCrashFiles(App.getContextInstance());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private void doSendMail() {
@@ -50,7 +61,10 @@ public class ReportIntentService extends IntentService {
         mailInfo.setSubject("BWM 异常反馈!");
         mailInfo.setContent("反馈客户设备信息:\r\n"
                         + "VersionCode:" + AppInfoUtil.getAppVersionName(this) + "\r\n"
-                        + "VersionCode:" + AppInfoUtil.getDeviceUUID(this)
+                        + "VersionCode:" + AppInfoUtil.getDeviceUUID(this) + "\r\n"
+                        + "UserId:" + (App.getLoginedUser()==null?"":App.getLoginedUser().getUser_id()) + "\r\n"
+                        + "UserName:" + (App.getLoginedUser()==null?"":App.getLoginedUser().getUser_given_name()) + "\r\n"
+                        + "Server:" + Constant.TRACKER_SITE_ID + "\r\n"
         );
         mailInfo.setAttachFiles(FileUtil.getCrashFiles(this));
 //

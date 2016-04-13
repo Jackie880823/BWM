@@ -252,7 +252,7 @@ public class AlbumActivity extends BaseActivity {
 //                            mProgressDialog.dismiss();
 //                        }
                         no_image_linear.setVisibility(View.VISIBLE);
-                        MessageUtil.showMessage(mContext, getResources().getString(R.string.text_error));
+                        MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
                     }
 
                     @Override

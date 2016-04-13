@@ -441,7 +441,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     }
 
     private void unknowWrong() {
-        MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_wrong_pwd_name));
+        MessageUtil.getInstance().showShortToast(getString(R.string.text_wrong_pwd_name));
         etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
         etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
     }
@@ -463,7 +463,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void OnLoginError(String error) {
-        MessageUtil.showMessage(getActivity(), error);
+        MessageUtil.getInstance().showShortToast(error);
         com.facebook.login.LoginManager.getInstance().logOut();//清除Facebook授权缓存
     }
 

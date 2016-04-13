@@ -438,7 +438,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
      */
     public boolean backCheck() {
        if (rlProgress != null && rlProgress.getVisibility() == View.VISIBLE) {
-        MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
+           MessageUtil.getInstance().showShortToast(R.string.waiting_upload);
         return true;
     }
     if (tasks != null && tasks.size() > 0) {
@@ -954,7 +954,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)
                 || TextUtils.isEmpty(categoryId) || TextUtils.isEmpty(titleDesc.getText().toString())) {
             // 没文字、没图片、没视频不能上传日记
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            MessageUtil.getInstance().showShortToast(R.string.msg_no_content);
             return;
         }
         mHandler.sendEmptyMessage(SHOW_PROGRESS);
@@ -1184,7 +1184,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         if (!isUpate && (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri))
                 || TextUtils.isEmpty(categoryId) || TextUtils.isEmpty(titleDesc.getText().toString())) {
             // 没文字、没图片、没视频不能上传日记
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            MessageUtil.getInstance().showShortToast(R.string.msg_no_content);
             return;
         }
         mHandler.sendEmptyMessage(SHOW_PROGRESS);

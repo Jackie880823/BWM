@@ -108,7 +108,7 @@ public class TransitionActivity extends Activity {
         if (userEntity != null) {
             String tokenString = PreferencesUtil.getValue(this, Constant.HTTP_TOKEN, null);
             if (!TextUtils.isEmpty(tokenString)) {
-                App.initToken(userEntity.getUser_login_id(),new Gson().fromJson(tokenString, AppTokenEntity.class));
+                App.initHttpHeaderWithToken(userEntity.getUser_login_id(),new Gson().fromJson(tokenString, AppTokenEntity.class));
                 return true;
             }
         }

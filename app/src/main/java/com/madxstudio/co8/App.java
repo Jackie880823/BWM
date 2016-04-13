@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by wing on 15/3/21.
@@ -133,8 +134,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
      */
     public static void userLoginSuccessed(Activity context, UserEntity user, AppTokenEntity tokenEntity) {
 
-        getContextInstance().finishAllActivitys();
-        if(user!=null) {
+        if (user != null) {
             changeLoginedUser(user, tokenEntity);
             runAlarmTask(context, user);
             goMain(context);
@@ -144,6 +144,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     /**
      * 运行定时任务
+     *
      * @param context
      * @param user
      */
@@ -280,7 +281,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public static void changeLoginedUser(UserEntity user, AppTokenEntity tokenEntity) {
         if (appContext != null) {
 
-            initToken(user.getUser_login_id(), tokenEntity);
+            initHttpHeaderWithToken(user.getUser_login_id(), tokenEntity);
 
             changeLoginedUser(user);
 
@@ -303,9 +304,10 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     }
 
-    public static void initToken(String user_login_id, AppTokenEntity tokenEntity) {
+    public static void initHttpHeaderWithToken(String user_login_id, AppTokenEntity tokenEntity) {
         if (tokenEntity != null) {
             Map<String, String> headers = new HashMap<String, String>();
+            headers.put("Charset", "UTF-8");
             headers.put("X_BWM_TOKEN", tokenEntity.getUser_token());
             headers.put("X_BWM_USERLOGINID", user_login_id);
             headers.put("X_BWM_DEVID", AppInfoUtil.getDeviceUUID(appContext));
@@ -313,6 +315,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             headers.put("X_BWM_USERLOC", "");
             headers.put("X_BWM_APPVER", AppInfoUtil.getAppVersionName(appContext));
             headers.put("X_BWM_APPLANG", Locale.getDefault().getLanguage());
+            headers.put("X_BWM_TIMEZONE", TimeZone.getDefault().getID());
             // 接收请求返回的语言
             headers.put("Accept-Language", Locale.getDefault().getLanguage());
 
@@ -330,7 +333,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             user = new Gson().fromJson(PreferencesUtil.getValue(appContext, "user", null), UserEntity.class);
             //异常情况，重新初始token
             if (user != null && HttpTools.getHeaders() != null && TextUtils.isEmpty(HttpTools.getHeaders().get("X_BWM_TOKEN"))) {
-                initToken(user.getUser_login_id(), new Gson().fromJson(PreferencesUtil.getValue(appContext, Constant.HTTP_TOKEN, ""), AppTokenEntity.class));
+                initHttpHeaderWithToken(user.getUser_login_id(), new Gson().fromJson(PreferencesUtil.getValue(appContext, Constant.HTTP_TOKEN, ""), AppTokenEntity.class));
             }
         }
         //test,18682116784
@@ -387,7 +390,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public void exit(Activity context) {
-        finishAllActivitys();
+        if (context != null && !context.isFinishing()) {
+            context.finish();
+        }
 //        App.getContextInstance().finishAllActivitys();
         onTerminate();
     }
@@ -481,7 +486,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 if (foreground && paused) {
                     foreground = false;
                     //重置add弹窗
-                    if(user!=null){
+                    if (user != null) {
                         if (isBackground()) {
                             needShowAddDialog = true;
                         }
@@ -517,7 +522,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
-                finishAllActivitys();
+                AppControler.getAppControler().finishAllActivity();
                 HttpTools.getHeaders().put("X_BWM_APPLANG", Locale.getDefault().getLanguage());
             }
         }
@@ -610,9 +615,11 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         //初始推送api
         PushApi.initPushApi(getContextInstance(), googleAvailable);
     }
+
     HttpTools httpTools;
     private final static String TAG_CHECK_PENDING = "check_pending";
-    private void checkHasPendingRequest(final Activity activity){
+
+    private void checkHasPendingRequest(final Activity activity) {
 //        httpTools = new HttpTools(activity);
 //
 //        httpTools.get(String.format(Constant.API_CHECK_HAS_PENDING_REQUEST, user.getUser_id()), null, TAG_CHECK_PENDING, new HttpCallback() {
@@ -628,8 +635,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 //
 //            @Override
 //            public void onResult(String string) {
-//                needShowAddDialog = false;
-//                showAddDialog(activity);
+//                if ("\"true\"".equals(string)) {
+//                    showAddDialog(activity);
+//                }
 //            }
 //
 //            @Override
@@ -649,30 +657,32 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 //        });
     }
 
-    private void showAddDialog(final Activity activity) {
-        needShowAddDialog = false;
-        if(showAddDialog!=null&&showAddDialog.isShowing()){
-
-        }else {
-            showAddDialog = new MyDialog(activity, R.string.text_tips_title, R.string.desc_recerve_member_add_request);
-            showAddDialog.setCanceledOnTouchOutside(false);
-
-            showAddDialog.setButtonCancel(R.string.text_later, new View.OnClickListener() {
+    public void showAddDialog(final Activity activity) {
+        if (activity != null && !activity.isFinishing()) {
+            needShowAddDialog = false;
+            activity.runOnUiThread(new Runnable() {
                 @Override
-                public void onClick(View v) {
-                    showAddDialog.dismiss();
+                public void run() {
+                    final MyDialog showAddDialog = new MyDialog(activity, R.string.text_tips_title, R.string.desc_recerve_member_add_request);
+                    showAddDialog.setCanceledOnTouchOutside(false);
+                    showAddDialog.setButtonCancel(R.string.text_later, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showAddDialog.dismiss();
+                        }
+                    });
+
+                    showAddDialog.setButtonAccept(R.string.yes, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.startActivity(new Intent(activity.getBaseContext(), MemberActivity.class));
+                            showAddDialog.dismiss();
+                        }
+                    });
+                    showAddDialog.show();
                 }
             });
 
-            showAddDialog.setButtonAccept(R.string.event_accept, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activity.startActivity(new Intent(activity.getBaseContext(), MemberActivity.class));
-                    showAddDialog.dismiss();
-                }
-            });
-
-            showAddDialog.show();
         }
     }
 }

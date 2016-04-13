@@ -232,7 +232,7 @@ public class RecommendActivity extends BaseActivity {
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(RecommendActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }
@@ -305,7 +305,7 @@ public class RecommendActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(RecommendActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -524,7 +524,7 @@ public class RecommendActivity extends BaseActivity {
 
             @Override
             public void onResult(String response) {
-                MessageUtil.showMessage(RecommendActivity.this, R.string.msg_action_successed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                 mProgressDialog.setVisibility(View.INVISIBLE);
                 handler.sendEmptyMessage(DELETE_RECOMMEND);
 
@@ -535,7 +535,7 @@ public class RecommendActivity extends BaseActivity {
             public void onError(Exception e) {
                 e.printStackTrace();
                 LogUtil.d(TAG,"",e);
-                MessageUtil.showMessage(RecommendActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
 
             }
 

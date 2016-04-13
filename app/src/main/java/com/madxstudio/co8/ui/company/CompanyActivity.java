@@ -264,7 +264,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: ", e);
-                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -332,7 +332,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: add admin ", e);
-                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -402,7 +402,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                         App.changeLoginedUser(currentUser);
                         finish();
                     } else {
-                        MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -412,7 +412,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: leave company", e);
-                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -530,7 +530,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: remove Admin", e);
-                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -626,7 +626,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: ", e);
-                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -685,7 +685,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: ", e);
                 e.printStackTrace();
-                MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override

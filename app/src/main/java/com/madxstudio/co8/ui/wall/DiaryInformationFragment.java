@@ -258,7 +258,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 getParentActivity().finish();
             }
 
@@ -364,7 +364,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
                     @Override
                     public void onResult(String string) {
-//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//                        MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                         setResultOK(true);
                         getParentActivity().finish();
                     }

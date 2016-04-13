@@ -101,7 +101,7 @@ public class AlbumGalleryActivity extends BaseActivity {
                 Gson gson = gsonb.create();
 
                 if ("[]".equals(response)) {
-                    MessageUtil.showMessage(AlbumGalleryActivity.this, getResources().getString(R.string.text_no_album_gallery));
+                    MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_no_album_gallery));
                     return;
                 }
 
@@ -147,7 +147,7 @@ public class AlbumGalleryActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(AlbumGalleryActivity.this, getResources().getString(R.string.text_error));
+                MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
             }
 
             @Override

@@ -933,7 +933,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                     //            }
                 }
             } catch (Exception e) {
-                MessageUtil.showMessage(Map4GoogleActivity.this, R.string.location_search_error);
+                MessageUtil.getInstance().showShortToast(R.string.location_search_error);
             }
         }
     };

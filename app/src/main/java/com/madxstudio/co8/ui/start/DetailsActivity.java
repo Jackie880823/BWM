@@ -284,7 +284,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         Intent intent = getIntent();
         userEntity = (UserEntity) intent.getExtras().getSerializable(Constant.LOGIN_USER);
         tokenEntity = (AppTokenEntity) intent.getExtras().getSerializable(Constant.HTTP_TOKEN);
-        App.initToken(userEntity.getUser_login_id(), tokenEntity);
+        App.initHttpHeaderWithToken(userEntity.getUser_login_id(), tokenEntity);
     }
 
     private void doHttpChangeUI() {

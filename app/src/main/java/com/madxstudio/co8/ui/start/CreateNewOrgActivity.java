@@ -120,7 +120,7 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
                 case GET_CREATE_ORG_EXIST:
                     String message = (String) msg.obj;
                     if (!TextUtils.isEmpty(message)) {
-                        MessageUtil.getInstance(mContext).showShortToast(message);
+                        MessageUtil.getInstance().showShortToast(message);
                     }
                     break;
                 default:

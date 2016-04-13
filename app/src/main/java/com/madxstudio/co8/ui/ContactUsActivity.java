@@ -131,7 +131,7 @@ public class ContactUsActivity extends BaseActivity {
     private void sendMail() {
         mail_from_text = mail_from.getText().toString();
         if (TextUtils.isEmpty(mail_from_text) || MyTextUtil.isInvalidText(mail_from_text) || mail_from_text.indexOf("@") <= 0) {
-            MessageUtil.getInstance(this).showShortToast(getString(R.string.text_valid_email));
+            MessageUtil.getInstance().showShortToast(getString(R.string.text_valid_email));
             return;
         }
         if (validateForm()) {
@@ -159,8 +159,8 @@ public class ContactUsActivity extends BaseActivity {
 
                 @Override
                 public void onResult(String string) {
-                    MessageUtil.showMessage(ContactUsActivity.this, R.string.msg_action_successed);
-                    if (!isFinishing()) {
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
+                    if (!isFinishing()){
                         finish();
                     }
                 }
@@ -180,8 +180,8 @@ public class ContactUsActivity extends BaseActivity {
 
                 }
             });
-        } else {
-            MessageUtil.showMessage(this, R.string.alert_text_mail_info_not_complete);
+        }else{
+            MessageUtil.getInstance().showShortToast(R.string.alert_text_mail_info_not_complete);
         }
     }
 

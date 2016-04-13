@@ -223,7 +223,7 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -268,7 +268,7 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override

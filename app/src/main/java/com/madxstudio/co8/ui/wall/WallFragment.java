@@ -395,7 +395,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
                     @Override
                     public void onResult(String string) {
-//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//                        MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                         List<WallEntity> data = adapter.getData();
                         int index = data.indexOf(wallEntity);
                         data.remove(wallEntity);
@@ -605,7 +605,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 getParentActivity().finish();
             }
 

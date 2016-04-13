@@ -493,7 +493,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
             public void onResult(String string) {
 
                 vProgress.setVisibility(View.GONE);
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                 if (groupEntityList != null) {
                     groupAdapter.clearBitmap(groupEntityList);
                     groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
@@ -504,7 +504,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -822,7 +822,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
                         Toast.makeText(getActivity(), getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     e.printStackTrace();
                 }
 
@@ -830,7 +830,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -1027,7 +1027,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
 
                     @Override
                     public void onError(Exception e) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                         finishReFresh();
                     }
 
@@ -1125,7 +1125,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
 //
 //                    @Override
 //                    public void onError(Exception e) {
-//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+//                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
 //                        finishReFresh();
 //                    }
 //
@@ -1243,9 +1243,9 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
             case ADD_MEMBER:
                 if (resultCode == getActivity().RESULT_OK) {
                     vProgress.setVisibility(View.GONE);
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                } else {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_canceled);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
+                }else {
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_canceled);
                 }
                 break;
         }

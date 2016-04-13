@@ -486,7 +486,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(StickerStoreActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
 //                adProgressDialog.setVisibility(View.GONE);
             }
 
@@ -524,7 +524,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(StickerStoreActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
