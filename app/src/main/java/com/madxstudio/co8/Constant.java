@@ -7,6 +7,18 @@ import com.madxstudio.co8.util.FileUtil;
  */
 public class Constant {
 
+    /**
+     * 网络请求返回代码信息
+     */
+    public static final String RESPONSE_STATUS_CODE = "response_status_code";
+    /**
+     * 网络请求返回状态信息
+     */
+    public static final String RESPONSE_STATUS = "response_status";
+    /**
+     * 状态成功
+     */
+    public static final String STATUS_SUCCESS = "Success";
 
     /**
      * mail

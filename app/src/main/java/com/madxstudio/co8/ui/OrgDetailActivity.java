@@ -132,11 +132,16 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
-            rightButton.setImageResource(R.drawable.org_search_icon);
+        if (Constant.ORG_TRANSMIT_PENDING_REQUEST.equals(transmitData)) {
+            rightButton.setVisibility(View.GONE);
             rightSearchButton.setVisibility(View.GONE);
         } else {
-            rightSearchButton.setVisibility(View.VISIBLE);
+            if (Constant.ADMIN_REQUEST.equals(requestType) || Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+                rightButton.setImageResource(R.drawable.org_search_icon);
+                rightSearchButton.setVisibility(View.GONE);
+            } else {
+                rightSearchButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -147,9 +152,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             intent.putExtra("isCreateNewGroup", true);
             intent.putExtra(Constant.SELECT_MEMBER_NORMAL_DATA, (Serializable) memberList);
             startActivityForResult(intent, CREATE_GROUP);
-        } else if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
-            startActivity(new Intent(mContext, AddMembersActivity.class));
-        } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+        } else if (Constant.ADMIN_REQUEST.equals(requestType) || Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
             if (serachLinear.getVisibility() == View.VISIBLE) {
                 serachLinear.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.org_up_from_bottom));
                 serachLinear.setVisibility(View.GONE);
@@ -157,6 +160,8 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 serachLinear.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.up_from_top));
                 serachLinear.setVisibility(View.VISIBLE);
             }
+        } else if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
+            startActivity(new Intent(mContext, AddMembersActivity.class));
         }
     }
 
@@ -432,8 +437,13 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             lineView.setVisibility(View.GONE);
         } else {
             profileView.setText(R.string.text_view_profile);
-            leaveView.setVisibility(View.VISIBLE);
-            lineView.setVisibility(View.VISIBLE);
+            if (Constant.ADMIN_REQUEST.equals(requestType)) {
+                leaveView.setVisibility(View.GONE);
+                lineView.setVisibility(View.GONE);
+            } else {
+                leaveView.setVisibility(View.VISIBLE);
+                lineView.setVisibility(View.VISIBLE);
+            }
             leaveView.setText(R.string.text_org_delete_contact);
         }
         messageView.setText(R.string.text_org_message);
@@ -619,20 +629,19 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 } else if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
                     showGroupDialog(groupAdapter.getList().get(arg2));
                 } else {
-                    if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData) && arg2 == 0) {
+                    OrgMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
+                    if (Constant.REQUEST_ADD_ADMIN.equals(requestType)) {
+                        // 将点击的Item中的FamilyMemberEntity返回给启动的Activity;
+                        Intent intent = new Intent();
+                        intent.putExtra(OrganisationConstants.NEED_ADD_ADMIN_USER, familyMemberEntity);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData) && arg2 == 0) {
                         return;
+                    } else if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
+                        showNoFriendDialog(familyMemberEntity);
                     } else {
-                        OrgMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
-                        if (Constant.REQUEST_ADD_ADMIN.equals(requestType)) {
-                            // 将点击的Item中的FamilyMemberEntity返回给启动的Activity;
-                            Intent intent = new Intent();
-                            intent.putExtra(OrganisationConstants.NEED_ADD_ADMIN_USER, familyMemberEntity);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        } else if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
-                            showNoFriendDialog(familyMemberEntity);
-                        } else {
-                            //put请求消除爱心
+                        //put请求消除爱心
 //                            if ("".equals(familyMemberEntity.getMiss())) {
 //                                updateMiss(familyMemberEntity.getUser_id());
 //                                arg0.findViewById(R.id.myfamily_image_right).setVisibility(View.GONE);
@@ -643,8 +652,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
 //                            intent.putExtra(UserEntity.EXTRA_GROUP_ID, familyMemberEntity.getGroup_id());
 //                            intent.putExtra(UserEntity.EXTRA_GROUP_NAME, familyMemberEntity.getUser_given_name());
 //                            startActivityForResult(intent, 1);
-                            showStaffDialog(familyMemberEntity);
-                        }
+                        showStaffDialog(familyMemberEntity);
 
                     }
 
@@ -1015,7 +1023,9 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 Gson gson = gsonb.create();
                 finishReFresh();
                 List<OrgMemberEntity> list = new ArrayList<>();
-                if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+                if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData) // 显示的是成员
+                        && !Constant.REQUEST_ADD_ADMIN.equals(requestType) // 不是添加管理员的请求需要显示自己
+                        ) {
                     OrgMemberEntity meMemberEntity = new OrgMemberEntity();
                     UserEntity userEntity = MainActivity.getUser();
                     meMemberEntity.setGroup_id(userEntity.getGroup_id());
@@ -1033,8 +1043,19 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 List<OrgMemberEntity> memberEntityList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
                 }.getType());
 
-                if (memberEntityList != null && memberEntityList.size() > 0) {
+                if (memberEntityList != null && memberEntityList.size() > 0) { //
                     list.addAll(memberEntityList);
+                    if (Constant.REQUEST_ADD_ADMIN.equals(requestType)) { // 是添加管理员，所以已经是管理员的成员不能显示，遍历移除显示列表
+                        for (OrgMemberEntity orgMemberEntity : memberEntityList) {
+                            if ("1".equals(orgMemberEntity.getAdmin_flag())) {
+                                list.remove(orgMemberEntity);
+                            }
+                        }
+                        if (list.isEmpty()) {
+                            showEmptyView();
+                            return;
+                        }
+                    }
                 }
                 if (list.size() > 0) {
                     hideEmptyView();

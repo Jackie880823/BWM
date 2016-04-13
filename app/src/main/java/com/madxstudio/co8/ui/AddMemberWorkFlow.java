@@ -185,26 +185,25 @@ public class AddMemberWorkFlow extends Activity {
 
         switch (requestCode) {
             case GET_RELATIONSHIP:
+                boolean goingNext = false;
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
                         response_relationship = data.getStringExtra("relationship");
-
                         if (!TextUtils.isEmpty(response_relationship)) {
+                            goingNext = true;
                             addMember();
-                        }else{
-                            cancle();
                         }
-                    }else{
-                        cancle();
                     }
                     break;
-                }else{
+                }
+                if(!goingNext){
                     cancle();
                 }
         }
     }
 
     private void cancle() {
+        //默认已同意
         if("Accept".equals(add_flag)){
             setResult(RESULT_OK);
             finish();

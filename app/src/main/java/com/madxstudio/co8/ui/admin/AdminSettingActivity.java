@@ -36,6 +36,12 @@ public class AdminSettingActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+        rightButton.setVisibility(View.GONE);
+    }
+
     /**
      * 设置title
      */

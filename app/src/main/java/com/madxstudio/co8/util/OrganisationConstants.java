@@ -96,7 +96,7 @@ public class OrganisationConstants {
      * PUT – Remove Admin  删除公司管理员 <br/>
      * %s匹配{@code org_id}
      */
-    public static final String API_REMOVE_ADMIN = CO8_API_SERVER + "removedAdmin/%s";
+    public static final String API_REMOVE_ADMIN = CO8_API_SERVER + "removeAdmin/%s";
 
     /**
      * POST – Upload Organisation Cover photo
