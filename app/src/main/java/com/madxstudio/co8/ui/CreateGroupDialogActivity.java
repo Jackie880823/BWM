@@ -404,8 +404,8 @@ public class CreateGroupDialogActivity extends BaseActivity {
                 startActivityForResult(intent, REQUEST_PHOTO);
             }
         });
-
-        showCameraAlbum.show();
+        if (!showCameraAlbum.isShowing())
+            showCameraAlbum.show();
     }
 
     Handler handler = new Handler(new Handler.Callback() {
@@ -499,30 +499,30 @@ public class CreateGroupDialogActivity extends BaseActivity {
         });
     }
 
-    MyDialog myDialog = null;
+    private MyDialog myDialog = null;
 
     private void ask4Confirm() {
-
-        if (myDialog == null) {
-            myDialog = new MyDialog(this, R.string.text_tips_title, R.string.text_create_group_not_save);
-            myDialog.setCanceledOnTouchOutside(false);
-            myDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (myDialog != null) {
-                        myDialog.dismiss();
-                    }
-                }
-            });
-            myDialog.setButtonAccept(R.string.text_dialog_accept, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    myDialog.dismiss();
-                    finish();
-                }
-            });
-        }
-        if (!myDialog.isShowing())
+//
+//        if (myDialog == null) {
+        myDialog = new MyDialog(CreateGroupDialogActivity.this, R.string.text_tips_title, R.string.text_create_group_not_save);
+        myDialog.setCanceledOnTouchOutside(false);
+        myDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+                myDialog = null;
+            }
+        });
+        myDialog.setButtonAccept(R.string.text_dialog_accept, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+                myDialog = null;
+                finish();
+            }
+        });
+//        }
+        if (myDialog != null && !myDialog.isShowing())
             myDialog.show();
 
     }
@@ -584,9 +584,13 @@ public class CreateGroupDialogActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (myDialog != null)
-            myDialog.dismiss();
         super.onDestroy();
+        if (myDialog != null && myDialog.isShowing()) {
+            myDialog.dismiss();
+            myDialog = null;
+        }
+        if (showCameraAlbum != null)
+            showCameraAlbum.dismiss();
     }
 
     @Override

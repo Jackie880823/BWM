@@ -1022,6 +1022,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                     meMemberEntity.setUser_id(userEntity.getUser_id());
                     meMemberEntity.setPosition(userEntity.getPosition());
                     meMemberEntity.setDepartment(userEntity.getDepartment());
+                    meMemberEntity.setAdmin_flag(userEntity.getAdmin());
                     meMemberEntity.setUser_given_name(mContext.getString(R.string.text_me));
                     list.add(meMemberEntity);
                 }

@@ -151,28 +151,29 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private String getReminderTime(int minu) {
         String[] reminderArrayUs = mContext.getResources().getStringArray(R.array.reminder_item);
-        for (int i = 0; i < reminderArrayUs.length; i++) {
-            if (minu == 0 && i == 0) {
-                return reminderArrayUs[i];
-            } else if (minu == 5 && i == 1) {
-                return reminderArrayUs[i];
-            } else if (minu == 15 && i == 2) {
-                return reminderArrayUs[i];
-            } else if (minu == 30 && i == 3) {
-                return reminderArrayUs[i];
-            } else if (minu == 60 && i == 4) {
-                return reminderArrayUs[i];
-            } else if (minu == 120 && i == 5) {
-                return reminderArrayUs[i];
-            } else if (minu == 60 * 24 && i == 6) {
-                return reminderArrayUs[i];
-            } else if (minu == 60 * 24 * 2 && i == 7) {
-                return reminderArrayUs[i];
-            } else if (minu == 60 * 24 * 7 && i == 8) {
-                return reminderArrayUs[i];
+        if (reminderArrayUs != null && reminderArrayUs.length >= 8) {
+            if (minu == 0) {
+                return reminderArrayUs[0];
+            } else if (minu == 5) {
+                return reminderArrayUs[1];
+            } else if (minu == 15) {
+                return reminderArrayUs[2];
+            } else if (minu == 30) {
+                return reminderArrayUs[3];
+            } else if (minu == 60) {
+                return reminderArrayUs[4];
+            } else if (minu == 120) {
+                return reminderArrayUs[5];
+            } else if (minu == 60 * 24) {
+                return reminderArrayUs[6];
+            } else if (minu == 60 * 24 * 2) {
+                return reminderArrayUs[7];
+            } else {
+                return reminderArrayUs[8];
             }
+        } else {
+            return "";
         }
-        return reminderArrayUs[0];
     }
 
 
