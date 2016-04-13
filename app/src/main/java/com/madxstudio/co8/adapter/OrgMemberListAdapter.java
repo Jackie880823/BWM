@@ -17,6 +17,7 @@ import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.OrgMemberEntity;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.OrgDetailActivity;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.CircularNetworkImage;
@@ -109,7 +110,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         }
         if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData) && "0".equals(memberEntity.getFam_accept_flag())) {
             viewHolder.orgRequest.setVisibility(View.VISIBLE);
-        } else if ("1".equals(memberEntity.getAdmin_flag())) {
+        } else if ("1".equals(memberEntity.getAdmin_flag()) && mContext instanceof OrgDetailActivity) {
             viewHolder.orgRequest.setVisibility(View.VISIBLE);
             viewHolder.orgRequest.setImageResource(R.drawable.org_admin_icon);
         } else {
@@ -249,6 +250,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
     public interface AdminAdapterListener {
         /**
          * 删除联系人
+         *
          * @param memberEntity 被删除对象的实例
          */
         void removeMember(OrgMemberEntity memberEntity);

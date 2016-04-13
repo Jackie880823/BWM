@@ -396,81 +396,76 @@ public class MessageFragment extends BaseFragment<MainActivity> {
         params.put("search", search);
         requestInfo.putAllParams(params);
         requestInfo.url = String.format(Constant.API_GET_ALL_MAIN_MESSAGE, MainActivity.getUser().getUser_id());
-        new Thread() {
+
+        new HttpTools(getActivity()).get(requestInfo, TAG, new HttpCallback() {
             @Override
-            public void run() {
-                super.run();
-                new HttpTools(getActivity()).get(requestInfo, TAG, new HttpCallback() {
-                    @Override
-                    public void onStart() {
-                        isGeData = true;
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        if (vProgress != null) {
-                            vProgress.setVisibility(View.GONE);
-                        }
-                        isPullData = false;
-                        isGeData = false;
-                    }
-
-                    @Override
-                    public void onResult(String response) {
-                        userFinishReFresh();
-                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
-                            showMemberEmptyView();
-                        }
-                        Gson gson = new GsonBuilder().create();
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            List<PrivateMessageEntity> userList = gson.fromJson(jsonObject.getString("message"), new TypeToken<ArrayList<PrivateMessageEntity>>() {
-                            }.getType());
-                            String totalUnread = jsonObject.optString("totalUnread", "");//私聊的消息总共有多少未读"groupUnread","memberUnread","totalUnread"
-                            Map<String, Object> map = new HashMap<>();
-                            map.put(MESSAGE_DATA, userList);
-                            map.put(MESSAGE_UNREAD_NUM, totalUnread);
-                            if (isPullData) {
-                                if (userList != null && userList.size() == DEF_DATA_NUM) {
-                                    startIndex++;
-                                }
-                                Message.obtain(handler, GET_PULL_DATA, map).sendToTarget();
-                            } else {
-                                if (null == userList || userList.size() == 0) {
-                                    showMemberEmptyView();
-                                } else {
-                                    hideMemberEmptyView();
-                                    Message.obtain(handler, GET_NEW_DATA, map).sendToTarget();
-                                }
-                            }
-                        } catch (JSONException e) {
-                            if (isPullData) {
-                                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                            } else {
-                                showMemberEmptyView();
-                            }
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                        userFinishReFresh();
-                    }
-
-                    @Override
-                    public void onCancelled() {
-
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
+            public void onStart() {
+                isGeData = true;
             }
-        }.start();
+
+            @Override
+            public void onFinish() {
+                if (vProgress != null) {
+                    vProgress.setVisibility(View.GONE);
+                }
+                isPullData = false;
+                isGeData = false;
+            }
+
+            @Override
+            public void onResult(String response) {
+                userFinishReFresh();
+                if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                    showMemberEmptyView();
+                }
+                Gson gson = new GsonBuilder().create();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    List<PrivateMessageEntity> userList = gson.fromJson(jsonObject.getString("message"), new TypeToken<ArrayList<PrivateMessageEntity>>() {
+                    }.getType());
+                    String totalUnread = jsonObject.optString("totalUnread", "");//私聊的消息总共有多少未读"groupUnread","memberUnread","totalUnread"
+                    Map<String, Object> map = new HashMap<>();
+                    map.put(MESSAGE_DATA, userList);
+                    map.put(MESSAGE_UNREAD_NUM, totalUnread);
+                    if (isPullData) {
+                        if (userList != null && userList.size() == DEF_DATA_NUM) {
+                            startIndex++;
+                        }
+                        Message.obtain(handler, GET_PULL_DATA, map).sendToTarget();
+                    } else {
+                        if (null == userList || userList.size() == 0) {
+                            showMemberEmptyView();
+                        } else {
+                            hideMemberEmptyView();
+                            Message.obtain(handler, GET_NEW_DATA, map).sendToTarget();
+                        }
+                    }
+                } catch (JSONException e) {
+                    if (isPullData) {
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    } else {
+                        showMemberEmptyView();
+                    }
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                userFinishReFresh();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
 

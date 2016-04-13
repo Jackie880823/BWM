@@ -118,15 +118,12 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
         }
 
         int messageNum = 0;
-        try {
-            messageNum = Integer.parseInt(userEntity.getUnread().toString());
-        } catch (NumberFormatException e) {
-            viewHolder.tvNum.setVisibility(View.GONE);
-            e.printStackTrace();
+        if (isNumeric(userEntity.getUnread())) {
+            messageNum = Integer.parseInt(userEntity.getUnread());
         }
         if (messageNum > 0 && messageNum < 100) {
             viewHolder.tvNum.setVisibility(View.VISIBLE);
-            viewHolder.tvNum.setText(userEntity.getUnread().toString());
+            viewHolder.tvNum.setText(userEntity.getUnread());
         } else if (messageNum > 99) {
             viewHolder.tvNum.setVisibility(View.VISIBLE);
             viewHolder.tvNum.setText("99+");
@@ -153,7 +150,6 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
         return convertView;
     }
 
-
     class ViewHolder {
         CircularNetworkImage imageMain;
         TextView memberName;
@@ -162,6 +158,18 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
         TextView lastMessageName;
         ImageView groupSign;
         TextView tvNum;
+    }
+
+    public static boolean isNumeric(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return false;
+        }
+        for (int i = str.length(); --i >= 0; ) {
+            if (!Character.isDigit(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

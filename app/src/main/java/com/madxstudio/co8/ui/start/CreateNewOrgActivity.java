@@ -154,7 +154,6 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setVisibility(View.INVISIBLE);
-        leftButton.setVisibility(View.INVISIBLE);
         changeTitleColor(R.color.btn_bg_color_login_normal);
         tvTitle.setTextColor(getResources().getColor(R.color.login_text_bg_color));
         leftButton.setImageResource(R.drawable.co8_back_button);

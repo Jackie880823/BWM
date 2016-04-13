@@ -498,99 +498,93 @@ public class OrgListActivity extends BaseActivity {
             return;
         }
 
-        new Thread() {
+        new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
             @Override
-            public void run() {
-                super.run();
-                new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
-                    @Override
-                    public void onStart() {
+            public void onStart() {
 
-                    }
+            }
 
-                    @Override
-                    public void onFinish() {
-                        vProgress.setVisibility(View.GONE);
-                    }
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
 
-                    @Override
-                    public void onResult(String response) {
-                        GsonBuilder gsonb = new GsonBuilder();
-                        Gson gson = gsonb.create();
-                        finishReFresh();
-                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                finishReFresh();
+                if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                    showEmptyView();
+                    return;
+                }
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    List<FamilyMemberEntity> memberList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
+                    }.getType());
+                    List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
+                    }.getType());
+                    if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
+                        if (groupList != null && groupList.size() > 0) {
+                            hideEmptyView();
+                            Message.obtain(handler, GET_DATA, groupList).sendToTarget();
+                        } else {
                             showEmptyView();
-                            return;
                         }
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            List<FamilyMemberEntity> memberList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
-                            }.getType());
-                            List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
-                            }.getType());
-                            if (Constant.ORG_TRANSMIT_GROUP.equals(transmitData)) {
-                                if (groupList != null && groupList.size() > 0) {
+                    } else {
+                        if (memberList != null && memberList.size() > 0) {
+                            List<FamilyMemberEntity> staffList = new ArrayList<FamilyMemberEntity>();
+                            List<FamilyMemberEntity> otherList = new ArrayList<FamilyMemberEntity>();
+                            for (FamilyMemberEntity memberEntity : memberList) {
+                                String tree_type = memberEntity.getTree_type();
+                                if (Constant.FAMILY_PARENT.equalsIgnoreCase(tree_type) || Constant.FAMILY_CHILDREN.equalsIgnoreCase(tree_type)
+                                        || Constant.FAMILY_SIBLING.equalsIgnoreCase(tree_type)) {
+                                    staffList.add(memberEntity);
+                                } else {
+                                    otherList.add(memberEntity);
+                                }
+                            }
+                            if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
+                                if (staffList.size() > 0) {
                                     hideEmptyView();
-                                    Message.obtain(handler, GET_DATA, groupList).sendToTarget();
+                                    Message.obtain(handler, GET_DATA, staffList).sendToTarget();
                                 } else {
                                     showEmptyView();
                                 }
                             } else {
-                                if (memberList != null && memberList.size() > 0) {
-                                    List<FamilyMemberEntity> staffList = new ArrayList<FamilyMemberEntity>();
-                                    List<FamilyMemberEntity> otherList = new ArrayList<FamilyMemberEntity>();
-                                    for (FamilyMemberEntity memberEntity : memberList) {
-                                        String tree_type = memberEntity.getTree_type();
-                                        if (Constant.FAMILY_PARENT.equalsIgnoreCase(tree_type) || Constant.FAMILY_CHILDREN.equalsIgnoreCase(tree_type)
-                                                || Constant.FAMILY_SIBLING.equalsIgnoreCase(tree_type)) {
-                                            staffList.add(memberEntity);
-                                        } else {
-                                            otherList.add(memberEntity);
-                                        }
-                                    }
-                                    if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
-                                        if (staffList.size() > 0) {
-                                            hideEmptyView();
-                                            Message.obtain(handler, GET_DATA, staffList).sendToTarget();
-                                        } else {
-                                            showEmptyView();
-                                        }
-                                    } else {
-                                        if (otherList.size() > 0) {
-                                            hideEmptyView();
-                                            Message.obtain(handler, GET_DATA, otherList).sendToTarget();
-                                        } else {
-                                            showEmptyView();
-                                        }
-                                    }
+                                if (otherList.size() > 0) {
+                                    hideEmptyView();
+                                    Message.obtain(handler, GET_DATA, otherList).sendToTarget();
                                 } else {
                                     showEmptyView();
                                 }
                             }
-                        } catch (JSONException e) {
-                            finishReFresh();
+                        } else {
                             showEmptyView();
-                            e.printStackTrace();
                         }
                     }
-
-                    @Override
-                    public void onError(Exception e) {
-                        MessageUtil.showMessage(mContext, R.string.msg_action_failed);
-                        finishReFresh();
-                    }
-
-                    @Override
-                    public void onCancelled() {
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
+                } catch (JSONException e) {
+                    finishReFresh();
+                    showEmptyView();
+                    e.printStackTrace();
+                }
             }
-        }.start();
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                finishReFresh();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     Handler handler = new Handler(new Handler.Callback() {
