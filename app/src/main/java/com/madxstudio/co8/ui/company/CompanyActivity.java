@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,9 @@ import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
@@ -117,7 +121,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     /**
      * 当前用户实例
      */
-    private UserEntity currentUser = MainActivity.getUser();
+    private UserEntity currentUser = App.getLoginedUser();
 
     /**
      * 初始底部栏，没有可以不操作
@@ -383,7 +387,26 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onResult(String string) {
                 LogUtil.d(TAG, "onResult() called with: leave company " + "string = [" + string + "]");
-                finish();
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    String statusCode = jsonObject.getString(Constant.RESPONSE_STATUS_CODE);
+                    String status = jsonObject.getString(Constant.RESPONSE_STATUS);
+                    if ("200".equals(statusCode) // 请求连接没有问题
+                            && !TextUtils.isEmpty(status) // 返回的状态不为空
+                            && !Constant.STATUS_SUCCESS.equalsIgnoreCase(status) // 返回为成功的状态
+                            ) {
+                        // 修改登陆的用户公司状态，没有加入公司，也没有创建公司
+                        currentUser.setPending_org("1");
+                        currentUser.setDemo("1");
+                        // 保存修改
+                        App.changeLoginedUser(currentUser);
+                        finish();
+                    } else {
+                        MessageUtil.showMessage(CompanyActivity.this, R.string.msg_action_failed);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
