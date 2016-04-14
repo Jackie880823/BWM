@@ -706,30 +706,29 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private String getReminderTime(String string) {
         String[] reminderArrayUs = getActivity().getResources().getStringArray(R.array.reminder_item);
-        for (int i = 0; i < reminderArrayUs.length; i++) {
-            if (string.equals(reminderArrayUs[i])) {
-                if (i == 0) {
-                    return 0 + "";
-                } else if (i == 1) {
-                    return "" + 5;
-                } else if (i == 2) {
-                    return "" + 15;
-                } else if (i == 3) {
-                    return "" + 30;
-                } else if (i == 4) {
-                    return "" + 60;
-                } else if (i == 5) {
-                    return "" + 120;
-                } else if (i == 6) {
-                    return "" + 60 * 24;
-                } else if (i == 7) {
-                    return "" + 60 * 24 * 2;
-                } else if (i == 8) {
-                    return "" + 60 * 24 * 7;
-                }
+        if (reminderArrayUs != null && reminderArrayUs.length >= 8) {
+            if (reminderArrayUs[0].equals(string)) {
+                return 0 + "";
+            } else if (reminderArrayUs[1].equals(string)) {
+                return 5 + "";
+            } else if (reminderArrayUs[2].equals(string)) {
+                return 15 + "";
+            } else if (reminderArrayUs[3].equals(string)) {
+                return 30 + "";
+            } else if (reminderArrayUs[4].equals(string)) {
+                return 60 + "";
+            } else if (reminderArrayUs[5].equals(string)) {
+                return 120 + "";
+            } else if (reminderArrayUs[6].equals(string)) {
+                return 60 * 24 + "";
+            } else if (reminderArrayUs[7].equals(string)) {
+                return 60 * 24 * 2 + "";
+            } else {
+                return 60 * 24 * 7 + "";
             }
+        } else {
+            return "0";
         }
-        return "0";
     }
 
     private void showReminderDialog() {

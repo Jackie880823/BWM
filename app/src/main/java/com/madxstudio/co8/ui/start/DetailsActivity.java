@@ -15,6 +15,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -244,6 +245,15 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
@@ -447,12 +457,19 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                             et_organisation_name.setText(searchEntity.getName());
                         }
                     }
+                    break;
                 default:
                     break;
 
             }
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isCreateNewOrg = false;
     }
 
     private void doHttpCompleteProfile() {

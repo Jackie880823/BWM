@@ -44,7 +44,7 @@ public class AlbumActivity extends BaseActivity {
     private String memberId;
     private String selectYear;
     private AlbumAdapter albumAdapter;
-//    private ProgressDialog mProgressDialog;
+    //    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0X11;
     private LinearLayout no_image_linear;
     private TextView textView;
@@ -61,6 +61,7 @@ public class AlbumActivity extends BaseActivity {
     protected void initBottomBar() {
 
     }
+
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
@@ -77,6 +78,7 @@ public class AlbumActivity extends BaseActivity {
     protected void titleRightEvent() {
         showSelectDialog();
     }
+
     //选择年dialog
     private void showSelectDialog() {
         final View selectIntention = LayoutInflater.from(mContext).inflate(R.layout.dialog_album_select_year, null);
@@ -169,85 +171,81 @@ public class AlbumActivity extends BaseActivity {
 
     @Override
     public void requestData() {
-        new Thread() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("viewer_id", MainActivity.getUser().getUser_id());
+        params.put("member_id", memberId);
+        params.put("year", selectYear);
+        String url = UrlUtil.generateUrl(Constant.API_GET_YEAR_ALBUM_LIST, params);
+        new HttpTools(mContext).get(url, null, Tag, new HttpCallback() {
             @Override
-            public void run() {
-                super.run();
-                HashMap<String, String> params = new HashMap<>();
-                params.put("viewer_id", MainActivity.getUser().getUser_id());
-                params.put("member_id", memberId);
-                params.put("year", selectYear);
-                String url = UrlUtil.generateUrl(Constant.API_GET_YEAR_ALBUM_LIST, params);
-                new HttpTools(mContext).get(url, null,Tag, new HttpCallback() {
-                    @Override
-                    public void onStart() {
-                    }
+            public void onStart() {
+            }
 
-                    @Override
-                    public void onFinish() {
-                    }
+            @Override
+            public void onFinish() {
+            }
 
-                    @Override
-                    public void onResult(String response) {
+            @Override
+            public void onResult(String response) {
 //                        if (mProgressDialog.isShowing()) {
 //                            mProgressDialog.dismiss();
 //                        }
-                        List<AlbumEntity> albumList = new ArrayList<>();
-                        try {
-                            JSONArray jsonArray = new JSONArray(response);
-                            AlbumEntity albumEntity;
-                            JSONObject jsonObject;
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                jsonObject = jsonArray.getJSONObject(i);
-                                albumEntity = new AlbumEntity();
-                                albumEntity.setMonth(jsonObject.optString("month"));
-                                albumEntity.setYear(jsonObject.optString("year"));
-                                List<AlbumPhotoEntity> photoList = new ArrayList<>();
-                                JSONObject json = jsonObject.optJSONObject("photo");
-                                albumEntity.setTotal(json.optString("total"));
-                                JSONArray photoJSONArray = json.getJSONArray("data");
-                                if (photoJSONArray == null || photoJSONArray.length() == 0) {
-                                    continue;
-                                }
-                                AlbumPhotoEntity albumPhotoEntity;
-                                JSONObject photoJsonObject;
-                                for (int j = 0; j < photoJSONArray.length(); j++) {
-                                    photoJsonObject = photoJSONArray.getJSONObject(j);
-                                    albumPhotoEntity = new AlbumPhotoEntity();
-                                    albumPhotoEntity.setContent_creator_id(photoJsonObject.optString("content_creator_id"));
-                                    albumPhotoEntity.setContent_group_flag(photoJsonObject.optString("content_group_flag"));
-                                    albumPhotoEntity.setContent_group_id(photoJsonObject.optString("content_group_id"));
-                                    albumPhotoEntity.setContent_id(photoJsonObject.optString("content_id"));
-                                    albumPhotoEntity.setContent_type(photoJsonObject.optString("content_type"));
-                                    albumPhotoEntity.setCreation_date(photoJsonObject.optString("creation_date"));
-                                    albumPhotoEntity.setCreation_month(photoJsonObject.optString("creation_month"));
-                                    albumPhotoEntity.setFile_id(photoJsonObject.optString("file_id"));
-                                    albumPhotoEntity.setGroup_id(photoJsonObject.optString("group_id"));
-                                    albumPhotoEntity.setPhoto_caption(photoJsonObject.optString("photo_caption"));
-                                    albumPhotoEntity.setPhoto_id(photoJsonObject.optString("photo_id"));
-                                    albumPhotoEntity.setPhoto_thumbsize(photoJsonObject.optString("photo_thumbsize"));
-                                    photoList.add(albumPhotoEntity);
-                                }
-                                albumEntity.setPhotoList(photoList);
-                                albumList.add(albumEntity);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                List<AlbumEntity> albumList = new ArrayList<>();
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    AlbumEntity albumEntity;
+                    JSONObject jsonObject;
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObject = jsonArray.getJSONObject(i);
+                        albumEntity = new AlbumEntity();
+                        albumEntity.setMonth(jsonObject.optString("month"));
+                        albumEntity.setYear(jsonObject.optString("year"));
+                        List<AlbumPhotoEntity> photoList = new ArrayList<>();
+                        JSONObject json = jsonObject.optJSONObject("photo");
+                        albumEntity.setTotal(json.optString("total"));
+                        JSONArray photoJSONArray = json.getJSONArray("data");
+                        if (photoJSONArray == null || photoJSONArray.length() == 0) {
+                            continue;
                         }
+                        AlbumPhotoEntity albumPhotoEntity;
+                        JSONObject photoJsonObject;
+                        for (int j = 0; j < photoJSONArray.length(); j++) {
+                            photoJsonObject = photoJSONArray.getJSONObject(j);
+                            albumPhotoEntity = new AlbumPhotoEntity();
+                            albumPhotoEntity.setContent_creator_id(photoJsonObject.optString("content_creator_id"));
+                            albumPhotoEntity.setContent_group_flag(photoJsonObject.optString("content_group_flag"));
+                            albumPhotoEntity.setContent_group_id(photoJsonObject.optString("content_group_id"));
+                            albumPhotoEntity.setContent_id(photoJsonObject.optString("content_id"));
+                            albumPhotoEntity.setContent_type(photoJsonObject.optString("content_type"));
+                            albumPhotoEntity.setCreation_date(photoJsonObject.optString("creation_date"));
+                            albumPhotoEntity.setCreation_month(photoJsonObject.optString("creation_month"));
+                            albumPhotoEntity.setFile_id(photoJsonObject.optString("file_id"));
+                            albumPhotoEntity.setGroup_id(photoJsonObject.optString("group_id"));
+                            albumPhotoEntity.setPhoto_caption(photoJsonObject.optString("photo_caption"));
+                            albumPhotoEntity.setPhoto_id(photoJsonObject.optString("photo_id"));
+                            albumPhotoEntity.setPhoto_thumbsize(photoJsonObject.optString("photo_thumbsize"));
+                            photoList.add(albumPhotoEntity);
+                        }
+                        albumEntity.setPhotoList(photoList);
+                        albumList.add(albumEntity);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
 //                        Gson gson = new GsonBuilder().create();
 //                        albumEntityList = gson.fromJson(response, new TypeToken<ArrayList<AlbumEntity>>() {
 //                        }.getType());
-                        Message.obtain(handler, GET_DATA, albumList).sendToTarget();
-                        if (null == albumList || albumList.size() == 0) {
-                            no_image_linear.setVisibility(View.VISIBLE);
-                        } else {
-                            no_image_linear.setVisibility(View.GONE);
-                        }
-                    }
+                Message.obtain(handler, GET_DATA, albumList).sendToTarget();
+                if (null == albumList || albumList.size() == 0) {
+                    no_image_linear.setVisibility(View.VISIBLE);
+                } else {
+                    no_image_linear.setVisibility(View.GONE);
+                }
+            }
 
-                    @Override
-                    public void onError(Exception e) {
+            @Override
+            public void onError(Exception e) {
 //                        if (mProgressDialog.isShowing()) {
 //                            mProgressDialog.dismiss();
 //                        }
@@ -255,17 +253,15 @@ public class AlbumActivity extends BaseActivity {
                         MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
                     }
 
-                    @Override
-                    public void onCancelled() {
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
+            @Override
+            public void onCancelled() {
             }
-        }.start();
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     @Override

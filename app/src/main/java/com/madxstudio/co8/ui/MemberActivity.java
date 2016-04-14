@@ -260,7 +260,7 @@ public class MemberActivity extends BaseActivity {
         showAddDialog = new MyDialog(this, getResources().getString(R.string.text_tips_title), selectIntention);
         showAddDialog.setCanceledOnTouchOutside(false);
 
-        showAddDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
+        showAddDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAddDialog.dismiss();

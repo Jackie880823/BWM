@@ -752,4 +752,5 @@
     <!--<string name="text_dialog_remove_message">Remove Message</string>-->
     <!--<string name="text_sure_remove_message">Are you sure you want to remove these message?</string>-->
     <!--<string name="posted_by">Posted by:</string>-->
+    <!--<string name="text_org_nomal_show">Name will be shown as Display Name</string>-->
 </resources>

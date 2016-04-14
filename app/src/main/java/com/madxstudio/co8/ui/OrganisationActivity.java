@@ -1,6 +1,5 @@
 package com.madxstudio.co8.ui;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +26,6 @@ import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.ui.family.FamilyTreeActivity;
 import com.madxstudio.co8.ui.start.CreateNewOrgActivity;
 import com.madxstudio.co8.util.MessageUtil;
-import com.madxstudio.co8.util.SDKUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.material.widget.Dialog;
 
@@ -53,6 +52,7 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
     private View vProgress;
     private static final int CANCEL_JOIN_ORG_SUCCESS = 0X10;
     private static final int RESEND_JOIN_ORG_SUCCESS = 0X11;
+    private static final int GET_OWN_ORG_SUCCESS = 0X12;
 
     @Override
     public int getLayout() {
@@ -114,24 +114,58 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
-        userEntity = App.getLoginedUser();
-        if ("0".equals(userEntity.getDemo()) && "0".equals(userEntity.getPending_org())) {
-            rl_org_join.setVisibility(View.GONE);
-            ll_org_list.setVisibility(View.VISIBLE);
-        } else if ("1".equals(userEntity.getDemo()) && "1".equals(userEntity.getPending_org())) {
-            rl_org_join.setVisibility(View.VISIBLE);
-            ll_org_list.setVisibility(View.GONE);
-            br_join_now.setText(getString(R.string.text_org_cancel_request));
-            br_create_new.setText(getString(R.string.text_org_resend_request));
-            String string = String.format(getString(R.string.text_org_have_join), userEntity.getOrganisation());
-            tv_join.setText(Html.fromHtml(string));
-        } else {
-            rl_org_join.setVisibility(View.VISIBLE);
-            ll_org_list.setVisibility(View.GONE);
-            br_join_now.setText(getString(R.string.text_org_join_now));
-            br_create_new.setText(getString(R.string.text_org_create_new));
-            tv_join.setText(getString(R.string.text_org_no_join));
-        }
+        getData();
+    }
+
+    private void getData() {
+
+        new HttpTools(mContext).get(String.format(Constant.API_GET_USER_ORG, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String demo = jsonObject.optString("demo");
+                    String pending_org = jsonObject.optString("pending_org");
+                    UserEntity userEntity = MainActivity.getUser();
+                    if (!TextUtils.isEmpty(demo)) {
+                        userEntity.setDemo(demo);
+                    }
+                    if (!TextUtils.isEmpty(pending_org)) {
+                        userEntity.setPending_org(pending_org);
+                    }
+                    App.changeLoginedUser(userEntity);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    handler.sendEmptyMessage(GET_OWN_ORG_SUCCESS);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                handler.sendEmptyMessage(GET_OWN_ORG_SUCCESS);
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     @Override
@@ -283,7 +317,7 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
-    private void showJoinDialog(String showContent){
+    private void showJoinDialog(String showContent) {
         View selectIntention = LayoutInflater.from(mContext).inflate(R.layout.dialog_message_delete, null);
         final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView copyText = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
@@ -317,6 +351,26 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
                     br_create_new.setText(getString(R.string.text_org_create_new));
                     tv_join.setText(getString(R.string.text_org_no_join));
                     userEntity = App.getLoginedUser();
+                    break;
+                case GET_OWN_ORG_SUCCESS:
+                    userEntity = App.getLoginedUser();
+                    if ("0".equals(userEntity.getDemo()) && "0".equals(userEntity.getPending_org())) {
+                        rl_org_join.setVisibility(View.GONE);
+                        ll_org_list.setVisibility(View.VISIBLE);
+                    } else if ("1".equals(userEntity.getDemo()) && "1".equals(userEntity.getPending_org())) {
+                        rl_org_join.setVisibility(View.VISIBLE);
+                        ll_org_list.setVisibility(View.GONE);
+                        br_join_now.setText(getString(R.string.text_org_cancel_request));
+                        br_create_new.setText(getString(R.string.text_org_resend_request));
+                        String string = String.format(getString(R.string.text_org_have_join), userEntity.getOrganisation());
+                        tv_join.setText(Html.fromHtml(string));
+                    } else {
+                        rl_org_join.setVisibility(View.VISIBLE);
+                        ll_org_list.setVisibility(View.GONE);
+                        br_join_now.setText(getString(R.string.text_org_join_now));
+                        br_create_new.setText(getString(R.string.text_org_create_new));
+                        tv_join.setText(getString(R.string.text_org_no_join));
+                    }
                     break;
             }
             return false;

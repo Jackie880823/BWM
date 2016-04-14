@@ -1,6 +1,7 @@
 package com.madxstudio.co8.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import com.android.volley.ext.tools.BitmapTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.MemberEntity;
+import com.madxstudio.co8.ui.OrgDetailActivity;
+import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 
 import java.util.List;
@@ -27,6 +30,10 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
     private final static int TAG_AUTO_ACCEPT = 2;
     private final static int TAG_ADDED = 3;
     private final static int TAG_UPDATED = 4;
+    private final static int TAG_JOIN_ORG = 5;
+    private final static int TAG_SET_ADMIN = 6;
+    private final static int TAG_REMOVE_ADMIN = 7;
+    private final static int TAG_REMOVE_CONTACT = 8;
 
     //add，awaiting，auto-accept，added(同意)，updated(修改关系)。
     private String[] action ;
@@ -138,10 +145,52 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             }
             break;
 
+            case TAG_JOIN_ORG:
+                setOrgAlert(holder, memberEntity, TAG_JOIN_ORG);
+                break;
+            case TAG_SET_ADMIN:
+                setOrgAlert(holder, memberEntity, TAG_JOIN_ORG);
+                break;
+            case TAG_REMOVE_ADMIN:
+                setOrgAlert(holder, memberEntity, TAG_REMOVE_ADMIN);
+                break;
+            case TAG_REMOVE_CONTACT:
+                holder.updated.setVisibility(View.GONE);
+                holder.add.setVisibility(View.GONE);
+                holder.awaiting.setVisibility(View.GONE);
+                holder.added.setVisibility(View.GONE);
+
+                holder.owner_content.setText(action[TAG_REMOVE_CONTACT] + memberEntity.getRelationship());
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent othersIntent = new Intent(mContext, OrgDetailActivity.class);
+                        othersIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
+                        mContext.startActivity(othersIntent);
+                    }
+                });
+                break;
+
             default:
                 break;
         }
 
+    }
+
+    private void setOrgAlert(VHItem holder, MemberEntity memberEntity, int alertTag) {
+        holder.updated.setVisibility(View.GONE);
+        holder.add.setVisibility(View.GONE);
+        holder.awaiting.setVisibility(View.GONE);
+        holder.added.setVisibility(View.GONE);
+
+        holder.owner_content.setText(action[alertTag] + memberEntity.getRelationship());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent companyIntent = new Intent(mContext, CompanyActivity.class);
+                mContext.startActivity(companyIntent);
+            }
+        });
     }
 
     public int tag(String moduleAction){
@@ -162,6 +211,18 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                 tag = TAG_UPDATED;
                 break;
 
+            case "approvedJoinOrg":
+                tag = TAG_JOIN_ORG;
+                break;
+            case "setAdmin":
+                tag = TAG_SET_ADMIN;
+                break;
+            case "removeAdmin":
+                tag = TAG_REMOVE_ADMIN;
+                break;
+            case "removeContact":
+                tag = TAG_REMOVE_CONTACT;
+                break;
         }
         return tag;
     }

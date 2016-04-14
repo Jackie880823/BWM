@@ -12,18 +12,25 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.EventCommentAdapter;
@@ -42,9 +49,6 @@ import com.madxstudio.co8.util.UIUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
 import com.madxstudio.co8.widget.SendComment;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.material.widget.CircularProgress;
 
 import org.json.JSONException;
@@ -52,6 +56,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -411,7 +416,105 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 initListSecondView(listSecondView);
             }
         });
+        adapter.setReminderListener(new EventCommentAdapter.ReminderListener() {
+            @Override
+            public void putReminder(String groupId) {
+                showReminderDialog(groupId);
+            }
+        });
         rvList.setAdapter(adapter);
+    }
+
+    private void showReminderDialog(final String groupId) {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        final View reminderView = factory.inflate(R.layout.meeting_reminder_list, null);
+        ListView listView = (ListView) reminderView.findViewById(R.id.reminder_list_view);
+        String[] reminderArrayUs = mContext.getResources().getStringArray(R.array.reminder_item);
+        final List<String> list = Arrays.asList(reminderArrayUs);
+        ArrayAdapter reminderAdapter = new ArrayAdapter(mContext, android.R.layout.simple_list_item_1, list);
+        listView.setAdapter(reminderAdapter);
+        final MyDialog item_reminderDialog = new MyDialog(mContext, "", reminderView);
+        if (!item_reminderDialog.isShowing()) {
+            item_reminderDialog.show();
+        }
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                item_reminderDialog.dismiss();
+                int min = 0;
+                if (i == 0) {
+                    min = 0;
+                } else if (i == 1) {
+                    min = 5;
+                } else if (i == 2) {
+                    min = 15;
+                } else if (i == 3) {
+                    min = 30;
+                } else if (i == 4) {
+                    min = 60;
+                } else if (i == 5) {
+                    min = 120;
+                } else if (i == 6) {
+                    min = 60 * 24;
+                } else if (i == 7) {
+                    min = 60 * 24 * 2;
+                } else if (i == 8) {
+                    min = 60 * 24 * 7;
+                }
+                putReminder(min + "", groupId);
+            }
+        });
+
+    }
+
+    private void putReminder(String reminder_minute, String groupId) {
+        RequestInfo info = new RequestInfo();
+        Map<String, String> params = new HashMap<>();
+        params.put("user_id", MainActivity.getUser().getUser_id());
+        params.put("reminder_minute", reminder_minute);
+        info.jsonParam = UrlUtil.mapToJsonstring(params);
+        info.url = String.format(Constant.API_SET_MEETING_REMINDER, groupId);
+        new HttpTools(getActivity()).put(info, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    String response_message = jsonObject.optString("response_message");
+                    if ("Server.ResponseSuccess".equalsIgnoreCase(response_message)) {
+                        requestData();
+                    } else {
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     private void initListSecondView(View listSecondView) {

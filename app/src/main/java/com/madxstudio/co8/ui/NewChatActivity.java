@@ -467,62 +467,56 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
             return;
         }
 
-        new Thread() {
+        new HttpTools(mContext).get(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
             @Override
-            public void run() {
-                super.run();
-                new HttpTools(mContext).get(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
-                    @Override
-                    public void onStart() {
+            public void onStart() {
 
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        vProgress.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onResult(String response) {
-                        GsonBuilder gsonb = new GsonBuilder();
-                        Gson gson = gsonb.create();
-                        finishReFresh();
-                        if (TextUtils.isEmpty(response) || "[]".equals(response)) {
-                            showMemberEmptyView();
-                        }
-                        List<OrgMemberEntity> memberList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
-                        }.getType());
-                        if (memberList != null && memberList.size() > 0) {
-                            hideMemberEmptyView();
-                            allMemberList.clear();
-                            for (OrgMemberEntity memberEntity : memberList) {
-                                if (!"0".equals(memberEntity.getFam_accept_flag())) {
-                                    allMemberList.add(memberEntity);
-                                }
-                            }
-                            Message.obtain(handler, GET_DATA, memberList).sendToTarget();
-                        } else {
-                            showMemberEmptyView();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
-                        finishReFresh();
-                    }
-
-                    @Override
-                    public void onCancelled() {
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
             }
-        }.start();
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                finishReFresh();
+                if (TextUtils.isEmpty(response) || "[]".equals(response)) {
+                    showMemberEmptyView();
+                }
+                List<OrgMemberEntity> memberList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
+                }.getType());
+                if (memberList != null && memberList.size() > 0) {
+                    hideMemberEmptyView();
+                    allMemberList.clear();
+                    for (OrgMemberEntity memberEntity : memberList) {
+                        if (!"0".equals(memberEntity.getFam_accept_flag())) {
+                            allMemberList.add(memberEntity);
+                        }
+                    }
+                    Message.obtain(handler, GET_DATA, memberList).sendToTarget();
+                } else {
+                    showMemberEmptyView();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                finishReFresh();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     private void getGroupData() {
@@ -532,57 +526,53 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
             return;
         }
 
-        new Thread() {
+        new HttpTools(mContext).get(String.format(Constant.API_GET_GROUP_LIST, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
             @Override
-            public void run() {
-                super.run();
-                new HttpTools(mContext).get(String.format(Constant.API_GET_GROUP_LIST, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
-                    @Override
-                    public void onStart() {
-                        vProgress.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        vProgress.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onResult(String response) {
-                        GsonBuilder gsonb = new GsonBuilder();
-                        Gson gson = gsonb.create();
-                        finishReFresh();
-                        if (TextUtils.isEmpty(response) || "[]".equals(response)) {
-                            showGroupEmptyView();
-                        }
-                        List<OrgGroupEntity> groupList = gson.fromJson(response, new TypeToken<ArrayList<OrgGroupEntity>>() {
-                        }.getType());
-
-                        if (groupList != null && groupList.size() > 0) {
-                            hideGroupEmptyView();
-                            Message.obtain(handler, GET_GROUP_DATA, groupList).sendToTarget();
-                        } else {
-                            showGroupEmptyView();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
-                        finishReFresh();
-                    }
-
-                    @Override
-                    public void onCancelled() {
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
             }
-        }.start();
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                finishReFresh();
+                if (TextUtils.isEmpty(response) || "[]".equals(response)) {
+                    showGroupEmptyView();
+                }
+                List<OrgGroupEntity> groupList = gson.fromJson(response, new TypeToken<ArrayList<OrgGroupEntity>>() {
+                }.getType());
+
+                if (groupList != null && groupList.size() > 0) {
+                    hideGroupEmptyView();
+                    Message.obtain(handler, GET_GROUP_DATA, groupList).sendToTarget();
+                } else {
+                    showGroupEmptyView();
+                }
+            }
+
+
+            @Override
+
+            public void onError(Exception e) {
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                finishReFresh();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     @Override

@@ -1383,7 +1383,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
         mic_iv.setOnLongClickListener(this);
 
-        etChat.setFilters(new InputFilter[]{new CustomLengthFilter(INPUT_EDIT_MAX_LENGTH)});
+//        etChat.setFilters(new InputFilter[]{new CustomLengthFilter(INPUT_EDIT_MAX_LENGTH)});
 
         etChat.addTextChangedListener(new TextWatcher() {
             @Override

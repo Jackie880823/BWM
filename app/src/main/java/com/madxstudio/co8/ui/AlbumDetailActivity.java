@@ -45,7 +45,7 @@ public class AlbumDetailActivity extends BaseActivity {
     private String memberId;
     private String fileId;
     private int startIndex = 0;
-//    private ProgressDialog mProgressDialog;
+    //    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0X11;
     private AlbumDetailAdapter albumDetailAdapter;
     private String total;
@@ -193,7 +193,7 @@ public class AlbumDetailActivity extends BaseActivity {
     private void setImageData(String albumFileId) {
         nowSelectIndex = albumDetailAdapter.getSelectPosition();
         pic_num.setText(String.format("<%s/%s>", albumDetailAdapter.getSelectPosition() + 1 + "", total));
-        BitmapTools.getInstance(mContext).display( imageView, String.format(Constant.API_GET_PIC, Constant.Module_preview, memberId, albumFileId),
+        BitmapTools.getInstance(mContext).display(imageView, String.format(Constant.API_GET_PIC, Constant.Module_preview, memberId, albumFileId),
                 R.drawable.network_image_default, R.drawable.network_image_default);
     }
 
@@ -225,76 +225,70 @@ public class AlbumDetailActivity extends BaseActivity {
 
     @Override
     public void requestData() {
-        new Thread() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("viewer_id", MainActivity.getUser().getUser_id());
+        params.put("member_id", memberId);
+        params.put("year", year);
+        params.put("month", month);
+        params.put("start", 20 * startIndex + "");
+        params.put("limit", "20");
+        String url = UrlUtil.generateUrl(Constant.API_GET_MONTH_ALBUM_LIST, params);
+        new HttpTools(mContext).get(url, null, TAG, new HttpCallback() {
+
             @Override
-            public void run() {
-                super.run();
-                HashMap<String, String> params = new HashMap<>();
-                params.put("viewer_id", MainActivity.getUser().getUser_id());
-                params.put("member_id", memberId);
-                params.put("year", year);
-                params.put("month", month);
-                params.put("start", 20 * startIndex + "");
-                params.put("limit", "20");
-                String url = UrlUtil.generateUrl(Constant.API_GET_MONTH_ALBUM_LIST, params);
-                new HttpTools(mContext).get(url, null, TAG, new HttpCallback() {
+            public void onStart() {
 
-                    @Override
-                    public void onStart() {
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-
-                    }
-
-                    @Override
-                    public void onResult(String response) {
-//                        if (mProgressDialog.isShowing()) {
-//                            mProgressDialog.dismiss();
-//                        }
-                        if (isPullData) {
-                            startIndex++;
-                            isPullData = false;
-                        }
-                        GsonBuilder gsonb = new GsonBuilder();
-                        Gson gson = gsonb.create();
-                        Map<String, Object> map = new HashMap<>();
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            List<AlbumPhotoEntity> albumList = gson.fromJson(jsonObject.optString("data"), new TypeToken<ArrayList<AlbumPhotoEntity>>() {
-                            }.getType());
-                            String total = jsonObject.optString("total");
-                            map.put("data", albumList);
-                            map.put("total", total);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Message.obtain(handler, GET_DATA, map).sendToTarget();
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-//                        if (mProgressDialog.isShowing()) {
-//                            mProgressDialog.dismiss();
-//                        }
-                    }
-
-                    @Override
-                    public void onCancelled() {
-//                        if (mProgressDialog.isShowing()) {
-//                            mProgressDialog.dismiss();
-//                        }
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
             }
-        }.start();
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
+                if (isPullData) {
+                    startIndex++;
+                    isPullData = false;
+                }
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                Map<String, Object> map = new HashMap<>();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    List<AlbumPhotoEntity> albumList = gson.fromJson(jsonObject.optString("data"), new TypeToken<ArrayList<AlbumPhotoEntity>>() {
+                    }.getType());
+                    String total = jsonObject.optString("total");
+                    map.put("data", albumList);
+                    map.put("total", total);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Message.obtain(handler, GET_DATA, map).sendToTarget();
+            }
+
+            @Override
+            public void onError(Exception e) {
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
+            }
+
+            @Override
+            public void onCancelled() {
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     @Override
