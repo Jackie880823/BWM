@@ -40,7 +40,7 @@
             style="@style/tv_start_light_small"
             android:layout_marginLeft="@dimen/default_content_padding"
             android:paddingLeft="@dimen/default_content_padding"
-            android:text="@string/text_start_detail_first_name_prompt" />
+            android:text="@string/text_org_nomal_show" />
 
         <TextView
             android:id="@+id/tv_first_name_error"

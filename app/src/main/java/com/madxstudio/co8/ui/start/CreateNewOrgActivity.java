@@ -32,14 +32,18 @@ import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.PicturesCacheUtil;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.CountryCodeActivity;
+import com.madxstudio.co8.ui.PickAndCropPictureActivity;
 import com.madxstudio.co8.ui.share.SelectPhotosActivity;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LocalImageLoader;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyTextUtil;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.material.widget.Dialog;
 import com.material.widget.PaperButton;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,7 +67,6 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
     public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
     private final static int REQUEST_HEAD_PHOTO = 1;
     private final static int REQUEST_HEAD_CAMERA = 2;
-    private final static int REQUEST_HEAD_FINAL = 3;
     private static final int GET_COUNTRY_CODE = 0x11;
     private final static int HANDLER_COMPLETE_PROFILE_SUCCESS = 0x12;
     private final static int GET_CREATE_ORG_EXIST = 0x13;
@@ -240,11 +243,11 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
         super.onClick(v);
         switch (v.getId()) {
             case R.id.rl_pic:
-                showCameraAlbum();
+                showCameraAlbum(v);
                 break;
 
             case R.id.civ_pic:
-                showCameraAlbum();
+                showCameraAlbum(v);
                 break;
 
             case R.id.br_next:
@@ -269,7 +272,7 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
         brNext.setClickable(true);
     }
 
-    private void showCameraAlbum() {
+    private void showCameraAlbum(final View view) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_camera_album, null);
         showCameraAlbum = new MyDialog(this, null, selectIntention);
@@ -281,18 +284,14 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                intent2.putExtra("android.intent.extras.CAMERA_FACING", 1);
-                intent2.putExtra("camerasensortype", 2);
-
-                // 下面这句指定调用相机拍照后的照片存储的路径
-                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getCachePicFileByName(CreateNewOrgActivity.this,
-                                CACHE_PIC_NAME_TEMP, true)));
-                // 图片质量为高
-                intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                intent2.putExtra("return-data", false);
-                startActivityForResult(intent2, REQUEST_HEAD_CAMERA);
+                Intent intent = new Intent(mContext, PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, view.getWidth());
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, view.getHeight());
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
+                startActivityForResult(intent, REQUEST_HEAD_CAMERA);
+                showCameraAlbum = null;
             }
         });
 
@@ -300,10 +299,14 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(CreateNewOrgActivity.this, SelectPhotosActivity.class);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                startActivityForResult(intent, REQUEST_HEAD_PHOTO);
+                Intent intent = new Intent(mContext, PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, view.getWidth());
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, view.getHeight());
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
+                startActivityForResult(intent, REQUEST_HEAD_CAMERA);
+                showCameraAlbum = null;
             }
         });
         tv_cancel.setOnClickListener(new View.OnClickListener() {
@@ -317,42 +320,14 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
 
     /**
      * 裁剪图片方法实现
-     *
-     * @param uri
-     * @throws IOException
      */
-    public void startPhotoZoom(Uri uri) throws IOException {
-        if (uri == null || uri.getPath() == null) {
-            return;
-        }
-//        String path = LocalImageLoader.compressBitmap(this, uri, 400, 200, false);
-//        Uri source = Uri.fromFile(new File(path));
-//        File f = PicturesCacheUtil.getCachePicFileByName(CreateNewOrgActivity.this, CACHE_PIC_NAME, true);
-//        ImageLoader.getInstance().displayImage(uri.toString(), rlPic, UniversalImageLoaderUtil.options);
-        String path = LocalImageLoader.compressBitmap(mContext, FileUtil.getRealPathFromURI(mContext, uri), 480, 800, false);
-        File file = new File(path);
-
-        mCropImagedUri = Uri.fromFile(file);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        Bitmap photo = BitmapFactory.decodeStream(CreateNewOrgActivity.this.getContentResolver().openInputStream(mCropImagedUri), null, options);
-        if (photo != null) {
-            rlPic.setImageBitmap(photo);
-        }
-//        Crop.of(source, mCropImagedUri).asSquare().start(this, REQUEST_HEAD_FINAL);
-    }
-
-    /**
-     * 保存裁剪之后的图片数据
-     *
-     * @param photo
-     */
-    private void setPicToView(Bitmap photo) {
-        if (photo != null) {
-            rlPic.setImageBitmap(photo);
-//            civPic.setVisibility(View.VISIBLE);
-//            rlPic.setVisibility(View.INVISIBLE);
-        }
+    public void startPhotoZoom() {
+        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder().cloneFrom(UniversalImageLoaderUtil.options);
+        builder.showImageOnFail(R.drawable.ic_profile_title_bg);
+        builder.showImageOnLoading(R.drawable.ic_profile_title_bg);
+        builder.showImageForEmptyUri(R.drawable.ic_profile_title_bg);
+        DisplayImageOptions options = builder.build();
+        ImageLoader.getInstance().displayImage(mCropImagedUri.toString(), rlPic, options);
     }
 
     @Override
@@ -363,54 +338,22 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
                 // 如果是直接从相册获取
                 case REQUEST_HEAD_PHOTO:
                     if (data != null) {
-                        Uri uri;
-                        uri = data.getData();
-                        try {
-                            startPhotoZoom(uri);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        mCropImagedUri = data.getParcelableExtra(PickAndCropPictureActivity.FINAL_PIC_URI);
+                        startPhotoZoom();
                     }
                     break;
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(CreateNewOrgActivity.this,
-                            CACHE_PIC_NAME_TEMP, true));
-//                    uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
-                    if (new File(uri.getPath()).exists()) {
-                        try {
-                            startPhotoZoom(uri);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-
-
-                // 取得裁剪后的图片
-                case REQUEST_HEAD_FINAL:
                     if (data != null) {
-                        Bitmap photo;
-                        try {
-                            imagePath = mCropImagedUri.getPath();
-                            if (!TextUtils.isEmpty(imagePath)) {
-                                BitmapFactory.Options options = new BitmapFactory.Options();
-                                options.inPreferredConfig = Bitmap.Config.RGB_565;
-                                photo = BitmapFactory.decodeStream(CreateNewOrgActivity.this.getContentResolver().openInputStream(mCropImagedUri), null, options);
-                                if (photo != null) {
-                                    setPicToView(photo);
-                                }
-                            }
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
+                        mCropImagedUri = data.getParcelableExtra(PickAndCropPictureActivity.FINAL_PIC_URI);
+                        startPhotoZoom();
                     }
                     break;
+
                 case GET_COUNTRY_CODE:
                     if (resultCode == RESULT_OK) {
                         etLast.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
-//                        data.getStringExtra(CountryCodeActivity.CODE));
                     }
                     break;
 
