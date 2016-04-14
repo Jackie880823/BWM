@@ -676,14 +676,14 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         /**
          * 查看管理员详情
          *
-         * @param userEntity 管理员,封装内容并不全，只包含{@code user_id}和{@code user_given_name}
+         * @param userEntity 管理员,封装内容并不全，只包含{@code group_id}、{@code user_id}和{@code user_given_name}
          */
         void viewAdminProfile(UserEntity userEntity);
 
         /**
          * 给管理员发送信息
          *
-         * @param userEntity 管理员,封装内容并不全，只包含{@code user_id}和{@code user_given_name}
+         * @param userEntity 管理员,封装内容并不全，只包含{@code group_id}、{@code user_id}和{@code user_given_name}
          */
         void sendMessageToAdmin(UserEntity userEntity);
     }
