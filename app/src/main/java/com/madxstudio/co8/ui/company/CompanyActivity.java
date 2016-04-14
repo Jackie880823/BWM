@@ -43,6 +43,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -241,8 +242,10 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         if (mHttpTools == null) {
             mHttpTools = new HttpTools(App.getContextInstance());
         }
+        Map<String, String> params = new Hashtable<>();
+        params.put(Constant.USER_ID, currentUser.getUser_id());
 
-        mHttpTools.get(String.format(OrganisationConstants.API_GET_ORGANISATION_DETAILS, currentUser.getOrg_id()), null, GET_ORGANISATION_TAG, new HttpCallback() {
+        mHttpTools.get(String.format(OrganisationConstants.API_GET_ORGANISATION_DETAILS, currentUser.getOrg_id()), params, GET_ORGANISATION_TAG, new HttpCallback() {
             @Override
             public void onStart() {
                 LogUtil.d(TAG, "onStart: ");
@@ -561,7 +564,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     /**
      * 查看管理员详情
      *
-     * @param userEntity 管理员,封装内容并不全，只包含{@code user_id}和{@code user_given_name}
+     * @param userEntity 管理员,封装内容并不全，只包含{@code group_id}、{@code user_id}和{@code user_given_name}
      */
     @Override
     public void viewAdminProfile(UserEntity userEntity) {
@@ -576,11 +579,11 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     /**
      * 给管理员发送信息
      *
-     * @param userEntity 管理员,封装内容并不全，只包含{@code user_id}和{@code user_given_name}
+     * @param userEntity 管理员,封装内容并不全，只包含{@code group_id}、{@code user_id}和{@code user_given_name}
      */
     @Override
     public void sendMessageToAdmin(UserEntity userEntity) {
-        LogUtil.d(TAG, "sendMessageToAdmin() called with: " + "group_id = [" + userEntity.getGroup_id() + "]; name = [" + userEntity.getUser_given_name() + "]");
+        LogUtil.d(TAG, "sendMessageToAdmin() called with: user_id = [" + userEntity.getUser_id()  + "]; group_id = [" + userEntity.getGroup_id() + "]; name = [" + userEntity.getUser_given_name() + "]");
         Intent intent = new Intent(this, MessageChatActivity.class);
         if (userEntity != null) {
             intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);
@@ -602,6 +605,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         map.put(OrganisationConstants.ADDRESS, profile.getAddress());
         map.put(OrganisationConstants.PHONE, profile.getPhone());
         map.put(OrganisationConstants.EMAIL, profile.getEmail());
+        map.put(Constant.USER_ID, currentUser.getUser_id());
 
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = String.format(OrganisationConstants.API_PUT_ORGANISATION_DETAILS, currentUser.getOrg_id());
