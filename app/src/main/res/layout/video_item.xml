@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/video_view_iv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/_250dp"
         android:layout_centerInParent="true"
         android:minHeight="@dimen/_100dp"
         android:scaleType="centerCrop" />
@@ -15,7 +15,7 @@
     <ImageView
         android:id="@+id/go_to_preview_video_iv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/_250dp"
         android:layout_alignBaseline="@+id/video_view_iv"
         android:layout_centerInParent="true"
         android:scaleType="centerInside"
