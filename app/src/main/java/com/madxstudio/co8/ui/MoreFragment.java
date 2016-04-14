@@ -116,9 +116,6 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         getViewById(R.id.btn_rewards).setOnClickListener(this);
         getViewById(R.id.btn_add_member).setOnClickListener(this);
 
-        /*add by Jackie */
-        setAdminSetting();
-
         news_alert_num = getViewById(R.id.news_alert_num);
 //        member_alert_num = getViewById(R.id.member_alert_num);
 //        recommend_alert_num = getViewById(R.id.recommend_alert_num);
@@ -145,7 +142,10 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     /**
      * 检测管理员状态
      */
-    private void checkAdminState(){
+    private void checkAdminState() {
+
+        setAdminSetting();
+
         new HttpTools(App.getContextInstance()).get(String.format(OrganisationConstants.API_GET_ADMIN_STATE, MainActivity.getUser().getUser_id()), null, CHECK_ADMIN_STATE_TAG, new HttpCallback() {
             @Override
             public void onStart() {
@@ -273,7 +273,6 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 
     @Override
     public void requestData() {
-        checkAdminState();
 
         new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_ALL_COUNT, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
             @Override
@@ -492,6 +491,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     public void onResume() {
         super.onResume();
         requestData();
+        checkAdminState();
         getNum();
     }
 }
