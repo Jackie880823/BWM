@@ -746,4 +746,14 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     public void onFragmentInteraction(Uri uri) {
 
     }
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
+    }
 }

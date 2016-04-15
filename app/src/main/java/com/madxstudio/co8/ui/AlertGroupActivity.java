@@ -1,5 +1,6 @@
 package com.madxstudio.co8.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -307,5 +308,17 @@ public class AlertGroupActivity extends BaseActivity{
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
     }
 }

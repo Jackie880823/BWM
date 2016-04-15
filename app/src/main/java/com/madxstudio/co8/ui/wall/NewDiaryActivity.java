@@ -106,4 +106,14 @@ public class NewDiaryActivity extends BaseActivity {
         }
         return super.dispatchKeyEvent(event);
     }
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
+    }
 }

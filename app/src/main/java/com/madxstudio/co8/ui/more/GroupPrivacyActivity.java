@@ -1,5 +1,6 @@
 package com.madxstudio.co8.ui.more;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -406,5 +407,16 @@ public class GroupPrivacyActivity extends BaseActivity {
         if (mProgressDialog != null) {
             mProgressDialog.setVisibility(View.INVISIBLE);
         }
+    }
+
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
     }
 }
