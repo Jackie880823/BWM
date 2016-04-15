@@ -257,7 +257,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
     private void showNoFriendDialog(final OrgMemberEntity familyMemberEntity) {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
         TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
         TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
@@ -301,7 +301,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
     private void showGroupDialog(final OrgGroupEntity groupEntity) {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
         TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
         TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
@@ -425,7 +425,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
     private void showStaffDialog(final OrgMemberEntity memberEntity) {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
         TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
         TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
@@ -729,7 +729,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
     private void showRequestDialog(final AdminPendingRequest pendingRequest) {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
         TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_to_message);
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);

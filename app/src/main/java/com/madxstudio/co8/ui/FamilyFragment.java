@@ -117,7 +117,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
     private View emptyMemberTv;
     private View vProgress;
     private GridView groupListView;
-    private Dialog showSelectDialog;
+    private MyDialog showSelectDialog;
     private String MemeberSearch;
     private String GroupSearch;
     private boolean isopen;

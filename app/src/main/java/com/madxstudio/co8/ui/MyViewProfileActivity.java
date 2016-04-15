@@ -88,8 +88,8 @@ public class MyViewProfileActivity extends BaseActivity {
     private NetworkImageView imQrImages;
     private View vProgress;
     private RelativeLayout RlView;
-    private Dialog showSelectDialog;
-    private Dialog showCameraAlbum;
+    private MyDialog showSelectDialog;
+    private MyDialog showCameraAlbum;
     private Boolean isUploadName = false;
     private Boolean isEit = false;
     private int headOrBackdropImage;
@@ -249,7 +249,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
     private void showJoinDialog(String showContent) {
         View selectIntention = LayoutInflater.from(mContext).inflate(R.layout.dialog_message_delete, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView copyText = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
         copyText.setText(showContent);
@@ -269,7 +269,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private void showNoFriendDialog() {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
         tv_no_member.setText(getString(R.string.text_create_group_not_save));
         TextView okTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
@@ -584,7 +584,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private void showPendDialog() {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
         TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
         TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);

@@ -86,7 +86,7 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
     private PaperButton brNext;
     private RelativeLayout rlProgress;
 
-    private Dialog showCameraAlbum;
+    private MyDialog showCameraAlbum;
     private Context mContext;
     private String userId;
     private UserEntity userEntity;

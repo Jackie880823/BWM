@@ -364,7 +364,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
 
     }
 
-    private Dialog showCameraAlbum;
+    private MyDialog showCameraAlbum;
 
     private void showCameraAlbum() {
         LayoutInflater factory = LayoutInflater.from(this);

@@ -298,7 +298,7 @@ public class GroupSettingActivity extends BaseActivity {
     private void showNoFriendDialog() {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
         tv_no_member.setText(getString(R.string.text_create_group_not_save));
         TextView okTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
@@ -541,7 +541,7 @@ public class GroupSettingActivity extends BaseActivity {
     private void showAdminDialog1(final int position) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin1, null);
-        final Dialog showAdminDialog1 = new MyDialog(this, null, selectIntention);
+        final MyDialog showAdminDialog1 = new MyDialog(this, null, selectIntention);
         TextView tvRemoveUser = (TextView) selectIntention.findViewById(R.id.tv_remove_user);
         TextView tvFamilyProfile = (TextView) selectIntention.findViewById(R.id.tv_family_profile);
         TextView tvMessage = (TextView) selectIntention.findViewById(R.id.tv_message);
@@ -653,7 +653,7 @@ public class GroupSettingActivity extends BaseActivity {
         }
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin0, null);
-        final Dialog showAdminDialog0 = new MyDialog(this, null, selectIntention);
+        final MyDialog showAdminDialog0 = new MyDialog(this, null, selectIntention);
 
         TextView tvRemoveUser = (TextView) selectIntention.findViewById(R.id.tv_remove_user);
         TextView tvAdd = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
@@ -732,7 +732,7 @@ public class GroupSettingActivity extends BaseActivity {
     private void showNonAdminDialog1(final int position) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_non_admin1, null);
-        final Dialog showNonAdminDialog1 = new MyDialog(this, null, selectIntention);
+        final MyDialog showNonAdminDialog1 = new MyDialog(this, null, selectIntention);
 
         TextView tvFamilyProfile = (TextView) selectIntention.findViewById(R.id.tv_family_profile);
         TextView tvMessage = (TextView) selectIntention.findViewById(R.id.tv_message);
@@ -769,7 +769,7 @@ public class GroupSettingActivity extends BaseActivity {
     private void showNonAdminDialog0(final int position) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_non_admin0, null);
-        final Dialog showNonAdminDialog0 = new MyDialog(this, null, selectIntention);
+        final MyDialog showNonAdminDialog0 = new MyDialog(this, null, selectIntention);
         TextView tvAdd = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override

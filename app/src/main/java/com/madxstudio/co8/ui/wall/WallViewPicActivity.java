@@ -56,7 +56,7 @@ public class WallViewPicActivity extends BaseActivity {
 
     private static final int EDIT_CAPTION = 1;
 
-    private Dialog dialog;
+    private MyDialog dialog;
 
     private View vProgress;
 
@@ -329,7 +329,7 @@ public class WallViewPicActivity extends BaseActivity {
      */
     private void deletePhoto() {
 
-        final Dialog deleteDialog = new MyDialog(WallViewPicActivity.this, R.string.text_wall_view_pic_delete, R.string.text_wall_view_pic_delete_warning);
+        final MyDialog deleteDialog = new MyDialog(WallViewPicActivity.this, R.string.text_wall_view_pic_delete, R.string.text_wall_view_pic_delete_warning);
 
         deleteDialog.setButtonAccept(R.string.text_dialog_accept, new View.OnClickListener() {
             @Override
