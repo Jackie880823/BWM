@@ -319,7 +319,7 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
 
     private void showJoinDialog(String showContent) {
         View selectIntention = LayoutInflater.from(mContext).inflate(R.layout.dialog_message_delete, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView copyText = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
         copyText.setText(showContent);

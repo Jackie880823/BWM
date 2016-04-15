@@ -79,7 +79,7 @@ public class OrgListActivity extends BaseActivity {
     private View emptyView;
     private boolean isRefresh = false;
     private String Tag = OrgListActivity.class.getName();
-    private Dialog showSelectDialog;
+    private MyDialog showSelectDialog;
     private EditText etSearch;
     private View serachLinear;
     private TextView tv_org_empty;

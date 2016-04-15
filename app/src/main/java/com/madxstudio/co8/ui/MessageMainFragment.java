@@ -58,7 +58,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     private View msg_member_relative;
     private View msg_group_relative;
     private View group_red_point;
-    private Dialog showSelectDialog;
+    private MyDialog showSelectDialog;
     private static final int GET_DELAY_ADD_PHOTO = 0x30;
     private InteractivePopupWindow popupWindowAddPhoto;
     private static final String MESSAGE_DATA = "data";

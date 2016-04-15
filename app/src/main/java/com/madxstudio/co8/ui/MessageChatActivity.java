@@ -866,7 +866,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             case R.id.camera_tv://打开相机
                 LayoutInflater factory = LayoutInflater.from(mContext);
                 View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
-                final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+                final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
                 TextView tvAddNewMember = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
                 TextView tvCreateNewGroup = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
                 TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
@@ -1217,7 +1217,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
             LayoutInflater factory = LayoutInflater.from(mContext);
             View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-            final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+            final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
             TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
             if (!isTooBig) {
                 formatLength = String.format(getString(R.string.text_chat_send_video), formatLength);

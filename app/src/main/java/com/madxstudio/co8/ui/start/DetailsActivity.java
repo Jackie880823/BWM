@@ -97,7 +97,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
     private TextView et_organisation_name;
     private OrgSearchEntity searchEntity;
 
-    private Dialog showCameraAlbum;
+    private MyDialog showCameraAlbum;
     private boolean isCreateNewOrg = false;
 
     Handler handler = new Handler(new Handler.Callback() {
