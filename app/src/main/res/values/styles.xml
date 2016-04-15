@@ -485,11 +485,9 @@
     </style>
     <style name="ActionButton">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">32dp</item>
-        <item name="android:minWidth">56dp</item>
-        <item name="android:paddingLeft">4dp</item>
-        <item name="android:paddingRight">4dp</item>
-        <item name="android:background">@drawable/button</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:layout_height">@dimen/_40dp</item>
+        <item name="android:minWidth">@dimen/_62dp</item>
+        <item name="android:background">@drawable/bg_transparent_gray</item>
+        <item name="android:textSize">@dimen/_14dp</item>
     </style>
 </resources>

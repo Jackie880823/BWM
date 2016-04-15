@@ -2,10 +2,9 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:minWidth="@dimen/_300dp"
     android:orientation="vertical"
     android:padding="@dimen/_20dp">
 
@@ -66,25 +65,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginBottom="@dimen/_8dp"
-            android:gravity="center_vertical"
-            android:paddingBottom="@dimen/_12dp"
+            android:gravity="center"
+            android:paddingBottom="@dimen/_10dp"
             android:paddingTop="@dimen/_8dp">
 
             <Button
                 android:id="@+id/btn_p"
                 style="@style/ActionButton"
+                android:paddingBottom="@dimen/_5dp"
+                android:paddingTop="@dimen/_5dp"
                 android:stateListAnimator="@null"
                 android:textColor="@color/black_de"
-                tools:text="@string/text_dialog_accept" />
+                tools:text="@string/text_dialog_cancel" />
 
             <Button
                 android:id="@+id/btn_n"
                 style="@style/ActionButton"
-                android:layout_marginLeft="@dimen/_2dp"
+                android:layout_marginLeft="@dimen/_5dp"
                 android:layout_marginRight="@dimen/_12dp"
+                android:paddingBottom="@dimen/_5dp"
+                android:paddingTop="@dimen/_5dp"
                 android:stateListAnimator="@null"
-                tools:text="@string/text_dialog_ok" />
+                tools:text="@string/text_dialog_accept" />
         </LinearLayout>
 
     </LinearLayout>
