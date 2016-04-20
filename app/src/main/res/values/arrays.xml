@@ -11,6 +11,7 @@
         <item>Set you as admin&#160;</item>
         <item>Remove you as admin&#160;</item>
         <item>Remove your contact&#160;</item>
+        <item>Reject join organization&#160;</item>
     </array>
 
     <string-array name="country_code">

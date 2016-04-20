@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/iv_pic_normal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/_250dp"
         android:layout_marginLeft="@dimen/default_view_margin"
         android:layout_marginRight="@dimen/default_view_margin"
         android:scaleType="centerCrop"
