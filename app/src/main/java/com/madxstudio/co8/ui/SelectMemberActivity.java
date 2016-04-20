@@ -113,7 +113,7 @@ public class SelectMemberActivity extends BaseActivity {
             } else {
                 LayoutInflater factory = LayoutInflater.from(mContext);
                 View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-                final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+                final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
                 TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
                 tv_no_member.setText(getString(R.string.text_create_group_members_least_two));
                 TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);

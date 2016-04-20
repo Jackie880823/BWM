@@ -24,7 +24,7 @@ import com.material.widget.Dialog;
 public class FamilyActivity extends BaseActivity {
     private static final String TAG = FamilyActivity.class.getSimpleName();
     private String content_group_id;
-    private Dialog showSelectDialog;
+    private MyDialog showSelectDialog;
 
     @Override
     protected void initBottomBar() {

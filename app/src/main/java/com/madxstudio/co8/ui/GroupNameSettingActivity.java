@@ -110,7 +110,7 @@ public class GroupNameSettingActivity extends BaseActivity {
     private void showNoFriendDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-        final Dialog showSelectDialog = new MyDialog(this, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(this, null, selectIntention);
         TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
         tv_no_member.setText(getString(R.string.text_create_group_not_save));
         TextView okTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
@@ -391,7 +391,7 @@ public class GroupNameSettingActivity extends BaseActivity {
         });
     }
 
-    private Dialog showCameraAlbum;
+    private MyDialog showCameraAlbum;
 
     private void showCameraAlbum() {
         LayoutInflater factory = LayoutInflater.from(this);

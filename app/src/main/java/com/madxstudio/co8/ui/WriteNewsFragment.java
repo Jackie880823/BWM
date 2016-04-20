@@ -791,7 +791,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
     private void openChooseDialog(){
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
         TextView tvAddNewMember = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         TextView tvCreateNewGroup = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);

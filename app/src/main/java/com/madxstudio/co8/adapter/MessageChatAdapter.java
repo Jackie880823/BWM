@@ -831,7 +831,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             return;
         }
         View selectIntention = LayoutInflater.from(context).inflate(R.layout.dialog_message_delete, null);
-        final Dialog showSelectDialog = new MyDialog(context, null, selectIntention);
+        final MyDialog showSelectDialog = new MyDialog(context, null, selectIntention);
         TextView copyText = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         TextView deleteText = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
