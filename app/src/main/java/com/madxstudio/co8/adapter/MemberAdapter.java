@@ -34,6 +34,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
     private final static int TAG_SET_ADMIN = 6;
     private final static int TAG_REMOVE_ADMIN = 7;
     private final static int TAG_REMOVE_CONTACT = 8;
+    private final static int TAG_REJECT_JOIN_ORGANIZATION = 9;
 
     //add，awaiting，auto-accept，added(同意)，updated(修改关系)。
     private String[] action ;
@@ -170,6 +171,13 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                     }
                 });
                 break;
+            case TAG_REJECT_JOIN_ORGANIZATION:
+                holder.updated.setVisibility(View.GONE);
+                holder.add.setVisibility(View.GONE);
+                holder.awaiting.setVisibility(View.GONE);
+                holder.added.setVisibility(View.GONE);
+                holder.owner_content.setText(action[TAG_REJECT_JOIN_ORGANIZATION] + memberEntity.getRelationship());
+                break;
 
             default:
                 break;
@@ -222,6 +230,9 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                 break;
             case "removeContact":
                 tag = TAG_REMOVE_CONTACT;
+                break;
+            case "rejectedJoinOrg":
+                tag = TAG_REJECT_JOIN_ORGANIZATION;
                 break;
         }
         return tag;
