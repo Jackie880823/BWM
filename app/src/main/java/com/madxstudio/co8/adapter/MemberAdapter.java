@@ -13,6 +13,7 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.MemberEntity;
 import com.madxstudio.co8.ui.OrgDetailActivity;
+import com.madxstudio.co8.ui.OrganisationActivity;
 import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 
@@ -30,10 +31,25 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
     private final static int TAG_AUTO_ACCEPT = 2;
     private final static int TAG_ADDED = 3;
     private final static int TAG_UPDATED = 4;
+    /**
+     * Approve join organization  加入公司
+     */
     private final static int TAG_JOIN_ORG = 5;
+    /**
+     * Set you as admin设置你为公司管理员
+     */
     private final static int TAG_SET_ADMIN = 6;
+    /**
+     * Remove you as admin 删除你为管理员
+     */
     private final static int TAG_REMOVE_ADMIN = 7;
+    /**
+     * Remove your contact 管理员删除你的供应商或客户
+     */
     private final static int TAG_REMOVE_CONTACT = 8;
+    /**
+     * Reject join organization拒绝你加入公司的请求
+     */
     private final static int TAG_REJECT_JOIN_ORGANIZATION = 9;
 
     //add，awaiting，auto-accept，added(同意)，updated(修改关系)。
@@ -171,12 +187,21 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                     }
                 });
                 break;
+
             case TAG_REJECT_JOIN_ORGANIZATION:
                 holder.updated.setVisibility(View.GONE);
                 holder.add.setVisibility(View.GONE);
                 holder.awaiting.setVisibility(View.GONE);
                 holder.added.setVisibility(View.GONE);
+
                 holder.owner_content.setText(action[TAG_REJECT_JOIN_ORGANIZATION] + memberEntity.getRelationship());
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent othersIntent = new Intent(mContext, OrganisationActivity.class);
+                        mContext.startActivity(othersIntent);
+                    }
+                });
                 break;
 
             default:
