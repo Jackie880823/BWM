@@ -822,4 +822,10 @@
     <string name="photo_saved">Photo Saved to Album</string>
     <string name="alert_remove_admin">Remove %s as Admin?</string>
     <string name="text_org_nomal_show">Name will be shown as Display Name</string>
+    <string name="notification_action_member_approvedJoinOrg">%1$s has approved you to join %2$s</string>
+    <string name="notification_action_member_setAdmin">%1$s has added you as the admin of %2$s</string>
+    <string name="notification_action_member_removeAdmin">%1$s has removed you as the admin of %2$s</string>
+    <string name="notification_action_member_removeContact">%1$s has removed %2$s from your contact</string>
+    <string name="notification_action_member_rejectedJoinOrg">%1$s has rejected you to join %2$s</string>
+    <string name="notification_action_organisation_join">%1$s wants to join %2$s</string>
 </resources>

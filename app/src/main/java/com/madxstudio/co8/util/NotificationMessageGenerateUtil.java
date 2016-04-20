@@ -98,6 +98,16 @@ public class NotificationMessageGenerateUtil {
             msg = context.getString(R.string.notification_action_member_accept, action_owner);
         } else if ("updateRel".equals(action)) {
             msg = context.getString(R.string.notification_action_member_updateRel, action_owner, RelationshipUtil.getRelationshipName(context, item_name));
+        }else if ("approvedJoinOrg".equals(action)) {
+            msg = context.getString(R.string.notification_action_member_approvedJoinOrg, action_owner, item_name);
+        }else if ("setAdmin".equals(action)) {
+            msg = context.getString(R.string.notification_action_member_setAdmin, action_owner, item_name);
+        }else if ("removeAdmin".equals(action)) {
+            msg = context.getString(R.string.notification_action_member_removeAdmin, action_owner, item_name);
+        }else if ("removeContact".equals(action)) {
+            msg = context.getString(R.string.notification_action_member_removeContact, action_owner, item_name);
+        }else if ("rejectedJoinOrg".equals(action)) {
+            msg = context.getString(R.string.notification_action_member_rejectedJoinOrg, action_owner, item_name);
         }
         return msg;
     }
@@ -225,5 +235,13 @@ public class NotificationMessageGenerateUtil {
         }
         return msg;
     }
+    public static String getOrganisationMessage(Context context, String action, String action_owner,String item_name) throws JSONException {
+        String msg = null;
+        if ("join".equals(action)) {
+            msg = context.getString(R.string.notification_action_organisation_join, action_owner,item_name);
+        }
+        return msg;
+    }
+
 
 }
