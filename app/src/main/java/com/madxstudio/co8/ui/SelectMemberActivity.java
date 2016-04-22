@@ -40,7 +40,6 @@ import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
-import com.material.widget.Dialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +68,7 @@ public class SelectMemberActivity extends BaseActivity {
     private CheckBox selectAllMember;
     private List<OrgMemberEntity> selectMemberEntityList;
     private boolean isCreateNewGroup;
+    private List<OrgMemberEntity> selectList;
 
     @Override
     protected void initBottomBar() {
@@ -111,24 +111,32 @@ public class SelectMemberActivity extends BaseActivity {
                 startActivity(intent);
                 finish();
             } else {
-                LayoutInflater factory = LayoutInflater.from(mContext);
-                View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-                final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
-                TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
-                tv_no_member.setText(getString(R.string.text_create_group_members_least_two));
-                TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
-                cancelTv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showSelectDialog.dismiss();
-                    }
-                });
-                showSelectDialog.show();
+                numNoEnough();
             }
         } else {
-            setResult(RESULT_OK, intent);
-            finish();
+            if (selectMemberEntityList.size() > 0) {
+                setResult(RESULT_OK, intent);
+                finish();
+            } else {
+                numNoEnough();
+            }
         }
+    }
+
+    private void numNoEnough() {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.text_create_group_members_least_two));
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
     }
 
     @Override
@@ -192,11 +200,8 @@ public class SelectMemberActivity extends BaseActivity {
         selectMemberEntityList = new ArrayList<>();
         String memberData = getIntent().getStringExtra(Constant.SELECT_MEMBER_DATA);
         if (memberData != null) {
-            selectMemberEntityList = new Gson().fromJson(memberData, new TypeToken<ArrayList<OrgMemberEntity>>() {
+            selectList = new Gson().fromJson(memberData, new TypeToken<ArrayList<OrgMemberEntity>>() {
             }.getType());
-            if (null != selectMemberEntityList && selectMemberEntityList.size() > 0) {
-                memberAdapter.addNewData(selectMemberEntityList);
-            }
         }
 
         tv_org_empty.setText(getString(R.string.text_org_no_contact));
@@ -264,6 +269,11 @@ public class SelectMemberActivity extends BaseActivity {
                         selectItem.setChecked(true);
                         memberAdapter.addSelectData(userId);
                         selectMemberEntityList.add(familyMemberEntity);
+                    }
+                    if (selectMemberEntityList.size() == memberList.size()) {
+                        selectAllMember.setChecked(true);
+                    } else {
+                        selectAllMember.setChecked(false);
                     }
                 }
             }
@@ -443,6 +453,22 @@ public class SelectMemberActivity extends BaseActivity {
                         memberList.clear();
                     }
                     memberList = (List<OrgMemberEntity>) msg.obj;
+                    if (null != selectList && selectList.size() > 0 && memberList != null) {
+                        for (OrgMemberEntity memberEntity : selectList) {
+                            memberAdapter.addSelectData(memberEntity.getUser_id());
+                            for (OrgMemberEntity entity : memberList) {
+                                if (memberEntity.getUser_id().equals(entity.getUser_id())) {
+                                    selectMemberEntityList.add(entity);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (selectMemberEntityList != null && memberList != null) {
+                        if (selectMemberEntityList.size() == memberList.size()) {
+                            selectAllMember.setChecked(true);
+                        }
+                    }
                     memberAdapter.addNewData(memberList);
                     break;
             }
