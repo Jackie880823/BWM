@@ -94,7 +94,7 @@ public class MessageListAdapter extends BaseAdapter implements Filterable {
         }
         PrivateMessageEntity userEntity = mUserEntityList.get(position);
         if ("group".equals(userEntity.getMessage_type())) {
-            BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()),
+            BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, userEntity.getGroup_id()),
                     R.drawable.b2be_normal, R.drawable.b2be_normal);
             viewHolder.lastMessageName.setText(userEntity.getMember_name());
             viewHolder.groupSign.setVisibility(View.VISIBLE);

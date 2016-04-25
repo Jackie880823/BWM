@@ -38,6 +38,26 @@ public class MessageUtil {
         mToast.show();
     }
 
+    public void showShortToast(int id) {
+        if (mToast == null) {
+            mToast = Toast.makeText(mContext, id, Toast.LENGTH_SHORT);
+        } else {
+            mToast.setText(mContext.getString(id));
+            mToast.setDuration(Toast.LENGTH_SHORT);
+        }
+        mToast.show();
+    }
+
+    public void showLongToast(int id) {
+        if (mToast == null) {
+            mToast = Toast.makeText(mContext, id, Toast.LENGTH_LONG);
+        } else {
+            mToast.setText(mContext.getString(id));
+            mToast.setDuration(Toast.LENGTH_LONG);
+        }
+        mToast.show();
+    }
+
     public void showLongToast(String text) {
         if (mToast == null) {
             mToast = Toast.makeText(mContext, text, Toast.LENGTH_LONG);

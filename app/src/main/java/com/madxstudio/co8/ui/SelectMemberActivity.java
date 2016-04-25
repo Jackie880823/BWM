@@ -41,6 +41,9 @@ import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -193,7 +196,8 @@ public class SelectMemberActivity extends BaseActivity {
         searchTv = getViewById(R.id.message_search);
         selectAllMember = getViewById(R.id.check_member_item);
         serachLinear.setVisibility(View.GONE);
-        memberList = (List<OrgMemberEntity>) getIntent().getSerializableExtra(Constant.SELECT_MEMBER_NORMAL_DATA);
+        memberList = new ArrayList<>();
+//        memberList = (List<OrgMemberEntity>) getIntent().getSerializableExtra(Constant.SELECT_MEMBER_NORMAL_DATA);
         isCreateNewGroup = getIntent().getBooleanExtra("isCreateNewGroup", false);
         memberAdapter = new SelectMemberListAdapter(mContext, memberList);
         listView.setAdapter(memberAdapter);
@@ -205,13 +209,13 @@ public class SelectMemberActivity extends BaseActivity {
         }
 
         tv_org_empty.setText(getString(R.string.text_org_no_contact));
-
-        if (memberList == null) {
-            memberList = new ArrayList<>();
-            vProgress.setVisibility(View.VISIBLE);
-        } else {
-            vProgress.setVisibility(View.GONE);
-        }
+        vProgress.setVisibility(View.VISIBLE);
+//        if (memberList == null) {
+//            memberList = new ArrayList<>();
+//            vProgress.setVisibility(View.VISIBLE);
+//        } else {
+//            vProgress.setVisibility(View.GONE);
+//        }
         getViewById(R.id.select_all_rl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -387,7 +391,7 @@ public class SelectMemberActivity extends BaseActivity {
             return;
         }
 
-        new HttpTools(mContext).get(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
+        new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -403,28 +407,38 @@ public class SelectMemberActivity extends BaseActivity {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
                 finishReFresh();
-                if (TextUtils.isEmpty(response) || "[]".equals(response)) {
+                if (TextUtils.isEmpty(response) || "{}".equals(response)) {
                     showEmptyView();
                     return;
                 }
-                List<OrgMemberEntity> memberEntityList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
-                }.getType());
-                if (memberEntityList != null && memberEntityList.size() > 0) {
-                    List<OrgMemberEntity> list = new ArrayList<>();
-                    for (OrgMemberEntity memberEntity : memberEntityList) {
-                        if (!"0".equals(memberEntity.getFam_accept_flag())) {
-                            list.add(memberEntity);
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(response);
+                    List<OrgMemberEntity> memberEntityList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<OrgMemberEntity>>() {
+                    }.getType());
+//                    List<OrgMemberEntity> memberEntityList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
+//                    }.getType());
+                    if (memberEntityList != null && memberEntityList.size() > 0) {
+                        List<OrgMemberEntity> list = new ArrayList<>();
+                        for (OrgMemberEntity memberEntity : memberEntityList) {
+                            if (!"0".equals(memberEntity.getFam_accept_flag())) {
+                                list.add(memberEntity);
+                            }
                         }
-                    }
-                    if (list.size() > 0) {
-                        hideEmptyView();
-                        Message.obtain(handler, GET_DATA, list).sendToTarget();
+                        if (list.size() > 0) {
+                            hideEmptyView();
+                            Message.obtain(handler, GET_DATA, list).sendToTarget();
+                        } else {
+                            showEmptyView();
+                        }
                     } else {
                         showEmptyView();
                     }
-                } else {
+                } catch (JSONException e) {
                     showEmptyView();
+                    e.printStackTrace();
                 }
+
             }
 
             @Override
