@@ -73,7 +73,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -171,7 +170,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private final static int SEND_AUDIO_MESSAGE = 0X109;
     private final static int PLAY_AUDIO_HANDLER = 0X110;
     public final static int NOTIFY_DATA = 0X111;
-    private final static int SEND_PIC = 0X112;
     public int INITIAL_LIMIT = 10;
 
     public MessageAction messageAction;
@@ -368,21 +366,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     int scrollPosition = llm.findLastVisibleItemPosition();
                     messageChatAdapter.notifyDataSetChanged();
                     llm.scrollToPosition(scrollPosition);
-                    break;
-                case SEND_PIC:
-                    Map<String, Object> map = (Map<String, Object>) msg.obj;
-                    String key = (String) map.get("key");
-                    Uri uri = (Uri) map.get("uri");
-                    MsgEntity msgEntity = new MsgEntity();
-                    msgEntity.setSticker_type(".png");
-                    msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-                    msgEntity.setUri(uri);
-                    msgEntity.setSendStatus(MsgEntity.SEND_IN);
-                    msgEntity.setContent_creation_date(MyDateUtils.getUTCDateString4DefaultFromLocal(System.currentTimeMillis()));
-                    msgEntity.setPhoto_postsize(key);
-                    msgEntity.setPhoto_thumbsize(MessageAction.POST_PHOTO);
-                    messageChatAdapter.addMsgEntity(msgEntity);
-                    sendMap.put(key, msgEntity);
                     break;
             }
 
@@ -1302,7 +1285,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP, true));
+//                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP, true));
+                    uri = data.getParcelableExtra(PickAndCropPictureActivity.FINAL_PIC_URI);
                     handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
                     break;
 
@@ -1366,15 +1350,19 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         if (playerManager != null) {
             playerManager.stop();
         }
-        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra("camerasensortype", 2);
-        // 下面这句指定调用相机拍照后的照片存储的路径
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
-                        CACHE_PIC_NAME_TEMP, true)));
-        // 图片质量为高
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        intent.putExtra("return-data", false);
+//        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        intent.putExtra("camerasensortype", 2);
+//        // 下面这句指定调用相机拍照后的照片存储的路径
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+//                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
+//                        CACHE_PIC_NAME_TEMP, true)));
+//        // 图片质量为高
+//        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+//        intent.putExtra("return-data", false);
+//        startActivityForResult(intent, REQUEST_HEAD_CAMERA);
+        Intent intent = new Intent(mContext, PickAndCropPictureActivity.class);
+        intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
+        intent.putExtra(PickAndCropPictureActivity.FLAG_CROP, false);
         startActivityForResult(intent, REQUEST_HEAD_CAMERA);
     }
 
@@ -1622,19 +1610,26 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     }
 
     private void uploadImage(final Uri uri) {
+        MsgEntity msgEntity = new MsgEntity();
+        msgEntity.setSticker_type(".png");
+        msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+        msgEntity.setUri(uri);
+        msgEntity.setSendStatus(MsgEntity.SEND_IN);
+        msgEntity.setContent_creation_date(MyDateUtils.getUTCDateString4DefaultFromLocal(System.currentTimeMillis()));
+        final String key = MessageAction.POST_PHOTO + System.currentTimeMillis();
+        msgEntity.setPhoto_postsize(key);
+        msgEntity.setPhoto_thumbsize(MessageAction.POST_PHOTO);
+        messageChatAdapter.addMsgEntity(msgEntity);
+        sendMap.put(key, msgEntity);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String path = LocalImageLoader.compressBitmap(mContext, FileUtil.getRealPathFromURI(mContext, uri), 480, 800, false);
                 File file = new File(path);
                 if (!file.exists()) {
+                    sendMap.remove(key);
                     return;
                 }
-                String key = MessageAction.POST_PHOTO + System.currentTimeMillis();
-                Map<String, Object> map = new HashMap<>();
-                map.put("key", key);
-                map.put("uri", Uri.fromFile(file));
-                Message.obtain(handler, SEND_PIC, map).sendToTarget();
                 Map<String, Object> params = new HashMap<>();
                 params.put("content_creator_id", MainActivity.getUser().getUser_id());
                 params.put("group_id", groupId);

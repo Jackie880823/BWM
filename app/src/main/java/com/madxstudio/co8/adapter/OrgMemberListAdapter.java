@@ -117,8 +117,11 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
             viewHolder.orgRequest.setVisibility(View.GONE);
         }
         viewHolder.memberName.setText(memberEntity.getUser_given_name());
-        viewHolder.orgPosition.setText(memberEntity.getPosition());
-
+        if(Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
+            viewHolder.orgPosition.setText(memberEntity.getOrganisation());
+        }else{
+            viewHolder.orgPosition.setText(memberEntity.getPosition());
+        }
         if (Constant.ADMIN_REQUEST.equals(requestType)) {
             View view = convertView.findViewById(R.id.iv_right);
             if (MainActivity.getUser().getUser_id().equals(memberEntity.getUser_id())) {
