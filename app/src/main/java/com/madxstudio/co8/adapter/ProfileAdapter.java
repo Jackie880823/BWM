@@ -313,14 +313,14 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                             }
                             break;
 
-                        case com.material.widget.R.id.button_accept:
+                        case R.id.btn_p:
                             // TODO: 16/3/23 dialog中点击了确认按钮
                             if (listener != null) {
                                 listener.removeAdmin(admins.get(index));
                             }
                             break;
 
-                        case com.material.widget.R.id.button_cancel:
+                        case R.id.btn_n:
                             // TODO: 16/3/23 dialog中点击了取消按钮
                             break;
 
