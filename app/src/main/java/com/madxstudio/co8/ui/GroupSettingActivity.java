@@ -212,10 +212,10 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 Intent intent2 = new Intent(mContext, MessageChatActivity.class);
-                //intent2.putExtra("userEntity", userList.get(position));
-                intent2.putExtra("type", 0);
-                intent2.putExtra("groupId", userEntity.getGroup_id());
-                intent2.putExtra("titleName", userEntity.getUser_given_name());
+                intent2.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);
+                intent2.putExtra(UserEntity.EXTRA_GROUP_ID, userEntity.getGroup_id());
+                intent2.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, userEntity.getUser_given_name());
+                intent2.putExtra(Constant.MESSAGE_CHART_STATUS, userEntity.getStatus());
                 startActivity(intent2);
                 showNonAdminDialog1.dismiss();
             }
