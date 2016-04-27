@@ -2,14 +2,14 @@
 
 <com.madxstudio.co8.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/background_transparent"
     android:paddingTop="@dimen/default_content_padding">
 
     <ImageView
         android:id="@+id/iv_pic_normal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_250dp"
+        android:layout_height="@dimen/_300dp"
         android:layout_marginLeft="@dimen/default_view_margin"
         android:layout_marginRight="@dimen/default_view_margin"
         android:scaleType="centerCrop"
@@ -32,7 +32,7 @@
         android:id="@+id/diary_edit_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/iv_pic_normal"
         android:layout_marginLeft="@dimen/default_view_margin"
         android:layout_marginRight="@dimen/default_view_margin"
         android:background="@color/default_text_color_while"
