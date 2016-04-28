@@ -1285,7 +1285,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP, true));
+//                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP, true));
+                    uri = data.getParcelableExtra(PickAndCropPictureActivity.FINAL_PIC_URI);
                     handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
                     break;
 
@@ -1349,15 +1350,19 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         if (playerManager != null) {
             playerManager.stop();
         }
-        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra("camerasensortype", 2);
-        // 下面这句指定调用相机拍照后的照片存储的路径
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
-                        CACHE_PIC_NAME_TEMP, true)));
-        // 图片质量为高
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        intent.putExtra("return-data", false);
+//        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        intent.putExtra("camerasensortype", 2);
+//        // 下面这句指定调用相机拍照后的照片存储的路径
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+//                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
+//                        CACHE_PIC_NAME_TEMP, true)));
+//        // 图片质量为高
+//        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+//        intent.putExtra("return-data", false);
+//        startActivityForResult(intent, REQUEST_HEAD_CAMERA);
+        Intent intent = new Intent(mContext, PickAndCropPictureActivity.class);
+        intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
+        intent.putExtra(PickAndCropPictureActivity.FLAG_CROP, false);
         startActivityForResult(intent, REQUEST_HEAD_CAMERA);
     }
 
