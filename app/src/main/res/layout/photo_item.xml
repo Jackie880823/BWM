@@ -32,11 +32,7 @@
         android:id="@+id/diary_edit_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
         android:layout_below="@id/iv_pic_normal"
-=======
-        android:layout_below="@+id/iv_pic_normal"
->>>>>>> e22c9d1ecc886211714545cb1eca645c8f2b1596
         android:layout_marginLeft="@dimen/default_view_margin"
         android:layout_marginRight="@dimen/default_view_margin"
         android:layout_marginTop="@dimen/_5dp"
