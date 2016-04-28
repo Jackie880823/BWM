@@ -23,7 +23,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@color/transparent_color"
-        android:src="@drawable/btn_group_setting"
+        android:src="@drawable/btn_sticker_sort"
         android:visibility="visible" />
 
     <TextView

@@ -87,7 +87,7 @@
                                     app:border="false"
                                     app:shadow="false"
                                     app:border_width="0dp"
-                                    android:src="@drawable/network_image_default"/>
+                                    android:src="@drawable/default_head_icon"/>
                                 <TextView
                                     android:id="@+id/tv_main"
                                     android:layout_width="match_parent"
@@ -143,7 +143,7 @@
                                             app:border="false"
                                             app:shadow="false"
                                             app:border_width="0dp"
-                                            android:src="@drawable/network_image_default"/>
+                                            android:src="@drawable/default_head_icon"/>
                                         <TextView
                                             android:id="@+id/tv_name1"
                                             android:layout_width="match_parent"
@@ -200,7 +200,7 @@
                                     app:border="false"
                                     app:shadow="false"
                                     app:border_width="0dp"
-                                    android:src="@drawable/network_image_default"/>
+                                    android:src="@drawable/default_head_icon"/>
                                 <TextView
                                     android:id="@+id/tv_name2"
                                     android:layout_width="match_parent"
@@ -257,7 +257,7 @@
                                         app:border="false"
                                         app:shadow="false"
                                         app:border_width="0dp"
-                                        android:src="@drawable/network_image_default"/>
+                                        android:src="@drawable/default_head_icon"/>
                                     <TextView
                                         android:id="@+id/tv_name3"
                                         android:layout_width="match_parent"
@@ -314,7 +314,7 @@
                                         app:border="false"
                                         app:shadow="false"
                                         app:border_width="0dp"
-                                        android:src="@drawable/network_image_default"/>
+                                        android:src="@drawable/default_head_icon"/>
                                     <TextView
                                         android:id="@+id/tv_name4"
                                         android:layout_width="match_parent"

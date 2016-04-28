@@ -4,54 +4,73 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="80dp"
+
+    <RelativeLayout
+        android:id="@+id/fl_item_root"
+        android:layout_width="@dimen/_80dp"
+        android:layout_height="@dimen/_80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_5dp">
+
+        <com.madxstudio.co8.widget.CircularNetworkImage
+            android:id="@+id/creategroup_image_main"
+            android:layout_width="@dimen/_75dp"
+            android:layout_height="@dimen/_75dp"
+            app:border="false" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/default_content_padding"
-        android:orientation="vertical"
-        android:layout_centerInParent="true">
-
-        <FrameLayout
-            android:id="@+id/fl_item_root"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
-
-            <com.madxstudio.co8.widget.CircularNetworkImage
-                android:id="@+id/creategroup_image_main"
-                android:layout_width="@dimen/_75dp"
-                android:layout_height="@dimen/_75dp"
-                app:border="false" />
-
-            <ImageView
-                android:id="@+id/creategroup_image_top"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:visibility="gone"
-                android:src="@drawable/time"
-                android:layout_gravity="right|top" />
-
-            <CheckBox
-                android:id="@+id/creategroup_image_right"
-                style="@style/checkbox_default"
-                android:layout_gravity="bottom|right"
-                android:gravity="center"
-                android:clickable="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
-        </FrameLayout>
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:layout_marginRight="@dimen/_8dp"
+        android:layout_toRightOf="@+id/fl_item_root"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/creategroup_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/default_content_padding"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:lines="1"
-            android:ellipsize="end"
-            android:textColor="#666"
-            android:textSize="@dimen/_10dp" />
-    </LinearLayout>
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="@dimen/_45dp"
+            android:singleLine="true"
+            android:textColor="#333"
+            android:textSize="@dimen/_18dp" />
+
+        <TextView
+            android:id="@+id/tv_org_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/creategroup_name"
+            android:layout_marginRight="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_5dp"
+            android:singleLine="true"
+            android:textColor="@color/message_comment"
+            android:textSize="@dimen/_15dp" />
+
+        <CheckBox
+            android:id="@+id/creategroup_image_right"
+            android:layout_width="@dimen/_25dp"
+            android:layout_height="@dimen/_25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_10dp"
+            android:button="@drawable/select_member_checkbox_style"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
+
+        <ImageView
+            android:id="@+id/creategroup_image_top"
+            android:layout_width="@dimen/_25dp"
+            android:layout_height="@dimen/_25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_10dp"
+            android:src="@drawable/time"
+            android:visibility="gone" />
+    </RelativeLayout>
 </RelativeLayout>

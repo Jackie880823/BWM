@@ -946,7 +946,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private void goChooseMembers() {
         //        Intent intent = new Intent(getActivity(), SelectPeopleActivity.class);
-        Intent intent = new Intent(getActivity(), SelectMemberActivity.class);
+        Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
         intent.putExtra("members_data", gson.toJson(userList));
         intent.putExtra("groups_data", "");
         intent.putExtra("type", 0);

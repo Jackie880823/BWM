@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.RecommendAdapter;
 import com.madxstudio.co8.entity.UserEntity;
@@ -45,6 +46,7 @@ public class RelationshipActivity extends BaseActivity {
     List<String> data_Zh = new ArrayList<String>();
     List<String> data_Us = new ArrayList<String>();
     private boolean isZh;
+    private String relationShip;
 
     @Override
     public int getLayout() {
@@ -85,6 +87,7 @@ public class RelationshipActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        relationShip = getIntent().getStringExtra(Constant.RELATION_SHIP);
         getDataEn();
         if (Locale.getDefault().toString().equals("zh_CN")) {
             isZh = true;
@@ -155,7 +158,12 @@ public class RelationshipActivity extends BaseActivity {
             UserEntity userEntity = MainActivity.getUser();
             TextView tv = (TextView) view.findViewById(R.id.tv_relation);
             tv.setText(data.get(position));
-            if (userEntity != null && !TextUtils.isEmpty(userEntity.getOrganisation())) {
+            if (Constant.FAMILY_PARENT.equalsIgnoreCase(relationShip) || Constant.FAMILY_CHILDREN.equalsIgnoreCase(relationShip)
+                    || Constant.FAMILY_SIBLING.equalsIgnoreCase(relationShip)) {
+                if (position == 3 || position == 4) {
+                    tv.setVisibility(View.GONE);
+                }
+            } else {
                 if (position == 0 || position == 1 || position == 2) {
                     tv.setVisibility(View.GONE);
                 }

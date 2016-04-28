@@ -146,9 +146,7 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
         groupSettingAdapter = new GroupInfoAdapter(mContext, R.layout.item_group_setting_members, new ArrayList());
         lvMembers.setAdapter(groupSettingAdapter);
         getMembersList();
-        if (isGroupDefault || isGroupAdmin) {
-            llSetting.setOnClickListener(this);
-        }
+        llSetting.setOnClickListener(this);
         cniMain.setOnClickListener(this);
         btnLeaveGroup.setOnClickListener(this);
         lvMembers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -409,11 +407,13 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
         super.onClick(v);
         switch (v.getId()) {
             case R.id.ll_setting:
-                Intent intent = new Intent(mContext, GroupNameSettingActivity.class);
-                intent.putExtra("groupId", groupId);
-                intent.putExtra("groupName", groupName);
-                intent.putExtra(Constant.GROUP_DEFAULT, isGroupDefault);
-                startActivityForResult(intent, SET_GROUP_PIC_NAME);
+                if (isGroupDefault || isGroupAdmin) {
+                    Intent intent = new Intent(mContext, GroupNameSettingActivity.class);
+                    intent.putExtra("groupId", groupId);
+                    intent.putExtra("groupName", groupName);
+                    intent.putExtra(Constant.GROUP_DEFAULT, isGroupDefault);
+                    startActivityForResult(intent, SET_GROUP_PIC_NAME);
+                }
                 break;
             case R.id.cni_main:
                 Intent intent1 = new Intent(mContext, ViewOriginalPicesActivity.class);
