@@ -163,13 +163,9 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             break;
 
             case TAG_JOIN_ORG:
-                setOrgAlert(holder, memberEntity, TAG_JOIN_ORG);
-                break;
             case TAG_SET_ADMIN:
-                setOrgAlert(holder, memberEntity, TAG_JOIN_ORG);
-                break;
             case TAG_REMOVE_ADMIN:
-                setOrgAlert(holder, memberEntity, TAG_REMOVE_ADMIN);
+                setOrgAlert(holder, memberEntity, tag);
                 break;
             case TAG_REMOVE_CONTACT:
                 holder.updated.setVisibility(View.GONE);
