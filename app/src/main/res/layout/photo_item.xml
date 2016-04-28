@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.madxstudio.co8.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/background_transparent"
     android:paddingTop="@dimen/default_content_padding">
 
@@ -32,9 +32,10 @@
         android:id="@+id/diary_edit_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/iv_pic_normal"
         android:layout_marginLeft="@dimen/default_view_margin"
         android:layout_marginRight="@dimen/default_view_margin"
+        android:layout_marginTop="@dimen/_5dp"
         android:background="@color/default_text_color_while"
         android:fitsSystemWindows="true"
         android:hint="@string/text_add_caption"
@@ -43,6 +44,6 @@
         android:singleLine="true"
         android:textColor="@android:color/widget_edittext_dark"
         android:textSize="@dimen/text_medium_size" />
-</com.madxstudio.co8.widget.SquareRelativeLayout>
+</RelativeLayout>
 
 
