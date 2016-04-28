@@ -89,15 +89,17 @@ public class ProfileAdapter extends RecyclerView.Adapter {
      * Adapter各事件的监听
      */
     private ProfileAdapterListener listener;
+    private boolean isAdmin;
 
     /**
      * 公司背景图片的路径，可以是网络路径也可以是本地路径
      */
     private String profileImageUrl;
 
-    public ProfileAdapter(Context context, String companyID) {
+    public ProfileAdapter(Context context, String companyID, boolean isAdmin) {
         this.context = context;
         this.companyID = companyID;
+        this.isAdmin = isAdmin;
     }
 
     public void setData(OrganisationDetail organisationDetail) {
@@ -271,7 +273,7 @@ public class ProfileAdapter extends RecyclerView.Adapter {
             LogUtil.d(TAG, "setAdminView: name => " + userEntity.getUser_given_name() + "; user id => " + userEntity.getUser_id());
         }
 
-        if ("1".equals(MainActivity.getUser().getAdmin())) { // 管理员才能有权力对管理列表进行操作
+        if ("1".equals(MainActivity.getUser().getAdmin()) && isAdmin) { // 管理员才能有权力对管理列表进行操作
 
             View.OnClickListener clickListener = new View.OnClickListener() {
                 private MyDialog listDialog;

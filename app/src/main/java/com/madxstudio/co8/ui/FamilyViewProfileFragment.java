@@ -26,6 +26,7 @@ import com.madxstudio.co8.entity.PhotoEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.http.VolleyUtil;
+import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.util.DensityUtil;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
@@ -259,6 +260,15 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 Intent intent = new Intent(getParentActivity(), RelationshipActivity.class);
                 intent.putExtra("member_id", userEntity.getUser_id());
                 startActivityForResult(intent, CHOOSE_RELATION_CODE);
+            }
+        });
+
+        rl_organisation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), CompanyActivity.class);
+                intent.putExtra(Constant.LOGIN_USER,userEntity);
+                startActivity(intent);
             }
         });
 
