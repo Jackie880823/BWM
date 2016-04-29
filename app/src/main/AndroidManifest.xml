@@ -734,6 +734,13 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden"></activity>
+        <activity
+            android:name="com.madxstudio.co8.qr_code.zxing.co8.CaptureActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
 
         <receiver android:name="com.madxstudio.co8.receiver_service.AlarmReceiver">
             <intent-filter>

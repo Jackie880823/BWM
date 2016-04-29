@@ -31,7 +31,7 @@
                 android:layout_centerInParent="true"
                 />
 
-            <com.madxstudio.co8.zxing.view.ViewfinderView
+            <com.madxstudio.co8.qr_code.zxing.co8.ViewfinderView
                 android:id="@+id/viewfinder_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

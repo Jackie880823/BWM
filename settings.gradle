@@ -1,1 +1,1 @@
-include ':app', ':Volley', ':PhotoView', ':mupdflibrary', ':MaterialWidget', ':facebook', ':ImageCrop', ':piwik_sdk'
+include ':app', ':Volley', ':PhotoView', ':mupdflibrary', ':MaterialWidget', ':facebook', ':ImageCrop', ':piwik_sdk', 'Zxing_qrcode'
