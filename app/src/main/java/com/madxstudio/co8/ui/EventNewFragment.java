@@ -117,6 +117,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private Long endMeetingTime;
     private boolean isChooseEndTime;
     private String reminderContent;
+    private String[] reminderArrayUs;
 
     private static final int MAX_COUNT = 300;
 
@@ -184,6 +185,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         date_desc = getViewById(R.id.date_desc);
         date_end_desc = getViewById(R.id.date_end_desc);
         position_name = getViewById(R.id.position_name);
+        reminderArrayUs = getActivity().getResources().getStringArray(R.array.reminder_item);
+        reminder_desc.setText(reminderArrayUs[0]);
         position_name.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
@@ -705,7 +708,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private String getReminderTime(String string) {
-        String[] reminderArrayUs = getActivity().getResources().getStringArray(R.array.reminder_item);
         if (reminderArrayUs != null && reminderArrayUs.length >= 8) {
             if (reminderArrayUs[0].equals(string)) {
                 return 0 + "";
@@ -735,7 +737,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View reminderView = factory.inflate(R.layout.meeting_reminder_list, null);
         ListView listView = (ListView) reminderView.findViewById(R.id.reminder_list_view);
-        String[] reminderArrayUs = getActivity().getResources().getStringArray(R.array.reminder_item);
         final List<String> list = Arrays.asList(reminderArrayUs);
         ArrayAdapter reminderAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         listView.setAdapter(reminderAdapter);
@@ -1052,10 +1053,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             MessageUtil.showMessage(getActivity(), R.string.text_meeting_end_time);
             return false;
         }
-        if (TextUtils.isEmpty(reminder_desc.getText())) {
-            MessageUtil.showMessage(getParentActivity(), "请选择reminder");
-            return false;
-        }
+//        if (TextUtils.isEmpty(reminder_desc.getText())) {
+//            MessageUtil.showMessage(getParentActivity(), "请选择reminder");
+//            return false;
+//        }
 
         return true;
     }

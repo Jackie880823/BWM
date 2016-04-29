@@ -88,7 +88,7 @@ public class WallGroupAdapter extends RecyclerView.Adapter<WallGroupAdapter.MGIt
     @Override
     public void onBindViewHolder(MGItem holder, int position) {
         GroupEntity entity = mData.get(position);
-        BitmapTools.getInstance(mContext).display(holder.nivHead, String.format(Constant.API_GET_GROUP_PHOTO, entity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.nivHead, String.format(Constant.API_GET_GROUP_PHOTO, entity.getGroup_id()), R.drawable.b2be_normal, R.drawable.b2be_normal);
         holder.name.setText(entity.getGroup_name());
     }
 
