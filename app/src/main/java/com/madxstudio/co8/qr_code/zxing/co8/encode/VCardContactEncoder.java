@@ -31,7 +31,7 @@ import java.util.Set;
  *
  * @author Sean Owen
  */
-final class VCardContactEncoder extends com.bondwithme.BondWithMe.qr_code.zxing.encode.ContactEncoder {
+final class VCardContactEncoder extends com.madxstudio.co8.qr_code.zxing.co8.encode.ContactEncoder {
 
   private static final char TERMINATOR = '\n';
 

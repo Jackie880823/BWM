@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.ui.add;
+package com.madxstudio.co8.ui.add;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +16,9 @@ import android.widget.ImageView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
@@ -23,15 +26,13 @@ import com.madxstudio.co8.adapter.AddMembersAdapter;
 import com.madxstudio.co8.entity.RecommendEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
+import com.madxstudio.co8.qr_code.zxing.co8.CaptureActivity;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.FamilyProfileActivity;
 import com.madxstudio.co8.ui.FamilyViewProfileActivity;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.ui.MeActivity;
-import com.madxstudio.co8.zxing.activity.CaptureActivity;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.madxstudio.co8.util.LogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -298,22 +299,29 @@ public class AddMembersActivity extends BaseActivity{
 
             @Override
             public void onResult(String string) {
-                GsonBuilder gsonb = new GsonBuilder();
-                Gson gson = gsonb.create();
-                data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {
-                }.getType());
+                try{
+                    LogUtil.d(TAG,"data======" + string);
+                    GsonBuilder gsonb = new GsonBuilder();
+                    Gson gson = gsonb.create();
+                    data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {
+                    }.getType());
 
-                adapter = new AddMembersAdapter(AddMembersActivity.this, data);
-                rv.setAdapter(adapter);
+                    adapter = new AddMembersAdapter(AddMembersActivity.this, data);
+                    rv.setAdapter(adapter);
 
-                adapter.setOnAddIconClickListener(new AddMembersAdapter.OnAddIconClickListener() {
-                    @Override
-                    public void onAddIconClick(RecommendEntity recommendEntity) {
-                        Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
-                        intent.putExtra("member_id", recommendEntity.getUser_id());
-                        startActivityForResult(intent, ADD_MEMBER);
-                    }
-                });
+                    adapter.setOnAddIconClickListener(new AddMembersAdapter.OnAddIconClickListener() {
+                        @Override
+                        public void onAddIconClick(RecommendEntity recommendEntity) {
+                            Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
+                            intent.putExtra("member_id", recommendEntity.getUser_id());
+                            startActivityForResult(intent, ADD_MEMBER);
+                        }
+                    });
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
 
 
             }

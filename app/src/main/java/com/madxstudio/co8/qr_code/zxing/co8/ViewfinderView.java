@@ -26,8 +26,8 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.bondwithme.BondWithMe.R;
 import com.google.zxing.ResultPoint;
+import com.madxstudio.co8.R;
 import com.madxstudio.co8.qr_code.zxing.co8.camera.CameraManager;
 
 import java.util.ArrayList;

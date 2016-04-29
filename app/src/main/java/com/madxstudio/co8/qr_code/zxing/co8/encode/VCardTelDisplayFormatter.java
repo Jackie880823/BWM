@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * @author Sean Owen
  */
-final class VCardTelDisplayFormatter implements com.google.zxing.client.android.encode.Formatter, com.bondwithme.BondWithMe.qr_code.zxing.encode.Formatter {
+public final class VCardTelDisplayFormatter implements com.google.zxing.client.android.encode.Formatter, com.madxstudio.co8.qr_code.zxing.co8.encode.Formatter {
 
   private final List<Map<String,Set<String>>> metadataForIndex;
 

@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -47,18 +48,6 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondWithMe.Constant;
-import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.FamilyProfileActivity;
-import com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.MeActivity;
-import com.bondwithme.BondWithMe.ui.more.ViewQRCodeActivity;
-import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -67,6 +56,10 @@ import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
 import com.google.zxing.ResultMetadataType;
 import com.google.zxing.ResultPoint;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.UserEntity;
+import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.qr_code.zxing.co8.camera.CameraManager;
 import com.madxstudio.co8.qr_code.zxing.co8.clipboard.ClipboardInterface;
 import com.madxstudio.co8.qr_code.zxing.co8.history.HistoryActivity;
@@ -77,6 +70,14 @@ import com.madxstudio.co8.qr_code.zxing.co8.result.ResultHandler;
 import com.madxstudio.co8.qr_code.zxing.co8.result.ResultHandlerFactory;
 import com.madxstudio.co8.qr_code.zxing.co8.result.supplement.SupplementalInfoRetriever;
 import com.madxstudio.co8.qr_code.zxing.co8.share.ShareActivity;
+import com.madxstudio.co8.ui.BaseActivity;
+import com.madxstudio.co8.ui.FamilyProfileActivity;
+import com.madxstudio.co8.ui.FamilyViewProfileActivity;
+import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.MeActivity;
+import com.madxstudio.co8.ui.more.ViewQRCodeActivity;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -152,7 +153,7 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
 
   @Override
   public int getLayout() {
-      return com.bondwithme.BondWithMe.R.layout.activity_capture;
+      return R.layout.activity_capture;
   }
 
 
@@ -160,8 +161,8 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
   public void initView() {
       Window window = getWindow();
       window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-      progressDialog = getViewById(com.bondwithme.BondWithMe.R.id.rl_progress);
-      cancelScanButton = (Button) this.findViewById(com.bondwithme.BondWithMe.R.id.btn_my_qr);
+      progressDialog = getViewById(R.id.rl_progress);
+      cancelScanButton = (Button) this.findViewById(R.id.btn_my_qr);
       hasSurface = false;
       inactivityTimer = new InactivityTimer(this);
       beepManager = new BeepManager(this);
@@ -235,7 +236,7 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
 
                 @Override
                 public void onError(Exception e) {
-                    MessageUtil.getInstance().showShortToast(getResources().getString(com.bondwithme.BondWithMe.R.string.text_error));
+                    MessageUtil.getInstance(CaptureActivity.this).showShortToast(getResources().getString(R.string.text_error));
                 }
 
                 @Override
@@ -609,7 +610,7 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
           LogUtil.d("CaptureActivity", "resultString===" + resultString);
           checkId(resultString);
       }else {
-          Toast.makeText(CaptureActivity.this, getString(com.bondwithme.BondWithMe.R.string.text_invalid_qr), Toast.LENGTH_SHORT)
+          Toast.makeText(CaptureActivity.this, getString(R.string.text_invalid_qr), Toast.LENGTH_SHORT)
                   .show();
           CaptureActivity.this.finish();
       }

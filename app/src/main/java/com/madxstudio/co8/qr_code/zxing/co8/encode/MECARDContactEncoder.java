@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  *
  * @author Sean Owen
  */
-final class MECARDContactEncoder extends com.bondwithme.BondWithMe.qr_code.zxing.encode.ContactEncoder {
+final class MECARDContactEncoder extends com.madxstudio.co8.qr_code.zxing.co8.encode.ContactEncoder {
 
   private static final char TERMINATOR = ';';
 
