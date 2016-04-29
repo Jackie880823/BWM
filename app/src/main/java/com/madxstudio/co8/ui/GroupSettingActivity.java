@@ -36,6 +36,7 @@ import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 import com.madxstudio.co8.widget.MyDialog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -916,7 +917,9 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onResult(String string) {
                 try {//[{"group_name":"MAD","group_owner_id":"31","group_individual":"0","group_type":"0","group_photo":"","group_default":"1"}]
-                    JSONObject json = new JSONObject(string);
+                    JSONArray jsonArray=new JSONArray(string);
+                    String  object=jsonArray.getString(0);
+                    JSONObject json = new JSONObject(object);
                     String group_default = json.optString("group_default");
                     if ("1".equalsIgnoreCase(group_default)) {
                         isGroupDefault = true;

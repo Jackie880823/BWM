@@ -517,18 +517,15 @@ public class ProfileAdapter extends RecyclerView.Adapter {
                         if (lineCount > 5) {
                             // TODO: 16/3/23 做一些显示处理
                             // 第5行只显示十个字符
-                            int maxLineEndIndex = tvDescription.getLayout().getLineEnd(4);
-                            CharSequence sourceText = tvDescription.getText();
-                            String string = sourceText.toString().substring(maxLineEndIndex - 3);
-                            if (string.startsWith("...")) {
-                                return;
+                            int maxLineEndIndex = tvDescription.getLayout().getLineEnd(3);
+                            String sourceText = tvDescription.getText().toString();
+                            String string = sourceText.substring(maxLineEndIndex);
+                            if(string.length()>10){
+                                sourceText = sourceText.replace(sourceText.substring(maxLineEndIndex+10),"...");
                             }
-
-                            SpannableStringBuilder ssb = new SpannableStringBuilder(sourceText);
-                            ssb.replace(maxLineEndIndex - 3, ssb.length(), "...");
-                            tvDescription.setText(ssb);
+                            tvDescription.setText(sourceText);
                             tvSwitch.setVisibility(View.VISIBLE);
-                            tvSwitch.setText(R.string.more);
+                            tvSwitch.setText(R.string.text_more);
                         }
                     }
                 };

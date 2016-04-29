@@ -89,11 +89,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     /**
      * 扩展功能按钮
      */
-    private ImageButton expandFunctionButton;
+    private ImageView expandFunctionButton;
     /**
      * 表情按钮
      */
-    private ImageButton stickerImageButton;
+    private ImageView stickerImageButton;
     /**
      * 文本输入框
      */

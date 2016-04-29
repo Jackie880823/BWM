@@ -187,6 +187,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         position_name = getViewById(R.id.position_name);
         reminderArrayUs = getActivity().getResources().getStringArray(R.array.reminder_item);
         reminder_desc.setText(reminderArrayUs[0]);
+        reminderContent = reminderArrayUs[0];
         position_name.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button

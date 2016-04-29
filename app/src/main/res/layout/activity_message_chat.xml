@@ -75,20 +75,18 @@
             android:paddingRight="@dimen/_8dp"
             android:paddingTop="@dimen/_5dp">
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/cb_1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:paddingLeft="@dimen/default_view_margin"
+                android:layout_width="@dimen/_34dp"
+                android:layout_height="@dimen/_34dp"
+                android:layout_marginLeft="@dimen/_5dp"
                 android:src="@drawable/chat_plus_normal" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/cb_2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:paddingLeft="@dimen/default_view_margin"
+                android:layout_width="@dimen/_34dp"
+                android:layout_height="@dimen/_34dp"
+                android:layout_marginLeft="@dimen/_5dp"
                 android:src="@drawable/chat_expression_normal" />
 
             <EditText
