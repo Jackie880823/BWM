@@ -16,12 +16,12 @@
 
 package com.google.zxing.client.android.result;
 
+import android.app.Activity;
+import android.telephony.PhoneNumberUtils;
+
 import com.google.zxing.client.android.R;
 import com.google.zxing.client.result.ParsedResult;
 import com.google.zxing.client.result.TelParsedResult;
-
-import android.app.Activity;
-import android.telephony.PhoneNumberUtils;
 
 /**
  * Offers relevant actions for telephone numbers.

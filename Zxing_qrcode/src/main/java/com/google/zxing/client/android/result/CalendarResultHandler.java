@@ -16,14 +16,14 @@
 
 package com.google.zxing.client.android.result;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.util.Log;
+
 import com.google.zxing.client.android.R;
 import com.google.zxing.client.result.CalendarParsedResult;
 import com.google.zxing.client.result.ParsedResult;
-
-import android.app.Activity;
-import android.content.Intent;
 
 import java.text.DateFormat;
 import java.util.Date;

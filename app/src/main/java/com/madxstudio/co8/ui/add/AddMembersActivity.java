@@ -1,4 +1,4 @@
-package com.madxstudio.co8.ui.add;
+package com.bondwithme.BondWithMe.ui.add;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AddMembersActivity extends BaseActivity {
+public class AddMembersActivity extends BaseActivity{
 
     public String getTAG() {
         return TAG;
@@ -92,14 +92,16 @@ public class AddMembersActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setImageResource(R.drawable.qrcode_button_icon);
-        if (App.getLoginedUser().isShow_add_member()) {
+        if(App.getLoginedUser().isShow_add_member())
+        {
             leftButton.setImageResource(R.drawable.x_button);
         }
     }
 
     @Override
     protected void titleLeftEvent() {
-        if (App.getLoginedUser().isShow_add_member()) {
+        if(App.getLoginedUser().isShow_add_member())
+        {
             goBackToMain();
         }
 
@@ -119,8 +121,9 @@ public class AddMembersActivity extends BaseActivity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (App.getLoginedUser().isShow_add_member()) {
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+        if(App.getLoginedUser().isShow_add_member())
+        {
+            if(event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
                 goBackToMain();
                 return true;
             }
@@ -137,8 +140,6 @@ public class AddMembersActivity extends BaseActivity {
         ivSearch = getViewById(R.id.iv_search);
 
         rv.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AddMembersAdapter(AddMembersActivity.this, data);
-        rv.setAdapter(adapter);
         rv.setItemAnimator(null);
         ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,19 +248,21 @@ public class AddMembersActivity extends BaseActivity {
                 if ((data != null) && (data.size() > 0)) {
                     userEntity = data.get(0);
 
-                    if ("0".equals(userEntity.getMember_flag())) {
+                    if("0".equals(userEntity.getMember_flag())){
                         //如果不是好友
                         Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
                         intent.putExtra("userEntity", userEntity);
                         intent.putExtra("member_id", memberId);
                         startActivity(intent);
-                    } else if ("1".equals(userEntity.getMember_flag())) {
+                    }else if("1".equals(userEntity.getMember_flag())){
                         //如果是好友
                         Intent intent = new Intent(AddMembersActivity.this, FamilyProfileActivity.class);
                         intent.putExtra("userEntity", userEntity);
                         intent.putExtra("member_id", memberId);
                         startActivity(intent);
                     }
+
+
                 }
             }
 
@@ -282,53 +285,54 @@ public class AddMembersActivity extends BaseActivity {
 
     @Override
     public void requestData() {
-//        new HttpTools(this).get(String.format(Constant.API_BONDALERT_RECOMMEND, MainActivity.getUser().getUser_id()), null, TAG, new HttpCallback() {
-//            @Override
-//            public void onStart() {
-//                vProgress.setVisibility(View.VISIBLE);
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//                vProgress.setVisibility(View.GONE);
-//            }
-//
-//            @Override
-//            public void onResult(String string) {
-//                GsonBuilder gsonb = new GsonBuilder();
-//                Gson gson = gsonb.create();
-//                data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {
-//                }.getType());
-//                adapter = new AddMembersAdapter(AddMembersActivity.this, data);
-//                rv.setAdapter(adapter);
-//
-//                adapter.setOnAddIconClickListener(new AddMembersAdapter.OnAddIconClickListener() {
-//                    @Override
-//                    public void onAddIconClick(RecommendEntity recommendEntity) {
-//                        Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
-//                        intent.putExtra("member_id", recommendEntity.getUser_id());
-//                        startActivityForResult(intent, ADD_MEMBER);
-//                    }
-//                });
-//
-//
-//            }
-//
-//            @Override
-//            public void onError(Exception e) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled() {
-//
-//            }
-//
-//            @Override
-//            public void onLoading(long count, long current) {
-//
-//            }
-//        });
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_RECOMMEND, MainActivity.getUser().getUser_id()), null, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {
+                }.getType());
+
+                adapter = new AddMembersAdapter(AddMembersActivity.this, data);
+                rv.setAdapter(adapter);
+
+                adapter.setOnAddIconClickListener(new AddMembersAdapter.OnAddIconClickListener() {
+                    @Override
+                    public void onAddIconClick(RecommendEntity recommendEntity) {
+                        Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
+                        intent.putExtra("member_id", recommendEntity.getUser_id());
+                        startActivityForResult(intent, ADD_MEMBER);
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     @Override
@@ -345,9 +349,11 @@ public class AddMembersActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
+        switch (requestCode)
+        {
             case ADD_MEMBER:
-                if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK)
+                {
                     requestData();
                 }
                 break;

@@ -22,9 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import java.util.List;
-
 import com.google.zxing.client.android.R;
+
+import java.util.List;
 
 /**
  * Manufactures list items which represent SBC results.

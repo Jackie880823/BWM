@@ -23,6 +23,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.preference.PreferenceManager;
+
 import com.google.zxing.client.android.camera.CameraManager;
 import com.google.zxing.client.android.camera.FrontLightMode;
 

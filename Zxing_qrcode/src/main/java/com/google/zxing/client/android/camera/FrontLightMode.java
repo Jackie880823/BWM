@@ -17,6 +17,7 @@
 package com.google.zxing.client.android.camera;
 
 import android.content.SharedPreferences;
+
 import com.google.zxing.client.android.PreferencesActivity;
 
 /**

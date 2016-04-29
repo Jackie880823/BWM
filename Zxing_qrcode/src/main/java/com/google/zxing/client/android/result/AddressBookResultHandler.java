@@ -16,16 +16,16 @@
 
 package com.google.zxing.client.android.result;
 
-import com.google.zxing.client.android.R;
-import com.google.zxing.client.result.AddressBookParsedResult;
-import com.google.zxing.client.result.ParsedResult;
-
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.telephony.PhoneNumberUtils;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+
+import com.google.zxing.client.android.R;
+import com.google.zxing.client.result.AddressBookParsedResult;
+import com.google.zxing.client.result.ParsedResult;
 
 import java.text.DateFormat;
 import java.text.ParseException;
