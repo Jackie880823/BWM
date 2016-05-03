@@ -111,11 +111,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     /**
      * 扩展功能按钮
      */
-    private ImageButton expandFunctionButton;
+    private ImageView expandFunctionButton;
     /**
      * 表情按钮
      */
-    private ImageButton stickerImageButton;
+    private ImageView stickerImageButton;
 
     private HttpTools mHttpTools;
 
