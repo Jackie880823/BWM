@@ -698,18 +698,15 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     int lineCount = tvContent.getLineCount();
                     if (lineCount > 5) {
                         // 第5行只显示十个字符
-                        int maxLineEndIndex = tvContent.getLayout().getLineEnd(4);
-                        CharSequence sourceText = tvContent.getText();
-                        String string = sourceText.toString().substring(maxLineEndIndex - 3);
-                        if (string.startsWith("...")) {
-                            return;
+                        int maxLineEndIndex = tvContent.getLayout().getLineEnd(3);
+                        String sourceText = tvContent.getText().toString();
+                        String string = sourceText.substring(maxLineEndIndex);
+                        if(string.length()>10){
+                            sourceText = sourceText.replace(sourceText.substring(maxLineEndIndex+10),"...");
                         }
-
-                        SpannableStringBuilder ssb = new SpannableStringBuilder(sourceText);
-                        ssb.replace(maxLineEndIndex - 3, ssb.length() - 1, "...");
-                        setSpanContent(context, ssb.toString());
+                        setSpanContent(context, sourceText);
                         tvSwitch.setVisibility(View.VISIBLE);
-                        tvSwitch.setText(R.string.more);
+                        tvSwitch.setText(R.string.text_more);
                     }
                 }
             };

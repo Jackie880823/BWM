@@ -122,7 +122,8 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     /**
      * 当前用户实例
      */
-    private UserEntity currentUser = App.getLoginedUser();
+    private UserEntity currentUser;
+    private boolean isAdmin;
 
     /**
      * 初始底部栏，没有可以不操作
@@ -170,16 +171,24 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void initView() {
+        currentUser = (UserEntity) getIntent().getSerializableExtra(Constant.LOGIN_USER);
+        if (currentUser == null) {
+            isAdmin = true;
+            currentUser = App.getLoginedUser();
+        }
         ibTop = getViewById(R.id.ib_top);
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.GONE);
         btnLeaveGroup = getViewById(R.id.btn_leave_group);
         rvProfile = getViewById(R.id.rv_profile);
 
+        if (isAdmin == false) {
+            btnLeaveGroup.setVisibility(View.GONE);
+        }
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvProfile.setLayoutManager(linearLayoutManager);
-        adapter = new ProfileAdapter(this, currentUser.getOrg_id());
+        adapter = new ProfileAdapter(this, currentUser.getOrg_id(), isAdmin);
         rvProfile.setAdapter(adapter);
         adapter.setListener(this);
         rvProfile.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -208,6 +217,9 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                     ibTop.setVisibility(View.GONE);
                     btnLeaveGroup.setVisibility(View.VISIBLE);
                     ibTop.setVisibility(View.VISIBLE);
+                    if (isAdmin == false) {
+                        btnLeaveGroup.setVisibility(View.GONE);
+                    }
                 } else {
                     btnLeaveGroup.setVisibility(View.GONE);
                 }
@@ -228,11 +240,11 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
     protected void initTitleBar() {
         super.initTitleBar();
 
-        if ("1".equals(MainActivity.getUser().getAdmin())) { // 管理员才可能编辑公司简介，右边按钮是编辑切换按钮
+        if ("1".equals(MainActivity.getUser().getAdmin()) && isAdmin) { // 管理员才可能编辑公司简介，右边按钮是编辑切换按钮
             rightButton.setVisibility(View.VISIBLE);
             rightButton.setImageResource(R.drawable.edit_profile);
         } else { // 非管理员不能编辑公司简介，编辑切换按钮所以不能显示
-            rightButton.setVisibility(View.GONE);
+            rightButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -583,7 +595,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
      */
     @Override
     public void sendMessageToAdmin(UserEntity userEntity) {
-        LogUtil.d(TAG, "sendMessageToAdmin() called with: user_id = [" + userEntity.getUser_id()  + "]; group_id = [" + userEntity.getGroup_id() + "]; name = [" + userEntity.getUser_given_name() + "]");
+        LogUtil.d(TAG, "sendMessageToAdmin() called with: user_id = [" + userEntity.getUser_id() + "]; group_id = [" + userEntity.getGroup_id() + "]; name = [" + userEntity.getUser_given_name() + "]");
         Intent intent = new Intent(this, MessageChatActivity.class);
         if (userEntity != null) {
             intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);

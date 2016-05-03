@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -254,16 +255,16 @@ public class MyDialog {
             if (mTitleResId != 0) {
                 setTitle(mTitleResId);
             }
-            if (mTitle != null) {
+            if (!TextUtils.isEmpty(mTitle)) {
                 setTitle(mTitle);
             }
-            if (mTitle == null && mTitleResId == 0) {
+            if (TextUtils.isEmpty(mTitle) && mTitleResId == 0) {
                 mTitleView.setVisibility(View.GONE);
             }
             if (mMessageResId != 0) {
                 setMessage(mMessageResId);
             }
-            if (mMessage != null) {
+            if (!TextUtils.isEmpty(mMessage)) {
                 setMessage(mMessage);
             }
             if (pId != -1) {

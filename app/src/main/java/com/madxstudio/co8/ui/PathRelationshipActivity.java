@@ -38,7 +38,7 @@ import java.util.List;
  * 坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑
  * 坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑
  * 坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑
- *
+ * <p/>
  * 服务器为字符串返回 。 翻译需要自己处理 维护很痛苦。
  */
 public class PathRelationshipActivity extends BaseActivity {
@@ -128,7 +128,7 @@ public class PathRelationshipActivity extends BaseActivity {
 
         tvRelationship.setText(RelationshipUtil.getRelationshipName(this, relationship));//传入服务器标准关系，获取当前语言关系名。
 
-        VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
         rlProgress = getViewById(R.id.rl_progress);
 
@@ -157,6 +157,7 @@ public class PathRelationshipActivity extends BaseActivity {
             public void onClick(View v) {
                 //选择关系
                 Intent intent = new Intent(PathRelationshipActivity.this, RelationshipActivity.class);
+                intent.putExtra(Constant.RELATION_SHIP, relationship);
                 startActivityForResult(intent, 1);
             }
         });
@@ -197,7 +198,7 @@ public class PathRelationshipActivity extends BaseActivity {
                     for (int i = 0; i < pathList.size(); i++) {//关系列表
 
                         ll[i].setVisibility(View.VISIBLE);
-                        VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                        VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
                         tvRelationships[i].setText(RelationshipUtil.getRelationshipName(PathRelationshipActivity.this, pathList.get(i).getRelationship()));
 

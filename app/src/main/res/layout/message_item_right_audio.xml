@@ -33,14 +33,14 @@
                 android:id="@+id/audio_play"
                 android:layout_width="@dimen/_40dp"
                 android:layout_height="@dimen/_40dp"
-                android:background="@drawable/play_message">
+                android:background="@drawable/chat_audio_click">
 
                 <!--<ImageView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_centerInParent="true"-->
-                    <!--android:layout_gravity="center_vertical"-->
-                    <!--android:src="@drawable/play_message" />-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:src="@drawable/play_message" />-->
             </RelativeLayout>
 
             <RelativeLayout
@@ -53,7 +53,12 @@
                 <com.madxstudio.co8.widget.HorizontalProgressBarWithNumber
                     android:id="@+id/id_progressbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    app:progress_reached_bar_height_horizontal="@dimen/_2dp"
+                    app:progress_reached_color_horizontal="#24518a"
+                    app:progress_unreached_bar_height_horizontal="@dimen/_1_5dp"
+                    app:progress_unreached_color_horizontal="#cccccc"
+                    app:progress_text_color_horizontal="#24518a"/>
 
                 <TextView
                     android:id="@+id/audio_time"

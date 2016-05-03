@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_item_add_photo"
-        android:icon="@drawable/add_photo"
+        android:icon="@drawable/add_photo_edit"
         android:orderInCategory="80"
         android:title="@string/add_photo_to_this_post" />
 

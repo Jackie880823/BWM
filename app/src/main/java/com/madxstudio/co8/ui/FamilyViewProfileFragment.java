@@ -26,6 +26,7 @@ import com.madxstudio.co8.entity.PhotoEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.http.VolleyUtil;
+import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.util.DensityUtil;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
@@ -262,6 +263,15 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             }
         });
 
+        rl_organisation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CompanyActivity.class);
+                intent.putExtra(Constant.LOGIN_USER, userEntity);
+                startActivity(intent);
+            }
+        });
+
         btMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -317,7 +327,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             if (userEntity.getInt_phone_ext() != null && userEntity.getInt_phone_ext().size() > 0) {
                 rl_et_internal_phone.setVisibility(View.VISIBLE);
                 for (int i = 0; i < userEntity.getInt_phone_ext().size(); i++) {
-                    userEntity.getInt_phone_ext().set(i, "+" + userEntity.getInt_phone_ext().get(i));
+                    if (!TextUtils.isEmpty(userEntity.getInt_phone_ext().get(i))) {
+                        userEntity.getInt_phone_ext().set(i, "+" + userEntity.getInt_phone_ext().get(i));
+                    }
                 }
                 ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.array_list_item, R.id.tv_phone, userEntity.getInt_phone_ext());
                 et_internal_phone.setAdapter(adapter);

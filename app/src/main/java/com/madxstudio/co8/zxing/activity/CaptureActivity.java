@@ -129,8 +129,6 @@ public class CaptureActivity extends BaseActivity implements Callback {
         rlScanQR = getViewById(R.id.rl_scan_qr);
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
-
-
     }
 
     @Override

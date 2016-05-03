@@ -16,7 +16,7 @@ import com.madxstudio.co8.http.VolleyUtil;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.util.LogUtil;
-import com.madxstudio.co8.zxing.activity.CaptureActivity;
+import com.madxstudio.co8.qr_code.zxing.co8.CaptureActivity;
 
 
 /**

@@ -1388,7 +1388,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 跳至选择TAG用户
      */
     private void goChooseMembers() {
-        Intent intent = new Intent(getActivity(), SelectMemberActivity.class);
+        Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
         if (at_groups_data == null) {
             at_groups_data = new ArrayList<>();
         }

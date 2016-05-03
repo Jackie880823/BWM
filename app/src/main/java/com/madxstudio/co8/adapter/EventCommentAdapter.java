@@ -187,7 +187,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 return reminderArrayUs[8];
             }
         } else {
-            return "";
+            return reminderArrayUs[0];
         }
     }
 

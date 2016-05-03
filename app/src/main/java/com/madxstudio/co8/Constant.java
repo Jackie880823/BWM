@@ -135,6 +135,9 @@ public class Constant {
     public static final String FAMILY_PARENT = "Supervisor";
     public static final String FAMILY_CHILDREN = "Subordinate";
     public static final String FAMILY_SIBLING = "Colleague";
+    public static final String RELATION_SHIP_SUPPLIER = "Supplier";
+    public static final String RELATION_SHIP_CUSTOMER = "Customer";
+    public static final String RELATION_SHIP = "Relationship";
 
     public static final String CREATE_COUNTRY_NAME = "CountryName";
 
@@ -512,17 +515,17 @@ public class Constant {
     public static final String API_ORG_SEARCH = API_SERVER + "/co8/index.php/api/searchOrganisation";//获取公司名字列表
 
     public static final String API_ORG_CREATE = API_SERVER + "/co8/index.php/api/organisation";//创建新公司
-    public static final String API_ORG_JOIN = API_SERVER +"/co8/index.php/api/joinOrg";//申请加入公司
-    public static final String API_ORG_RESEND_JOIN = API_SERVER +"/co8/index.php/api/resendJoinOrgReq/%s";//重发申请加入公司
-    public static final String API_ORG_CANCEL_JOIN = API_SERVER +"/co8/index.php/api/cancelJoinOrgReq/%s";//取消加入公司
+    public static final String API_ORG_JOIN = API_SERVER + "/co8/index.php/api/joinOrg";//申请加入公司
+    public static final String API_ORG_RESEND_JOIN = API_SERVER + "/co8/index.php/api/resendJoinOrgReq/%s";//重发申请加入公司
+    public static final String API_ORG_CANCEL_JOIN = API_SERVER + "/co8/index.php/api/cancelJoinOrgReq/%s";//取消加入公司
 
-    public static final String API_GET_GROUP_LIST = API_SERVER +"/co8/index.php/api/myGroup/%s";//获取组群列表
-    public static final String API_GET_ALL_STAFF = API_SERVER +"/co8/index.php/api/allStaff/%s";//所有同事列表
-    public static final String API_GET_ALL_OTHER = API_SERVER +"/co8/index.php/api/myOthers/%s";//所有其他成员列表
-    public static final String API_GET_ALL_MAIN_MESSAGE = API_SERVER +"/co8/index.php/api/messages/%s/type/all";//所有消息列表
-    public static final String API_GET_REMOVE_MESSAGE = API_SERVER +"/co8/index.php/api/hidePost/%s";//删除消息列表
-    public static final String API_REMOVE_OWN_SUPPLIER  = API_SERVER +"/co8/index.php/api/removeOther/%s";//删除自己的客户或供应商
-    public static final String API_GET_USER_ORG  = API_SERVER +"/co8/index.php/api/userOrgStatus/%s";//获取自己是否加入公司
-    public static final String API_SET_MEETING_REMINDER  = API_SERVER +"/co8/index.php/api/setReminder/%s";//设置会议reminder
+    public static final String API_GET_GROUP_LIST = API_SERVER + "/co8/index.php/api/myGroup/%s";//获取组群列表
+    public static final String API_GET_ALL_STAFF = API_SERVER + "/co8/index.php/api/allStaff/%s";//所有同事列表
+    public static final String API_GET_ALL_OTHER = API_SERVER + "/co8/index.php/api/myOthers/%s";//所有其他成员列表
+    public static final String API_GET_ALL_MAIN_MESSAGE = API_SERVER + "/co8/index.php/api/messages/%s/type/all";//所有消息列表
+    public static final String API_GET_REMOVE_MESSAGE = API_SERVER + "/co8/index.php/api/hidePost/%s";//删除消息列表
+    public static final String API_REMOVE_OWN_SUPPLIER = API_SERVER + "/co8/index.php/api/removeOther/%s";//删除自己的客户或供应商
+    public static final String API_GET_USER_ORG = API_SERVER + "/co8/index.php/api/userOrgStatus/%s";//获取自己是否加入公司
+    public static final String API_SET_MEETING_REMINDER = API_SERVER + "/co8/index.php/api/setReminder/%s";//设置会议reminder
 
 }

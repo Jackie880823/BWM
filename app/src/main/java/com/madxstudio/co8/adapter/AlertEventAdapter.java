@@ -78,6 +78,9 @@ public class AlertEventAdapter extends RecyclerView.Adapter<AlertEventAdapter.VH
             case "reminder":
                 whatEvent = String.format(mContext.getString(R.string.text_upcoming_event), moduleName);
                 break;
+            case "cancel":
+                whatEvent = String.format(mContext.getString(R.string.text_cancelled_event), moduleName);
+                break;
             default:
                 whatEvent = moduleAction + moduleName;
                 break;

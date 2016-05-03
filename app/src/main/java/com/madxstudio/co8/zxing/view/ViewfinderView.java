@@ -45,6 +45,7 @@ public final class ViewfinderView extends View {
 	private static final long ANIMATION_DELAY = 100L;
 	private static final int OPAQUE = 0xFF;
 
+    private CameraManager cameraManager;
 	private final Paint paint;
 	private Bitmap resultBitmap;
 	private final int maskColor;
@@ -75,6 +76,9 @@ public final class ViewfinderView extends View {
 		possibleResultPoints = new HashSet<ResultPoint>(5);
 	}
 
+    public void setCameraManager(CameraManager cameraManager) {
+        this.cameraManager = cameraManager;
+    }
 	@Override
 	public void onDraw(Canvas canvas) {
 		// 中间的扫描框，你要修改扫描框的大小，去CameraManager里面修改

@@ -72,6 +72,8 @@ public class SelectMemberActivity extends BaseActivity {
     private List<OrgMemberEntity> selectMemberEntityList;
     private boolean isCreateNewGroup;
     private List<OrgMemberEntity> selectList;
+    private int type;
+    private List<String> setGroupList;
 
     @Override
     protected void initBottomBar() {
@@ -199,6 +201,7 @@ public class SelectMemberActivity extends BaseActivity {
         memberList = new ArrayList<>();
 //        memberList = (List<OrgMemberEntity>) getIntent().getSerializableExtra(Constant.SELECT_MEMBER_NORMAL_DATA);
         isCreateNewGroup = getIntent().getBooleanExtra("isCreateNewGroup", false);
+        type = getIntent().getIntExtra(Constant.TYPE, 0);
         memberAdapter = new SelectMemberListAdapter(mContext, memberList);
         listView.setAdapter(memberAdapter);
         selectMemberEntityList = new ArrayList<>();
@@ -221,8 +224,19 @@ public class SelectMemberActivity extends BaseActivity {
             public void onClick(View v) {
                 if (selectAllMember.isChecked() == true) {
                     selectAllMember.setChecked(false);
-                    selectMemberEntityList.clear();
-                    memberAdapter.removeAllSelectData();
+                    if (type == 1) {
+                        List<OrgMemberEntity> list = new ArrayList<OrgMemberEntity>();
+                        list.addAll(selectMemberEntityList);
+                        for (OrgMemberEntity entity : list) {
+                            if (!setGroupList.contains(entity.getUser_id())) {
+                                selectMemberEntityList.remove(entity);
+                                memberAdapter.removeSelectData(entity.getUser_id());
+                            }
+                        }
+                    } else {
+                        selectMemberEntityList.clear();
+                        memberAdapter.removeAllSelectData();
+                    }
                 } else {
                     selectAllMember.setChecked(true);
                     selectMemberEntityList.clear();
@@ -265,6 +279,9 @@ public class SelectMemberActivity extends BaseActivity {
 //                    showNoFriendDialog();
                 } else {
                     CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.check_member_item);
+                    if (setGroupList != null && setGroupList.contains(userId)) {
+                        return;
+                    }
                     if (selectItem.isChecked()) {
                         selectItem.setChecked(false);
                         memberAdapter.removeSelectData(userId);
@@ -468,8 +485,12 @@ public class SelectMemberActivity extends BaseActivity {
                     }
                     memberList = (List<OrgMemberEntity>) msg.obj;
                     if (null != selectList && selectList.size() > 0 && memberList != null) {
+                        setGroupList = new ArrayList<>();
                         for (OrgMemberEntity memberEntity : selectList) {
                             memberAdapter.addSelectData(memberEntity.getUser_id());
+                            if (type == 1) {
+                                setGroupList.add(memberEntity.getUser_id());
+                            }
                             for (OrgMemberEntity entity : memberList) {
                                 if (memberEntity.getUser_id().equals(entity.getUser_id())) {
                                     selectMemberEntityList.add(entity);

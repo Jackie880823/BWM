@@ -111,7 +111,7 @@
                 <TextView
                     android:id="@+id/switch_text_show"
                     style="@style/text_default"
-                    android:text="@string/more"
+                    android:text="@string/text_more"
                     android:textColor="@android:color/holo_blue_bright"
                     android:textStyle="bold"
                     android:visibility="gone" />
@@ -208,7 +208,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/goodjob_clicked" />
+                    android:background="@drawable/goodjob_nonclicked" />
 
                 <TextView
                     android:id="@+id/tv_wall_agree_count"

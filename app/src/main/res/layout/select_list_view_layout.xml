@@ -9,12 +9,11 @@
         android:layout_below="@id/my_family_linear"
         android:orientation="vertical">
 
-            <GridView
+            <ListView
                 android:id="@+id/family_grid_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:numColumns="3" />
+                android:visibility="gone" />
 
 
             <TextView

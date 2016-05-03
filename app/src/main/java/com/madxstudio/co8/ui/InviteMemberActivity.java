@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,9 +95,9 @@ public class InviteMemberActivity extends BaseActivity {
     /**
      * wing added
      */
-    GridView userGridView;
+    ListView userGridView;
     TextView userNoDataView;
-    GridView groupGridView;
+    ListView groupGridView;
     TextView groupNoDataView;
     /**
      * end
@@ -393,7 +394,7 @@ public class InviteMemberActivity extends BaseActivity {
         List<View> mLists = new ArrayList<>();
         View userView = LayoutInflater.from(mContext).inflate(R.layout.select_list_view_layout, null);
         /**wing modified for no data*/
-        userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
+        userGridView = (ListView) userView.findViewById(R.id.family_grid_view);
         userNoDataView = (TextView) userView.findViewById(R.id.data_null);
         userNoDataView.setText(R.string.no_member);
         /**end*/
@@ -480,7 +481,7 @@ public class InviteMemberActivity extends BaseActivity {
         mLists.add(userView);
         View groupView = LayoutInflater.from(mContext).inflate(R.layout.select_list_view_layout, null);
         /**wing modified for no data*/
-        groupGridView = (GridView) groupView.findViewById(R.id.family_grid_view);
+        groupGridView = (ListView) groupView.findViewById(R.id.family_grid_view);
         groupNoDataView = (TextView) groupView.findViewById(R.id.data_null);
         groupNoDataView.setText(R.string.no_group);
         /** end*/
@@ -585,11 +586,23 @@ public class InviteMemberActivity extends BaseActivity {
                 message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
                 message_group_tv.setTextColor(Color.parseColor("#666666"));
                 message_member_tv.setTextColor(Color.parseColor("#ffffff"));
+                if (!TextUtils.isEmpty(MemeberSearch)) {
+                    etSearch.setText(MemeberSearch);
+                } else {
+                    etSearch.setText("");
+                }
+                etSearch.setSelection(etSearch.length());
             } else {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_normal_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_selected_shap);
                 message_group_tv.setTextColor(Color.parseColor("#ffffff"));
                 message_member_tv.setTextColor(Color.parseColor("#666666"));
+                if (!TextUtils.isEmpty(GroupSearch)) {
+                    etSearch.setText(GroupSearch);
+                } else {
+                    etSearch.setText("");
+                }
+                etSearch.setSelection(etSearch.length());
             }
         }
 
@@ -786,22 +799,10 @@ public class InviteMemberActivity extends BaseActivity {
             case R.id.message_member_tv:
                 isTabChanged = true;
                 pager.setCurrentItem(0);
-                if (!TextUtils.isEmpty(MemeberSearch)) {
-                    etSearch.setText(MemeberSearch);
-                } else {
-                    etSearch.setText("");
-                }
-                etSearch.setSelection(etSearch.length());
                 break;
             case R.id.message_group_tv:
                 isTabChanged = true;
                 pager.setCurrentItem(1);
-                if (!TextUtils.isEmpty(GroupSearch)) {
-                    etSearch.setText(GroupSearch);
-                } else {
-                    etSearch.setText("");
-                }
-                etSearch.setSelection(etSearch.length());
                 break;
         }
     }
