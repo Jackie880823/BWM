@@ -251,7 +251,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     @Override
     public void onResume() {
         super.onResume();
-        if (MainActivity.IS_INTERACTIVE_USE &&
+        if (App.IS_INTERACTIVE_USE &&
                 !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT, false)) {
             getParentActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN |
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
@@ -274,7 +274,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (MainActivity.IS_INTERACTIVE_USE && isVisibleToUser) {
+        if (App.IS_INTERACTIVE_USE && isVisibleToUser) {
             handler.sendEmptyMessage(GET_DELAY);
         }
     }

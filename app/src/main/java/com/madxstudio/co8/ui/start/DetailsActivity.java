@@ -41,7 +41,6 @@ import com.madxstudio.co8.util.LocalImageLoader;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.widget.CircularImageView;
 import com.madxstudio.co8.widget.MyDialog;
-import com.material.widget.Dialog;
 import com.material.widget.PaperButton;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.soundcloud.android.crop.Crop;
@@ -294,7 +293,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         Intent intent = getIntent();
         userEntity = (UserEntity) intent.getExtras().getSerializable(Constant.LOGIN_USER);
         tokenEntity = (AppTokenEntity) intent.getExtras().getSerializable(Constant.HTTP_TOKEN);
-        App.initHttpHeaderWithToken(userEntity.getUser_login_id(), tokenEntity);
+        App.initOthers(userEntity.getUser_login_id(), tokenEntity);
     }
 
     private void doHttpChangeUI() {

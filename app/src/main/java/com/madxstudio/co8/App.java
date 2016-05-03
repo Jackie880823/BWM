@@ -86,6 +86,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     private static List<String> notificationNewsList = new ArrayList<>();
     private static List<String> notificationGroupList = new ArrayList<>();
     private MyDialog showAddDialog;
+    public static Boolean IS_INTERACTIVE_USE;
 
     @Override
     public void onCreate() {
@@ -281,7 +282,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public static void changeLoginedUser(UserEntity user, AppTokenEntity tokenEntity) {
         if (appContext != null) {
 
-            initHttpHeaderWithToken(user.getUser_login_id(), tokenEntity);
+            initOthers(user.getUser_login_id(), tokenEntity);
 
             changeLoginedUser(user);
 
@@ -304,7 +305,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     }
 
-    public static void initHttpHeaderWithToken(String user_login_id, AppTokenEntity tokenEntity) {
+    public static void initOthers(String user_login_id, AppTokenEntity tokenEntity) {
         if (tokenEntity != null) {
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Charset", "UTF-8");
@@ -325,6 +326,12 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             //            headers.put("Content-Type","application/json");
             //            HttpTools.initHeaders(headers);
             PreferencesUtil.saveValue(appContext, Constant.HTTP_TOKEN, new Gson().toJson(tokenEntity));
+
+            //获取是否显示tips标识
+            IS_INTERACTIVE_USE = PreferencesUtil.getValue(getContextInstance(), InteractivePopupWindow.INTERACTIVE_TIP_START, true);
+            if (user!=null&&user.isShow_tip()) {
+                IS_INTERACTIVE_USE = true;
+            }
         }
     }
 
@@ -333,7 +340,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             user = new Gson().fromJson(PreferencesUtil.getValue(appContext, "user", null), UserEntity.class);
             //异常情况，重新初始token
             if (user != null && HttpTools.getHeaders() != null && TextUtils.isEmpty(HttpTools.getHeaders().get("X_BWM_TOKEN"))) {
-                initHttpHeaderWithToken(user.getUser_login_id(), new Gson().fromJson(PreferencesUtil.getValue(appContext, Constant.HTTP_TOKEN, ""), AppTokenEntity.class));
+                initOthers(user.getUser_login_id(), new Gson().fromJson(PreferencesUtil.getValue(appContext, Constant.HTTP_TOKEN, ""), AppTokenEntity.class));
             }
         }
         //test,18682116784

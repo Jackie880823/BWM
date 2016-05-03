@@ -20,6 +20,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.WallAdapter;
@@ -297,7 +298,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, false)) {
+            if (App.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, false)) {
                 handler.sendEmptyMessage(GET_DELAY);
             }
 

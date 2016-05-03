@@ -60,7 +60,6 @@ import com.madxstudio.co8.interfaces.ImagesRecyclerListener;
 import com.madxstudio.co8.ui.BaseFragment;
 import com.madxstudio.co8.ui.InviteMemberActivity;
 import com.madxstudio.co8.ui.MainActivity;
-import com.madxstudio.co8.ui.SelectMemberActivity;
 import com.madxstudio.co8.ui.share.PreviewVideoActivity;
 import com.madxstudio.co8.ui.share.SelectPhotosActivity;
 import com.madxstudio.co8.util.FileUtil;
@@ -792,7 +791,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onResume() {
         super.onResume();
-        if (MainActivity.IS_INTERACTIVE_USE &&
+        if (App.IS_INTERACTIVE_USE &&
                 !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
             mHandler.sendEmptyMessage(GET_DELAY);

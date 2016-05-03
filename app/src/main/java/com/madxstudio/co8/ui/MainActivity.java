@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     public static String STICKER_VERSION = "4";
 
-    public static Boolean IS_INTERACTIVE_USE;
+//    public static Boolean IS_INTERACTIVE_USE;
     public static Map<String, InteractivePopupWindow> interactivePopupWindowMap;
     private static final int GET_DELAY = 0x28;
 
@@ -488,11 +488,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + App.getLoginedUser().getUser_id();
         String isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, "0");
-        IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START, true);
-        if (getUser().isShow_tip()) {
-            IS_INTERACTIVE_USE = true;
-        }
-//        IS_INTERACTIVE_USE = false;
         LogUtil.d(TAG, "isFirstLogin=========" + isFirstLogin + "======IS_FIRST_LOGIN======" + IS_FIRST_LOGIN);
         if (!STICKER_VERSION.equals(isFirstLogin)) {
             new Thread() {
