@@ -32,20 +32,18 @@
         android:paddingBottom="@dimen/_5dp"
         android:paddingTop="@dimen/_5dp">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/ib_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_view_margin"
-            android:background="@null"
+            android:layout_width="@dimen/_34dp"
+            android:layout_height="@dimen/_34dp"
+            android:layout_marginLeft="@dimen/_5dp"
             android:src="@drawable/chat_plus_normal" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/ib_sticker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_view_margin"
-            android:background="@null"
+            android:layout_width="@dimen/_34dp"
+            android:layout_height="@dimen/_34dp"
+            android:layout_marginLeft="@dimen/_5dp"
             android:src="@drawable/chat_expression_normal" />
 
         <EditText

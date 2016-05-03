@@ -15,22 +15,19 @@
         android:gravity="center"
         android:paddingTop="@dimen/default_view_margin"
         android:paddingBottom="@dimen/default_view_margin">
-        <ImageButton
+        <ImageView
             android:id="@+id/cb_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_view_margin"
+            android:layout_width="@dimen/_34dp"
+            android:layout_height="@dimen/_34dp"
+            android:layout_marginLeft="@dimen/_5dp"
             android:src="@drawable/chat_plus_normal"
-            android:background="@null"
             />
-        <ImageButton
+        <ImageView
             android:id="@+id/cb_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_view_margin"
-            android:src="@drawable/chat_expression_normal"
-            android:background="@null"
-            />
+            android:layout_width="@dimen/_34dp"
+            android:layout_height="@dimen/_34dp"
+            android:layout_marginLeft="@dimen/_5dp"
+            android:src="@drawable/chat_expression_normal" />
         <EditText
             android:id="@+id/et_chat"
             android:layout_width="0dp"
