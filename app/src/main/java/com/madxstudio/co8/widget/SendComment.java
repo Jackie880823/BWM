@@ -46,8 +46,8 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
     private static final String TAG = SendComment.class.getSimpleName();
 
     private int cache_count = 0;
-    private ImageButton ibMore;
-    private ImageButton ibSticker;
+    private ImageView ibMore;
+    private ImageView ibSticker;
     private EditText etChat;
     private LinearLayout llMore;
     private LinearLayout llSticker;
@@ -109,9 +109,9 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
     public SendComment(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.layout_send_commond, this);
-        ibMore = (ImageButton) findViewById(R.id.ib_more);
+        ibMore = (ImageView) findViewById(R.id.ib_more);
         llMore = (LinearLayout) findViewById(R.id.ll_more);
-        ibSticker = (ImageButton) findViewById(R.id.ib_sticker);
+        ibSticker = (ImageView) findViewById(R.id.ib_sticker);
         llSticker = (LinearLayout) findViewById(R.id.ll_sticker);
         etChat = (EditText) findViewById(R.id.et_chat);
         ImageButton tvSend = (ImageButton) findViewById(R.id.tv_send);
