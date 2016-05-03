@@ -1490,7 +1490,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                                 mic_right.setScaleX(1);
                                 mic_right.setScaleY(1);
                                 mic_left.setImageResource(R.drawable.chat_play);
-                                MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_record_audio_too_short));
+                                MessageUtil.getInstance().showShortToast(getString(R.string.text_record_audio_too_short));
                                 mlCount = 1;
                                 hideAudioView();
                             } else if (isInLeft) {

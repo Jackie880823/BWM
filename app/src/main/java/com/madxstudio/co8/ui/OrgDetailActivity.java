@@ -196,9 +196,9 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             case ADD_MEMBER:
                 if (resultCode == RESULT_OK) {
                     vProgress.setVisibility(View.GONE);
-                    MessageUtil.showMessage(mContext, R.string.msg_action_successed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                 } else {
-                    MessageUtil.showMessage(mContext, R.string.msg_action_canceled);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_canceled);
                 }
                 break;
         }
@@ -234,12 +234,12 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             @Override
             public void onResult(String string) {
                 vProgress.setVisibility(View.GONE);
-                MessageUtil.showMessage(mContext, R.string.msg_action_successed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -373,20 +373,20 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                                 try {
                                     JSONObject jsonObject = new JSONObject(response);
                                     if (("200").equals(jsonObject.getString("response_status_code"))) {
-                                        MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_success_leave_group));//成功
+                                        MessageUtil.getInstance().showShortToast(getString(R.string.text_success_leave_group));//成功
                                         groupAdapter.removeData(groupEntity);
                                     } else {
-                                        MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_fail_leave_group));//失败
+                                        MessageUtil.getInstance().showShortToast(getString(R.string.text_fail_leave_group));//失败
                                     }
                                 } catch (JSONException e) {
-                                    MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_error));
+                                    MessageUtil.getInstance().showShortToast(getString(R.string.text_error));
                                     e.printStackTrace();
                                 }
                             }
 
                             @Override
                             public void onError(Exception e) {
-                                MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_error));
+                                MessageUtil.getInstance().showShortToast(getString(R.string.text_error));
                             }
 
                             @Override
@@ -823,7 +823,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                         }
                     }
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     e.printStackTrace();
                 }
             }
@@ -831,7 +831,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: accept request", e);
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -891,14 +891,14 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                         Toast.makeText(mContext, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -990,7 +990,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             @Override
             public void onError(Exception e) {
                 LogUtil.e(TAG, "onError: pending request list", e);
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -1067,7 +1067,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 finishReFresh();
             }
 
@@ -1115,7 +1115,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 finishReFresh();
             }
 
@@ -1227,7 +1227,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                         memberAdapter.notifyDataSetChanged();
                     }
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     e.printStackTrace();
                 }
             }

@@ -60,7 +60,6 @@ import com.madxstudio.co8.interfaces.ImagesRecyclerListener;
 import com.madxstudio.co8.ui.BaseFragment;
 import com.madxstudio.co8.ui.InviteMemberActivity;
 import com.madxstudio.co8.ui.MainActivity;
-import com.madxstudio.co8.ui.SelectMemberActivity;
 import com.madxstudio.co8.ui.share.PreviewVideoActivity;
 import com.madxstudio.co8.ui.share.SelectPhotosActivity;
 import com.madxstudio.co8.util.FileUtil;
@@ -271,8 +270,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         public boolean handleMessage(Message message) {
             switch (message.what) {
                 case ACTION_FAILED:
-                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_failed);
                     mHandler.sendEmptyMessage(HIDE_PROGRESS);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     break;
                 case ACTION_SUCCEED:
                     if (!isEdit) {
@@ -280,7 +279,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         editor.clear().apply();
                     }
 
-//                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
+//                    MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                     if (getActivity() != null && !getActivity().isFinishing()) {
                         Intent intent = getParentActivity().getIntent();
                         intent.putExtra(Constant.WALL_ENTITY, wall);
@@ -792,7 +791,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onResume() {
         super.onResume();
-        if (MainActivity.IS_INTERACTIVE_USE &&
+        if (App.IS_INTERACTIVE_USE &&
                 !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
             mHandler.sendEmptyMessage(GET_DELAY);
@@ -1465,7 +1464,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)) {
             // 没文字、没图片、没视频不能上传日记
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            MessageUtil.getInstance().showShortToast(R.string.msg_no_content);
             return;
         }
 
@@ -1556,7 +1555,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         if (!isUpdate && (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri))) {
             // 没文字、没图片、没视频不能上传日记
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            MessageUtil.getInstance().showShortToast(R.string.msg_no_content);
             return;
         }
 
@@ -1712,7 +1711,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             popupwindow.dismiss();
             return true;
         } else if (rlProgress != null && rlProgress.getVisibility() == View.VISIBLE) {
-            MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
+            MessageUtil.getInstance().showShortToast(R.string.waiting_upload);
             return true;
         }
         if (tasks != null && tasks.size() > 0) {

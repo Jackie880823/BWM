@@ -106,9 +106,9 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 //                if (bitmapCache != null && !bitmapCache.isRecycled()) {
 //                    try {
 //                        PicturesCacheUtil.saveImageToGallery(getActivity(), bitmapCache, "wall");
-//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//                        MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
 //                    } catch (Exception e) {
-//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+//                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
 //                    }
 //                }
 //            }
@@ -203,9 +203,9 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
                 if (bitmapCache != null && !bitmapCache.isRecycled()) {
                     try {
                         String path = PicturesCacheUtil.saveImageToGallery(getActivity(), new File(cacheFilePath), "wall");
-                        MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.saved_to_path) + path);
+                        MessageUtil.getInstance().showShortToast(getActivity().getString(R.string.saved_to_path) + path);
                     } catch (Exception e) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     }
                 }
             }

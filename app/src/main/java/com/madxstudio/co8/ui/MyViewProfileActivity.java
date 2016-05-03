@@ -646,7 +646,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -691,7 +691,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -1163,7 +1163,7 @@ public class MyViewProfileActivity extends BaseActivity {
                 mCalendar.set(Calendar.MONTH, datePicker.getMonth());
                 mCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDay());
                 if (!MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis() - (1000 * 86400))) {
-                    MessageUtil.showMessage(MyViewProfileActivity.this, R.string.text_wrong_data);
+                    MessageUtil.getInstance().showShortToast(R.string.text_wrong_data);
                     return;
                 }
                 String dateDesc = MyDateUtils.getLocalDateStringFromLocal(MyViewProfileActivity.this, mCalendar.getTimeInMillis());

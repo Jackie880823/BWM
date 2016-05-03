@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     public static String STICKER_VERSION = "4";
 
-    public static Boolean IS_INTERACTIVE_USE;
+//    public static Boolean IS_INTERACTIVE_USE;
     public static Map<String, InteractivePopupWindow> interactivePopupWindowMap;
     private static final int GET_DELAY = 0x28;
 
@@ -149,6 +149,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         App.checkVerSion(this);
 
+        //TODO del the test code
+//        PreferencesUtil.saveValue(this, Constant.APP_CRASH, true);
     }
 
     @Override
@@ -219,6 +221,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 @Override
                 public void onClick(View v) {
                     errorReportDialog.dismiss();
+                    //TODO the follow line is for test , remember del it
+//                    throw new NullPointerException();
                 }
             });
             errorReportDialog.setButtonAccept(R.string.report, new View.OnClickListener() {
@@ -227,7 +231,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                     errorReportDialog.dismiss();
                     Intent intentService = new Intent(App.getContextInstance(), ReportIntentService.class);
                     startService(intentService);
-                    MessageUtil.showMessage(MainActivity.this, R.string.say_thanks_for_report);
+                    MessageUtil.getInstance().showShortToast( R.string.say_thanks_for_report);
                 }
             });
         }
@@ -484,11 +488,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + App.getLoginedUser().getUser_id();
         String isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, "0");
-        IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START, true);
-        if (getUser().isShow_tip()) {
-            IS_INTERACTIVE_USE = true;
-        }
-//        IS_INTERACTIVE_USE = false;
         LogUtil.d(TAG, "isFirstLogin=========" + isFirstLogin + "======IS_FIRST_LOGIN======" + IS_FIRST_LOGIN);
         if (!STICKER_VERSION.equals(isFirstLogin)) {
             new Thread() {
@@ -588,8 +587,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         //检查显示小红点
         checkAndShowRedPoit();
-
-        //TODO test mush delete
 
     }
 
@@ -829,12 +826,17 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
 
     private long startTime;
+    /**返回确定退出间隔时间*/
+    private static final int EXIT_BUTTON_RELAY_TIME = 2000;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                if (System.currentTimeMillis() - startTime < 1000) {
+                if(startTime==0L||System.currentTimeMillis() - startTime > EXIT_BUTTON_RELAY_TIME){
+                    startTime = System.currentTimeMillis();
+                    MessageUtil.getInstance().showToast(R.string.click_again_exit, EXIT_BUTTON_RELAY_TIME);
+                }else{
                     if ("lastLeaveIndex".equals(LAST_LEAVE_INDEX)) {
                         LAST_LEAVE_INDEX += App.getLoginedUser().getUser_id();
                     }
@@ -842,9 +844,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                     LAST_LEAVE_INDEX = "lastLeaveIndex";
                     IS_FIRST_LOGIN = "isFirstLogin";
                     App.getContextInstance().exit(MainActivity.this);
-                } else {
-                    MessageUtil.showMessage(this, R.string.click_again_exit, 1000);
-                    startTime = System.currentTimeMillis();
                 }
 //                snackBar = new SnackBar(MainActivity.this,
 //                        getString(R.string.msg_ask_exit_app),

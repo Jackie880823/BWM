@@ -26,6 +26,8 @@ import com.madxstudio.co8.ui.MemberActivity;
 import com.madxstudio.co8.ui.MessageChatActivity;
 import com.madxstudio.co8.ui.MissListActivity;
 import com.madxstudio.co8.ui.NewsActivity;
+import com.madxstudio.co8.ui.OrgDetailActivity;
+import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.ui.more.BondAlert.BigDayActivity;
 import com.madxstudio.co8.ui.more.GroupPrivacyActivity;
 import com.madxstudio.co8.ui.more.sticker.StickerStoreActivity;
@@ -57,7 +59,9 @@ public class NotificationUtil {
         BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_OTHER("other"),
         BONDALERT_MEMBER("member"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group"), BONDALERT_INACTIVE("inactive"),
         LOCAL_PRIVACY_SETTINGS("privacy_settings"), LOCAL_NEW_DIARY("new_diary"), LOCAL_STICKIES_STORE("stickies_store"),
-        LOCAL_FAMILY_PAGE("family_page");
+        LOCAL_FAMILY_PAGE("family_page"),ORGANISATION("organisation")
+        ;
+
         private String typeName;
 
         MessageType(String typeName) {
@@ -247,12 +251,33 @@ public class NotificationUtil {
             case BONDALERT_MEMBER:
                 smallIcon = R.drawable.bondalert_member_icon;
                 msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_MEMBER);
-                if (msgs.size() == 0) {
-                    intent = new Intent(context, MemberActivity.class);
-                } else {
-                    //TODO
+
+                //以下为恶心的东西，非member的通知也搞到这里来了 begin
+//                if (msgs.size() == 0) {
+//                    intent = new Intent(context, MemberActivity.class);
+//                } else {
+//                    //TODO
+//                    intent = new Intent(context, MemberActivity.class);
+//                }
+                if("add".equals(action)
+                        ||"autoAcp".equals(action)
+                        ||"accept".equals(action)
+                        ||"updateRel".equals(action)
+                        ||"rejectedJoinOrg".equals(action)
+                        ){
                     intent = new Intent(context, MemberActivity.class);
                 }
+                else if("approvedJoinOrg".equals(action)
+                        ||"setAdmin".equals(action)
+                        ||"removeAdmin".equals(action)
+                        ){
+                    intent = new Intent(context, CompanyActivity.class);
+                }
+                else if("removeContact".equals(action)){
+                    intent = new Intent(context, OrgDetailActivity.class);
+                    intent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
+                }
+                //以上为恶心的东西，非member的通知也搞到这里来了 end
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MEMBER);
                 newMsg = NotificationMessageGenerateUtil.getMemberMessage(context, action, action_owner, item_name);
                 doNotificationHandle(MainActivity.TabEnum.more);
@@ -358,6 +383,15 @@ public class NotificationUtil {
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_INACTIVE);
                 intent.putExtra("member_id", action_owner_id);
                 newMsg = NotificationMessageGenerateUtil.getInactiveMessage(context, action, action_owner);
+                doNotificationHandle(MainActivity.TabEnum.more);
+                break;
+            case ORGANISATION:
+                smallIcon = R.drawable.admin_icon;
+
+                intent = new Intent(context, OrgDetailActivity.class);
+                intent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_PENDING_REQUEST);
+                intent.putExtra(Constant.REQUEST_TYPE, Constant.ADMIN_REQUEST);
+                newMsg = NotificationMessageGenerateUtil.getOrganisationMessage(context, action, action_owner,item_name);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
 

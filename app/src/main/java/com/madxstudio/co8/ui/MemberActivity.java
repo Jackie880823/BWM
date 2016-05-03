@@ -184,7 +184,7 @@ public class MemberActivity extends BaseActivity {
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(MemberActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
 //                if (isRefresh) {
 //                    finishReFresh();
 //                }
@@ -228,12 +228,12 @@ public class MemberActivity extends BaseActivity {
         switch (requestCode) {
             case ADD_MEMBER:
                 if (resultCode == RESULT_OK) {
-                    MessageUtil.showMessage(this, R.string.msg_action_successed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
 //                    startIndex = 0;
 //                    isRefresh = true;
                     requestData();//这样直接请求???
                 } else {
-                    MessageUtil.showMessage(this, R.string.msg_action_canceled);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_canceled);
                 }
                 mProgressDialog.setVisibility(View.GONE);
                 break;
@@ -352,7 +352,7 @@ public class MemberActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(MemberActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -395,7 +395,7 @@ public class MemberActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(MemberActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override

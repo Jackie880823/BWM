@@ -505,7 +505,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void OnLoginError(String error) {
-        MessageUtil.showMessage(getActivity(), error);
+        MessageUtil.getInstance().showShortToast(error);
         com.facebook.login.LoginManager.getInstance().logOut();//清除Facebook授权缓存
     }
 

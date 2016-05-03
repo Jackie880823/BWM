@@ -273,7 +273,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
 
                 @Override
                 public void onError(Exception e) {
-                    MessageUtil.showMessage(CaptureActivity.this, getResources().getString(R.string.text_error));
+					MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
                 }
 
                 @Override

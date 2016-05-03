@@ -443,7 +443,7 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
                 if (getActivity() != null && !getActivity().isFinishing()) {
                     UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 }
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
 
             }
 

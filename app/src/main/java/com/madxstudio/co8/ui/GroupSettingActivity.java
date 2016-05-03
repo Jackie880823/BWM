@@ -248,20 +248,20 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
                     if (("200").equals(jsonObject.getString("response_status_code"))) {
                         userList.remove(userEntity);
                         groupSettingAdapter.removeData(userEntity);
-                        MessageUtil.getInstance(mContext).showShortToast(R.string.text_success_remove);
+                        MessageUtil.getInstance().showShortToast(R.string.text_success_remove);
                         getMembersList();
                     } else {
-                        MessageUtil.getInstance(mContext).showShortToast(R.string.text_fail_remove);
+                        MessageUtil.getInstance().showShortToast(R.string.text_fail_remove);
                     }
                 } catch (JSONException e) {
-                    MessageUtil.getInstance(mContext).showShortToast(R.string.text_error);
+                    MessageUtil.getInstance().showShortToast(R.string.text_error);
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.getInstance(mContext).showShortToast(R.string.text_error);
+                MessageUtil.getInstance().showShortToast(R.string.text_error);
             }
 
             @Override
@@ -365,21 +365,21 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
                         response_type = jsonObject.getString("response_type");
                         String response_relationship = jsonObject.getString("response_relationship");
                         if ("Resend".equals(response_type)) {
-                            MessageUtil.getInstance(mContext).showShortToast(R.string.text_success_resend);
+                            MessageUtil.getInstance().showShortToast(R.string.text_success_resend);
                         } else if ("Request".equals(response_type)) {
-                            MessageUtil.getInstance(mContext).showShortToast(R.string.text_success_request);
+                            MessageUtil.getInstance().showShortToast(R.string.text_success_request);
                         } else if ("Accept".equals(response_type)) {
-                            MessageUtil.getInstance(mContext).showShortToast(R.string.text_success_accept);
+                            MessageUtil.getInstance().showShortToast(R.string.text_success_accept);
                         }
                         if (TextUtils.isEmpty(response_relationship)) {//关系为空时, 跳转到选择界面
                             startActivityForResult(new Intent(mContext, RelationshipActivity.class), GET_RELATIONSHIP);
                         }
                     } else {
-                        MessageUtil.getInstance(mContext).showShortToast(R.string.text_error);
+                        MessageUtil.getInstance().showShortToast(R.string.text_error);
                     }
 
                 } catch (JSONException e) {
-                    MessageUtil.getInstance(mContext).showShortToast(R.string.text_error);
+                    MessageUtil.getInstance().showShortToast(R.string.text_error);
                     e.printStackTrace();
                 }
 
@@ -470,23 +470,23 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
-                                MessageUtil.getInstance(mContext).showShortToast(R.string.text_success_leave_group);//成功
+                                MessageUtil.getInstance().showShortToast(R.string.text_success_leave_group);//成功
                                 Intent intent = new Intent(mContext, MainActivity.class);
                                 intent.putExtra("jumpIndex", 3);
                                 startActivity(intent);
                                 finish();
                             } else {
-                                MessageUtil.getInstance(mContext).showShortToast(R.string.text_fail_leave_group);//失败
+                                MessageUtil.getInstance().showShortToast(R.string.text_fail_leave_group);//失败
                             }
                         } catch (JSONException e) {
-                            MessageUtil.getInstance(mContext).showShortToast(R.string.text_fail_leave_group);
+                            MessageUtil.getInstance().showShortToast(R.string.text_fail_leave_group);
                             e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        MessageUtil.getInstance(mContext).showShortToast(R.string.text_fail_leave_group);
+                        MessageUtil.getInstance().showShortToast(R.string.text_fail_leave_group);
                     }
 
                     @Override
@@ -597,14 +597,14 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if ("Success".equals(jsonObject.getString("response_status"))) {
-                        MessageUtil.getInstance(mContext).showShortToast(R.string.text_success_set_relationship);//成功
+                        MessageUtil.getInstance().showShortToast(R.string.text_success_set_relationship);//成功
                         getMembersList();
                     } else {
-                        MessageUtil.getInstance(mContext).showShortToast(R.string.text_error);
+                        MessageUtil.getInstance().showShortToast(R.string.text_error);
                     }
 
                 } catch (JSONException e) {
-                    MessageUtil.getInstance(mContext).showShortToast(R.string.text_error);
+                    MessageUtil.getInstance().showShortToast(R.string.text_error);
                     e.printStackTrace();
                 }
             }
@@ -646,13 +646,13 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onResult(String response) {
-                MessageUtil.getInstance(mContext).showShortToast(R.string.text_success);
+                MessageUtil.getInstance().showShortToast(R.string.text_success);
                 getMembersList();
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.getInstance(mContext).showShortToast(R.string.text_error);
+                MessageUtil.getInstance().showShortToast(R.string.text_error);
             }
 
             @Override
@@ -696,7 +696,7 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.getInstance(mContext).showShortToast(R.string.text_error_try_again);
+                MessageUtil.getInstance().showShortToast(R.string.text_error_try_again);
             }
 
             @Override
@@ -743,7 +743,7 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.getInstance(mContext).showShortToast(R.string.text_error_try_again);
+                MessageUtil.getInstance().showShortToast(R.string.text_error_try_again);
             }
 
             @Override

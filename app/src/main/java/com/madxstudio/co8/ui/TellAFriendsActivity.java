@@ -178,7 +178,7 @@ public class TellAFriendsActivity extends BaseActivity {
 
                 @Override
                 public void onResult(String string) {
-                    MessageUtil.showMessage(TellAFriendsActivity.this, R.string.action_invitation_successful);
+                    MessageUtil.getInstance().showShortToast(R.string.action_invitation_successful);
                     finish();
                 }
 
@@ -198,7 +198,7 @@ public class TellAFriendsActivity extends BaseActivity {
                 }
             });
         } else {
-            MessageUtil.showMessage(this, R.string.msg_no_contact_select);
+            MessageUtil.getInstance().showShortToast(R.string.msg_no_contact_select);
         }
     }
 

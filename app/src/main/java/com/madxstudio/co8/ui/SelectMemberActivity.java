@@ -175,9 +175,9 @@ public class SelectMemberActivity extends BaseActivity {
 //            case ADD_MEMBER:
 //                if (resultCode == RESULT_OK) {
 //                    vProgress.setVisibility(View.GONE);
-//                    MessageUtil.showMessage(mContext, R.string.msg_action_successed);
+//                    MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
 //                } else {
-//                    MessageUtil.showMessage(mContext, R.string.msg_action_canceled);
+//                    MessageUtil.getInstance().showShortToast(R.string.msg_action_canceled);
 //                }
 //                break;
 //        }
@@ -460,7 +460,7 @@ public class SelectMemberActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 finishReFresh();
             }
 

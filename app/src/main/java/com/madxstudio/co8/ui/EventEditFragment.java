@@ -315,7 +315,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                     Intent intent = new Intent();
                     intent.putExtra("event", mEevent);
                     getParentActivity().setResult(Activity.RESULT_OK, intent);
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                     getActivity().finish();
 
 //                    Intent intent = new Intent(getActivity(), EventDetailActivity.class);
@@ -327,7 +327,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 
                 @Override
                 public void onError(Exception e) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
 
                 }
 
@@ -551,7 +551,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
                 endData = mCalendar.getTimeInMillis();
                 if (endData <= startData) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.text_meeting_end_time));
                     return;
                 }
                 pickEndDateTimeDialog.dismiss();
@@ -629,11 +629,11 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
                 startData = mCalendar.getTimeInMillis();
                 if (MyDateUtils.isBeforeDate(startData)) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.msg_date_not_befort_now));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.msg_date_not_befort_now));
                     return;
                 }
                 if (endData >= 0 && endData <= startData) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.text_meeting_end_time));
                     return;
                 }
                 pickDateTimeDialog.dismiss();
@@ -741,47 +741,43 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     }
 
     private boolean validateForm() {
-        if (TextUtils.isEmpty(event_title.getText().toString().trim())) {
-            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_title_null);
+        if(TextUtils.isEmpty(event_title.getText().toString().trim())) {
+            MessageUtil.getInstance().showShortToast(R.string.alert_text_title_null);
             return false;
         }
-        if (TextUtils.isEmpty(event_desc.getText().toString().trim())) {
-            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_desc_null);
-            return false;
-        }
-
-        if (TextUtils.isEmpty(position_name.getText().toString().trim())) {
-            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_location_null);
+        if(TextUtils.isEmpty(event_desc.getText().toString().trim())) {
+            MessageUtil.getInstance().showShortToast(R.string.alert_text_desc_null);
             return false;
         }
 
-        if (TextUtils.isEmpty(date_desc.getText())) {
-            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_date_null);
-            return false;
-        }
-        if (TextUtils.isEmpty(date_end_desc.getText())) {
-            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_date_null);
+        if(TextUtils.isEmpty(position_name.getText().toString().trim())) {
+            MessageUtil.getInstance().showShortToast(R.string.alert_text_location_null);
             return false;
         }
 
-        if (mCalendar == null) {
-            if (MyDateUtils.isBeforeDate(MyDateUtils.dateString2Timestamp(MyDateUtils.getLocalDateString4DefaultFromUTC(mEevent.getGroup_event_date())).getTime())) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
+        if(TextUtils.isEmpty(date_desc.getText())) {
+            MessageUtil.getInstance().showShortToast(R.string.alert_text_date_null);
+            return false;
+        }
+
+        if(mCalendar == null) {
+            if(MyDateUtils.isBeforeDate(MyDateUtils.dateString2Timestamp(MyDateUtils.getLocalDateString4DefaultFromUTC(mEevent.getGroup_event_date())).getTime())) {
+                MessageUtil.getInstance().showShortToast(R.string.msg_date_not_befort_now);
                 return false;
             }
 
         } else {
-            if (MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
+            if(MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
+                MessageUtil.getInstance().showShortToast(R.string.msg_date_not_befort_now);
                 return false;
             }
         }
         if (endData <= startData) {
-            MessageUtil.showMessage(getActivity(), R.string.text_meeting_end_time);
+            MessageUtil.getInstance().showShortToast(R.string.text_meeting_end_time);
             return false;
         }
         if (TextUtils.isEmpty(reminder_desc.getText())) {
-            MessageUtil.showMessage(getParentActivity(), "请选择reminder");
+            MessageUtil.getInstance().showShortToast("请选择reminder");
             return false;
         }
         mEevent.setText_description(event_desc.getText().toString());

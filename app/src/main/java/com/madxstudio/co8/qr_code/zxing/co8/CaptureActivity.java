@@ -236,7 +236,7 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
 
                 @Override
                 public void onError(Exception e) {
-                    MessageUtil.getInstance(CaptureActivity.this).showShortToast(getResources().getString(R.string.text_error));
+                    MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
                 }
 
                 @Override

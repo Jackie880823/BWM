@@ -201,7 +201,7 @@ public class PrivateListActivity extends BaseActivity {
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(PrivateListActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }

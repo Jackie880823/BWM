@@ -1,23 +1,20 @@
 package com.madxstudio.co8.util;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.madxstudio.co8.widget.CustomDialog;
+import com.madxstudio.co8.App;
 
 
 public class MessageUtil {
 
-    static CustomDialog wattingDialog;
-    static Dialog alertDialog;
 
     private Context mContext;
     private static MessageUtil mslToast;
 
-    public static MessageUtil getInstance(Context mContext) {
+    public static MessageUtil getInstance() {
         if (mslToast == null) {
-            mslToast = new MessageUtil(mContext);
+            mslToast = new MessageUtil(App.getContextInstance());
         }
         return mslToast;
     }
@@ -29,43 +26,18 @@ public class MessageUtil {
     private Toast mToast;
 
     public void showShortToast(String text) {
-        if (mToast == null) {
-            mToast = Toast.makeText(mContext, text, Toast.LENGTH_SHORT);
-        } else {
-            mToast.setText(text);
-            mToast.setDuration(Toast.LENGTH_SHORT);
-        }
-        mToast.show();
-    }
-
-    public void showShortToast(int id) {
-        if (mToast == null) {
-            mToast = Toast.makeText(mContext, id, Toast.LENGTH_SHORT);
-        } else {
-            mToast.setText(mContext.getString(id));
-            mToast.setDuration(Toast.LENGTH_SHORT);
-        }
-        mToast.show();
-    }
-
-    public void showLongToast(int id) {
-        if (mToast == null) {
-            mToast = Toast.makeText(mContext, id, Toast.LENGTH_LONG);
-        } else {
-            mToast.setText(mContext.getString(id));
-            mToast.setDuration(Toast.LENGTH_LONG);
-        }
-        mToast.show();
+        showToast(text,Toast.LENGTH_SHORT);
     }
 
     public void showLongToast(String text) {
-        if (mToast == null) {
-            mToast = Toast.makeText(mContext, text, Toast.LENGTH_LONG);
-        } else {
-            mToast.setText(text);
-            mToast.setDuration(Toast.LENGTH_LONG);
-        }
-        mToast.show();
+        showToast(text,Toast.LENGTH_LONG);
+    }
+    public void showShortToast(int resourceId) {
+        showToast(resourceId,Toast.LENGTH_SHORT);
+    }
+
+    public void showLongToast(int resourceId) {
+        showToast(resourceId,Toast.LENGTH_LONG);
     }
 
     public void showToast(String text, int showTime) {
@@ -73,6 +45,16 @@ public class MessageUtil {
             mToast = Toast.makeText(mContext, text, showTime);
         } else {
             mToast.setText(text);
+            mToast.setDuration(showTime);
+        }
+        mToast.show();
+    }
+
+    public void showToast(int resourceId, int showTime) {
+        if (mToast == null) {
+            mToast = Toast.makeText(mContext, resourceId, showTime);
+        } else {
+            mToast.setText(resourceId);
             mToast.setDuration(showTime);
         }
         mToast.show();
@@ -87,7 +69,7 @@ public class MessageUtil {
 //	/**
 //	 * 隐藏等待提示
 //	 */
-//	public static void dismissWattingDialog(Context context) {
+//	public void dismissWattingDialog(Context context) {
 //		if (wattingDialog != null&&wattingDialog.getContext()==context)
 //			wattingDialog.dismiss();
 //	}
@@ -97,7 +79,7 @@ public class MessageUtil {
      *
      * @param context
      */
-//	public static void showWaitting(Context context,int msgId) {
+//	public void showWaitting(Context context,int msgId) {
 //		if (context == null) {
 //			return;
 //		}
@@ -115,32 +97,7 @@ public class MessageUtil {
 //		}
 //		wattingDialog.show();
 //	}
-    public static void showMessage(Context context, String msg) {
-        if (context != null) {
-            Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-        }
-    }
 
-    public static void showMessage(Context context, int resourceId) {
-        if (context != null) {
-            Toast.makeText(context, resourceId, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public static void showMessage(Context context, int resourceId, int showTime) {
-        if (context != null) {
-            Toast.makeText(context, resourceId, showTime).show();
-        }
-    }
-
-    public static void showMessage(Context context, String msg, int showTime) {
-        if (context != null) {
-            Toast.makeText(context, msg, showTime).show();
-        }
-    }
-
-    public static void showAlert(Context context, int msg, int content, int showTime, AlertListener alertListener) {
-    }
 //	public static void showAlert(Context context, String msg,String content,int showTime,final AlertListener alertListener) {
 //		if (context == null) {
 //			return;
@@ -182,22 +139,5 @@ public class MessageUtil {
 //		}
 //		alertDialog.show();
 //	}
-
-    /**
-     * 隐藏alert
-     */
-    public static void dismissAlertDialog() {
-        if (alertDialog != null)
-            alertDialog.dismiss();
-    }
-
-    private static AlertListener mAlertListener;
-
-    public interface AlertListener {
-        void cancle();
-
-        void confirm();
-    }
-
 
 }

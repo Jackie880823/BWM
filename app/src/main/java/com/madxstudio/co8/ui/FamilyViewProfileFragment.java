@@ -488,10 +488,10 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     JSONObject jsonObject = new JSONObject(response);
                     if ("Success".equals(jsonObject.getString("response_status"))) {
                         getParentActivity().setResult(getActivity().RESULT_OK);
-                        MessageUtil.showMessage(getContext(), getResources().getString(R.string.text_success_add_member));
+                        MessageUtil.getInstance().showShortToast(R.string.text_success_add_member);
                         // finish();
                     } else {
-                        MessageUtil.showMessage(getContext(), getResources().getString(R.string.text_fail_add_member));
+                        MessageUtil.getInstance().showShortToast(R.string.text_fail_add_member);
                     }
 
                 } catch (JSONException e) {
@@ -501,7 +501,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(getParentActivity(), R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -577,7 +577,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
                 @Override
                 public void onError(Exception e) {
-                    MessageUtil.showMessage(getContext(), getResources().getString(R.string.text_error));
+                    MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
                 }
 
                 @Override

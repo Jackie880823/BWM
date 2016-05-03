@@ -349,7 +349,7 @@ public class PreviewVideoActivity extends BaseActivity implements MediaPlayer.On
                                 updateIntent.setData(Uri.fromFile(saveFile));
                                 PreviewVideoActivity.this.sendBroadcast(updateIntent);
 
-                                MessageUtil.showMessage(PreviewVideoActivity.this, PreviewVideoActivity.this.getString(R.string.saved_to_path) + saveFile.getPath());
+                                MessageUtil.getInstance().showShortToast(PreviewVideoActivity.this.getString(R.string.saved_to_path) + saveFile.getPath());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

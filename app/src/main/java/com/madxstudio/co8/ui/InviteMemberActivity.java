@@ -685,7 +685,7 @@ public class InviteMemberActivity extends BaseActivity {
                     }
                     Message.obtain(handler, GET_DATA, map).sendToTarget();
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
                     e.printStackTrace();
                 }finally {
                     finishReFresh();
@@ -694,7 +694,7 @@ public class InviteMemberActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
                 finishReFresh();
             }
 

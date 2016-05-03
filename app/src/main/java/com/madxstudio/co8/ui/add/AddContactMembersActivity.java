@@ -272,7 +272,7 @@ public class AddContactMembersActivity extends BaseActivity {
                 if (resultCode == RESULT_OK)
                 {
                     getData();
-                    MessageUtil.showMessage(this, R.string.text_success_resend);
+                    MessageUtil.getInstance().showShortToast(R.string.text_success_resend);
                 }
                 break;
 

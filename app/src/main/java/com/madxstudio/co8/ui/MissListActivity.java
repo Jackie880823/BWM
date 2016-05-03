@@ -194,7 +194,7 @@ public class MissListActivity extends BaseActivity {
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(MissListActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }
@@ -271,7 +271,7 @@ public class MissListActivity extends BaseActivity {
                         Toast.makeText(MissListActivity.this, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(MissListActivity.this, R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     e.printStackTrace();
                 }
 
@@ -279,7 +279,7 @@ public class MissListActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(MissListActivity.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override

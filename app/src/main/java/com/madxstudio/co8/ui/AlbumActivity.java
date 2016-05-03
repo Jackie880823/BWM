@@ -249,9 +249,9 @@ public class AlbumActivity extends BaseActivity {
 //                        if (mProgressDialog.isShowing()) {
 //                            mProgressDialog.dismiss();
 //                        }
-                no_image_linear.setVisibility(View.VISIBLE);
-                MessageUtil.showMessage(mContext, getResources().getString(R.string.text_error));
-            }
+                        no_image_linear.setVisibility(View.VISIBLE);
+                        MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
+                    }
 
             @Override
             public void onCancelled() {

@@ -160,7 +160,7 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         if (userEntity != null) {
             String tokenString = PreferencesUtil.getValue(this, Constant.HTTP_TOKEN, null);
             if (!TextUtils.isEmpty(tokenString)) {
-                App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));
+                App.initOthers(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));
                 return true;
             }
         }

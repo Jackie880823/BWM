@@ -92,21 +92,21 @@ public class AddMemberWorkFlow extends Activity {
                         }
                     } else {
                         //失败
-                        MessageUtil.showMessage(AddMemberWorkFlow.this, R.string.msg_action_failed);
                         cancle();
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    MessageUtil.showMessage(AddMemberWorkFlow.this, R.string.msg_action_failed);
                     cancle();
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 }
 
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(AddMemberWorkFlow.this, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override

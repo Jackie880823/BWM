@@ -86,4 +86,15 @@ public class DiaryInformationActivity extends BaseActivity implements DiaryInfor
             }
         }
     }
+
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
+    }
 }

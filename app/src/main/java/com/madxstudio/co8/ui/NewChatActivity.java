@@ -504,7 +504,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 finishReFresh();
             }
 
@@ -556,9 +556,11 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
                 }
             }
 
+
             @Override
+
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 finishReFresh();
             }
 

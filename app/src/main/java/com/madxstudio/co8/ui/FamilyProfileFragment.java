@@ -1,8 +1,6 @@
 package com.madxstudio.co8.ui;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -20,7 +18,9 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.madxstudio.co8.App;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.PhotoEntity;
@@ -32,16 +32,10 @@ import com.madxstudio.co8.ui.wall.WallFragment;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.widget.CircularNetworkImage;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -391,20 +385,21 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             public void onResult(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    if (-1 != jsonObject.optString("message", "").indexOf("already")) {
-                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
+                    if (-1 != jsonObject.getString("message").indexOf("already")) {
+                        MessageUtil.getInstance().showShortToast(getResources().getString(R.string.miss_already_you));
                     } else {
-                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
+                        MessageUtil.getInstance().showShortToast(getResources().getString(R.string.miss_you));
+
                     }
                 } catch (JSONException e) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
+                    MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
+                MessageUtil.getInstance().showShortToast(getResources().getString(R.string.text_error));
             }
 
             @Override

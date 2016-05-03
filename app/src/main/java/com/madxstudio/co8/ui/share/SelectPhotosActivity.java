@@ -133,7 +133,7 @@ public class SelectPhotosActivity extends BaseActivity {
                         result = mSelectedImages.contains(mediaData) || mSelectedImages.add(mediaData);
                     } else {
                         // 提示用户添加的图片超过限制的数量
-                        MessageUtil.showMessage(SelectPhotosActivity.this, String.format(SelectPhotosActivity.this.getString(R.string.select_too_many), residue));
+                        MessageUtil.getInstance().showShortToast(String.format(SelectPhotosActivity.this.getString(R.string.select_too_many), residue));
                     }
                 } else {
                     // 不是同时添加多张图片，添加完成关闭当前Activity

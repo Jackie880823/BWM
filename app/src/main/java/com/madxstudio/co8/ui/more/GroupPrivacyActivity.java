@@ -1,5 +1,6 @@
 package com.madxstudio.co8.ui.more;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.GsonBuilder;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.ProfilePrivacyEntity;
@@ -20,10 +22,8 @@ import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.widget.MyDialog;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -285,13 +285,13 @@ public class GroupPrivacyActivity extends BaseActivity {
 
             @Override
             public void onResult(String string) {
-//                MessageUtil.showMessage(GroupPrivacyActivity.this,R.string.msg_action_successed);
+//                MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                 GroupPrivacyActivity.this.finish();
             }
 
             @Override
             public void onError(Exception e) {
-//                MessageUtil.showMessage(GroupPrivacyActivity.this,R.string.msg_action_failed);
+//                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -334,12 +334,12 @@ public class GroupPrivacyActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-//                MessageUtil.showMessage(GroupPrivacyActivity.this, R.string.msg_load_config_successed);
+//                MessageUtil.getInstance().showShortToast(R.string.msg_load_config_successed);
             }
 
             @Override
             public void onError(Exception e) {
-//                MessageUtil.showMessage(GroupPrivacyActivity.this, R.string.msg_load_config_failed);
+//                MessageUtil.getInstance().showShortToast(R.string.msg_load_config_failed);
             }
 
             @Override
@@ -407,5 +407,16 @@ public class GroupPrivacyActivity extends BaseActivity {
         if (mProgressDialog != null) {
             mProgressDialog.setVisibility(View.INVISIBLE);
         }
+    }
+
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
     }
 }

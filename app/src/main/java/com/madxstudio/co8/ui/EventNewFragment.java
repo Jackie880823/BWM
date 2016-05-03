@@ -251,7 +251,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     @Override
     public void onResume() {
         super.onResume();
-        if (MainActivity.IS_INTERACTIVE_USE &&
+        if (App.IS_INTERACTIVE_USE &&
                 !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT, false)) {
             getParentActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN |
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
@@ -274,7 +274,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (MainActivity.IS_INTERACTIVE_USE && isVisibleToUser) {
+        if (App.IS_INTERACTIVE_USE && isVisibleToUser) {
             handler.sendEmptyMessage(GET_DELAY);
         }
     }
@@ -564,7 +564,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
                 @Override
                 public void onError(Exception e) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
 
                 }
 
@@ -693,7 +693,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 break;
             case R.id.item_end_date:
                 if (TextUtils.isEmpty(date_desc.getText())) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_choose_start_time));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.text_choose_start_time));
                 } else {
                     if (pickEndDateTimeDialog == null || !pickEndDateTimeDialog.isShowing()) {
                         showEndDateTimePicker();
@@ -843,7 +843,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
                 endMeetingTime = mCalendar.getTimeInMillis();
                 if (endMeetingTime / 1000 / 60 - startMeetingTime / 1000 / 60 <= 0) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.text_meeting_end_time));
                     return;
                 }
                 //把时间储存到缓存
@@ -909,11 +909,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
                 startMeetingTime = mCalendar.getTimeInMillis();
                 if (MyDateUtils.isBeforeDate(startMeetingTime)) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.msg_date_not_befort_now));
+                    MessageUtil.getInstance().showShortToast(R.string.msg_date_not_befort_now);
                     return;
                 }
                 if (endMeetingTime > 0 && endMeetingTime / 1000 / 60 - startMeetingTime / 1000 / 60 <= 0) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getString(R.string.text_meeting_end_time));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.text_meeting_end_time));
                     return;
                 }
                 pickDateTimeDialog.dismiss();
@@ -1018,40 +1018,37 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     //判断输入的内容是否为空
     private boolean validateForm() {
-        if (TextUtils.isEmpty(event_title.getText().toString().trim())) {
-            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_title_null);
+        if(TextUtils.isEmpty(event_title.getText().toString().trim())) {
+            MessageUtil.getInstance().showShortToast(R.string.alert_text_title_null);
             return false;
         }
-        if (TextUtils.isEmpty(event_desc.getText().toString().trim())) {
-            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_desc_null);
+        if(TextUtils.isEmpty(event_desc.getText().toString().trim())) {
+            MessageUtil.getInstance().showShortToast(R.string.alert_text_desc_null);
             return false;
         }
-        if (TextUtils.isEmpty(position_name.getText().toString().trim())) {
-            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_location_null);
+        if(TextUtils.isEmpty(position_name.getText().toString().trim())) {
+            MessageUtil.getInstance().showShortToast(R.string.alert_text_location_null);
             return false;
         }
-        if (TextUtils.isEmpty(date_desc.getText())) {
-            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_date_null);
+        if(TextUtils.isEmpty(date_desc.getText())) {
+            MessageUtil.getInstance().showShortToast(R.string.alert_text_date_null);
             return false;
         }
-        if (TextUtils.isEmpty(date_end_desc.getText())) {
-            MessageUtil.showMessage(getParentActivity(), R.string.alert_text_date_null);
-            return false;
-        }
-        if (mCalendar == null) {
-            if (MyDateUtils.isBeforeDate(MyDateUtils.dateString2Timestamp(MyDateUtils.getLocalDateString4DefaultFromUTC(mEevent.getGroup_event_date())).getTime())) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
+
+        if(mCalendar == null) {
+            if(MyDateUtils.isBeforeDate(MyDateUtils.dateString2Timestamp(MyDateUtils.getLocalDateString4DefaultFromUTC(mEevent.getGroup_event_date())).getTime())) {
+                MessageUtil.getInstance().showShortToast(R.string.msg_date_not_befort_now);
                 return false;
             }
 
         } else {
             if (MyDateUtils.isBeforeDate(startMeetingTime)) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
+                MessageUtil.getInstance().showShortToast(R.string.msg_date_not_befort_now);
                 return false;
             }
         }
         if (endMeetingTime / 1000 / 60 <= startMeetingTime / 1000 / 60) {
-            MessageUtil.showMessage(getActivity(), R.string.text_meeting_end_time);
+            MessageUtil.getInstance().showShortToast(R.string.text_meeting_end_time);
             return false;
         }
 //        if (TextUtils.isEmpty(reminder_desc.getText())) {

@@ -137,7 +137,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 case HANDLE_FAIL_VERIFY:
 //                    goBackAgain();
                     //验证码错误
-                    MessageUtil.getInstance(VerificationActivity.this).showShortToast(getString(R.string.text_expired_code));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.text_expired_code));
                     etCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     break;
 
@@ -968,8 +968,10 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     }
 
 
-    private void goBackAgain() {
-        MessageUtil.showMessage(this, getString(R.string.text_start_fail_verify_code));
+
+    private void goBackAgain()
+    {
+        MessageUtil.getInstance().showShortToast(getString(R.string.text_start_fail_verify_code));
         finish();
     }
 

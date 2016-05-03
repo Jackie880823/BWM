@@ -686,7 +686,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                                             intent.putExtra(UserEntity.EXTRA_GROUP_NAME, msgEntity.getUser_given_name());
                                             context.startActivity(intent);
                                         } else {
-                                            MessageUtil.getInstance(context).showShortToast(context.getString(R.string.text_show_message_is_friend));
+                                            MessageUtil.getInstance().showShortToast(context.getString(R.string.text_show_message_is_friend));
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -695,7 +695,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
                                 @Override
                                 public void onError(Exception e) {
-                                    MessageUtil.getInstance(context).showShortToast(context.getResources().getString(R.string.text_error));
+                                    MessageUtil.getInstance().showShortToast(context.getResources().getString(R.string.text_error));
                                 }
 
                                 @Override

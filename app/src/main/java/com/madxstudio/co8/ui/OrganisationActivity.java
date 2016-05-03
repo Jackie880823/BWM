@@ -1,6 +1,5 @@
 package com.madxstudio.co8.ui;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,33 +13,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.entity.OrgGroupEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.ui.family.FamilyTreeActivity;
 import com.madxstudio.co8.ui.start.CreateNewOrgActivity;
 import com.madxstudio.co8.util.MessageUtil;
-import com.madxstudio.co8.util.NetworkUtil;
-import com.madxstudio.co8.util.SDKUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by quankun on 16/3/8.
@@ -163,7 +153,7 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 handler.sendEmptyMessage(GET_OWN_ORG_SUCCESS);
             }
 
@@ -267,7 +257,7 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -312,7 +302,7 @@ public class OrganisationActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override

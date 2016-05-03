@@ -343,7 +343,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     }
 
     private void unkonwWrong() {
-        MessageUtil.getInstance(LogInUsernameActivity.this).showShortToast(getString(R.string.text_wrong_pwd_name));
+        MessageUtil.getInstance().showShortToast(getString(R.string.text_wrong_pwd_name));
         etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
         etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
     }

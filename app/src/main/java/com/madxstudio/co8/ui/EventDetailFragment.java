@@ -31,7 +31,6 @@ import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.EventCommentAdapter;
@@ -39,7 +38,6 @@ import com.madxstudio.co8.entity.EventCommentEntity;
 import com.madxstudio.co8.entity.EventEntity;
 import com.madxstudio.co8.entity.PhotoEntity;
 import com.madxstudio.co8.entity.UpdateEvent;
-import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.util.LocalImageLoader;
 import com.madxstudio.co8.util.LocationUtil;
@@ -198,7 +196,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 if (false) {
                     getParentActivity().finish();
                 } else {
-                    //                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                    //                    MessageUtil.getInstance().showShortToast(R.string.msg_date_not_commentbim_now);
                 }
             }
         });
@@ -359,7 +357,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         if (isCommentBim) {
                             getParentActivity().finish();
                         } else {
-                            //                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                            //                            MessageUtil.getInstance().showShortToast(R.string.msg_date_not_commentbim_now);
                         }
 
                     }
@@ -495,7 +493,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     if ("Server.ResponseSuccess".equalsIgnoreCase(response_message)) {
                         requestData();
                     } else {
-                        MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -504,7 +502,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -692,7 +690,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         //        String commentText = et.getText().toString();
         //        if(TextUtils.isEmpty(etChat.getText().toString().trim()) && isStickerItemClick==false) {
         //            // 如果没有输入字符且没有添加表情，不发送评论
-        //            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+        //            MessageUtil.getInstance().showShortToast(R.string.msg_no_content);
         //            return;
         //        }
 //        isComment = false;
@@ -703,7 +701,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         }
         if (TextUtils.isEmpty(commentText)) {
             // 如果没有输入字不发送评论
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            MessageUtil.getInstance().showShortToast(R.string.msg_no_content);
 //            isComment = true;
             return;
         } else {
@@ -787,7 +785,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     }
                 });
             } else {
-                MessageUtil.showMessage(getActivity(), R.string.msg_no_internet);
+                MessageUtil.getInstance().showShortToast(R.string.msg_no_internet);
             }
         }
 
@@ -1052,7 +1050,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 }
             });
         } else {
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_internet);
+            MessageUtil.getInstance().showShortToast(R.string.msg_no_internet);
         }
     }
 

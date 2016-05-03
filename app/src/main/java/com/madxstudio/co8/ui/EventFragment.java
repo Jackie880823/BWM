@@ -15,6 +15,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.EventAdapter;
@@ -189,7 +190,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT, false)) {
+            if (App.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT, false)) {
                 handler.sendEmptyMessage(GET_DELAY_RIGHT);
             }
             EventBus.getDefault().registerSticky(this);
@@ -334,7 +335,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     eventStart.setVisibility(View.VISIBLE);
                     swipeRefreshLayout.setVisibility(View.GONE);
                 }
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
             }
 
             @Override
@@ -393,13 +394,13 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
                     adapter.add(data);
                     loading = false;
-//                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//                    MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
 
                 } catch (JSONException e) {
                     if (isRefresh) {
                         finishReFresh();
                     }
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
                 }
             }
 
@@ -408,7 +409,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                 if (isRefresh) {
                     finishReFresh();
                 }
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
             }
 
             @Override

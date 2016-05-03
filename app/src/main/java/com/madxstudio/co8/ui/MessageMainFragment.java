@@ -253,7 +253,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             @Override
             public void onRefresh() {
                 if (!NetworkUtil.isNetworkConnected(getActivity())) {
-                    MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.text_no_network));
                     userRefreshLayout.setRefreshing(false);
                     return;
                 }
@@ -328,7 +328,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             @Override
             public void onRefresh() {
                 if (!NetworkUtil.isNetworkConnected(getActivity())) {
-                    MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+                    MessageUtil.getInstance().showShortToast(getString(R.string.text_no_network));
                     groupRefreshLayout.setRefreshing(false);
                     return;
                 }
@@ -391,7 +391,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 
     private void getData(int beginIndex) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
-            MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+            MessageUtil.getInstance().showShortToast(getString(R.string.text_no_network));
             userFinishReFresh();
             return;
         }
@@ -453,7 +453,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             }
                         } catch (JSONException e) {
                             if (isPullData) {
-                                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                             } else {
                                 showMemberEmptyView();
                             }
@@ -466,7 +466,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 //                        if (mProgressDialog.isShowing()) {
 //                            mProgressDialog.dismiss();
 //                        }
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                         userFinishReFresh();
                     }
 
@@ -587,7 +587,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 
     private void getDataGroup(int beginIndex) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
-            MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+            MessageUtil.getInstance().showShortToast(getString(R.string.text_no_network));
             groupFinishReFresh();
             return;
         }
@@ -640,7 +640,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             }
                         } catch (JSONException e) {
                             if (isPullDataGroup) {
-                                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                             } else {
                                 showGroupEmptyView();
                             }
@@ -650,7 +650,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 
                     @Override
                     public void onError(Exception e) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                         groupFinishReFresh();
                     }
 

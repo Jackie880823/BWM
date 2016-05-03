@@ -9,8 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -226,7 +224,7 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }
@@ -290,7 +288,7 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
 
                     @Override
                     public void onResult(String string) {
-//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//                        MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                         List<NewsEntity> data = adapter.getData();
                         int index = data.indexOf(newsEntity);
                         data.remove(newsEntity);
