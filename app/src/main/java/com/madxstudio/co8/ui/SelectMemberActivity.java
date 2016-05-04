@@ -275,7 +275,7 @@ public class SelectMemberActivity extends BaseActivity {
                                     int arg2, long arg3) {
                 OrgMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
                 String userId = familyMemberEntity.getUser_id();
-                if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
+                if ("0".equals(familyMemberEntity.getAdded_flag())) {
 //                    showNoFriendDialog();
                 } else {
                     CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.check_member_item);
@@ -438,7 +438,7 @@ public class SelectMemberActivity extends BaseActivity {
                     if (memberEntityList != null && memberEntityList.size() > 0) {
                         List<OrgMemberEntity> list = new ArrayList<>();
                         for (OrgMemberEntity memberEntity : memberEntityList) {
-                            if (!"0".equals(memberEntity.getFam_accept_flag())) {
+                            if (!"0".equals(memberEntity.getAdded_flag())) {
                                 list.add(memberEntity);
                             }
                         }

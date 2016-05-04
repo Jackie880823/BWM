@@ -61,7 +61,6 @@ import com.madxstudio.co8.util.UIUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.WallEditView;
-import com.material.widget.Dialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
@@ -182,7 +181,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
 
     public static WriteNewsFragment newInstance(String... params) {
 
-        return createInstance(new WriteNewsFragment(),params);
+        return createInstance(new WriteNewsFragment(), params);
     }
 
     @Override
@@ -203,7 +202,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
             e.printStackTrace();
         }
 
-        mContext=getActivity();
+        mContext = getActivity();
         gson = new Gson();
         isEdit = !TextUtils.isEmpty(contentGroupId);
         rvImages = getViewById(R.id.rcv_post_photos);
@@ -215,20 +214,20 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rvImages.setLayoutManager(llm);
-        mAdapter = new NewsFragmentAdapter(getContext(),photoEntities);
+        mAdapter = new NewsFragmentAdapter(getContext(), photoEntities);
         rlProgress = getViewById(R.id.rl_progress);
         rlProgress.setVisibility(View.GONE);
         getViewById(R.id.tv_camera).setOnClickListener(this);
         getViewById(R.id.tv_album).setOnClickListener(this);
         getViewById(R.id.tv_location).setOnClickListener(this);
-        getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener(){
+        getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
 
             @Override
             public boolean execute(View v) {
-                if(v.getId() == getParentActivity().rightButton.getId()){
+                if (v.getId() == getParentActivity().rightButton.getId()) {
                     submitWall();
-                }else if(v.getId() == getParentActivity().leftButton.getId()){
-                    if(!backCheck()){
+                } else if (v.getId() == getParentActivity().leftButton.getId()) {
+                    if (!backCheck()) {
                         UIUtil.hideKeyboard(getContext(), getActivity().getCurrentFocus());
                         getParentActivity().finish();
                     }
@@ -259,6 +258,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                 wevContent = (WallEditView) headView.findViewById(R.id.diary_edit_content);
                 wevContent.setTextChangeListener(new WallEditView.TextChangeListener() {
                     int lastChange = CHANGE_MODE_NORMAL;
+
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -271,7 +271,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
 
                     @Override
                     public void afterTextChanged(Editable s, int change) {
-                        switch (change){
+                        switch (change) {
                             case CHANGE_MODE_NORMAL:
                                 break;
                             case CHANGE_MODE_DELETE_AT_ALL:
@@ -359,7 +359,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
 
         @Override
         public boolean handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case GET_WALL_SUCCEED:
                     rlProgress.setVisibility(View.GONE);
                     // 得到纬度
@@ -383,10 +383,19 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                     tvLocationDesc.setText(locName);
                     wevContent.setText(entity.getText_description());
                     categoryId = entity.getCategory_id();
-                    String categoryText = list.get(Integer.valueOf(categoryId).intValue() - 1);
-                    if(!TextUtils.isEmpty(categoryText)){
+                    int cateId = 0;
+                    try {
+                        cateId = Integer.valueOf(categoryId).intValue() - 1;
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                    if (cateId < 0 || list.size() - 1 < cateId) {
+                        cateId = 0;
+                    }
+                    String categoryText = list.get(cateId);
+                    if (!TextUtils.isEmpty(categoryText)) {
                         category_tv.setText(categoryText);
-                    }else {
+                    } else {
                         category_tv.setText(list.get(0));
                     }
                     String s = entity.getContent_title();
@@ -437,48 +446,48 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
      * @return
      */
     public boolean backCheck() {
-       if (rlProgress != null && rlProgress.getVisibility() == View.VISIBLE) {
-           MessageUtil.getInstance().showShortToast(R.string.waiting_upload);
-        return true;
-    }
-    if (tasks != null && tasks.size() > 0) {
-        // 图片上传务正在执行
-        LogUtil.i(TAG, "backCheck& tasks size: " + tasks.size());
-        return true;
-    } else if (isEdit) {
-        // 是修改正已经发表的日志，不需要保存草稿
-        LogUtil.i(TAG, "backCheck& tasks size: ");
-        return false;
-    }else {
-        if(draftPreferences == null){
-            draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME,Context.MODE_PRIVATE);
+        if (rlProgress != null && rlProgress.getVisibility() == View.VISIBLE) {
+            MessageUtil.getInstance().showShortToast(R.string.waiting_upload);
+            return true;
         }
-        SharedPreferences.Editor editor = draftPreferences.edit();
-        if(TextUtils.isEmpty(wevContent.getRelText()) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)){
-            editor.clear().apply();
+        if (tasks != null && tasks.size() > 0) {
+            // 图片上传务正在执行
+            LogUtil.i(TAG, "backCheck& tasks size: " + tasks.size());
+            return true;
+        } else if (isEdit) {
+            // 是修改正已经发表的日志，不需要保存草稿
+            LogUtil.i(TAG, "backCheck& tasks size: ");
             return false;
-        }
-        myDialog = new MyDialog(getActivity(), "", getActivity().getString(R.string.text_dialog_save_draft));
-        myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myDialog.dismiss();
-                saveDraft();
-                getActivity().finish();
+        } else {
+            if (draftPreferences == null) {
+                draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
             }
-        });
-        myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myDialog.dismiss();
-                getActivity().finish();
+            SharedPreferences.Editor editor = draftPreferences.edit();
+            if (TextUtils.isEmpty(wevContent.getRelText()) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)) {
+                editor.clear().apply();
+                return false;
             }
-        });
-        if (!myDialog.isShowing()) {
-            myDialog.show();
+            myDialog = new MyDialog(getActivity(), "", getActivity().getString(R.string.text_dialog_save_draft));
+            myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myDialog.dismiss();
+                    saveDraft();
+                    getActivity().finish();
+                }
+            });
+            myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myDialog.dismiss();
+                    getActivity().finish();
+                }
+            });
+            if (!myDialog.isShowing()) {
+                myDialog.show();
+            }
+            return true;
         }
-        return true;
-      }
 
     }
 
@@ -536,29 +545,30 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
     }
 
     private final static int INTENT_REQUEST_ACTIVITY = 103;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
             if (isEdit) {
                 // 进入编辑确定Wall是更新了
                 isUpate = true;
             }
         }
-        if(resultCode == Activity.RESULT_OK){
-            switch (requestCode){
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
                 case Constant.INTENT_REQUEST_HEAD_CAMERA:
                     clearVideo();
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP,true));
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP, true));
                     imageUris.add(uri);
                     ArrayList<Uri> pickUris2 = new ArrayList<>();
                     pickUris2.add(uri);
                     addDataAndNotify(pickUris2);
                     break;
                 case INTENT_REQUEST_ACTIVITY:
-                    if(data != null){
+                    if (data != null) {
                         long durationTime = data.getLongExtra(MediaData.EXTRA_VIDEO_DURATION, 0);
-                        if(durationTime > 0L){
+                        if (durationTime > 0L) {
                             addVideoFromActivityResult(data);
                         }
                     }
@@ -598,14 +608,15 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                         //                        }
                         //坐标数据类型
                         loc_type = data.getStringExtra("loc_type");
-                    break;
+                        break;
+                    }
             }
-        }
-        if (requestCode == Constant.INTENT_REQUEST_OPEN_GPS && LocationUtil.isOPen(getActivity())) {
-            openMap();
-        }
+            if (requestCode == Constant.INTENT_REQUEST_OPEN_GPS && LocationUtil.isOPen(getActivity())) {
+                openMap();
+            }
 
-    }}
+        }
+    }
 
     private void addDataAndNotify(ArrayList<Uri> pickUris) {
         photoEntities.removeAll(localEntities);
@@ -788,7 +799,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO);
     }
 
-    private void openChooseDialog(){
+    private void openChooseDialog() {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
         final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
@@ -828,7 +839,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
     /**
      * 打开相机
      */
-    private void openCamera(){
+    private void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra("camerasensortype", 2);
         // 下面这句指定调用相机拍照后的照片存储的路径
@@ -840,6 +851,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         intent.putExtra("return-data", false);
         startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_CAMERA);
     }
+
     class CallBack implements HttpCallback {
 
         /**
@@ -939,7 +951,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
     /**
      * 新建news
      */
-    private void submitWall(){
+    private void submitWall() {
         if (rlProgress.getVisibility() == View.VISIBLE) {
             return;
         }
@@ -983,11 +995,10 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         params.put(Constant.PARAM_LOC_TYPE, loc_type);
 
         params.put("dofeel_code", "");
-        params.put("category_id",categoryId);//新闻分类id
-        params.put("content_title",titleDesc.getText().toString());//新闻主题
-        params.put("group_ind_type","3");//
-        params.put("content_group_public","2");
-
+        params.put("category_id", categoryId);//新闻分类id
+        params.put("content_title", titleDesc.getText().toString());//新闻主题
+        params.put("group_ind_type", "3");//
+        params.put("content_group_public", "2");
 
 
         if (!Uri.EMPTY.equals(videoUri)) {
@@ -1021,7 +1032,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
     /**
      * 上传视频
      */
-    private void resultByPutWall(){
+    private void resultByPutWall() {
         if (!localEntities.isEmpty()) {
 
             if (entity != null) {
@@ -1068,6 +1079,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
             }
             return LocalImageLoader.compressBitmap(App.getContextInstance(), params[0].getUri(), 480, 800, false);
         }
+
         @Override
         protected void onPostExecute(String path) {
             try {
@@ -1104,7 +1116,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
     /**
      * 上传图片
      */
-    private void submitLocalPhotos(String contentId){
+    private void submitLocalPhotos(String contentId) {
         if (localEntities.isEmpty()) {
             mHandler.sendEmptyMessage(ACTION_SUCCEED);
         } else {
@@ -1151,6 +1163,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
 
     /**
      * 上传照片
+     *
      * @param path
      * @param contentId
      * @param index
@@ -1249,9 +1262,9 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
      */
     private void saveDraft() {
         SharedPreferences.Editor editor = draftPreferences.edit();
-        if(!photoEntities.isEmpty()){
+        if (!photoEntities.isEmpty()) {
             int i = 0;
-            for (PushedPhotoEntity entity : photoEntities){
+            for (PushedPhotoEntity entity : photoEntities) {
                 if (entity instanceof DiaryPhotoEntity) {
                     editor.putString(PREFERENCE_KEY_PIC_CONTENT + i, ((DiaryPhotoEntity) entity).getUri().toString());
                     editor.putString(PREFERENCE_KEY_PIC_CAPTION + i, getPhotoCaptionByPosition(i + 1));
@@ -1261,7 +1274,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
                 }
             }
             editor.putInt(PREFERENCE_KEY_PIC_COUNT, i);
-        }else if(!Uri.EMPTY.equals(videoUri)){
+        } else if (!Uri.EMPTY.equals(videoUri)) {
             editor.putString(PREFERENCE_KEY_VIDEO_PATH, videoUri.toString());
             editor.putString(PREFERENCE_KEY_VIDEO_DURATION, duration);
         }
@@ -1270,9 +1283,9 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         editor.putFloat(PREFERENCE_KEY_LOC_LONGITUDE, (float) longitude);
         editor.putFloat(PREFERENCE_KEY_LOC_LATITUDE, (float) latitude);
 
-        editor.putString(PREFERENCE_KEY_CATEGORY_ID,categoryId);
-        editor.putString(PREFERENCE_KEY_CATEGORY_NAME,category_tv.getText().toString());
-        editor.putString(PREFERENCE_KEY_CATEGORY_TITLE,titleDesc.getText().toString());
+        editor.putString(PREFERENCE_KEY_CATEGORY_ID, categoryId);
+        editor.putString(PREFERENCE_KEY_CATEGORY_NAME, category_tv.getText().toString());
+        editor.putString(PREFERENCE_KEY_CATEGORY_TITLE, titleDesc.getText().toString());
 
         editor.putString(PREFERENCE_KEY_TEXT_CONTENT, wevContent.getText().toString());
         editor.putString(PREFERENCE_KEY_OLD_MEMBER_TEXT, wevContent.getOldMemberText());
@@ -1286,7 +1299,7 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
     /**
      * 恢复草稿
      */
-    private void recoverDraft(){
+    private void recoverDraft() {
         if (draftPreferences == null) {
             draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         }
@@ -1303,9 +1316,9 @@ public class WriteNewsFragment extends BaseFragment<WriteNewsActivity> implement
         longitude = draftPreferences.getFloat(PREFERENCE_KEY_LOC_LONGITUDE, (float) longitude);
         latitude = draftPreferences.getFloat(PREFERENCE_KEY_LOC_LATITUDE, (float) latitude);
 
-        categoryId = draftPreferences.getString(PREFERENCE_KEY_CATEGORY_ID,"");
-        category_tv.setText(draftPreferences.getString(PREFERENCE_KEY_CATEGORY_NAME,""));
-        titleDesc.setText(draftPreferences.getString(PREFERENCE_KEY_CATEGORY_TITLE,""));
+        categoryId = draftPreferences.getString(PREFERENCE_KEY_CATEGORY_ID, "");
+        category_tv.setText(draftPreferences.getString(PREFERENCE_KEY_CATEGORY_NAME, ""));
+        titleDesc.setText(draftPreferences.getString(PREFERENCE_KEY_CATEGORY_TITLE, ""));
 
         wevContent.setOldMemberText(draftPreferences.getString(PREFERENCE_KEY_OLD_MEMBER_TEXT, wevContent.getOldMemberText()));
         wevContent.setOldGroupText(draftPreferences.getString(PREFERENCE_KEY_OLD_GROUP_TEXT, wevContent.getOldGroupText()));

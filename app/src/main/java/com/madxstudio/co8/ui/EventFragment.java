@@ -104,7 +104,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_DELAY_RIGHT:
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, getParentActivity().getResources().getString(R.string.text_tip_create_event), 0);
+                    popupWindow = new InteractivePopupWindow(getActivity(), getParentActivity().rightButton, getParentActivity().getResources().getString(R.string.text_tip_create_event), 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
