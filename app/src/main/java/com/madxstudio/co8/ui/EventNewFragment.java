@@ -140,7 +140,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     String popText = getParentActivity().getResources().getString(R.string.text_tip_save_event);
                     if (TextUtils.isEmpty(popText)) return;
 
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popText, 0);
+                    popupWindow = new InteractivePopupWindow(getActivity(), getParentActivity().rightButton, popText, 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {

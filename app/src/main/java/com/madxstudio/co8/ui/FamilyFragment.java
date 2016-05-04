@@ -246,7 +246,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
 //                    }
                     break;
                 case GET_DELAY_RIGHT:
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popTestSt, 0);
+                    popupWindow = new InteractivePopupWindow(getActivity(), getParentActivity().rightButton, popTestSt, 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
@@ -334,7 +334,7 @@ public class FamilyFragment extends BaseFragment<FamilyActivity> implements View
     }
 
     private void newPopAddPhoto() {
-        InteractivePopupWindow popupWindowAddPhoto = new InteractivePopupWindow(getParentActivity(), getParentActivity().bottom, getParentActivity().getResources().getString(R.string.text_tip_add_photo), 1);
+        InteractivePopupWindow popupWindowAddPhoto = new InteractivePopupWindow(getActivity(), getParentActivity().bottom, getParentActivity().getResources().getString(R.string.text_tip_add_photo), 1);
         popupWindowAddPhoto.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
             @Override
             public void popDismiss() {
