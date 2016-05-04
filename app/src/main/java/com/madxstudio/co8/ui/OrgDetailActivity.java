@@ -51,7 +51,6 @@ import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
-import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -638,7 +637,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                         finish();
                     } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData) && arg2 == 0) {
                         return;
-                    } else if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
+                    } else if ("0".equals(familyMemberEntity.getAdded_flag())) {
                         showNoFriendDialog(familyMemberEntity);
                     } else {
                         //put请求消除爱心
