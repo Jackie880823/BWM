@@ -246,7 +246,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 OrgMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
-                if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
+                if ("0".equals(familyMemberEntity.getAdded_flag())) {
 
                 } else {
                     Intent intent = new Intent(mContext, MessageChatActivity.class);
@@ -492,7 +492,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
                     hideMemberEmptyView();
                     allMemberList.clear();
                     for (OrgMemberEntity memberEntity : memberList) {
-                        if (!"0".equals(memberEntity.getFam_accept_flag())) {
+                        if (!"0".equals(memberEntity.getAdded_flag())) {
                             allMemberList.add(memberEntity);
                         }
                     }

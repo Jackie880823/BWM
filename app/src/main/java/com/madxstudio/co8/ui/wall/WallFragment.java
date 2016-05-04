@@ -113,7 +113,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     String popText = getParentActivity().getResources().getString(R.string.text_tip_add_diary);
                     if (TextUtils.isEmpty(popText)) return;
 
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popText, 0);
+                    popupWindow = new InteractivePopupWindow(getActivity(), getParentActivity().rightButton, popText, 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
