@@ -108,7 +108,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         } else {
             viewHolder.meLine.setVisibility(View.GONE);
         }
-        if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData) && "0".equals(memberEntity.getFam_accept_flag())) {
+        if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData) && "0".equals(memberEntity.getAdded_flag())) {
             viewHolder.orgRequest.setVisibility(View.VISIBLE);
         } else if ("1".equals(memberEntity.getAdmin_flag()) && mContext instanceof OrgDetailActivity) {
             viewHolder.orgRequest.setVisibility(View.VISIBLE);
