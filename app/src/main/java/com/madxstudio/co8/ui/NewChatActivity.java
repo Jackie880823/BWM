@@ -45,6 +45,9 @@ import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.MySwipeRefreshLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -467,7 +470,7 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
             return;
         }
 
-        new HttpTools(mContext).get(String.format(Constant.API_GET_ALL_STAFF, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
+        new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -483,23 +486,50 @@ public class NewChatActivity extends BaseActivity implements View.OnClickListene
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
                 finishReFresh();
-                if (TextUtils.isEmpty(response) || "[]".equals(response)) {
+                if (TextUtils.isEmpty(response) || "{}".equals(response)) {
                     showMemberEmptyView();
                 }
-                List<OrgMemberEntity> memberList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
-                }.getType());
-                if (memberList != null && memberList.size() > 0) {
-                    hideMemberEmptyView();
-                    allMemberList.clear();
-                    for (OrgMemberEntity memberEntity : memberList) {
-                        if (!"0".equals(memberEntity.getAdded_flag())) {
-                            allMemberList.add(memberEntity);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    List<OrgMemberEntity> memberEntityList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<OrgMemberEntity>>() {
+                    }.getType());
+//                    List<OrgMemberEntity> memberEntityList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
+//                    }.getType());
+                    if (memberEntityList != null && memberEntityList.size() > 0) {
+                        List<OrgMemberEntity> list = new ArrayList<>();
+                        for (OrgMemberEntity memberEntity : memberEntityList) {
+                            if (!"0".equals(memberEntity.getAdded_flag())) {
+                                list.add(memberEntity);
+                            }
                         }
+                        if (list.size() > 0) {
+                            hideMemberEmptyView();
+                            allMemberList.clear();
+                            Message.obtain(handler, GET_DATA, list).sendToTarget();
+                        } else {
+                            showMemberEmptyView();
+                        }
+                    } else {
+                        showMemberEmptyView();
                     }
-                    Message.obtain(handler, GET_DATA, memberList).sendToTarget();
-                } else {
+                } catch (JSONException e) {
                     showMemberEmptyView();
+                    e.printStackTrace();
                 }
+//                List<OrgMemberEntity> memberList = gson.fromJson(response, new TypeToken<ArrayList<OrgMemberEntity>>() {
+//                }.getType());
+//                if (memberList != null && memberList.size() > 0) {
+//                    hideMemberEmptyView();
+//                    allMemberList.clear();
+//                    for (OrgMemberEntity memberEntity : memberList) {
+//                        if (!"0".equals(memberEntity.getAdded_flag())) {
+//                            allMemberList.add(memberEntity);
+//                        }
+//                    }
+//                    Message.obtain(handler, GET_DATA, memberList).sendToTarget();
+//                } else {
+//                    showMemberEmptyView();
+//                }
             }
 
             @Override

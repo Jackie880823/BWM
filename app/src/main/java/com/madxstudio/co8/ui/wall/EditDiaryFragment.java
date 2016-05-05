@@ -1335,7 +1335,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         popView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int popupWidth = popView.getMeasuredWidth();
         int popupHeight = popView.getMeasuredHeight();
-        onlyPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, view.getMeasuredWidth() - popupWidth, y - popupHeight);
+        if (getActivity() != null) {
+            onlyPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, view.getMeasuredWidth() - popupWidth, y - popupHeight);
+        }
     }
 
     /**

@@ -254,47 +254,67 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
     }
 
     private void showNoFriendDialog(final OrgMemberEntity familyMemberEntity) {
-        LayoutInflater factory = LayoutInflater.from(mContext);
-        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
-        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
-        TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
-        TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
-        TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
-        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
-        profileView.setText(R.string.text_view_profile);
-        messageView.setText(R.string.text_org_resend_request);
-        leaveView.setText(R.string.text_org_cancel_request);
-        profileView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSelectDialog.dismiss();
-                Intent intent = new Intent(mContext, FamilyViewProfileActivity.class);
-                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
-                startActivity(intent);
-            }
-        });
 
-        messageView.setOnClickListener(new View.OnClickListener() {
+        // 没有添加好友，弹出添加好友界面提示框由用户选择是否添加
+        final MyDialog myDialog = new MyDialog(mContext, "", mContext.getString(R.string.alert_ask_add_member));
+        myDialog.setButtonAccept(R.string.ok, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSelectDialog.dismiss();
+                // 同意添加好友跳转至添加好友界面
                 onceAdd(familyMemberEntity.getUser_id());
+                myDialog.dismiss();
             }
         });
-        leaveView.setOnClickListener(new View.OnClickListener() {
+        myDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSelectDialog.dismiss();
-                awaitingRemove(familyMemberEntity.getUser_id());
+                // 不同意添加，关闭对话框
+                myDialog.dismiss();
             }
         });
-        cancelTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSelectDialog.dismiss();
-            }
-        });
-        showSelectDialog.show();
+        myDialog.show();
+
+//        LayoutInflater factory = LayoutInflater.from(mContext);
+//        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+//        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+//        TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+//        TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+//        TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
+//        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+//        profileView.setText(R.string.text_view_profile);
+//        messageView.setText(R.string.text_org_resend_request);
+//        leaveView.setText(R.string.text_org_cancel_request);
+//        profileView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showSelectDialog.dismiss();
+//                Intent intent = new Intent(mContext, FamilyViewProfileActivity.class);
+//                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
+//                startActivity(intent);
+//            }
+//        });
+//
+//        messageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showSelectDialog.dismiss();
+//                onceAdd(familyMemberEntity.getUser_id());
+//            }
+//        });
+//        leaveView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showSelectDialog.dismiss();
+//                awaitingRemove(familyMemberEntity.getUser_id());
+//            }
+//        });
+//        cancelTv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showSelectDialog.dismiss();
+//            }
+//        });
+//        showSelectDialog.show();
     }
 
     private void showGroupDialog(final OrgGroupEntity groupEntity) {
