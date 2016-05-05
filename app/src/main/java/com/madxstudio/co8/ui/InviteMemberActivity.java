@@ -2,11 +2,11 @@ package com.madxstudio.co8.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -17,13 +17,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,6 +31,9 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.InviteGroupAdapter;
@@ -41,10 +44,6 @@ import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.MyDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,7 +90,8 @@ public class InviteMemberActivity extends BaseActivity {
     List<FamilyGroupEntity> groupList;
     List<FamilyMemberEntity> searchmemberList = new LinkedList<>();
 
-
+    private View message_member_view, message_group_view;
+    private View serachLinear;
     /**
      * wing added
      */
@@ -121,8 +121,7 @@ public class InviteMemberActivity extends BaseActivity {
                                 if (!selectMemberList.contains(memberEntity.getUser_id())) {
                                     memberList.add(memberEntity);
 
-                                }
-                                else {
+                                } else {
                                     if (isFirstData && selectNewData == 0) {
                                         selectMemberEntityList.add(memberEntity);
                                     }
@@ -130,18 +129,17 @@ public class InviteMemberActivity extends BaseActivity {
                             }
                             searchmemberList.addAll(memberList);
                             memberAdapter.addNewData(memberList);
-                        }
-                        else {
-                            if(selectNewData == 0){
+                        } else {
+                            if (selectNewData == 0) {
                                 for (FamilyMemberEntity memberEntity : memberEntityList) {
-                                    if(memberEntity.getUser_id().equals("665")){
-                                        Log.i("cccccc",memberEntity.getUser_given_name());
+                                    if (memberEntity.getUser_id().equals("665")) {
+                                        Log.i("cccccc", memberEntity.getUser_given_name());
                                     }
                                     if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
                                         selectMemberEntityList.add(memberEntity);
                                     }
                                 }
-                                Log.i("cccccddd",selectMemberEntityList.size()+"");
+                                Log.i("cccccddd", selectMemberEntityList.size() + "");
 
                             }
                             memberAdapter.addNewData(memberEntityList);
@@ -208,7 +206,7 @@ public class InviteMemberActivity extends BaseActivity {
         jumpIndex = intent.getIntExtra("jumpIndex", 0);
         type = intent.getIntExtra("type", 0);//传过来1表示要隐藏；0表示不隐藏
         groupType = intent.getIntExtra("groupType", -1);
-        selectNewData = intent.getIntExtra("selectNewData",0);//如果是1，回传的数据只包含新选
+        selectNewData = intent.getIntExtra("selectNewData", 0);//如果是1，回传的数据只包含新选
         if (groupType == -1) {
             groupType = type;
         }
@@ -216,7 +214,7 @@ public class InviteMemberActivity extends BaseActivity {
         if (memberData != null) {
             memberSelectList = new Gson().fromJson(memberData, new TypeToken<ArrayList<FamilyMemberEntity>>() {
             }.getType());
-            Log.i("memberSelectList====1", memberSelectList.size()+"");
+            Log.i("memberSelectList====1", memberSelectList.size() + "");
         }
         selectMemberList = new ArrayList<>();
         selectGroupList = new ArrayList<>();
@@ -241,9 +239,14 @@ public class InviteMemberActivity extends BaseActivity {
         pager = getViewById(R.id.family_list_viewpager);
         message_member_tv = getViewById(R.id.message_member_tv);
         message_group_tv = getViewById(R.id.message_group_tv);
+        message_member_view = getViewById(R.id.message_member_view);
+        message_group_view = getViewById(R.id.message_group_view);
+        serachLinear = getViewById(R.id.search_linear);
         etSearch = getViewById(R.id.et_search);
         memberEntityList = new ArrayList<>();
         groupEntityList = new ArrayList<>();
+        serachLinear.setVisibility(View.GONE);
+
 //        mProgressDialog = new ProgressDialog(mContext, getString(R.string.text_loading));
 //        mProgressDialog.show();
 
@@ -293,6 +296,18 @@ public class InviteMemberActivity extends BaseActivity {
     }
 
     boolean isTabChanged;
+
+    @Override
+    protected void titleRightSearchEvent() {
+        super.titleRightSearchEvent();
+        if (serachLinear.getVisibility() == View.VISIBLE) {
+            serachLinear.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.org_up_from_bottom));
+            serachLinear.setVisibility(View.GONE);
+        } else {
+            serachLinear.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.up_from_top));
+            serachLinear.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
@@ -582,10 +597,12 @@ public class InviteMemberActivity extends BaseActivity {
         @Override
         public void onPageSelected(int arg0) {
             if (arg0 == 0) {
-                message_member_tv.setBackgroundResource(R.drawable.message_member_selected_shap);
-                message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
-                message_group_tv.setTextColor(Color.parseColor("#666666"));
-                message_member_tv.setTextColor(Color.parseColor("#ffffff"));
+//                message_member_tv.setBackgroundResource(R.drawable.message_member_selected_shap);
+//                message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
+                message_member_view.setVisibility(View.VISIBLE);
+                message_group_view.setVisibility(View.INVISIBLE);
+                message_group_tv.setTextColor(ContextCompat.getColor(mContext, R.color.message_comment));
+                message_member_tv.setTextColor(ContextCompat.getColor(mContext, R.color.tab_color_press1));
                 if (!TextUtils.isEmpty(MemeberSearch)) {
                     etSearch.setText(MemeberSearch);
                 } else {
@@ -593,10 +610,10 @@ public class InviteMemberActivity extends BaseActivity {
                 }
                 etSearch.setSelection(etSearch.length());
             } else {
-                message_member_tv.setBackgroundResource(R.drawable.message_member_normal_shap);
-                message_group_tv.setBackgroundResource(R.drawable.message_group_selected_shap);
-                message_group_tv.setTextColor(Color.parseColor("#ffffff"));
-                message_member_tv.setTextColor(Color.parseColor("#666666"));
+                message_group_tv.setTextColor(ContextCompat.getColor(mContext, R.color.tab_color_press1));
+                message_member_tv.setTextColor(ContextCompat.getColor(mContext, R.color.message_comment));
+                message_member_view.setVisibility(View.INVISIBLE);
+                message_group_view.setVisibility(View.VISIBLE);
                 if (!TextUtils.isEmpty(GroupSearch)) {
                     etSearch.setText(GroupSearch);
                 } else {
@@ -672,8 +689,18 @@ public class InviteMemberActivity extends BaseActivity {
                     }.getType());
                     Map<String, List> map = new HashMap<>();
                     if (memberList != null && memberList.size() > 0) {
-                        map.put("private", memberList);
-                        memberNull = false;
+                        List<FamilyMemberEntity> list = new ArrayList<>();
+                        for (FamilyMemberEntity memberEntity : memberList) {
+                            if (!"0".equals(memberEntity.getAdded_flag())) {
+                                list.add(memberEntity);
+                            }
+                        }
+                        if (list.size() > 0) {
+                            map.put("private", list);
+                            memberNull = false;
+                        }
+//                        map.put("private", memberList);
+//                        memberNull = false;
                     } else {
                         memberNull = true;
                     }
@@ -685,16 +712,16 @@ public class InviteMemberActivity extends BaseActivity {
                     }
                     Message.obtain(handler, GET_DATA, map).sendToTarget();
                 } catch (JSONException e) {
-                    MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     e.printStackTrace();
-                }finally {
+                } finally {
                     finishReFresh();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                 finishReFresh();
             }
 
@@ -727,6 +754,7 @@ public class InviteMemberActivity extends BaseActivity {
         super.initTitleBar();
         rightButton.setImageResource(R.drawable.btn_done);
         rightButton.setVisibility(View.VISIBLE);
+        rightSearchButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -749,8 +777,8 @@ public class InviteMemberActivity extends BaseActivity {
     protected void titleRightEvent() {
         Intent intent = new Intent();
         Gson gson = new Gson();
-        for (FamilyMemberEntity familyMemberEntity : selectMemberEntityList){
-            Log.i("familyMemberEntity===",familyMemberEntity.getUser_id());
+        for (FamilyMemberEntity familyMemberEntity : selectMemberEntityList) {
+            Log.i("familyMemberEntity===", familyMemberEntity.getUser_id());
         }
         intent.putExtra("members_data", gson.toJson(selectMemberEntityList));
 //        Log.i("members_data====", gson.toJson(selectMemberEntityList));
