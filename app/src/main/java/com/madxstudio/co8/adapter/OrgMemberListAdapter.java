@@ -100,28 +100,36 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
         final OrgMemberEntity memberEntity = list.get(position);
         String userId = memberEntity.getUser_id();
         BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userId), R.drawable.default_head_icon, R.drawable.default_head_icon);
+
         if (!TextUtils.isEmpty(userId) && userId.equals(MainActivity.getUser().getUser_id()) && list.size() > 1) {
             viewHolder.meLine.setVisibility(View.VISIBLE);
         } else {
             viewHolder.meLine.setVisibility(View.GONE);
         }
+
         if (Constant.ORG_TRANSMIT_OTHER.equals(transmitData) && "0".equals(memberEntity.getAdded_flag())) {
+            // 添加好友没有获得准显示等待批准图标
             viewHolder.orgRequest.setVisibility(View.VISIBLE);
+            viewHolder.orgRequest.setImageResource(R.drawable.time);
         } else if ("1".equals(memberEntity.getAdmin_flag()) && mContext instanceof OrgDetailActivity) {
+            // 是管理员用户显示管理员图标
             viewHolder.orgRequest.setVisibility(View.VISIBLE);
             viewHolder.orgRequest.setImageResource(R.drawable.org_admin_icon);
         } else {
             viewHolder.orgRequest.setVisibility(View.GONE);
         }
+
         viewHolder.memberName.setText(memberEntity.getUser_given_name());
         if(Constant.ORG_TRANSMIT_OTHER.equals(transmitData)) {
             viewHolder.orgPosition.setText(memberEntity.getOrganisation());
         }else{
             viewHolder.orgPosition.setText(memberEntity.getPosition());
         }
+
         if (Constant.ADMIN_REQUEST.equals(requestType)) {
             View view = convertView.findViewById(R.id.iv_right);
             if (MainActivity.getUser().getUser_id().equals(memberEntity.getUser_id())) {
