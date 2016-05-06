@@ -80,13 +80,36 @@
                 android:layout_marginTop="@dimen/default_content_padding"
                 android:hint="@string/text_last_name" />
 
-            <TextView
-                android:id="@+id/et_organisation_name"
-                style="@style/et_start_details_name"
+            <RelativeLayout
+                style="@style/et_start_default"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding"
                 android:layout_marginTop="@dimen/_22dp"
-                android:drawablePadding="@dimen/default_view_margin"
-                android:drawableRight="@drawable/search"
-                android:hint="@string/text_new_family" />
+                android:padding="@dimen/default_content_padding">
+
+                <ImageView
+                    android:id="@+id/delete_org"
+                    android:layout_width="@dimen/_22dp"
+                    android:layout_height="@dimen/_22dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/x_delete_icon" />
+
+                <TextView
+                    android:id="@+id/et_organisation_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/_5dp"
+                    android:layout_toLeftOf="@id/delete_org"
+                    android:hint="@string/text_new_family"
+                    android:singleLine="true"
+                    android:textColor="@color/default_text_color_dark"
+                    android:textColorHint="@color/default_text_color_light"
+                    android:textSize="@dimen/text_medium_size" />
+
+            </RelativeLayout>
+
             <!--<AutoCompleteTextView-->
             <!--android:id="@+id/et_organisation_name"-->
             <!--style="@style/et_start_details_name"-->
