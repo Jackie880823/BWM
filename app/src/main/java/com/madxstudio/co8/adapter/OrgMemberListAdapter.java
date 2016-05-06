@@ -17,6 +17,7 @@ import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.OrgMemberEntity;
 import com.madxstudio.co8.interfaces.NoFoundDataListener;
 import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.OrgDetailActivity;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.util.PinYin4JUtil;
 import com.madxstudio.co8.widget.CircularNetworkImage;
@@ -114,7 +115,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
             // 添加好友没有获得准显示等待批准图标
             viewHolder.orgRequest.setVisibility(View.VISIBLE);
             viewHolder.orgRequest.setImageResource(R.drawable.time);
-        } else if ("1".equals(memberEntity.getAdmin_flag()) && Constant.ADMIN_REQUEST.equals(requestType)) {
+        } else if ("1".equals(memberEntity.getAdmin_flag()) && mContext instanceof OrgDetailActivity) {
             // 是管理员用户显示管理员图标
             viewHolder.orgRequest.setVisibility(View.VISIBLE);
             viewHolder.orgRequest.setImageResource(R.drawable.org_admin_icon);
