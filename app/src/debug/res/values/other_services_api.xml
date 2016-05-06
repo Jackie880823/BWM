@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="api_server" translatable="false">http://devb2be.bondwith.me</string>
-<string name="co8_api_server" translatable="false"> http://devb2be.bondwith.me/co8/index.php/api/</string>
 <string name="tracker_site_id" translatable="false">3</string>
 </resources>

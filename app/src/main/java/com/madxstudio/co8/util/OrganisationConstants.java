@@ -10,7 +10,7 @@ import com.madxstudio.co8.R;
  * @version 1.0
  */
 public class OrganisationConstants {
-    public static final String CO8_API_SERVER = App.getContextInstance().getString(R.string.co8_api_server);
+    public static final String CO8_API_SERVER = App.getContextInstance().getString(R.string.api_server) + "/co8/index.php/api/";
 
     /**
      * 测试所用的{@code org_id}正式版时要删除
