@@ -10,8 +10,6 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.madxstudio.co8.Constant;
-import com.madxstudio.co8.R;
-import com.madxstudio.co8.util.MessageUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,21 +90,18 @@ public class AddMemberWorkFlow extends Activity {
                         }
                     } else {
                         //失败
-                        cancle();
-                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                        advanceFinish(true);
                     }
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
-                    cancle();
-                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                    advanceFinish(true);
                 }
 
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                advanceFinish(true);
             }
 
             @Override
@@ -129,7 +124,7 @@ public class AddMemberWorkFlow extends Activity {
         params.put("action_type", add_flag);
         params.put("user_relationship_name", response_relationship);
 
-        new HttpTools(this).post(Constant.API_SET_RELATIONSHIP,params, this, new HttpCallback() {
+        new HttpTools(this).post(Constant.API_SET_RELATIONSHIP, params, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -151,19 +146,19 @@ public class AddMemberWorkFlow extends Activity {
 //                        Toast.makeText(AddMemberWorkFlow.this, "Success to set relationship.", Toast.LENGTH_SHORT).show();//成功
                         setResult(RESULT_OK);
                     } else {
-                        cancle();
+                        advanceFinish(true);
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    cancle();
+                    advanceFinish(true);
                 }
             }
 
             @Override
             public void onError(Exception e) {
 
-                cancle();
+                advanceFinish(true);
             }
 
             @Override
@@ -177,7 +172,6 @@ public class AddMemberWorkFlow extends Activity {
             }
         });
     }
-
 
 
     @Override
@@ -196,19 +190,26 @@ public class AddMemberWorkFlow extends Activity {
                     }
                     break;
                 }
-                if(!goingNext){
-                    cancle();
+                if (!goingNext) {
+                    advanceFinish(false);
                 }
         }
     }
 
-    private void cancle() {
-        //默认已同意
-        if("Accept".equals(add_flag)){
-            setResult(RESULT_OK);
+    /**
+     * 提前结束
+     * @param isError 是否是因为错误而结束
+     */
+    private void advanceFinish(boolean isError) {
+        if (isError) {
             finish();
-        }else{
-            setResult(RESULT_CANCELED);
+        } else {
+            //默认已同意
+            if ("Accept".equals(add_flag)) {
+                setResult(RESULT_OK);
+            } else {
+                setResult(RESULT_CANCELED);
+            }
             finish();
         }
 
