@@ -154,6 +154,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
         write = !write;
         if (write) {
             rightButton.setImageResource(R.drawable.btn_done);
+            btnLeaveGroup.setVisibility(View.GONE);
         } else {
             rightButton.setImageResource(R.drawable.edit_profile);
         }
@@ -215,11 +216,12 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                 int lastPosition = linearLayoutManager.findLastVisibleItemPosition();
                 if (lastPosition == adapter.getItemCount() - 1) {
                     ibTop.setVisibility(View.GONE);
-                    btnLeaveGroup.setVisibility(View.VISIBLE);
-                    ibTop.setVisibility(View.VISIBLE);
-                    if (isAdmin == false) {
+                    if (!isAdmin || write) {
                         btnLeaveGroup.setVisibility(View.GONE);
+                    } else {
+                        btnLeaveGroup.setVisibility(View.VISIBLE);
                     }
+                    ibTop.setVisibility(View.VISIBLE);
                 } else {
                     btnLeaveGroup.setVisibility(View.GONE);
                 }
