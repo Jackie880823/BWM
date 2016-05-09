@@ -1,6 +1,5 @@
 package com.madxstudio.co8.ui;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -10,8 +9,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,19 +25,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.ext.HttpCallback;
-import com.android.volley.ext.tools.HttpTools;
-import com.madxstudio.co8.Constant;
-import com.madxstudio.co8.R;
-import com.madxstudio.co8.adapter.PlaceAutocompleteAdapter;
-import com.madxstudio.co8.task.PlacesDisplayTask;
-import com.madxstudio.co8.util.LocationUtil;
-import com.madxstudio.co8.util.LogUtil;
-import com.madxstudio.co8.util.MessageUtil;
-import com.madxstudio.co8.util.SDKUtil;
-import com.madxstudio.co8.util.UIUtil;
-import com.madxstudio.co8.widget.MapWrapperLayout;
-import com.madxstudio.co8.widget.OnInfoWindowElemTouchListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -57,6 +41,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.madxstudio.co8.Constant;
+import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.PlaceAutocompleteAdapter;
+import com.madxstudio.co8.util.LocationUtil;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.UIUtil;
+import com.madxstudio.co8.widget.MapWrapperLayout;
+import com.madxstudio.co8.widget.OnInfoWindowElemTouchListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -334,94 +327,6 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     private static final int MAX_SEARCH_RESULT = 20;
     private int PROXIMITY_RADIUS = 5000;
 
-    private void searchByAddress(String searchText) throws IOException {
-
-
-        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlacesUrl.append("location=" + myLocation.latitude + "," + myLocation.longitude);
-        googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
-        googlePlacesUrl.append("&input=" + searchText);
-        googlePlacesUrl.append("&sensor=true");
-        //        googlePlacesUrl.append("&key=" + "AIzaSyDT_b4XSfwPPIuTTugObeZFi2Wo9M1UBVM");
-        googlePlacesUrl.append("&key=" + getString(R.string.google_maps_place_key));
-
-        //        GooglePlacesReadTask googlePlacesReadTask = new GooglePlacesReadTask();
-        //        Object[] toPass = new Object[2];
-        //        toPass[0] = mMap;
-        //        toPass[1] = googlePlacesUrl.toString();
-        //        googlePlacesReadTask.execute(toPass);
-
-        new HttpTools(this).get(googlePlacesUrl.toString(), null, this, new HttpCallback() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-
-            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-            @Override
-            public void onResult(String response) {
-                PlacesDisplayTask task = new PlacesDisplayTask();
-                Object[] toPass = new Object[2];
-                toPass[0] = mMap;
-                toPass[1] = response;
-
-                //for not work in down 11
-                if (SDKUtil.IS_HONEYCOMB) {
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, toPass);
-                } else {
-                    task.execute(toPass);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
-
-
-        //        List<Address> addresses = geocoder.getFromLocationName(searchText, MAX_SEARCH_RESULT);
-        //        if (addresses.size() > 0) {
-        //
-        //            LatLng firstLatLng = null;
-        //            for (Address address : addresses) {
-        //                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-        //                if (firstLatLng == null) {
-        //                    firstLatLng = latLng;
-        //                }
-        //                int maxLine = address.getMaxAddressLineIndex();
-        //                String addressString;
-        //                if (maxLine >= 2) {
-        //                    addressString = address.getAddressLine(1) + address.getAddressLine(2);
-        //                } else {
-        //                    addressString = address.getAddressLine(1);
-        //                }
-        //                setMarkerContent(latLng, address.getAdminArea(), addressString);
-        //                Log.i("", "address====" + address.toString());
-        //            }
-        //
-        //
-        //            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(firstLatLng
-        //                    , 14);
-        //
-        //            mMap.animateCamera(cameraUpdate);
-        //        }
-    }
 
     @Override
     public void requestData() {

@@ -2,4 +2,5 @@
 <resources>
     <string name="api_server" translatable="false">http://ptb2be.bondwith.me</string>
     <string name="tracker_site_id" translatable="false">4</string>
+    <string name="baidu_maps_key"  templateMergeStrategy="preserve" translatable="false">WZjbKazu9s809IUasAFpzGMG</string>
 </resources>
