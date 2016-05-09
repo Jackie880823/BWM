@@ -337,7 +337,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 rl_et_internal_phone.setVisibility(View.GONE);
             }
             tvName1.setText(userEntity.getUser_given_name());
-            tvId1.setText(getResources().getString(R.string.app_name) + " ID: " + userEntity.getDis_bondwithme_id());
+            tvId1.setText(getResources().getString(R.string.co8_id) + userEntity.getDis_bondwithme_id());
 //            if (userEntity.getUser_phone_number().size() > 0) {
 //     tvPhone.setText("+" + userEntity.getUser_phone_number().get(0));
 //            }

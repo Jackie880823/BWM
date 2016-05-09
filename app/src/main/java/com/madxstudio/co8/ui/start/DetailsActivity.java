@@ -19,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -98,6 +99,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
 
     private MyDialog showCameraAlbum;
     private boolean isCreateNewOrg = false;
+    private ImageView delete_org;
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -185,6 +187,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         rlProgress = getViewById(R.id.rl_progress);
         et_organisation_name = getViewById(R.id.et_organisation_name);
         detail_new_org = getViewById(R.id.detail_new_org);
+        delete_org = getViewById(R.id.delete_org);
 
         detail_new_org.setText(Html.fromHtml(getResources().getString(R.string.text_sign_up_detail_org)));
         rlPic.setOnClickListener(this);
@@ -192,7 +195,8 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         brNext.setOnClickListener(this);
         detail_new_org.setOnClickListener(this);
         et_organisation_name.setOnClickListener(this);
-
+        delete_org.setOnClickListener(this);
+        delete_org.setVisibility(View.GONE);
         etFirst.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -282,6 +286,11 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.et_organisation_name:
                 startActivityForResult(new Intent(DetailsActivity.this, OrgSearchActivity.class), Constant.SEARCH_ORG_DATA);
+                break;
+            case R.id.delete_org:
+                et_organisation_name.setText("");
+                searchEntity = null;
+                delete_org.setVisibility(View.GONE);
                 break;
             default:
                 break;
@@ -454,6 +463,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                         searchEntity = (OrgSearchEntity) data.getSerializableExtra(Constant.CREATE_COUNTRY_NAME);
                         if (searchEntity != null) {
                             et_organisation_name.setText(searchEntity.getName());
+                            delete_org.setVisibility(View.VISIBLE);
                         }
                     }
                     break;
@@ -480,7 +490,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
             params.put("user_id", userEntity.getUser_id());
             params.put("user_given_name", strFirstName);
             params.put("user_surname", strLastName);
-            if (searchEntity != null) {
+            if (searchEntity != null && !isCreateNewOrg) {
                 params.put("org_id", searchEntity.getId());
             }
 
