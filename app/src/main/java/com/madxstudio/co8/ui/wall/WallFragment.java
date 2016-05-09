@@ -129,12 +129,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     };
 
     @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-    }
-
-    @Override
     public void initView() {
 
         if (getArguments() != null) {
@@ -211,9 +205,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
     @Override
     public void requestData() {
-    }
-
-    private void getData() {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("limit", offset + "");
@@ -266,9 +257,9 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                             tvNoData.setVisibility(View.VISIBLE);
                             flWallStartUp.setVisibility(View.GONE);
                         }
-                        swipeRefreshLayout.setVisibility(View.GONE);
+//                        swipeRefreshLayout.setVisibility(View.GONE);
                     } else {
-                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+//                        swipeRefreshLayout.setVisibility(View.VISIBLE);
                         flWallStartUp.setVisibility(View.GONE);
                         tvNoData.setVisibility(View.GONE);
                     }
@@ -568,7 +559,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         swipeRefreshLayout.setRefreshing(true);
         isRefresh = true;
         startIndex = 0;
-        getData();
+        requestData();
     }
 
     /**

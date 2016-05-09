@@ -88,7 +88,7 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
             public void onRefresh() {
                 isRefresh = true;
                 startIndex = 0;
-                getData();
+                requestData();
             }
 
         });
@@ -104,7 +104,7 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
                 int count = Math.abs(totalItemCount - 3);
                 if (!loading && count != 0 && lastVisibleItem >= count && dy > 0) {
                     loading = true;
-                    getData();//再请求数据
+                    requestData();//再请求数据
                 }
             }
         });
@@ -119,7 +119,7 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
                     swipeRefreshLayout.setRefreshing(true);
                     isRefresh = true;
                     startIndex = 0;
-                    getData();
+                    requestData();
                     break;
             }
 
@@ -172,16 +172,6 @@ public class NewsFragment extends BaseFragment<MainActivity> implements NewsView
 
     @Override
     public void requestData() {
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-    }
-
-    private void getData() {
         Map<String, String> params = new HashMap<>();
         params.put("start", "" + startIndex);
         params.put("limit", "" + offSet);

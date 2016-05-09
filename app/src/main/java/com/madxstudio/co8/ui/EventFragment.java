@@ -124,13 +124,13 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     isRefresh = true;
                     startIndex = 0;
                     eventStart.setVisibility(View.GONE);
-                    getData();
+                    requestData();
                     break;
 
             }
             return false;
         }
-    });
+    }) ;
 
     @Override
     public void initView() {
@@ -179,7 +179,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
             public void onRefresh() {
                 isRefresh = true;
                 startIndex = 0;
-                getData();
+                requestData();
             }
 
         });
@@ -233,16 +233,6 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
     @Override
     public void requestData() {
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getData();
-    }
-
-    private void getData() {
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "1");
@@ -284,10 +274,10 @@ public class EventFragment extends BaseFragment<MainActivity> {
 //                    }.getType());
                     if (startIndex == 0 && (data == null || data.size() == 0)) {
                         eventStart.setVisibility(View.VISIBLE);
-                        swipeRefreshLayout.setVisibility(View.GONE);
+//                        swipeRefreshLayout.setVisibility(View.GONE);
                     } else {
                         eventStart.setVisibility(View.GONE);
-                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+//                        swipeRefreshLayout.setVisibility(View.VISIBLE);
                     }
                     currentPage = 1;
                     startIndex = data.size();
@@ -332,7 +322,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                         finishReFresh();
                     } else {
                         eventStart.setVisibility(View.VISIBLE);
-                        swipeRefreshLayout.setVisibility(View.GONE);
+//                        swipeRefreshLayout.setVisibility(View.GONE);
                     }
                 }
             }
@@ -343,9 +333,9 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     finishReFresh();
                 } else {
                     eventStart.setVisibility(View.VISIBLE);
-                    swipeRefreshLayout.setVisibility(View.GONE);
+//                    swipeRefreshLayout.setVisibility(View.GONE);
                 }
-                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
             }
 
             @Override
@@ -410,7 +400,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     if (isRefresh) {
                         finishReFresh();
                     }
-                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                    MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
                 }
             }
 
@@ -419,7 +409,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                 if (isRefresh) {
                     finishReFresh();
                 }
-                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
             }
 
             @Override
