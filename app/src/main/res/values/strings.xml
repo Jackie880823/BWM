@@ -828,4 +828,5 @@
     <string name="notification_action_member_removeContact">%1$s has removed %2$s from your contact</string>
     <string name="notification_action_member_rejectedJoinOrg">%1$s has rejected you to join %2$s</string>
     <string name="notification_action_organisation_join">%1$s wants to join %2$s</string>
+    <string name="co8_id">Co8 ID:</string>
 </resources>
