@@ -341,6 +341,13 @@
                         android:layout_height="@dimen/default_small_button_width_height"
                         android:layout_centerInParent="true"
                         android:src="@drawable/admin_icon" />
+                    <TextView
+                        android:id="@+id/tv_admin_num"
+                        style="@style/RedPoint"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <TextView
