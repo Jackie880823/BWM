@@ -33,6 +33,7 @@ import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyDateUtils;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 import com.madxstudio.co8.widget.NoScrollListView;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,8 +96,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private TextView et_position;
     private TextView et_department;
     private NoScrollListView et_internal_phone;
-    private Button btAddMember;
-    private Button btMessage;
+    private PaperButton btAddMember;
+    private PaperButton btMessage;
     private int[] array;
     private int profileBackgroundId;
     private String stFemale;
@@ -122,7 +123,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
     @Override
     protected void setParentTitle() {
-
+        if (userEntity != null) {
+            getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
+        }
     }
 
 
@@ -133,6 +136,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 case GET_USER_ENTITY:
                     userEntity = (UserEntity) message.obj;
                     if (userEntity != null) {
+                        getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
                         VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
                         VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id()), 0, 0);
                         rlFirstName.setVisibility(View.VISIBLE);

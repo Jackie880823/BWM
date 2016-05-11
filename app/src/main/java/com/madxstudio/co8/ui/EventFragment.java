@@ -177,6 +177,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                vProgress.setVisibility(View.VISIBLE);
                 isRefresh = true;
                 startIndex = 0;
                 requestData();

@@ -23,13 +23,7 @@ public class FamilyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        /**
-         * begin QK
-         */
-        tvTitle.setText(getResources().getString(R.string.title_family_profile));
-        /**
-         * end
-         */
+//        tvTitle.setText(getResources().getString(R.string.title_family_profile));
     }
 
     @Override
