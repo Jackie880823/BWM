@@ -43,6 +43,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 
     public static final String CHECK_ADMIN_STATE_TAG = "check admin state";
     private TextView tv_num;
+    private TextView tvAdminNum;
     private TextView tvVersion;
 
     private TextView news_alert_num;
@@ -124,6 +125,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         tvVersion = getViewById(R.id.tv_version);
         tvVersion.setText("V " + AppInfoUtil.getAppVersionName(getActivity()));
         tv_num = getViewById(R.id.tv_num);
+        tvAdminNum = getViewById(R.id.tv_admin_num);
 
     }
 
@@ -295,8 +297,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                     int countOfMember = Integer.valueOf(jsonObject.getString("member"));
                     int countOfRecommended = Integer.valueOf(jsonObject.optString("recommended", "0"));
                     int countOfRewards = Integer.valueOf(jsonObject.getString("reward"));
+                    int countOfAdmin = Integer.valueOf(jsonObject.getString("admin"));
                     LogUtil.d(TAG, "countOfNews======" + countOfNews + "countOfRewards=========" + countOfRewards);
-                    int count = countOfTotal - countOfNews - countOfRecommended;
+                    int count = countOfTotal - countOfNews - countOfRecommended - countOfAdmin;
                     if (count > 0) {
                         Log.d("", "mmmmmmmmm" + "mmmmmmm>0");
                         tv_num.setVisibility(View.VISIBLE);
@@ -305,10 +308,17 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                         tv_num.setVisibility(View.GONE);
                     }
 
+                    if (countOfAdmin > 0) {
+                        tvAdminNum.setVisibility(View.VISIBLE);
+                    } else {
+                        tvAdminNum.setVisibility(View.GONE);
+                    }
+
                     Log.d("", "mmmmmmmmm" + count + "=====" + jsonObject.toString());
 
                 } catch (JSONException e) {
                     tv_num.setVisibility(View.GONE);
+                    tvAdminNum.setVisibility(View.GONE);
                     e.printStackTrace();
                 }
             }

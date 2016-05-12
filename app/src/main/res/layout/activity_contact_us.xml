@@ -78,9 +78,7 @@
             android:layout_weight="1"
             android:gravity="top"
             android:hint="@string/hint_mail_content"
-            android:textColorHint="@color/default_text_color_dark"
-            android:scrollbars="vertical"
-             />
+            android:scrollbars="vertical"/>
 
     </LinearLayout>
 

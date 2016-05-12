@@ -126,8 +126,8 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
     /**
      * 点赞
      */
-    private ImageButton ibAgree;
-    private View flLove;
+    private ImageView ibAgree;
+    //    private View flLove;
     private String accountUserId;
     private BaseFragment fragment;
     private CallBack callBack = new CallBack();
@@ -136,7 +136,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     private String imageUrl;
     private String videoUrl;
-    private View rl_category_name;
+//    private View rl_category_name;
 
     private boolean isDisplayMore;
     private int defaultLineCount = 5;
@@ -162,20 +162,20 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         ibtnVideo = (ImageView) itemView.findViewById(R.id.iv_video_top);
         tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
 
-        ibAgree = (ImageButton) itemView.findViewById(R.id.iv_good);
+        ibAgree = (ImageView) itemView.findViewById(R.id.iv_good);
         tvContent = (TextView) itemView.findViewById(R.id.news_content);
         tvMoreOrCollapse = (TextView) itemView.findViewById(R.id.tv_more_or_collapse);
         new_comment_linear = itemView.findViewById(R.id.new_comment_linear);
-        new_good_job_linear = itemView.findViewById(R.id.new_comment_linear);
+        new_good_job_linear = itemView.findViewById(R.id.new_good_job_linear);
         btnOption = (ImageButton) itemView.findViewById(R.id.btn_option);
 
         newsGoodMember = (TextView) itemView.findViewById(R.id.new_good_job);
         newsCommentMember = (TextView) itemView.findViewById(R.id.new_comment);
-        rl_category_name = itemView.findViewById(R.id.rl_category_name);
+//        rl_category_name = itemView.findViewById(R.id.rl_category_name);
         llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
         ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
         tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
-        flLove = itemView.findViewById(R.id.fl_love);
+//        flLove = itemView.findViewById(R.id.fl_love);
 
         changeTextDisplay(isDisplayMore);
 
@@ -185,8 +185,8 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         new_comment_linear.setOnClickListener(this);
         new_good_job_linear.setOnClickListener(this);
         btnOption.setOnClickListener(this);
-        ibAgree.setOnClickListener(this);
-        flLove.setOnClickListener(this);
+//        ibAgree.setOnClickListener(this);
+//        flLove.setOnClickListener(this);
     }
 
     public void setNewsEntity(NewsEntity newsEntity) {
@@ -225,9 +225,9 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         if (accountUserId.equals(newsEntity.getUser_id())) {
-            rl_category_name.setVisibility(View.VISIBLE);
+            btnOption.setVisibility(View.VISIBLE);
         } else {
-            rl_category_name.setVisibility(View.GONE);
+            btnOption.setVisibility(View.GONE);
         }
 
         if (TextUtils.isEmpty(newsEntity.getLove_id())) {
@@ -355,6 +355,12 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 fragment.startActivityForResult(intent, Constant.INTENT_UPDATE_DIARY);
                 break;
             case R.id.new_good_job_linear://赞
+                updateLovedView();
+                if (TextUtils.isEmpty(newsEntity.getLove_id())) {
+                    doLove(newsEntity, false);
+                } else {
+                    doLove(newsEntity, true);
+                }
                 break;
             case R.id.btn_option:
                 if (newsEntity != null) {
@@ -369,18 +375,18 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     doLove(newsEntity, true);
                 }
                 break;
-            case R.id.fl_love:
-                if (WallEntity.CONTENT_TYPE_ADS.equals(newsEntity.getContent_type())) {
-                    LogUtil.i(TAG, "is ADS can't show member");
-                } else {
-
-                    if (Integer.valueOf(newsEntity.getLove_count()) > 0) {
-                        if (mViewClickListener != null) {
-                            mViewClickListener.showLovedMember(accountUserId, newsEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
-                        }
-                    }
-                }
-                break;
+//            case R.id.fl_love:
+//                if (WallEntity.CONTENT_TYPE_ADS.equals(newsEntity.getContent_type())) {
+//                    LogUtil.i(TAG, "is ADS can't show member");
+//                } else {
+//
+//                    if (Integer.valueOf(newsEntity.getLove_count()) > 0) {
+//                        if (mViewClickListener != null) {
+//                            mViewClickListener.showLovedMember(accountUserId, newsEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+//                        }
+//                    }
+//                }
+//                break;
         }
 
     }

@@ -85,9 +85,9 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
                 break;
             case R.id.btn_sign_out:
                 if (myDialog == null) {
-                    myDialog = new MyDialog(this, R.string.text_tips_title, R.string.msg_ask_exit_app);
+                    myDialog = new MyDialog(this, null, getString(R.string.msg_ask_exit_app));
                     myDialog.setCanceledOnTouchOutside(false);
-                    myDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
+                    myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (myDialog != null) {
@@ -95,7 +95,7 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
                             }
                         }
                     });
-                    myDialog.setButtonAccept(R.string.text_dialog_accept, new View.OnClickListener() {
+                    myDialog.setButtonAccept(R.string.text_yes, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             myDialog.dismiss();

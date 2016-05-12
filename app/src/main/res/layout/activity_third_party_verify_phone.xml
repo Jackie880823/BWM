@@ -85,7 +85,8 @@
         android:layout_marginBottom="@dimen/default_content_padding"
         android:layout_marginLeft="@dimen/default_view_margin"
         android:layout_marginRight="@dimen/default_view_margin"
-        app:paper_color="@color/btn_bg_color_green_normal"
+        app:paper_color="@color/btn_bg_color_login_normal"
+        app:paper_text_color="@color/login_text_bg_color"
         app:paper_text="@string/text_start_next"
          />
 

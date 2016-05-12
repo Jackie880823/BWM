@@ -177,6 +177,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                vProgress.setVisibility(View.VISIBLE);
                 isRefresh = true;
                 startIndex = 0;
                 requestData();
@@ -274,10 +275,10 @@ public class EventFragment extends BaseFragment<MainActivity> {
 //                    }.getType());
                     if (startIndex == 0 && (data == null || data.size() == 0)) {
                         eventStart.setVisibility(View.VISIBLE);
-                        swipeRefreshLayout.setVisibility(View.GONE);
+//                        swipeRefreshLayout.setVisibility(View.GONE);
                     } else {
                         eventStart.setVisibility(View.GONE);
-                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+//                        swipeRefreshLayout.setVisibility(View.VISIBLE);
                     }
                     currentPage = 1;
                     startIndex = data.size();
@@ -322,7 +323,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                         finishReFresh();
                     } else {
                         eventStart.setVisibility(View.VISIBLE);
-                        swipeRefreshLayout.setVisibility(View.GONE);
+//                        swipeRefreshLayout.setVisibility(View.GONE);
                     }
                 }
             }
@@ -333,7 +334,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     finishReFresh();
                 } else {
                     eventStart.setVisibility(View.VISIBLE);
-                    swipeRefreshLayout.setVisibility(View.GONE);
+//                    swipeRefreshLayout.setVisibility(View.GONE);
                 }
                 MessageUtil.getInstance().showShortToast( R.string.msg_action_failed);
             }

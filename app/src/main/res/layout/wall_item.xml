@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="@dimen/default_content_padding"
-        android:paddingRight="@dimen/default_content_padding">
+        android:paddingRight="@dimen/default_content_padding"
+        android:layout_marginTop="@dimen/_10dp">
 
 
         <LinearLayout
@@ -55,8 +56,8 @@
 
                         <ImageView
                             android:id="@+id/iv_mood"
-                            android:layout_width="@dimen/default_small_button_width_height"
-                            android:layout_height="@dimen/default_small_button_width_height"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/activity_horizontal_margin"
                             android:scaleType="fitCenter"
@@ -75,8 +76,8 @@
 
                         <ImageView
                             android:id="@+id/lock_post_iv"
-                            android:layout_width="@dimen/_20dp"
-                            android:layout_height="@dimen/_20dp"
+                            android:layout_width="@dimen/_16dp"
+                            android:layout_height="@dimen/_16dp"
                             android:scaleType="centerInside"
                             android:src="@drawable/lock_post" />
                     </LinearLayout>
@@ -205,8 +206,8 @@
 
                 <ImageView
                     android:id="@+id/iv_love"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/goodjob_nonclicked" />
 
@@ -214,7 +215,7 @@
                     android:id="@+id/tv_wall_agree_count"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/_8dp"
+                    android:layout_marginLeft="@dimen/_10dp"
                     android:text="1"/>
 
                 <TextView
@@ -245,8 +246,8 @@
 
                 <ImageView
                     android:id="@+id/iv_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_gravity="center_vertical"
                     android:background="@null"
                     android:src="@drawable/btn_comment" />
@@ -255,7 +256,7 @@
                     android:id="@+id/tv_wall_relay_count"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/_8dp"
+                    android:layout_marginLeft="@dimen/_10dp"
                     android:text="1"/>
 
                 <TextView

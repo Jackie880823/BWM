@@ -1,15 +1,14 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@color/default_text_color_while"
     tools:context="com.madxstudio.co8.ui.more.MoreSettingActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/btn_sign_out"
         android:orientation="vertical">
 
         <include
@@ -22,46 +21,47 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_split_line"
+            android:layout_gravity="center"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_gravity="center"/>
+            android:background="@color/default_split_line" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_white_gray"
             android:padding="@dimen/default_content_padding">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/text_more_setting_current_version"
-                android:textSize="@dimen/text_medium_size"
                 android:textColor="@color/primary_dark_material_dark"
-                />
+                android:textSize="@dimen/text_medium_size" />
+
             <TextView
                 android:id="@+id/tv_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text=""
-                android:textSize="@dimen/text_medium_size"
                 android:textColor="@color/default_text_color_light"
-                android:layout_alignParentRight="true"/>
+                android:textSize="@dimen/text_medium_size" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_split_line"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:background="@color/default_split_line" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_split_line"
+            android:layout_gravity="center"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_gravity="center"/>
+            android:background="@color/default_split_line" />
 
         <RelativeLayout
             android:id="@+id/rl_1"
@@ -70,27 +70,28 @@
             android:background="@drawable/bg_white_gray"
 
             android:padding="@dimen/default_content_padding">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/text_auto_accept"
-                android:textSize="@dimen/text_medium_size"
                 android:textColor="@color/primary_dark_material_dark"
-                />
+                android:textSize="@dimen/text_medium_size" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/profile_right"
-                android:layout_alignParentRight="true"/>
+                android:src="@drawable/profile_right" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_split_line"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:background="@color/default_split_line" />
 
         <RelativeLayout
             android:id="@+id/rl_2"
@@ -98,27 +99,28 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_white_gray"
             android:padding="@dimen/default_content_padding">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/text_birthday_alert_reminder"
-                android:textSize="@dimen/text_medium_size"
                 android:textColor="@color/primary_dark_material_dark"
-                />
+                android:textSize="@dimen/text_medium_size" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/profile_right"
-                android:layout_alignParentRight="true"/>
+                android:src="@drawable/profile_right" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_split_line"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:background="@color/default_split_line" />
 
         <RelativeLayout
             android:id="@+id/rl_3"
@@ -126,27 +128,28 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_white_gray"
             android:padding="@dimen/default_content_padding">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/text_group_privacy"
-                android:textSize="@dimen/text_medium_size"
                 android:textColor="@color/primary_dark_material_dark"
-                />
+                android:textSize="@dimen/text_medium_size" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/profile_right"
-                android:layout_alignParentRight="true"/>
+                android:src="@drawable/profile_right" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_split_line"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:background="@color/default_split_line" />
 
     </LinearLayout>
 
@@ -154,9 +157,10 @@
         android:id="@+id/btn_sign_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/text_sign_out"
-        android:background="@drawable/btn_logout_gray"
-        android:layout_margin="@dimen/_10dp"
         android:layout_alignParentBottom="true"
-        />
+        android:layout_marginBottom="@dimen/_20dp"
+        android:layout_marginLeft="@dimen/_20dp"
+        android:layout_marginRight="@dimen/_20dp"
+        android:background="@drawable/btn_logout_gray"
+        android:text="@string/text_sign_out" />
 </RelativeLayout>

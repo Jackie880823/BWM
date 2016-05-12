@@ -160,8 +160,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/_40dp"
-                        android:visibility="gone"
-                        android:src="@drawable/time" />
+                        android:src="@drawable/time"
+                        android:visibility="gone" />
 
                     <View
                         android:layout_width="match_parent"
@@ -601,47 +601,54 @@
                     </LinearLayout>
                 </RelativeLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center"
-                    android:background="@color/default_split_line" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    android:layout_gravity="center"
-                    android:background="@color/default_wide_split_line" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center"
-                    android:background="@color/default_split_line" />
-
                 <LinearLayout
-                    android:id="@+id/ll_reset_password"
+                    android:id="@+id/edit_pwd_linear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_below="@+id/ll_profile"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="@dimen/_10dp"
-                    android:layout_marginLeft="@dimen/_20dp"
-                    android:layout_marginRight="@dimen/_20dp"
-                    android:layout_marginTop="@dimen/_10dp"
-                    android:background="@drawable/ll_change_password"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_8dp">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:layout_gravity="center"
+                        android:background="@color/default_wide_split_line" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center"
+                        android:background="@color/default_split_line" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_reset_password"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:text="@string/text_change_password"
-                        android:textColor="@color/ok_button_color"
-                        android:textSize="22sp" />
+                        android:layout_alignParentBottom="true"
+                        android:layout_below="@+id/ll_profile"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/_25dp"
+                        android:layout_marginLeft="@dimen/_20dp"
+                        android:layout_marginRight="@dimen/_20dp"
+                        android:layout_marginTop="@dimen/_20dp"
+                        android:background="@drawable/ll_change_password"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text="@string/text_change_password"
+                            android:textColor="@color/ok_button_color"
+                            android:textSize="22sp" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>

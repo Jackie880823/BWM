@@ -257,9 +257,9 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                             tvNoData.setVisibility(View.VISIBLE);
                             flWallStartUp.setVisibility(View.GONE);
                         }
-                        swipeRefreshLayout.setVisibility(View.GONE);
+//                        swipeRefreshLayout.setVisibility(View.GONE);
                     } else {
-                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+//                        swipeRefreshLayout.setVisibility(View.VISIBLE);
                         flWallStartUp.setVisibility(View.GONE);
                         tvNoData.setVisibility(View.GONE);
                     }

@@ -8,11 +8,14 @@ import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
@@ -20,9 +23,6 @@ import com.madxstudio.co8.entity.AppTokenEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.util.AppInfoUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,9 +35,9 @@ public class ResetPasswordSuccessfulActivity extends Activity {
     private static final int ERROR = -1;
     private static final int GO_DETAILS = 1;
     private static final int GO_MAIN = 2;
-    private static final int CATCH =3;
+    private static final int CATCH = 3;
 
-    private TextView btnOk;
+    private Button btnOk;
 
     private List<UserEntity> userEntities;
     private UserEntity userEntity;
@@ -46,13 +46,11 @@ public class ResetPasswordSuccessfulActivity extends Activity {
 
     private RelativeLayout rlProgress;
 
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case GO_DETAILS:
                     goDetails();
                     break;
@@ -77,9 +75,9 @@ public class ResetPasswordSuccessfulActivity extends Activity {
 
         intentUserEntity = (UserEntity) getIntent().getExtras().getSerializable(Constant.LOGIN_USER);
 
-        rlProgress = (RelativeLayout)findViewById(R.id.rl_progress);
+        rlProgress = (RelativeLayout) findViewById(R.id.rl_progress);
 
-        btnOk = (TextView)findViewById(R.id.tv_ok);
+        btnOk = (Button) findViewById(R.id.tv_ok);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,12 +87,9 @@ public class ResetPasswordSuccessfulActivity extends Activity {
     }
 
     private void login() {
-        if (Constant.TYPE_PHONE.equals(intentUserEntity.getUser_login_type()))
-        {
+        if (Constant.TYPE_PHONE.equals(intentUserEntity.getUser_login_type())) {
             loginPhone();
-        }
-        else if (Constant.TYPE_USERNAME.equals(intentUserEntity.getUser_login_type()))
-        {
+        } else if (Constant.TYPE_USERNAME.equals(intentUserEntity.getUser_login_type())) {
             loginUsername();
         }
     }
@@ -184,7 +179,6 @@ public class ResetPasswordSuccessfulActivity extends Activity {
     }
 
 
-
     private void loginUsername() {
         doingLogInChangeUI();
         HashMap<String, String> jsonParams = new HashMap<String, String>();
@@ -222,20 +216,16 @@ public class ResetPasswordSuccessfulActivity extends Activity {
                     }.getType());
                     tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
 
-                    if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
-                    {
+                    if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id())) {
                         //这样可以当做是bad date
                         return;
                     }
 
                     userEntity = userEntities.get(0);
 
-                    if ("created".equals(userEntity.getUser_status()))
-                    {
+                    if ("created".equals(userEntity.getUser_status())) {
                         handler.sendEmptyMessage(GO_DETAILS);
-                    }
-                    else
-                    {
+                    } else {
                         handler.sendEmptyMessage(GO_MAIN);
                     }
 
@@ -263,13 +253,11 @@ public class ResetPasswordSuccessfulActivity extends Activity {
         });
     }
 
-    public void goMainActivity()
-    {
+    public void goMainActivity() {
         App.userLoginSuccessed(this, userEntity, tokenEntity);
     }
 
-    public void goDetails()
-    {
+    public void goDetails() {
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(Constant.LOGIN_USER, userEntity);
         intent.putExtra(Constant.HTTP_TOKEN, tokenEntity);

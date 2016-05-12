@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <ImageButton
+        android:id="@+id/btn_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_5dp"
+        android:background="@null"
+        android:contentDescription="@string/popu_delete"
+        android:padding="@dimen/default_view_margin"
+        android:src="@drawable/option_dots_view"
+        android:visibility="visible" />
+
     <LinearLayout
+        android:id="@+id/item_linear"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/_5dp">
 
-        <RelativeLayout
-            android:id="@+id/rl_category_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/news_category_name"
-                style="@style/text_title_default"
-                android:textColor="@color/default_text_color_dark"
-                android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/btn_option"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:background="@null"
-                android:contentDescription="@string/popu_delete"
-                android:padding="@dimen/default_view_margin"
-                android:src="@drawable/option_dots_view" />
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/news_category_name"
+            style="@style/text_title_default"
+            android:textColor="@color/default_text_color_dark"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/news_title"
@@ -58,6 +54,33 @@
             <TextView
                 android:id="@+id/news_user"
                 style="@style/text_light_default" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_default_selector_bg"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_5dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_location"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:background="@drawable/btn_default_selector_bg"
+                android:scaleType="centerInside"
+                android:src="@drawable/location" />
+
+            <TextView
+                android:id="@+id/tv_location"
+                style="@style/text_dark_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_default_selector_bg"
+                android:text="@string/text_location"
+                android:textSize="@dimen/text_small_size" />
         </LinearLayout>
 
         <RelativeLayout
@@ -116,33 +139,6 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <LinearLayout
-            android:id="@+id/ll_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_default_selector_bg"
-            android:gravity="center_vertical"
-            android:padding="@dimen/_5dp"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/iv_location"
-                android:layout_width="@dimen/_20dp"
-                android:layout_height="@dimen/_20dp"
-                android:background="@drawable/btn_default_selector_bg"
-                android:scaleType="centerInside"
-                android:src="@drawable/location" />
-
-            <TextView
-                android:id="@+id/tv_location"
-                style="@style/text_dark_default"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_default_selector_bg"
-                android:text="@string/text_location"
-                android:textSize="@dimen/text_small_size" />
-        </LinearLayout>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -156,32 +152,23 @@
                 android:layout_marginRight="@dimen/default_content_padding"
                 android:gravity="center_vertical">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/iv_good"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_centerVertical="true"
-                    android:background="@null"
                     android:src="@drawable/goodjob_nonclicked" />
 
-                <RelativeLayout
-                    android:id="@+id/fl_love"
-                    android:layout_width="@dimen/_30dp"
+                <TextView
+                    android:id="@+id/new_good_job"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/_5dp"
-                    android:layout_toRightOf="@id/iv_good">
-
-                    <TextView
-                        android:id="@+id/new_good_job"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/_8dp"
-                        android:text="0"
-                        android:textSize="@dimen/_15dp" />
-                </RelativeLayout>
+                    android:layout_marginLeft="@dimen/_13dp"
+                    android:layout_toRightOf="@id/iv_good"
+                    android:text="0"
+                    android:textSize="@dimen/_15dp" />
 
             </RelativeLayout>
 
@@ -196,31 +183,26 @@
 
                 <ImageView
                     android:id="@+id/iv_new_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
                     android:layout_centerVertical="true"
                     android:src="@drawable/btn_comment" />
 
-                <RelativeLayout
-                    android:layout_width="@dimen/_30dp"
+                <TextView
+                    android:id="@+id/new_comment"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/_5dp"
-                    android:layout_toRightOf="@id/iv_new_comment">
-
-                    <TextView
-                        android:id="@+id/new_comment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/default_content_padding"
-                        android:text="0"
-                        android:textSize="@dimen/_15dp" />
-                </RelativeLayout>
+                    android:layout_marginLeft="@dimen/_13dp"
+                    android:layout_toRightOf="@id/iv_new_comment"
+                    android:text="0"
+                    android:textSize="@dimen/_15dp" />
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
 
-    <View style="@style/split_line_default" />
-</LinearLayout>
+    <View
+        style="@style/split_line_default"
+        android:layout_below="@id/item_linear" />
+</RelativeLayout>
 

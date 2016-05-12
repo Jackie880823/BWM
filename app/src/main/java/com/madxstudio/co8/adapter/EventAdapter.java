@@ -106,11 +106,11 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.tvReleaseDate.setVisibility(View.VISIBLE);
                 if(!"0".equals(ee.getGroup_new_post())) {
                     this.position = position;
-                    if(clickitemList.size() > 0 && clickitemList.contains(position)) {
+//                    if(clickitemList.size() > 0 && clickitemList.contains(position)) {
                         item.event_start.setVisibility(View.INVISIBLE);
-                    } else {
-                        item.event_start.setVisibility(View.VISIBLE);
-                    }
+//                    } else {
+//                        item.event_start.setVisibility(View.VISIBLE);
+//                    }
                 }
             }
         } else if(holder instanceof VHHeader) {
