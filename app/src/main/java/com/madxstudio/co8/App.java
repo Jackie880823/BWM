@@ -137,7 +137,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
         if (user != null) {
             changeLoginedUser(user, tokenEntity);
-            runAlarmTask(context, user);
+//            runAlarmTask(context, user);
             goMain(context);
         }
 
