@@ -5,6 +5,17 @@
     android:background="@color/default_text_color_while"
     tools:context="com.madxstudio.co8.ui.more.MoreSettingActivity">
 
+    <Button
+        android:id="@+id/btn_sign_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_20dp"
+        android:layout_marginLeft="@dimen/_20dp"
+        android:layout_marginRight="@dimen/_20dp"
+        android:background="@drawable/btn_logout_gray"
+        android:text="@string/text_sign_out" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -153,14 +164,4 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_sign_out"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/_20dp"
-        android:layout_marginLeft="@dimen/_20dp"
-        android:layout_marginRight="@dimen/_20dp"
-        android:background="@drawable/btn_logout_gray"
-        android:text="@string/text_sign_out" />
 </RelativeLayout>

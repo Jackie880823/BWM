@@ -725,7 +725,11 @@ public class MyViewProfileActivity extends BaseActivity {
 //            finish();
             return;
         }
-
+        String email = etEmail.getText().toString();
+        if (email.indexOf("@") <= 0) {
+            MessageUtil.getInstance().showShortToast(getString(R.string.text_erro_email));
+            return;
+        }
         if ("Male".equals(tvGender.getText().toString())) {
             userGender = "M";
         } else {
@@ -738,7 +742,7 @@ public class MyViewProfileActivity extends BaseActivity {
         jsonParams.put("user_given_name", etFirstName.getText().toString());
         jsonParams.put("user_gender", userGender);
         jsonParams.put("user_dob", strDOB);
-        jsonParams.put("user_email", etEmail.getText().toString());
+        jsonParams.put("user_email", email);
         jsonParams.put("user_location_name", etRegion.getText().toString());
 
         jsonParams.put("position", et_position.getText().toString());
