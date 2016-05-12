@@ -124,7 +124,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     @Override
     protected void setParentTitle() {
         if (userEntity != null) {
-            getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
+            getParentActivity().tvTitle.setText(userEntity.getUser_given_name() + " " + userEntity.getUser_surname());
         }
     }
 
@@ -136,7 +136,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 case GET_USER_ENTITY:
                     userEntity = (UserEntity) message.obj;
                     if (userEntity != null) {
-                        getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
+                        getParentActivity().tvTitle.setText(userEntity.getUser_given_name() + " " + userEntity.getUser_surname());
                         VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
                         VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id()), 0, 0);
                         rlFirstName.setVisibility(View.VISIBLE);
@@ -147,6 +147,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                         setDatePrivacy(userEntity.getEmail_flag(), rlEmail);
                         setDatePrivacy(userEntity.getLocation_flag(), rlRegion);
                         setDatePrivacy(userEntity.getMember_flag(), rlPhone);
+                        setDatePrivacy(userEntity.getInt_phone_ext_flag(), rl_et_internal_phone);
                         showMessageButton();
 
                         tvFirstName.setText(userEntity.getUser_given_name());
@@ -157,11 +158,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                         et_position.setText(userEntity.getPosition());
                         et_department.setText(userEntity.getDepartment());
                         if (userEntity.getInt_phone_ext() != null && userEntity.getInt_phone_ext().size() > 0) {
-                            rl_et_internal_phone.setVisibility(View.VISIBLE);
                             ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, userEntity.getInt_phone_ext());
                             et_internal_phone.setAdapter(adapter);
-                        } else {
-                            rl_et_internal_phone.setVisibility(View.GONE);
                         }
                         if (userEntity.getUser_phone_number() != null && userEntity.getUser_phone_number().size() > 0) {
                             ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, userEntity.getUser_phone_number());
@@ -251,6 +249,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         stFemale = getResources().getString(R.string.text_female);
         stMale = getResources().getString(R.string.text_male);
 
+        rl_position.setVisibility(View.VISIBLE);
+        rl_department.setVisibility(View.VISIBLE);
 //        if (profileBackgroundId == 6) {
 //            array = new int[]{R.drawable.profile_background_0, R.drawable.profile_background_1, R.drawable.profile_background_2,
 //                    R.drawable.profile_background_3, R.drawable.profile_background_4, R.drawable.profile_background_5};
@@ -325,11 +325,11 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             setDatePrivacy(userEntity.getEmail_flag(), rlEmail);
             setDatePrivacy(userEntity.getLocation_flag(), rlRegion);
             setDatePrivacy(userEntity.getMember_flag(), rlPhone);
+            setDatePrivacy(userEntity.getInt_phone_ext_flag(), rl_et_internal_phone);
             tvOrganisationName.setText(userEntity.getOrganisation());
             et_position.setText(userEntity.getPosition());
             et_department.setText(userEntity.getDepartment());
             if (userEntity.getInt_phone_ext() != null && userEntity.getInt_phone_ext().size() > 0) {
-                rl_et_internal_phone.setVisibility(View.VISIBLE);
                 for (int i = 0; i < userEntity.getInt_phone_ext().size(); i++) {
                     if (!TextUtils.isEmpty(userEntity.getInt_phone_ext().get(i))) {
                         userEntity.getInt_phone_ext().set(i, "+" + userEntity.getInt_phone_ext().get(i));
@@ -337,8 +337,6 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 }
                 ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.array_list_item, R.id.tv_phone, userEntity.getInt_phone_ext());
                 et_internal_phone.setAdapter(adapter);
-            } else {
-                rl_et_internal_phone.setVisibility(View.GONE);
             }
             tvName1.setText(userEntity.getUser_given_name());
             tvId1.setText(getResources().getString(R.string.co8_id) + userEntity.getDis_bondwithme_id());
@@ -418,6 +416,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 break;
             case "1":
                 view.setVisibility(View.VISIBLE);
+                break;
+            default:
+                view.setVisibility(View.GONE);
                 break;
         }
 

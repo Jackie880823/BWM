@@ -434,6 +434,10 @@ public class MyViewProfileActivity extends BaseActivity {
         etLastName.setText(userEntity.getUser_surname());
         tvTitle.setText(userEntity.getUser_given_name());
 
+        if (Constant.TYPE_FACEBOOK.equalsIgnoreCase(userEntity.getUser_login_type())) {
+            getViewById(R.id.edit_pwd_linear).setVisibility(View.GONE);
+        }
+
 //        tvAge.setText(userEntity.getUser_dob());//需要做处理，年转为岁数
         //1990-09-10   1990年
         strDOB = userEntity.getUser_dob();

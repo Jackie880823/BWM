@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -219,8 +219,7 @@
                     <RelativeLayout
                         android:id="@+id/rl_last_name"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone">
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -463,7 +462,7 @@
                         android:id="@+id/rl_department"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -539,7 +538,8 @@
                     <RelativeLayout
                         android:id="@+id/rl_et_internal_phone"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -621,46 +621,41 @@
                 </LinearLayout>
             </RelativeLayout>
 
-
-            <FrameLayout
+            <RelativeLayout
                 android:id="@+id/fl_member"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@android:color/white"
-                android:orientation="vertical"
+                android:layout_height="match_parent"
+                android:layout_below="@id/rl_view"
+                android:layout_marginTop="@dimen/_15dp"
+                android:layout_marginBottom="@dimen/_25dp"
                 android:visibility="visible">
 
-                <RelativeLayout
+                <com.material.widget.PaperButton
+                    android:id="@+id/btn_add_member"
+                    style="@style/paper_button_style"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/default_content_padding"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:layout_marginRight="@dimen/default_view_margin"
+                    app:paper_color="@color/btn_bg_color_login_normal"
+                    app:paper_text="@string/text_add_member"
+                    app:paper_text_color="@color/login_text_bg_color" />
 
-                    <com.material.widget.PaperButton
-                        android:id="@+id/btn_add_member"
-                        style="@style/paper_button_style"
-                        android:layout_width="match_parent"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="@dimen/default_content_padding"
-                        android:layout_marginLeft="@dimen/default_view_margin"
-                        android:layout_marginRight="@dimen/default_view_margin"
-                        app:paper_color="@color/btn_bg_color_login_normal"
-                        app:paper_text_color="@color/login_text_bg_color"
-                        app:paper_text="@string/text_add_member" />
-                    <com.material.widget.PaperButton
-                        android:id="@+id/btn_message"
-                        style="@style/paper_button_style"
-                        android:layout_width="match_parent"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="@dimen/default_content_padding"
-                        android:layout_marginLeft="@dimen/default_view_margin"
-                        android:layout_marginRight="@dimen/default_view_margin"
-                        app:paper_color="@color/btn_bg_color_login_normal"
-                        app:paper_text_color="@color/login_text_bg_color"
-                        app:paper_text="@string/text_send_message"
-                        android:visibility="gone"/>
+                <com.material.widget.PaperButton
+                    android:id="@+id/btn_message"
+                    style="@style/paper_button_style"
+                    android:layout_width="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/default_content_padding"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:layout_marginRight="@dimen/default_view_margin"
+                    android:visibility="gone"
+                    app:paper_color="@color/btn_bg_color_login_normal"
+                    app:paper_text="@string/text_send_message"
+                    app:paper_text_color="@color/login_text_bg_color" />
 
-                </RelativeLayout>
-            </FrameLayout>
+            </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
 

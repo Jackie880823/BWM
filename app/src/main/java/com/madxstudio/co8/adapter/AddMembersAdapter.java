@@ -18,6 +18,7 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.RecommendEntity;
@@ -27,7 +28,6 @@ import com.madxstudio.co8.ui.add.AddContactMembersActivity;
 import com.madxstudio.co8.ui.add.AddMembersActivity;
 import com.madxstudio.co8.util.RelationshipUtil;
 import com.madxstudio.co8.widget.CircularNetworkImage;
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,14 +36,14 @@ import java.util.Map;
 /**
  * Created by christepherzhang on 15/11/3.
  */
-public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
-    private enum ITEM_TYPE
-    {
+    private enum ITEM_TYPE {
         ITEM_HEAD,
         ITEM_CONTENT
     }
+
     private Context mContext;
     private List<RecommendEntity> mData;
 
@@ -51,42 +51,39 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public AddMembersAdapter(Context context, List<RecommendEntity> data) {
         mContext = context;
         mData = data;
+    }
 
+    public void getNewData(List<RecommendEntity> list) {
+        if (list != null && list.size() > 0) {
+            mData.clear();
+            mData.addAll(list);
+            notifyDataSetChanged();
+        }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == ITEM_TYPE.ITEM_HEAD.ordinal())
-        {
+        if (viewType == ITEM_TYPE.ITEM_HEAD.ordinal()) {
             return new HeaderViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_add_members_options_head, null));
-        }
-        else if (viewType == ITEM_TYPE.ITEM_CONTENT.ordinal())
-        {
+        } else if (viewType == ITEM_TYPE.ITEM_CONTENT.ordinal()) {
             return new ContentViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_add_members, null));
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof HeaderViewHolder)
-        {
+        if (holder instanceof HeaderViewHolder) {
 
-        }
-        else if (holder instanceof ContentViewHolder)
-        {
+        } else if (holder instanceof ContentViewHolder) {
 
 
-            ContentViewHolder itemView = (ContentViewHolder)holder;
+            ContentViewHolder itemView = (ContentViewHolder) holder;
             if (position == 1)//推荐的第一个要展示提示布局，其余的不用
             {
                 itemView.llPrompt.setVisibility(View.VISIBLE);
-            }
-            else
-            {
+            } else {
                 itemView.llPrompt.setVisibility(View.GONE);
             }
 
@@ -110,18 +107,14 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0)
-        {
+        if (position == 0) {
             return ITEM_TYPE.ITEM_HEAD.ordinal();
-        }
-        else
-        {
+        } else {
             return ITEM_TYPE.ITEM_CONTENT.ordinal();
         }
     }
 
-    private class HeaderViewHolder extends RecyclerView.ViewHolder
-    {
+    private class HeaderViewHolder extends RecyclerView.ViewHolder {
         private LinearLayout llContacts;
         private LinearLayout llFacebook;
         private LinearLayout llQq;
@@ -154,8 +147,7 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     });
 
                     //请求后台运行，活动销毁了。会奔溃？？
-                    if (!((AddMembersActivity)mContext).isFinishing())
-                    {
+                    if (!((AddMembersActivity) mContext).isFinishing()) {
                         dialog.show();
                     }
                 }
@@ -163,8 +155,7 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private class ContentViewHolder extends RecyclerView.ViewHolder
-    {
+    private class ContentViewHolder extends RecyclerView.ViewHolder {
         private LinearLayout llPrompt;
         private RelativeLayout rl;
         private CircularNetworkImage cni;
@@ -179,7 +170,7 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             cni = (CircularNetworkImage) itemView.findViewById(R.id.cni);
             tvName = (TextView) itemView.findViewById(R.id.tv_name);
             ibAdd = (ImageButton) itemView.findViewById(R.id.ib_add);
-            tvRelationship = (TextView)itemView.findViewById(R.id.tv_relationship);
+            tvRelationship = (TextView) itemView.findViewById(R.id.tv_relationship);
 
             llPrompt.setLongClickable(false);
 
@@ -222,7 +213,7 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             requestInfo.jsonParam = jsonParamsString;
                             Log.d("", "jsonParamsString=========" + jsonParamsString);
                             Log.d("", "getFullUrl========" + requestInfo.getFullUrl());
-                            new HttpTools(mContext).put(requestInfo, ((AddMembersActivity)mContext).getTAG(), new HttpCallback() {
+                            new HttpTools(mContext).put(requestInfo, ((AddMembersActivity) mContext).getTAG(), new HttpCallback() {
                                 @Override
                                 public void onStart() {
                                     ((AddMembersActivity) mContext).getvProgress().setVisibility(View.VISIBLE);
@@ -239,7 +230,6 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 //                                    应该重新获取该列表比较妥当？？？
                                     ((AddMembersActivity) mContext).requestData();
-
 
 
                                     //TODO
@@ -268,8 +258,7 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     });
 
                     //请求后台运行，活动销毁了。会奔溃？？
-                    if (!((AddMembersActivity)mContext).isFinishing())
-                    {
+                    if (!((AddMembersActivity) mContext).isFinishing()) {
                         dialog.show();
                     }
 
@@ -282,13 +271,11 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     OnAddIconClickListener onAddIconClickListener;
 
-    public interface OnAddIconClickListener
-    {
+    public interface OnAddIconClickListener {
         void onAddIconClick(RecommendEntity recommendEntity);
     }
 
-    public void setOnAddIconClickListener(OnAddIconClickListener onAddIconClickListener)
-    {
+    public void setOnAddIconClickListener(OnAddIconClickListener onAddIconClickListener) {
         this.onAddIconClickListener = onAddIconClickListener;
     }
 
