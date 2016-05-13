@@ -415,6 +415,8 @@ public class Constant {
 
     public static final String IS_SIGN_UP = "signUp";
     public static final String IS_FROM_ORG = "fromOrg";
+
+    public static final String IS_FIRST_CREATE_ORG = "createNewOrg";
     /**
      * about wall, user extra
      */

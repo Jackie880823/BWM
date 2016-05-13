@@ -51,7 +51,8 @@ public class TermsActivity extends BaseActivity {
     public void initView() {
         webView = getViewById(R.id.webView);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
-        webView.loadUrl("http://bondwithme.com/term.php?lang="+ Locale.getDefault().getLanguage());
+//        webView.loadUrl("www.madxstudio.com/term.php?lang="+ Locale.getDefault().getLanguage());
+        webView.loadUrl("http://www.madxstudio.com/term.php?lang=X_BWM_APPLANG");
 //        webView.loadUrl("http://bondwithme.com/term.php?lang="+ HttpTools.getHeaders().get("X_BWM_APPLANG"));
 //        webView.loadUrl("http://bondwithme.com/bonding-terms.htm");
         webView.getSettings().setJavaScriptEnabled(true);//修复url不能跳转bug,add by wing

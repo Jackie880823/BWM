@@ -13,7 +13,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,6 +32,7 @@ import com.madxstudio.co8.adapter.MyFragmentPagerAdapter;
 import com.madxstudio.co8.dao.LocalStickerInfoDao;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.receiver_service.ReportIntentService;
+import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.ui.wall.NewDiaryActivity;
 import com.madxstudio.co8.ui.wall.WallFragment;
 import com.madxstudio.co8.util.FileUtil;
@@ -117,7 +120,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     public static String STICKER_VERSION = "4";
 
-//    public static Boolean IS_INTERACTIVE_USE;
+    //    public static Boolean IS_INTERACTIVE_USE;
     public static Map<String, InteractivePopupWindow> interactivePopupWindowMap;
     private static final int GET_DELAY = 0x28;
 
@@ -231,7 +234,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                     errorReportDialog.dismiss();
                     Intent intentService = new Intent(App.getContextInstance(), ReportIntentService.class);
                     startService(intentService);
-                    MessageUtil.getInstance().showShortToast( R.string.say_thanks_for_report);
+                    MessageUtil.getInstance().showShortToast(R.string.say_thanks_for_report);
                 }
             });
         }
@@ -587,7 +590,36 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         //检查显示小红点
         checkAndShowRedPoit();
-
+        boolean isCreateOrg = PreferencesUtil.getValue(this, Constant.IS_FIRST_CREATE_ORG + getUser().getUser_id(), false);
+        if (isCreateOrg) {
+            final LayoutInflater factory = LayoutInflater.from(this);
+            View selectIntention = factory.inflate(R.layout.dialog_group_nofriend, null);
+            final MyDialog dialog = new MyDialog(this, null, selectIntention);
+            TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+            tv_no_member.setText(getString(R.string.text_org_profile_page));
+            TextView acceptTv = (TextView) selectIntention.findViewById(R.id.tv_cal);//确定
+            TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);//取消
+            acceptTv.setText(R.string.text_update_now);
+            cancelTv.setText(R.string.text_later);
+            cancelTv.getPaint().setFakeBoldText(false);
+            dialog.setCanceledOnTouchOutside(false);
+            cancelTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    PreferencesUtil.saveValue(MainActivity.this, Constant.IS_FIRST_CREATE_ORG + getUser().getUser_id(), false);
+                }
+            });
+            acceptTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    PreferencesUtil.saveValue(MainActivity.this, Constant.IS_FIRST_CREATE_ORG + getUser().getUser_id(), false);
+                    startActivity(new Intent(MainActivity.this, CompanyActivity.class));
+                }
+            });
+            dialog.show();
+        }
     }
 
 
@@ -826,17 +858,19 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
 
     private long startTime;
-    /**返回确定退出间隔时间*/
+    /**
+     * 返回确定退出间隔时间
+     */
     private static final int EXIT_BUTTON_RELAY_TIME = 2000;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                if(startTime==0L||System.currentTimeMillis() - startTime > EXIT_BUTTON_RELAY_TIME){
+                if (startTime == 0L || System.currentTimeMillis() - startTime > EXIT_BUTTON_RELAY_TIME) {
                     startTime = System.currentTimeMillis();
                     MessageUtil.getInstance().showToast(R.string.click_again_exit, EXIT_BUTTON_RELAY_TIME);
-                }else{
+                } else {
                     if ("lastLeaveIndex".equals(LAST_LEAVE_INDEX)) {
                         LAST_LEAVE_INDEX += App.getLoginedUser().getUser_id();
                     }

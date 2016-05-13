@@ -830,4 +830,6 @@
     <string name="notification_action_organisation_join">%1$s wants to join %2$s</string>
     <string name="co8_id">co8 ID:</string>
     <string name="text_erro_email">Incorrect email format.</string>
+    <string name="text_update_now">Update Now</string>
+    <string name="text_org_profile_page">Your Organisation Profile page is still blank</string>
 </resources>

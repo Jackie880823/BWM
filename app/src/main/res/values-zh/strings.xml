@@ -755,4 +755,6 @@
     <!--<string name="text_org_nomal_show">Name will be shown as Display Name</string>-->
     <!--<string name="co8_id">Co8 ID:</string>-->
     <!--<string name="text_erro_email">Incorrect email format.</string>-->
+    <string name="text_update_now">Update Now</string>
+    <string name="text_org_profile_page">Your Organisation Profile page is still blank</string>
 </resources>

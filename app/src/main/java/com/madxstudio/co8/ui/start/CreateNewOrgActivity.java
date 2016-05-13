@@ -38,6 +38,7 @@ import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LocalImageLoader;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyTextUtil;
+import com.madxstudio.co8.util.PreferencesUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
 import com.material.widget.Dialog;
@@ -105,6 +106,7 @@ public class CreateNewOrgActivity extends BaseActivity implements View.OnClickLi
                         AppTokenEntity tokenEntity = (AppTokenEntity) intent.getExtras().getSerializable(Constant.HTTP_TOKEN);
                         userEntity.setShow_tip(true);//从登陆流程进入的必须显示tip，此值作为判断依据。
                         userEntity.setShow_add_member(true);
+                        PreferencesUtil.saveValue(mContext, Constant.IS_FIRST_CREATE_ORG + userEntity.getUser_id(), true);
                         App.userLoginSuccessed(CreateNewOrgActivity.this, userEntity, tokenEntity);
                     } else {
                         OrgSearchEntity searchEntity = (OrgSearchEntity) msg.obj;
