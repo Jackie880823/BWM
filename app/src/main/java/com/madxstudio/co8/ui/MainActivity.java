@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -596,12 +597,13 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             View selectIntention = factory.inflate(R.layout.dialog_group_nofriend, null);
             final MyDialog dialog = new MyDialog(this, null, selectIntention);
             TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
-            tv_no_member.setText(getString(R.string.text_org_profile_page));
+            tv_no_member.setText(R.string.text_org_profile_page);
             TextView acceptTv = (TextView) selectIntention.findViewById(R.id.tv_cal);//确定
             TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);//取消
+            selectIntention.findViewById(R.id.line_v).setVisibility(View.VISIBLE);
             acceptTv.setText(R.string.text_update_now);
             cancelTv.setText(R.string.text_later);
-            cancelTv.getPaint().setFakeBoldText(false);
+            cancelTv.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
             dialog.setCanceledOnTouchOutside(false);
             cancelTv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -616,6 +618,34 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                     dialog.dismiss();
                     PreferencesUtil.saveValue(MainActivity.this, Constant.IS_FIRST_CREATE_ORG + getUser().getUser_id(), false);
                     startActivity(new Intent(MainActivity.this, CompanyActivity.class));
+                }
+            });
+            dialog.show();
+        }
+        if (!isCreateOrg && ("1".equals(getUser().getDemo()) && "0".equals(getUser().getPending_org()))) {
+            final LayoutInflater factory = LayoutInflater.from(this);
+            View selectIntention = factory.inflate(R.layout.dialog_group_nofriend, null);
+            final MyDialog dialog = new MyDialog(this, null, selectIntention);
+            TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+            tv_no_member.setText(R.string.text_join_org_now);
+            TextView acceptTv = (TextView) selectIntention.findViewById(R.id.tv_cal);//确定
+            TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);//取消
+            selectIntention.findViewById(R.id.line_v).setVisibility(View.VISIBLE);
+            acceptTv.setText(R.string.text_org_join_now);
+            cancelTv.setText(R.string.text_later);
+            cancelTv.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+            dialog.setCanceledOnTouchOutside(false);
+            cancelTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            acceptTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    startActivity(new Intent(MainActivity.this, OrganisationActivity.class));
                 }
             });
             dialog.show();

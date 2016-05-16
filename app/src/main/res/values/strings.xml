@@ -832,4 +832,5 @@
     <string name="text_erro_email">Incorrect email format.</string>
     <string name="text_update_now">Update Now</string>
     <string name="text_org_profile_page">Your Organisation Profile page is still blank</string>
+    <string name="text_join_org_now">You have not joined any organisation. Would you like to join one now?</string>
 </resources>
