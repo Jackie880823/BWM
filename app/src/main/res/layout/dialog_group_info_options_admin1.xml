@@ -1,53 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_contact_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
         <TextView
-            android:id="@+id/tv_remove_user"
+            android:id="@+id/tv_contact_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/text_remove_user"
+            android:background="@drawable/bg_white_gray"
             android:gravity="center_horizontal"
-            android:textSize="@dimen/text_large_size"
-            android:textColor="@color/default_text_color_dark"
-            android:paddingTop="2dp"
             android:padding="@dimen/default_content_padding"
-            android:background="@drawable/bg_white_gray"
-            />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/default_split_line"/>
-
-        <TextView
-            android:id="@+id/tv_family_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:paddingTop="2dp"
             android:text="@string/text_view_profile"
-            android:textSize="@dimen/text_large_size"
-            android:background="@drawable/bg_white_gray"
-            android:textColor="@color/default_text_color_dark"
-            android:padding="@dimen/default_content_padding"/>
+            android:textColor="@color/default_text_color_blue"
+            android:textSize="@dimen/text_large_size" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_split_line"/>
+            android:background="@color/default_split_line" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_resend_quest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_message"
+            android:id="@+id/tv_resend_quest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/text_message_user"
             android:background="@drawable/bg_white_gray"
-            android:textSize="@dimen/text_large_size"
-            android:textColor="@color/default_text_color_dark"
-            android:padding="@dimen/default_content_padding"/>
+            android:gravity="center_horizontal"
+            android:padding="@dimen/default_content_padding"
+            android:paddingTop="2dp"
+            android:text="@string/text_org_resend_request"
+            android:textColor="@color/default_text_color_blue"
+            android:textSize="@dimen/text_large_size" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_split_line" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_cancel_quest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_cancel_quest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white_gray"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/default_content_padding"
+            android:text="@string/text_org_cancel_request"
+            android:textColor="@color/default_text_color_blue"
+            android:textSize="@dimen/text_large_size" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_split_line" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_remove_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_remove_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white_gray"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/default_content_padding"
+            android:paddingTop="2dp"
+            android:text="@string/text_remove_user"
+            android:textColor="@color/default_text_color_blue"
+            android:textSize="@dimen/text_large_size" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_split_line" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_gray"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/default_content_padding"
+        android:text="@string/text_start_cancle"
+        android:textColor="@color/default_text_color_blue"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_large_size" />
 
 </LinearLayout>

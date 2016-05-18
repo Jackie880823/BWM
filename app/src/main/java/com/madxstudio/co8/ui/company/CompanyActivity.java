@@ -613,6 +613,11 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
      * @param profile 公司资料封装实例
      */
     private void putProfile(Profile profile) {
+        String email = profile.getEmail();
+        if (!TextUtils.isEmpty(email) && email.indexOf("@") <= 0) {
+            MessageUtil.getInstance().showShortToast(getString(R.string.text_erro_email));
+            return;
+        }
         Map<String, String> map = new HashMap<>();
         map.put(OrganisationConstants.NAME, profile.getName());
         map.put(OrganisationConstants.DESCRIPTION, profile.getDescription());

@@ -142,7 +142,7 @@
     <string name="text_remove_user">Remove Contact</string>
     <string name="text_add_member">Add Contact</string>
     <string name="text_view_profile">View Contact\'s Profile</string>
-    <string name="text_message_user">Send a Message</string>
+    <string name="text_message_user">Message Contact</string>
     <string name="text_add_new_member">Add New Contact</string>
     <string name="text_create_new_group">Create New Group</string>
     <string name="text_i_miss_you">Good Job !</string>
@@ -833,4 +833,6 @@
     <string name="text_update_now">Update Now</string>
     <string name="text_org_profile_page">Your Organisation Profile page is still blank</string>
     <string name="text_join_org_now">You have not joined any organisation. Would you like to join one now?</string>
+    <string name="text_approve_request">Approve Request</string>
+    <string name="text_reject_request">Reject Request</string>
 </resources>

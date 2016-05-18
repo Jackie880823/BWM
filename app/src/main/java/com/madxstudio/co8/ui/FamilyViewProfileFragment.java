@@ -149,7 +149,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                         setDatePrivacy(userEntity.getMember_flag(), rlPhone);
                         setDatePrivacy(userEntity.getInt_phone_ext_flag(), rl_et_internal_phone);
                         showMessageButton();
-
+                        tvOrganisationName.setText(userEntity.getOrganisation());
                         tvFirstName.setText(userEntity.getUser_given_name());
                         tvLastName.setText(userEntity.getUser_surname());
 //                    if (userEntity.getUser_phone_number().size() > 0) {
