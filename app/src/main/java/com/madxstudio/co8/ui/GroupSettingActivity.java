@@ -353,15 +353,17 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
                     if ("Success".equals(jsonObject.getString("response_status"))) {
                         response_type = jsonObject.getString("response_type");
                         String response_relationship = jsonObject.getString("response_relationship");
-                        if ("Resend".equals(response_type)) {
-                            MessageUtil.getInstance().showShortToast(R.string.text_success_resend);
-                        } else if ("Request".equals(response_type)) {
-                            MessageUtil.getInstance().showShortToast(R.string.text_success_request);
-                        } else if ("Accept".equals(response_type)) {
-                            MessageUtil.getInstance().showShortToast(R.string.text_success_accept);
-                        }
+//                        if ("Resend".equals(response_type)) {
+//                            MessageUtil.getInstance().showShortToast(R.string.text_success_resend);
+//                        } else if ("Request".equals(response_type)) {
+//                            MessageUtil.getInstance().showShortToast(R.string.text_success_request);
+//                        } else if ("Accept".equals(response_type)) {
+//                            MessageUtil.getInstance().showShortToast(R.string.text_success_accept);
+//                        }
                         if (TextUtils.isEmpty(response_relationship)) {//关系为空时, 跳转到选择界面
                             startActivityForResult(new Intent(mContext, RelationshipActivity.class), GET_RELATIONSHIP);
+                        }else{
+                            setRelationship(response_relationship);
                         }
                     } else {
                         MessageUtil.getInstance().showShortToast(R.string.text_error);
