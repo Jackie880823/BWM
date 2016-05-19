@@ -835,4 +835,5 @@
     <string name="text_join_org_now">You have not joined any organisation. Would you like to join one now?</string>
     <string name="text_approve_request">Approve Request</string>
     <string name="text_reject_request">Reject Request</string>
+    <string name="text_before_jion_org">You must join an organisation first before you add any contact</string>
 </resources>

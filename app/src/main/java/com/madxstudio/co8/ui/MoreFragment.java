@@ -1,6 +1,7 @@
 package com.madxstudio.co8.ui;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +27,7 @@ import com.madxstudio.co8.util.AppInfoUtil;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.widget.InteractivePopupWindow;
+import com.madxstudio.co8.widget.MyDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -401,8 +403,37 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     }
 
     private void goAddMember() {
-        Intent intent = new Intent(getActivity(), AddMembersActivity.class);
-        startActivity(intent);
+        if (!("0".equals(App.getLoginedUser().getDemo()) && "0".equals(App.getLoginedUser().getPending_org()))) {
+            final LayoutInflater factory = LayoutInflater.from(getActivity());
+            View selectIntention = factory.inflate(R.layout.dialog_group_nofriend, null);
+            final MyDialog dialog = new MyDialog(getActivity(), null, selectIntention);
+            TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+            tv_no_member.setText(R.string.text_before_jion_org);
+            TextView acceptTv = (TextView) selectIntention.findViewById(R.id.tv_cal);//确定
+            TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);//取消
+            selectIntention.findViewById(R.id.line_v).setVisibility(View.VISIBLE);
+            acceptTv.setText(R.string.text_org_join_now);
+            cancelTv.setText(R.string.text_later);
+            cancelTv.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+            dialog.setCanceledOnTouchOutside(false);
+            cancelTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            acceptTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    startActivity(new Intent(getActivity(), OrganisationActivity.class));
+                }
+            });
+            dialog.show();
+        } else {
+            Intent intent = new Intent(getActivity(), AddMembersActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void goRewards() {
