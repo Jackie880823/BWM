@@ -544,7 +544,7 @@
     <string name="text_inverse_select">Select Inverse</string>
     <string name="text_delete">Delete</string>
     <string name="text_cancel_all">Cancel All</string>
-    <string name="text_message_break_ice">Break the ice!</string>
+    <string name="text_message_break_ice">No conversation yet&#8230;</string>
     <string name="text_video_too_big">The selected video is too large</string>
     <string name="text_chat_send_video">Video size is %1$s,Confirm send it?</string>
     <string name="go_back_to_me">Go back to Me</string>
