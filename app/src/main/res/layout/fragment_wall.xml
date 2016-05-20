@@ -19,8 +19,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/write_a_diary"
-                android:src="@drawable/wall_startup" />
+                android:contentDescription="@string/write_a_diary" />
 
             <TextView
                 style="@style/text_dark_default"

@@ -127,7 +127,7 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
             // 介绍描述封装
             entity.setDescription(introductionStrings[i]);
             // 介绍展示图片封装
-            entity.setImagesResId(R.drawable.splash_page_01 + i);
+//            entity.setImagesResId(R.drawable.splash_page_01 + i);
             // 将封装好的实例添加到列表
             list.add(entity);
         }

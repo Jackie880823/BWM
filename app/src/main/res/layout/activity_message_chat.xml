@@ -50,14 +50,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_60dp"
-                android:background="@drawable/empty_chat_message"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/_30dp"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:text="@string/text_message_break_ice"
                 android:textSize="@dimen/_26dp" />
         </LinearLayout>
