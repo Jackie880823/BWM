@@ -100,7 +100,7 @@ public class InviteGroupAdapter extends BaseAdapter implements Filterable {
         }
         viewHolder.textName.setText(familyGroupEntity.getGroup_name());
         BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
-                familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+                familyGroupEntity.getGroup_id()), R.drawable.b2be_normal, R.drawable.b2be_normal);
         return convertView;
     }
     class ViewHolder {

@@ -53,7 +53,7 @@ public class CountryCodeActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_login);
+        changeTitleColor(R.color.btn_bg_color_login_normal);
     }
 
     @Override
