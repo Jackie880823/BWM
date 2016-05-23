@@ -19,8 +19,8 @@ android {
         applicationId "com.madxstudio.co8"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 62   //TODO
-        versionName "2.3.0" //TODO
+        versionCode 1   //TODO
+        versionName "1.0.0.2" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
