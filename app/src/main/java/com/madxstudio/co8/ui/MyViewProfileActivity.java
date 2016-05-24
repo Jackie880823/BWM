@@ -726,7 +726,7 @@ public class MyViewProfileActivity extends BaseActivity {
             return;
         }
         String email = etEmail.getText().toString();
-        if (email.indexOf("@") <= 0) {
+        if (!TextUtils.isEmpty(email) && email.indexOf("@") <= 0) {
             MessageUtil.getInstance().showShortToast(getString(R.string.text_erro_email));
             return;
         }

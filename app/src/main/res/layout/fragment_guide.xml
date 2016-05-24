@@ -29,7 +29,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_35dp"
         android:scaleType="centerInside"
-        tools:src="@drawable/splash_page_01" />
+        tools:src="@drawable/workspace_empty_tag" />
 
     <TextView
         android:id="@+id/tv_introduction_description"

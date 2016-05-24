@@ -52,16 +52,14 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitStart"
-                android:visibility="gone"
-                android:src="@drawable/family_group_msg_empty" />
+                android:visibility="gone" />
             <ImageView
                 android:id="@+id/family_memeber_image_empty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitCenter"
-                android:visibility="gone"
-                android:src="@drawable/family_member_msg_empty" />
+                android:visibility="gone" />
 
         </RelativeLayout>
 

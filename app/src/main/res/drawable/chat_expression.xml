@@ -3,7 +3,7 @@
 
     <item android:drawable="@drawable/chat_expression_press" android:state_checked="true"/>
     <item android:drawable="@drawable/chat_expression_normal" android:state_checked="false" />
-    <item android:drawable="@drawable/no_image"/>
+
 
 </selector>
 

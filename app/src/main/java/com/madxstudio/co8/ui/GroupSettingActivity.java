@@ -62,10 +62,12 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
     private final static int GET_MEMBERS = 2;
     private final static int SET_GROUP_PIC_NAME = 3;
     private final static int GET_RELATIONSHIP = 4;
+    private final static int ADD_MEMBER = 5;
     private List<String> addMemberList;
     private Context mContext;
     private static final int GET_DATA = 0X11;
     private static final int GET_MEMBERS_DATA = 0X12;
+
 
     //    private int type;//0  其他界面打开，1是Archive打开
     private boolean isGroupDefault;
@@ -154,73 +156,15 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 UserEntity userEntity = groupSettingAdapter.getmUserList().get(position);
-                if (isGroupAdmin) {
-                    if (!MainActivity.getUser().getUser_id().equals(userEntity.getUser_id())) {
-                        if ("0".equals(userEntity.getAdded_flag())) {
-                            showAdminNoFriendDialog(userEntity);
-                        } else if ("1".equals(userEntity.getAdded_flag())) {
-                            showAdminIsFriendDialog(userEntity);
-                        }
-                    }
-                } else {
-                    if (!MainActivity.getUser().getUser_id().equals(userEntity.getUser_id())) {
-                        if ("0".equals(userEntity.getAdded_flag())) {
-                            showNoAdminNoFriendDialog(userEntity);
-                        } else if ("1".equals(userEntity.getAdded_flag())) {
-                            showNoAdminIsFriendDialog(userEntity);
-                        }
+                if (!MainActivity.getUser().getUser_id().equals(userEntity.getUser_id())) {
+                    if ("0".equals(userEntity.getAdded_flag())) {
+                        showAddFriendDialog(userEntity);
+                    } else {
+                        showFriendDialog(userEntity);
                     }
                 }
             }
         });
-    }
-
-    private void showNoAdminNoFriendDialog(final UserEntity userEntity) {
-        View selectIntention = LayoutInflater.from(this).inflate(R.layout.dialog_group_info_options_non_admin0, null);
-        final MyDialog showNonAdminDialog0 = new MyDialog(this, null, selectIntention);
-        TextView tvAdd = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
-        tvAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showNonAdminDialog0.dismiss();
-                getMemberType(userEntity.getUser_id());
-            }
-        });
-        if (!showNonAdminDialog0.isShowing())
-            showNonAdminDialog0.show();
-    }
-
-    private void showNoAdminIsFriendDialog(final UserEntity userEntity) {
-        View selectIntention = LayoutInflater.from(this).inflate(R.layout.dialog_group_info_options_non_admin1, null);
-        final MyDialog showNonAdminDialog1 = new MyDialog(this, null, selectIntention);
-        TextView tvFamilyProfile = (TextView) selectIntention.findViewById(R.id.tv_family_profile);
-        TextView tvMessage = (TextView) selectIntention.findViewById(R.id.tv_message);
-        tvFamilyProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent1 = new Intent(mContext, FamilyProfileActivity.class);
-                intent1.putExtra(UserEntity.EXTRA_MEMBER_ID, userEntity.getUser_id());
-                intent1.putExtra(UserEntity.EXTRA_GROUP_ID, userEntity.getGroup_id());
-                intent1.putExtra(UserEntity.EXTRA_GROUP_NAME, userEntity.getUser_given_name());
-                startActivity(intent1);
-                showNonAdminDialog1.dismiss();
-            }
-        });
-
-        tvMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent2 = new Intent(mContext, MessageChatActivity.class);
-                intent2.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);
-                intent2.putExtra(UserEntity.EXTRA_GROUP_ID, userEntity.getGroup_id());
-                intent2.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, userEntity.getUser_given_name());
-                intent2.putExtra(Constant.MESSAGE_CHART_STATUS, userEntity.getStatus());
-                startActivity(intent2);
-                showNonAdminDialog1.dismiss();
-            }
-        });
-        if (!showNonAdminDialog1.isShowing())
-            showNonAdminDialog1.show();
     }
 
     private void removeMember(final UserEntity userEntity) {
@@ -276,70 +220,115 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
-    private void showAdminIsFriendDialog(final UserEntity userEntity) {
+    private void showFriendDialog(final UserEntity userEntity) {
         View selectIntention = LayoutInflater.from(this).inflate(R.layout.dialog_group_info_options_admin1, null);
-        final MyDialog showAdminDialog1 = new MyDialog(this, null, selectIntention);
-        TextView tvRemoveUser = (TextView) selectIntention.findViewById(R.id.tv_remove_user);
-        TextView tvFamilyProfile = (TextView) selectIntention.findViewById(R.id.tv_family_profile);
-        TextView tvMessage = (TextView) selectIntention.findViewById(R.id.tv_message);
-        tvRemoveUser.setOnClickListener(new View.OnClickListener() {
+        final MyDialog addFriendDialog = new MyDialog(this, null, selectIntention);
+        View ll_remove_contact = selectIntention.findViewById(R.id.ll_remove_contact);
+        View ll_cancel_quest = selectIntention.findViewById(R.id.ll_cancel_quest);
+        ll_cancel_quest.setVisibility(View.GONE);
+        TextView tv_resend_quest = (TextView) selectIntention.findViewById(R.id.tv_resend_quest);
+        tv_resend_quest.setText(R.string.text_message_user);
+        View ll_contact_profile = selectIntention.findViewById(R.id.ll_contact_profile);
+        View tv_cancel = selectIntention.findViewById(R.id.tv_cancel);
+
+        if (isGroupAdmin) {
+            ll_remove_contact.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addFriendDialog.dismiss();
+                    removeMember(userEntity);
+                }
+            });
+        } else {
+            ll_remove_contact.setVisibility(View.GONE);
+        }
+
+        ll_contact_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAdminDialog1.dismiss();
-                removeMember(userEntity);
-            }
-        });
-
-
-        tvFamilyProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                addFriendDialog.dismiss();
                 Intent intent1 = new Intent(mContext, FamilyProfileActivity.class);
                 intent1.putExtra(UserEntity.EXTRA_MEMBER_ID, userEntity.getUser_id());
                 intent1.putExtra(UserEntity.EXTRA_GROUP_ID, userEntity.getGroup_id());
                 intent1.putExtra(UserEntity.EXTRA_GROUP_NAME, userEntity.getUser_given_name());
                 startActivity(intent1);
-                showAdminDialog1.dismiss();
             }
         });
 
-        tvMessage.setOnClickListener(new View.OnClickListener() {
+        tv_resend_quest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addFriendDialog.dismiss();
                 Intent intent2 = new Intent(mContext, MessageChatActivity.class);
-                intent2.putExtra("type", 0);
-                intent2.putExtra("groupId", userEntity.getGroup_id());
-                intent2.putExtra("titleName", userEntity.getUser_given_name());
+                intent2.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_MEMBER);
+                intent2.putExtra(UserEntity.EXTRA_GROUP_ID, userEntity.getGroup_id());
+                intent2.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, userEntity.getUser_given_name());
+                intent2.putExtra(Constant.MESSAGE_CHART_STATUS, userEntity.getStatus());
                 startActivity(intent2);
-                showAdminDialog1.dismiss();
             }
         });
-        if (!showAdminDialog1.isShowing())
-            showAdminDialog1.show();
+
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFriendDialog.dismiss();
+            }
+        });
+
+        if (!addFriendDialog.isShowing())
+            addFriendDialog.show();
     }
 
-    private void showAdminNoFriendDialog(final UserEntity userEntity) {
-        View selectIntention = LayoutInflater.from(this).inflate(R.layout.dialog_group_info_options_admin0, null);
-        final MyDialog showAdminDialog0 = new MyDialog(this, null, selectIntention);
-        TextView tvRemoveUser = (TextView) selectIntention.findViewById(R.id.tv_remove_user);
-        TextView tvAdd = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
-        tvRemoveUser.setOnClickListener(new View.OnClickListener() {
+    private void showAddFriendDialog(final UserEntity userEntity) {
+        View selectIntention = LayoutInflater.from(this).inflate(R.layout.dialog_group_info_options_admin1, null);
+        final MyDialog addFriendDialog = new MyDialog(this, null, selectIntention);
+        View ll_remove_contact = selectIntention.findViewById(R.id.ll_remove_contact);
+        View ll_cancel_quest = selectIntention.findViewById(R.id.ll_cancel_quest);
+        ll_cancel_quest.setVisibility(View.GONE);
+        TextView tv_resend_quest = (TextView) selectIntention.findViewById(R.id.tv_resend_quest);
+        tv_resend_quest.setText(R.string.text_add_member);
+        View ll_contact_profile = selectIntention.findViewById(R.id.ll_contact_profile);
+        View tv_cancel = selectIntention.findViewById(R.id.tv_cancel);
+
+        if (isGroupAdmin) {
+            ll_remove_contact.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addFriendDialog.dismiss();
+                    removeMember(userEntity);
+                }
+            });
+        } else {
+            ll_remove_contact.setVisibility(View.GONE);
+        }
+
+        ll_contact_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAdminDialog0.dismiss();
-                removeMember(userEntity);
+                addFriendDialog.dismiss();
+                Intent intent = new Intent(mContext, FamilyViewProfileActivity.class);
+                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, userEntity.getUser_id());
+                startActivity(intent);
             }
         });
 
-        tvAdd.setOnClickListener(new View.OnClickListener() {
+        tv_resend_quest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addFriendDialog.dismiss();
                 getMemberType(userEntity.getUser_id());
-                showAdminDialog0.dismiss();
             }
         });
-        if (!showAdminDialog0.isShowing())
-            showAdminDialog0.show();
+
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFriendDialog.dismiss();
+            }
+        });
+
+        if (!addFriendDialog.isShowing())
+            addFriendDialog.show();
     }
 
     public void getMemberType(String userId) {
@@ -364,15 +353,17 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
                     if ("Success".equals(jsonObject.getString("response_status"))) {
                         response_type = jsonObject.getString("response_type");
                         String response_relationship = jsonObject.getString("response_relationship");
-                        if ("Resend".equals(response_type)) {
-                            MessageUtil.getInstance().showShortToast(R.string.text_success_resend);
-                        } else if ("Request".equals(response_type)) {
-                            MessageUtil.getInstance().showShortToast(R.string.text_success_request);
-                        } else if ("Accept".equals(response_type)) {
-                            MessageUtil.getInstance().showShortToast(R.string.text_success_accept);
-                        }
+//                        if ("Resend".equals(response_type)) {
+//                            MessageUtil.getInstance().showShortToast(R.string.text_success_resend);
+//                        } else if ("Request".equals(response_type)) {
+//                            MessageUtil.getInstance().showShortToast(R.string.text_success_request);
+//                        } else if ("Accept".equals(response_type)) {
+//                            MessageUtil.getInstance().showShortToast(R.string.text_success_accept);
+//                        }
                         if (TextUtils.isEmpty(response_relationship)) {//关系为空时, 跳转到选择界面
                             startActivityForResult(new Intent(mContext, RelationshipActivity.class), GET_RELATIONSHIP);
+                        }else{
+                            setRelationship(response_relationship);
                         }
                     } else {
                         MessageUtil.getInstance().showShortToast(R.string.text_error);
@@ -569,6 +560,17 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
                     if (data != null) {
                         setRelationship(data.getStringExtra("relationship"));
                     }
+                    break;
+                case ADD_MEMBER:
+                    vProgress.setVisibility(View.GONE);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
+                    break;
+            }
+        } else {
+            switch (requestCode) {
+                case ADD_MEMBER:
+                    vProgress.setVisibility(View.GONE);
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_canceled);
                     break;
             }
         }
@@ -868,11 +870,13 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
             } else {
                 viewHolder.tvName.setText(userEntity.getUser_given_name());
             }
-            viewHolder.ivWaitting.setVisibility(View.GONE);
-            if ("1".equals(userEntity.getJoin_group())) {
-                viewHolder.ivWaitting.setImageResource(R.drawable.existing_user);
-            } else {
+            if ("0".equals(userEntity.getAdded_flag())) {
                 viewHolder.ivWaitting.setImageResource(R.drawable.pending_user);
+//            } else if ("0".equals(userEntity.getAdded_flag()) && "0".equals(userEntity.getPending_org())) {
+//                viewHolder.ivWaitting.setImageResource(R.drawable.add_member_icon);
+            } else {
+//                viewHolder.ivWaitting.setImageResource(R.drawable.existing_user);
+                viewHolder.ivWaitting.setVisibility(View.GONE);
             }
             return convertView;
         }
@@ -917,8 +921,8 @@ public class GroupSettingActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onResult(String string) {
                 try {//[{"group_name":"MAD","group_owner_id":"31","group_individual":"0","group_type":"0","group_photo":"","group_default":"1"}]
-                    JSONArray jsonArray=new JSONArray(string);
-                    String  object=jsonArray.getString(0);
+                    JSONArray jsonArray = new JSONArray(string);
+                    String object = jsonArray.getString(0);
                     JSONObject json = new JSONObject(object);
                     String group_default = json.optString("group_default");
                     if ("1".equalsIgnoreCase(group_default)) {
