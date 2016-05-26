@@ -761,4 +761,6 @@
     <!--<string name="text_approve_request">Approve Request</string>-->
     <!--<string name="text_reject_request">Reject Request</string>-->
     <!--<string name="text_before_jion_org">You must join an organisation first before you add any contact</string>-->
+    <!--<string name="text_insert_first_name">Please insert First Name</string>-->
+    <!--<string name="text_insert_last_name">Please insert Last Name</string>-->
 </resources>
