@@ -834,7 +834,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     if ("200".equals(jsonObject.optString("response_status_code", ""))) {
-                        Toast.makeText(mContext, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mContext, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
                         requestAdapter.getList().remove(pendingRequest);
                         requestAdapter.notifyDataSetChanged();
                         if (requestAdapter.getList().isEmpty()) {
@@ -1241,7 +1241,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     if ("200".equals(jsonObject.optString("response_status_code", ""))) {
-                        Toast.makeText(mContext, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mContext, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
                         memberAdapter.getList().remove(memberEntity);
                         memberAdapter.notifyDataSetChanged();
                     }
