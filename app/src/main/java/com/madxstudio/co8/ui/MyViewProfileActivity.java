@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,14 +67,14 @@ public class MyViewProfileActivity extends BaseActivity {
     private CircularNetworkImage cniMain;
     private ImageView ivBottomLeft;
     private LinearLayout llResetPassword;
-    private TextView etFirstName;
-    private TextView etLastName;
+    private EditText etFirstName;
+    private EditText etLastName;
     private TextView tvBirthday;
     private EditText tvYearBirthday;
     private TextView rlBirthday;
     private TextView tvGender;
     private TextView rlGender;
-    private TextView etEmail;
+    private EditText etEmail;
     private EditText etPhone;
     private EditText etRegion;
     private EditText et_position;
@@ -307,14 +308,16 @@ public class MyViewProfileActivity extends BaseActivity {
             return true;
         } else {
             if (TextUtils.isEmpty(etFirstName.getText())) {
-                return true;
+                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_name));
+                return false;
             }
         }
         if (!TextUtils.isEmpty(etLastName.getText()) && !etLastName.getText().toString().trim().equals(userEntity.getUser_surname())) {
             return true;
         } else {
             if (TextUtils.isEmpty(etLastName.getText())) {
-                return true;
+                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_last_name));
+                return false;
             }
         }
         if (!TextUtils.isEmpty(strDOB) && !strDOB.equals(userEntity.getUser_dob())) {
