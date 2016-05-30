@@ -84,7 +84,7 @@
 
     <!-- about -->
 
-    <string name="text_about_desc1">co8 enables you and your work communities to connect and collaborate anytime and anywhere. Collaboration made simple for a better and more effective team communication./n/nContact: support@co8app.com/nWebsite: www.co8app.com</string>
+    <string name="text_about_desc1">co8 enables you and your work communities to connect and collaborate anytime and anywhere. Collaboration made simple for a better and more effective team communication.\n\nContact: support@co8app.com\nWebsite: www.co8app.com</string>
     <string name="text_about_desc2"></string>
     <string name="text_about_desc3"></string>
     <string name="msg_ask_exit_app">Do you really want to log out?</string>
