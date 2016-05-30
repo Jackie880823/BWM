@@ -42,8 +42,8 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
     public static final String PATH = "sticker_path";
     private Context mContext;
     private List<StickerGroupEntity> dataStickerGroup;
-    private String url;
-    private StickerGroupEntity stickerGroupEntity = null;
+    //    private String url;
+//    private StickerGroupEntity stickerGroupEntity = null;
     public static final String POSITION = "position";
     public static final String STICKER_GROUP = "STICKER_GROUP";
     private List<String> mStickers;
@@ -78,9 +78,9 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
     @Override
     public void onBindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         VHItem holder = (VHItem) viewHolder;
-        stickerGroupEntity = dataStickerGroup.get(position);
+        StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
 //        url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_S", stickerGroupEntity.getPath(), stickerGroupEntity.getType());
-        url = String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getFirst_sticker_code(),stickerGroupEntity.getVersion());
+        String url = String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getFirst_sticker_code(), stickerGroupEntity.getVersion());
         //设置new sticker
         if (stickerGroupEntity.getSticker_new().trim().equals("1")) {
             holder.ivNewSticker.setVisibility(View.VISIBLE);
@@ -88,8 +88,7 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
             holder.ivNewSticker.setVisibility(View.INVISIBLE);
         }
         //设置sticker缩略图
-        setFirstBigSticker(holder.ivSticker);
-
+        setFirstBigSticker(holder.ivSticker, url);
 
 
         //设置sticker name
@@ -116,16 +115,13 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
 
     }
 
-    private void setFirstBigSticker(ImageView view) {
+    private void setFirstBigSticker(NetworkImageView view, String url) {
 //        String picPath = FileUtil.getBigStickerPath(mContext, stickerGroupEntity.getPath(), "1", stickerGroupEntity.getType());
 //        File file = new File(picPath);
 //        if (file.exists()){
 //            view.setImageBitmap(BitmapFactory.decodeFile(picPath));
 //        }else{
-            BitmapTools.getInstance(mContext).display(
-                    (NetworkImageView) view,
-                    url,
-                    R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(view, url, R.drawable.network_image_default, R.drawable.network_image_default);
 //        }
 
     }
@@ -380,6 +376,11 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int position = getAdapterPosition() - 1;
+                    if (position < 0 || dataStickerGroup == null || position > dataStickerGroup.size() - 1) {
+                        return;
+                    }
+                    StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
                     if (itemClickListener != null && dataStickerGroup != null) {
                         itemClickListener.itemClick(stickerGroupEntity, getAdapterPosition() - 1);
 
@@ -389,6 +390,11 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
             tvDownload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int position = getAdapterPosition() - 1;
+                    if (position < 0 || dataStickerGroup == null || position > dataStickerGroup.size() - 1) {
+                        return;
+                    }
+                    StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
                     if (downloadClickListener != null && dataStickerGroup != null) {
                         downloadClickListener.downloadClick(stickerGroupEntity, getAdapterPosition() - 1);
                     }

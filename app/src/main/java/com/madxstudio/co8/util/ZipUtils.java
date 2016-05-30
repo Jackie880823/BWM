@@ -34,7 +34,7 @@ public class ZipUtils {
 
     private static String NAME_DEFAULT_STICKER_1 = "Office Lady";
     private static String NAME_DEFAULT_STICKER_2 = "Office Man";
-    private static String NAME_DEFAULT_STICKER_3 = "Man & Lady";
+    private static String NAME_DEFAULT_STICKER_3 = "Office People";
 //    private static String NAME_DEFAULT_STICKER_4 = "Grandpa Turtle";
 //    private static String NAME_DEFAULT_STICKER_5 = "Grandma Goose";
 //    private static String NAME_DEFAULT_STICKER_6 = "Bunny";

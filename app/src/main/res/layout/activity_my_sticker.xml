@@ -14,7 +14,7 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/sc_my_sticker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/fragment_main_top"
         android:fillViewport="true">
 
@@ -44,7 +44,6 @@
                 android:layout_below="@id/tv_download_stickers" />
 
         </RelativeLayout>
-
 
     </android.support.v4.widget.NestedScrollView>
 

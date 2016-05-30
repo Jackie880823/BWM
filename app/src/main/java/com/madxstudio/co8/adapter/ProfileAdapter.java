@@ -557,13 +557,13 @@ public class ProfileAdapter extends RecyclerView.Adapter {
         public void changeText() {
             if (write) {// 编辑状态所有内容在编辑框中显示
                 tvChangeText.setVisibility(View.VISIBLE);
-                etCompanyName.setVisibility(View.VISIBLE);
+                etCompanyName.setVisibility(View.GONE);
                 etDescription.setVisibility(View.VISIBLE);
                 etAddress.setVisibility(View.VISIBLE);
                 etPhone.setVisibility(View.VISIBLE);
                 etEmail.setVisibility(View.VISIBLE);
 
-                tvCompanyName.setVisibility(View.GONE);
+                tvCompanyName.setVisibility(View.VISIBLE);
                 llTvDescription.setVisibility(View.GONE);
                 tvAddress.setVisibility(View.GONE);
                 tvPhone.setVisibility(View.GONE);

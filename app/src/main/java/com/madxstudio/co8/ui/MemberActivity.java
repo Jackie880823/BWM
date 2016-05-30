@@ -130,10 +130,10 @@ public class MemberActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(showAddDialog!=null){
+        if (showAddDialog != null) {
             showAddDialog.dismiss();
         }
-        if(showSelectDialog!=null){
+        if (showSelectDialog != null) {
             showSelectDialog.dismiss();
         }
     }
@@ -254,33 +254,26 @@ public class MemberActivity extends BaseActivity {
     }
 
     private void showAddDialog(final MemberEntity member) {
-
         LayoutInflater factory = LayoutInflater.from(this);
-        final View selectIntention = factory.inflate(R.layout.dialog_bond_alert_member, null);
-        showAddDialog = new MyDialog(this, getResources().getString(R.string.text_tips_title), selectIntention);
-        showAddDialog.setCanceledOnTouchOutside(false);
+        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+        showAddDialog = new MyDialog(this, null, selectIntention);
+        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
 
-        showAddDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAddDialog.dismiss();
-            }
-        });
+        selectIntention.findViewById(R.id.tv_leave_or_delete).setVisibility(View.GONE);
+        selectIntention.findViewById(R.id.leave_line).setVisibility(View.GONE);
 
-        TextView item1 = (TextView) selectIntention.findViewById(R.id.subject_1);
-        item1.setText(R.string.text_dialog_accept);
-        item1.setOnClickListener(new View.OnClickListener() {
+        tvApprove.setText(R.string.text_dialog_accept);
+        tvReject.setText(R.string.text_item_reject);
+        tvApprove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doAdd(member);
                 showAddDialog.dismiss();
             }
         });
-
-        TextView item2 = (TextView) selectIntention.findViewById(R.id.subject_2);
-        item2.setText(R.string.text_item_reject);
-        item2.setOnClickListener(new View.OnClickListener() {
-            //        selectIntention.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
+        tvReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addRemove(member.getAction_user_id());
@@ -288,32 +281,71 @@ public class MemberActivity extends BaseActivity {
             }
         });
 
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddDialog.dismiss();
+            }
+        });
         showAddDialog.show();
+
+//        LayoutInflater factory = LayoutInflater.from(this);
+//        final View selectIntention = factory.inflate(R.layout.dialog_bond_alert_member, null);
+//        showAddDialog = new MyDialog(this, getResources().getString(R.string.text_tips_title), selectIntention);
+//        showAddDialog.setCanceledOnTouchOutside(false);
+//
+//        showAddDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showAddDialog.dismiss();
+//            }
+//        });
+//
+//        TextView item1 = (TextView) selectIntention.findViewById(R.id.subject_1);
+//        item1.setText(R.string.text_dialog_accept);
+//        item1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                doAdd(member);
+//                showAddDialog.dismiss();
+//            }
+//        });
+//
+//        TextView item2 = (TextView) selectIntention.findViewById(R.id.subject_2);
+//        item2.setText(R.string.text_item_reject);
+//        item2.setOnClickListener(new View.OnClickListener() {
+//            //        selectIntention.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                addRemove(member.getAction_user_id());
+//                showAddDialog.dismiss();
+//            }
+//        });
+//
+//        showAddDialog.show();
     }
 
     private void showSelectDialog(final MemberEntity member) {
-
         LayoutInflater factory = LayoutInflater.from(this);
-        final View selectIntention = factory.inflate(R.layout.dialog_bond_alert_member, null);
-        showSelectDialog = new MyDialog(this, getResources().getString(R.string.text_tips_title), selectIntention);
-        showSelectDialog.setCanceledOnTouchOutside(false);
+        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+        showSelectDialog = new MyDialog(this, null, selectIntention);
+        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
 
-        showSelectDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSelectDialog.dismiss();
-            }
-        });
+        selectIntention.findViewById(R.id.tv_leave_or_delete).setVisibility(View.GONE);
+        selectIntention.findViewById(R.id.leave_line).setVisibility(View.GONE);
 
-        selectIntention.findViewById(R.id.subject_1).setOnClickListener(new View.OnClickListener() {
+        tvApprove.setText(R.string.text_item_resend);
+        tvReject.setText(R.string.text_item_remove);
+        tvApprove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doAdd(member);
                 showSelectDialog.dismiss();
             }
         });
-
-        selectIntention.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
+        tvReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 awaitingRemove(member.getAction_user_id());
@@ -321,13 +353,48 @@ public class MemberActivity extends BaseActivity {
             }
         });
 
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
         showSelectDialog.show();
+//        LayoutInflater factory = LayoutInflater.from(this);
+//        final View selectIntention = factory.inflate(R.layout.dialog_bond_alert_member, null);
+//        showSelectDialog = new MyDialog(this, getResources().getString(R.string.text_tips_title), selectIntention);
+//        showSelectDialog.setCanceledOnTouchOutside(false);
+//
+//        showSelectDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showSelectDialog.dismiss();
+//            }
+//        });
+//
+//        selectIntention.findViewById(R.id.subject_1).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                doAdd(member);
+//                showSelectDialog.dismiss();
+//            }
+//        });
+//
+//        selectIntention.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                awaitingRemove(member.getAction_user_id());
+//                showSelectDialog.dismiss();
+//            }
+//        });
+//
+//        showSelectDialog.show();
     }
 
     private void addRemove(final String memberId) {
 
         RequestInfo requestInfo = new RequestInfo();
-        requestInfo.url = String.format(Constant.API_REJECT_PENDING_MEMBER , MainActivity.getUser().getUser_id());
+        requestInfo.url = String.format(Constant.API_REJECT_PENDING_MEMBER, MainActivity.getUser().getUser_id());
         Map<String, String> params = new HashMap<>();
         params.put("requestor_id", memberId);
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
