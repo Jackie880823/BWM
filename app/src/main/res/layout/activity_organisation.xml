@@ -57,7 +57,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/fragment_main_top"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,7 +90,8 @@
                     style="@style/text_dark_default"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_org_company_profile" />
+                    android:gravity="center_horizontal"
+                    android:text="@string/text_company_profile" />
 
             </LinearLayout>
 

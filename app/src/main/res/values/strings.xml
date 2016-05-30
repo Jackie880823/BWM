@@ -751,6 +751,7 @@
     <string name="text_wrong_pwd_name">Login ID/password is incorrect. Please try again.</string>
     <string name="text_valid_email">Please enter valid email format.</string>
     <string name="text_org_company_profile">Organisation Profile</string>
+    <string name="text_company_profile">Organisation \nProfile</string>
     <string name="text_my_org_chart">My Org Chart</string>
     <string name="text_org_my_group">My Group</string>
     <string name="text_org_all_staff">All Staff</string>
