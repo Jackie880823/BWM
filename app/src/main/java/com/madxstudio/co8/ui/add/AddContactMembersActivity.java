@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -71,12 +72,11 @@ public class AddContactMembersActivity extends BaseActivity {
 
     private MyDialog pendingDialog;
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case REQUEST_CONTACT_DETAIL_SUCCESSFUL:
                     adapter = new AddContactMemberAdapter(AddContactMembersActivity.this, serverContactDetailEntities);
                     rv.setAdapter(adapter);
@@ -138,7 +138,7 @@ public class AddContactMembersActivity extends BaseActivity {
 
     private void doInvite(int position, ContactDetailEntity contactDetailEntity) {
         Intent intent = new Intent(this, AddInviteMembersActivity.class);
-        intent.putExtra("contact_detail",contactDetailEntity);
+        intent.putExtra("contact_detail", contactDetailEntity);
         startActivityForResult(intent, INVITE_MEMBER);
     }
 
@@ -146,43 +146,77 @@ public class AddContactMembersActivity extends BaseActivity {
         showPendingDialog(contactDetailEntity.getUser_id());
     }
 
-    private void showPendingDialog(final String userId)
-    {
-        final LayoutInflater layoutInflater = LayoutInflater.from(this);
-        final View view = layoutInflater.inflate(R.layout.dialog_bond_alert_member, null);
-        pendingDialog = new MyDialog(this, R.string.text_tips_title, view);
-        pendingDialog.setCanceledOnTouchOutside(false);
+    private void showPendingDialog(final String userId) {
+        LayoutInflater factory = LayoutInflater.from(this);
+        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+        pendingDialog = new MyDialog(this, null, selectIntention);
+        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
 
-        pendingDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (pendingDialog.isShowing())
-                    pendingDialog.dismiss();
-            }
-        });
+        selectIntention.findViewById(R.id.tv_leave_or_delete).setVisibility(View.GONE);
+        selectIntention.findViewById(R.id.leave_line).setVisibility(View.GONE);
 
-        view.findViewById(R.id.subject_1).setOnClickListener(new View.OnClickListener() {
+        tvApprove.setText(R.string.text_item_resend);
+        tvReject.setText(R.string.text_item_remove);
+        tvApprove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doPendingResend(userId);
-                if (pendingDialog.isShowing())
-                    pendingDialog.dismiss();
+                pendingDialog.dismiss();
             }
         });
-
-        view.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
+        tvReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doPendingDelete(userId);
-                if (pendingDialog.isShowing())
-                    pendingDialog.dismiss();
+                pendingDialog.dismiss();
             }
         });
 
-        if (!pendingDialog.isShowing())
-        {
-            pendingDialog.show();
-        }
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pendingDialog.dismiss();
+            }
+        });
+        pendingDialog.show();
+
+
+//        final LayoutInflater layoutInflater = LayoutInflater.from(this);
+//        final View view = layoutInflater.inflate(R.layout.dialog_bond_alert_member, null);
+//        pendingDialog = new MyDialog(this, R.string.text_tips_title, view);
+//        pendingDialog.setCanceledOnTouchOutside(false);
+//
+//        pendingDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (pendingDialog.isShowing())
+//                    pendingDialog.dismiss();
+//            }
+//        });
+//
+//        view.findViewById(R.id.subject_1).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                doPendingResend(userId);
+//                if (pendingDialog.isShowing())
+//                    pendingDialog.dismiss();
+//            }
+//        });
+//
+//        view.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                doPendingDelete(userId);
+//                if (pendingDialog.isShowing())
+//                    pendingDialog.dismiss();
+//            }
+//        });
+//
+//        if (!pendingDialog.isShowing()) {
+//            pendingDialog.show();
+//        }
 
     }
 
@@ -237,8 +271,7 @@ public class AddContactMembersActivity extends BaseActivity {
 
     private void doAdd(int position, ContactDetailEntity contactDetailEntity) {
         Intent intent = new Intent(this, FamilyViewProfileActivity.class);
-        if (!TextUtils.isEmpty(contactDetailEntity.getUser_id()))
-        {
+        if (!TextUtils.isEmpty(contactDetailEntity.getUser_id())) {
             intent.putExtra("member_id", contactDetailEntity.getUser_id());
 
             startActivityForResult(intent, ADD_MEMBER);
@@ -247,8 +280,7 @@ public class AddContactMembersActivity extends BaseActivity {
 
     private void doAdded(int position, ContactDetailEntity contactDetailEntity) {
         Intent intent = new Intent(this, FamilyViewProfileActivity.class);
-        if (!TextUtils.isEmpty(contactDetailEntity.getUser_id()))
-        {
+        if (!TextUtils.isEmpty(contactDetailEntity.getUser_id())) {
             intent.putExtra("member_id", contactDetailEntity.getUser_id());
             startActivity(intent);
         }
@@ -258,27 +290,23 @@ public class AddContactMembersActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode)
-        {
+        switch (requestCode) {
             case ADD_MEMBER:
-                if (resultCode == RESULT_OK)
-                {
+                if (resultCode == RESULT_OK) {
                     getData();
                 }
                 break;
 
             case PENDING_MEMBER:
                 vProgress.setVisibility(View.GONE);
-                if (resultCode == RESULT_OK)
-                {
+                if (resultCode == RESULT_OK) {
                     getData();
                     MessageUtil.getInstance().showShortToast(R.string.text_success_resend);
                 }
                 break;
 
             case INVITE_MEMBER:
-                if (resultCode == RESULT_OK)
-                {
+                if (resultCode == RESULT_OK) {
                 }
                 break;
 
@@ -356,7 +384,6 @@ public class AddContactMembersActivity extends BaseActivity {
         });
 
 
-
     }
 
     /**
@@ -369,8 +396,7 @@ public class AddContactMembersActivity extends BaseActivity {
 
     boolean blnFst = true;
 
-    private void getData()
-    {
+    private void getData() {
         Map<String, String> params = new HashMap<>();
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("user_country_code", MainActivity.getUser().getUser_country_code());
@@ -389,7 +415,6 @@ public class AddContactMembersActivity extends BaseActivity {
 
 
         LogUtil.d(TAG, "requestData: ======" + UrlUtil.mapToJsonstring(params));
-
 
 
         new HttpTools(this).post(Constant.API_MATCH_CONTACT_LIST, params, TAG, new HttpCallback() {
@@ -415,13 +440,10 @@ public class AddContactMembersActivity extends BaseActivity {
                     serverContactDetailEntities = gson.fromJson(jsonObject.getString("contactDetails"), new TypeToken<List<ContactDetailEntity>>() {
                     }.getType());
 
-                    if (blnFst)
-                    {
+                    if (blnFst) {
                         handler.sendEmptyMessage(REQUEST_CONTACT_DETAIL_SUCCESSFUL);
                         blnFst = false;
-                    }
-                    else
-                    {
+                    } else {
                         handler.sendEmptyMessage(REQUEST_CONTACT_DETAIL_SUCCESSFUL_AGAIN);
                     }
 

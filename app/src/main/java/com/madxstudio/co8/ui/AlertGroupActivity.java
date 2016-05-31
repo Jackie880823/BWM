@@ -119,37 +119,72 @@ public class AlertGroupActivity extends BaseActivity{
     }
 
     private void showOptionDialog(final AlertGroupEntity alertGroupEntity) {
-        String dialogTitle = this.getResources().getString(R.string.text_tips_title);//Dialog title
         LayoutInflater factory = LayoutInflater.from(this);
-        final View optionIntention = factory.inflate(R.layout.dialog_bond_alert_group,null);
-        showOptionDialog = new MyDialog(this, dialogTitle, optionIntention);
-        showOptionDialog.setCanceledOnTouchOutside(false);
-        showOptionDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showOptionDialog.dismiss();
-            }
-        });
+        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+        showOptionDialog = new MyDialog(this, null, selectIntention);
+        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
 
-        // accept join the group;
-        optionIntention.findViewById(R.id.subject_accept).setOnClickListener(new View.OnClickListener() {
+        selectIntention.findViewById(R.id.tv_leave_or_delete).setVisibility(View.GONE);
+        selectIntention.findViewById(R.id.leave_line).setVisibility(View.GONE);
+
+        tvApprove.setText(R.string.text_item_accept);
+        tvReject.setText(R.string.text_item_decline);
+        tvApprove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 confirmJoinGroup(alertGroupEntity);
                 showOptionDialog.dismiss();
-
             }
         });
-        // reject the invite to the group;
-        optionIntention.findViewById(R.id.subject_decline).setOnClickListener(new View.OnClickListener() {
+        tvReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 rejectJoinGroup(alertGroupEntity);
                 showOptionDialog.dismiss();
+            }
+        });
 
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showOptionDialog.dismiss();
             }
         });
         showOptionDialog.show();
+
+//        String dialogTitle = this.getResources().getString(R.string.text_tips_title);//Dialog title
+//        LayoutInflater factory = LayoutInflater.from(this);
+//        final View optionIntention = factory.inflate(R.layout.dialog_bond_alert_group,null);
+//        showOptionDialog = new MyDialog(this, dialogTitle, optionIntention);
+//        showOptionDialog.setCanceledOnTouchOutside(false);
+//        showOptionDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showOptionDialog.dismiss();
+//            }
+//        });
+//
+//        // accept join the group;
+//        optionIntention.findViewById(R.id.subject_accept).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                confirmJoinGroup(alertGroupEntity);
+//                showOptionDialog.dismiss();
+//
+//            }
+//        });
+//        // reject the invite to the group;
+//        optionIntention.findViewById(R.id.subject_decline).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                rejectJoinGroup(alertGroupEntity);
+//                showOptionDialog.dismiss();
+//
+//            }
+//        });
+//        showOptionDialog.show();
     }
 
     private void confirmJoinGroup(AlertGroupEntity alertGroupEntity) {
