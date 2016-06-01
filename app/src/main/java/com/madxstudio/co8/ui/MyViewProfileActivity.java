@@ -197,7 +197,15 @@ public class MyViewProfileActivity extends BaseActivity {
             ableEdit(true, RlView);
             isEit = true;
         } else {
-            update();
+            if (TextUtils.isEmpty(etFirstName.getText()) && TextUtils.isEmpty(etLastName.getText())) {
+                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_last_name));
+            } else if (TextUtils.isEmpty(etFirstName.getText())) {
+                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_name));
+            } else if (TextUtils.isEmpty(etLastName.getText())) {
+                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_last_name));
+            } else {
+                update();
+            }
         }
     }
 
@@ -355,14 +363,14 @@ public class MyViewProfileActivity extends BaseActivity {
 
     private boolean isProfileChanged() {
         if (TextUtils.isEmpty(etFirstName.getText()) && TextUtils.isEmpty(etLastName.getText())) {
-            MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_last_name));
+//            MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_last_name));
             return false;
         }
         if (!TextUtils.isEmpty(etFirstName.getText()) && !etFirstName.getText().toString().trim().equals(userEntity.getUser_given_name())) {
             return true;
         } else {
             if (TextUtils.isEmpty(etFirstName.getText())) {
-                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_name));
+//                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_name));
                 return false;
             }
         }
@@ -370,7 +378,7 @@ public class MyViewProfileActivity extends BaseActivity {
             return true;
         } else {
             if (TextUtils.isEmpty(etLastName.getText())) {
-                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_last_name));
+//                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_last_name));
                 return false;
             }
         }

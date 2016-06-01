@@ -42,11 +42,11 @@
     </LinearLayout>
 
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/search_linear"
-        android:orientation="vertical">
+        android:layout_below="@id/search_linear">
 
         <com.madxstudio.co8.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
@@ -56,23 +56,21 @@
             <ListView
                 android:id="@+id/org_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </com.madxstudio.co8.widget.MySwipeRefreshLayout>
-    </LinearLayout>
 
-
-    <ImageButton
-        android:id="@+id/ib_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/_8dp"
-        android:layout_marginRight="@dimen/_8dp"
-        android:background="@null"
-        android:src="@drawable/top"
-        android:visibility="gone" />
-
+        <ImageButton
+            android:id="@+id/ib_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/_10dp"
+            android:layout_marginRight="@dimen/_10dp"
+            android:background="@null"
+            android:src="@drawable/top"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/family_group_text_empty"
@@ -90,6 +88,7 @@
             android:text="@string/text_org_list_empty"
             android:textSize="@dimen/_20dp" />
     </LinearLayout>
+
     <TextView
         android:id="@+id/message_search"
         android:layout_width="wrap_content"
@@ -98,6 +97,7 @@
         android:layout_marginTop="@dimen/_150dp"
         android:textSize="@dimen/_22dp"
         android:visibility="gone" />
+
     <include layout="@layout/progress_layout" />
 
 </RelativeLayout>
