@@ -650,7 +650,7 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
                 try {
                     JSONObject jsonObject=new JSONObject(string);
                     if("Fail".equals(jsonObject.optString("response_status"))){
-                        MessageUtil.getInstance().showLongToast(jsonObject.optString("response_message"));
+                        MessageUtil.getInstance().showLongToast(getString(R.string.text_org_exit));
                         adapter.setData(detail);
                     }else{
                         parseDetail(string);

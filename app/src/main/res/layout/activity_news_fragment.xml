@@ -44,7 +44,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_5dp"
+            android:paddingRight="@dimen/_5dp"/>
 
     </com.madxstudio.co8.widget.MySwipeRefreshLayout>
 

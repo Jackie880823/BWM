@@ -764,4 +764,5 @@
     <!--<string name="text_insert_first_name">Please insert First Name</string>-->
     <!--<string name="text_insert_last_name">Please insert Last Name</string>-->
     <!--<string name="text_insert_first_last_name"><![CDATA[Please provide both your First Name & Last Name.]]></string>-->
+    <!--<string name="text_org_exit">Your new organisation name is taken. Please change to another one.</string>-->
 </resources>
