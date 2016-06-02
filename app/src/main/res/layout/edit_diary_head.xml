@@ -84,7 +84,6 @@
             android:gravity="top"
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines="5"
-            android:minLines="5"
             android:hint="@string/diary_hint"
             android:textColor="@color/default_text_color_dark"
             android:textSize="@dimen/text_medium_size" />

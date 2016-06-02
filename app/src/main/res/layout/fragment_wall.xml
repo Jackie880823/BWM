@@ -69,6 +69,8 @@
             android:id="@+id/rv_wall_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_5dp"
+            android:paddingRight="@dimen/_5dp"
             android:scrollbars="vertical">
 
         </android.support.v7.widget.RecyclerView>
