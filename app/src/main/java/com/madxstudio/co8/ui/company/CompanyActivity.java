@@ -647,7 +647,17 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onResult(String string) {
                 LogUtil.d(TAG, "onResult() called with: " + "string = [" + string + "]");
-                parseDetail(string);
+                try {
+                    JSONObject jsonObject=new JSONObject(string);
+                    if("Fail".equals(jsonObject.optString("response_status"))){
+                        MessageUtil.getInstance().showLongToast(jsonObject.optString("response_message"));
+                        adapter.setData(detail);
+                    }else{
+                        parseDetail(string);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

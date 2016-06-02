@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -39,6 +40,7 @@ import com.madxstudio.co8.ui.OrgSearchActivity;
 import com.madxstudio.co8.ui.share.SelectPhotosActivity;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LocalImageLoader;
+import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.widget.CircularImageView;
 import com.madxstudio.co8.widget.MyDialog;
@@ -210,12 +212,13 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(etFirst.getText().toString())) {
+                if (TextUtils.isEmpty(etFirst.getText())) {
                     etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                    tvFirstNameError.setVisibility(View.VISIBLE);
+                    Toast.makeText(DetailsActivity.this, R.string.text_insert_first_name, Toast.LENGTH_LONG).show();
+//                    tvFirstNameError.setVisibility(View.VISIBLE);
                 } else {
                     etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                    tvFirstNameError.setVisibility(View.GONE);
+//                    tvFirstNameError.setVisibility(View.GONE);
                 }
             }
         });
@@ -233,8 +236,9 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(etLast.getText().toString())) {
+                if (TextUtils.isEmpty(etLast.getText())) {
                     etLast.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                    Toast.makeText(DetailsActivity.this, R.string.text_insert_last_name, Toast.LENGTH_LONG).show();
                 } else {
                     etLast.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                 }
@@ -545,19 +549,27 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
             });
 
         } else {
-            if (TextUtils.isEmpty(strFirstName)) {
+            if (TextUtils.isEmpty(strFirstName) && TextUtils.isEmpty(strLastName)) {
                 etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                tvFirstNameError.setVisibility(View.VISIBLE);
+                etLast.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                Toast.makeText(DetailsActivity.this, R.string.text_insert_first_last_name, Toast.LENGTH_LONG).show();
+            } else if (TextUtils.isEmpty(strFirstName)) {
+                etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                etLast.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                Toast.makeText(DetailsActivity.this, R.string.text_insert_first_name, Toast.LENGTH_LONG).show();
+//                tvFirstNameError.setVisibility(View.VISIBLE);
             } else {
                 etFirst.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                tvFirstNameError.setVisibility(View.GONE);
+                etLast.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                Toast.makeText(DetailsActivity.this, R.string.text_insert_last_name, Toast.LENGTH_LONG).show();
+//                tvFirstNameError.setVisibility(View.GONE);
             }
 
-            if (TextUtils.isEmpty(strLastName)) {
-                etLast.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            } else {
-                etLast.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-            }
+//            if (TextUtils.isEmpty(strLastName)) {
+//                etLast.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+//            } else {
+//                etLast.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+//            }
 
 //            if (TextUtils.isEmpty(strGender)) {
 //                rlRB.setBackgroundResource(R.drawable.bg_stroke_corners_red);

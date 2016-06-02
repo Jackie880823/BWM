@@ -622,7 +622,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             });
             dialog.show();
         }
-        if (!isCreateOrg && !("0".equals(getUser().getDemo()) && "0".equals(getUser().getPending_org()))) {
+        if (!isCreateOrg && ("1".equals(getUser().getDemo()) && "0".equals(getUser().getPending_org()))) {
             final LayoutInflater factory = LayoutInflater.from(this);
             View selectIntention = factory.inflate(R.layout.dialog_group_nofriend, null);
             final MyDialog dialog = new MyDialog(this, null, selectIntention);
