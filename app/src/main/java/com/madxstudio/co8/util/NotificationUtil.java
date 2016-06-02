@@ -56,7 +56,7 @@ public class NotificationUtil {
      * 通知类型
      */
     public enum MessageType {
-        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_OTHER("other"),
+        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("goodjob"), BONDALERT_OTHER("other"),
         BONDALERT_MEMBER("member"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group"), BONDALERT_INACTIVE("inactive"),
         LOCAL_PRIVACY_SETTINGS("privacy_settings"), LOCAL_NEW_DIARY("new_diary"), LOCAL_STICKIES_STORE("stickies_store"),
         LOCAL_FAMILY_PAGE("family_page"),ORGANISATION("organisation")
