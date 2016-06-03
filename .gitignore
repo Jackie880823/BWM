@@ -36,3 +36,4 @@ Thumbs.db
 *.swp
 .gitignore.swp
 demo/*
+/runShare2All.sh
