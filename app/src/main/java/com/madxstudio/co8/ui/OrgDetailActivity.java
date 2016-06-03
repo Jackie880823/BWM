@@ -214,12 +214,12 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
         startActivityForResult(intent, ADD_MEMBER);
     }
 
-    private void awaitingRemove(final String memberId) {
+    private void awaitingRemove(final OrgMemberEntity familyMemberEntity) {
         vProgress.setVisibility(View.VISIBLE);
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = Constant.API_BONDALERT_MEMEBER_REMOVE + MainActivity.getUser().getUser_id();
         Map<String, String> params = new HashMap<>();
-        params.put("member_id", memberId);
+        params.put("member_id", familyMemberEntity.getUser_id());
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         new HttpTools(mContext).put(requestInfo, null, new HttpCallback() {
             @Override
@@ -229,13 +229,23 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
 
             @Override
             public void onFinish() {
-
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
             public void onResult(String string) {
-                vProgress.setVisibility(View.GONE);
-                MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("Success".equals(jsonObject.optString("response_status"))) {
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
+                        memberAdapter.getList().remove(familyMemberEntity);
+                        memberAdapter.notifyDataSetChanged();
+                        getData();
+                    }
+                } catch (JSONException e) {
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -307,7 +317,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             @Override
             public void onClick(View v) {
                 showSelectDialog.dismiss();
-                awaitingRemove(familyMemberEntity.getUser_id());
+                awaitingRemove(familyMemberEntity);
             }
         });
         cancelTv.setOnClickListener(new View.OnClickListener() {
