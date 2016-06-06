@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -673,11 +672,8 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 } else {
                     OrgMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
                     if (Constant.REQUEST_ADD_ADMIN.equals(requestType)) {
-                        // 将点击的Item中的FamilyMemberEntity返回给启动的Activity;
-                        Intent intent = new Intent();
-                        intent.putExtra(OrganisationConstants.NEED_ADD_ADMIN_USER, familyMemberEntity);
-                        setResult(RESULT_OK, intent);
-                        finish();
+                        // 请求设置管理员的启动，要确认是否设置选中用户为管理员
+                        confirmAdmin(familyMemberEntity);
                     } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData) && arg2 == 0) {
                         return;
                     } else if ("0".equals(familyMemberEntity.getAdded_flag())) {
@@ -699,6 +695,33 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                     }
 
                 }
+            }
+
+            /**
+             * 确认管理员，弹出提示是否把传入的用户设置为管理员
+             * @param familyMemberEntity
+             */
+            private void confirmAdmin(final OrgMemberEntity familyMemberEntity) {
+                final MyDialog myDialog = new MyDialog(OrgDetailActivity.this, null,
+                        getString(R.string.ask_conf_admin));
+                myDialog.setButtonAccept(R.string.text_yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 将点击的Item中的FamilyMemberEntity返回给启动的Activity;
+                        Intent intent = new Intent();
+                        intent.putExtra(OrganisationConstants.NEED_ADD_ADMIN_USER,
+                                familyMemberEntity);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
+                myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                    }
+                });
+                myDialog.show();
             }
         });
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
