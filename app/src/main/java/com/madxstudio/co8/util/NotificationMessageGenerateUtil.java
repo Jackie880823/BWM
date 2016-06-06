@@ -180,7 +180,7 @@ public class NotificationMessageGenerateUtil {
     public static String getMissMessage(Context context, String action, String action_owner, int memberCount, int msgCount) {
 
         String msg = null;
-        if ("missyou".equals(action)) {
+//        if ("missyou".equals(action)) {
             /**
              you hui sent you a Miss
              you hui sent you 2 Miss
@@ -190,11 +190,11 @@ public class NotificationMessageGenerateUtil {
 
             //只有一个人
             if (memberCount == 1) {
-                msg = context.getString(R.string.notification_action_miss_missyou, "", action_owner, msgCount);
+                msg = context.getString(R.string.notification_action_miss_missyou, "", action_owner);
             } else {
-                msg = context.getString(R.string.notification_action_miss_missyou, "" + memberCount, context.getString(R.string.text_member_unit), msgCount);
+                msg = context.getString(R.string.notification_action_miss_missyou, "" + memberCount, context.getString(R.string.text_member_unit));
             }
-        }
+//        }
         return msg;
     }
 

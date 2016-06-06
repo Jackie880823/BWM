@@ -31,6 +31,8 @@ import com.google.gson.GsonBuilder;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.OrganisationDetail;
+import com.madxstudio.co8.entity.Profile;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.ui.company.CompanyActivity;
@@ -39,6 +41,7 @@ import com.madxstudio.co8.util.LocalImageLoader;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyDateUtils;
+import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 import com.madxstudio.co8.widget.DatePicker;
 import com.madxstudio.co8.widget.MyDialog;
@@ -57,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -193,7 +197,15 @@ public class MyViewProfileActivity extends BaseActivity {
             ableEdit(true, RlView);
             isEit = true;
         } else {
-            update();
+            if (TextUtils.isEmpty(etFirstName.getText()) && TextUtils.isEmpty(etLastName.getText())) {
+                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_last_name));
+            } else if (TextUtils.isEmpty(etFirstName.getText())) {
+                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_name));
+            } else if (TextUtils.isEmpty(etLastName.getText())) {
+                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_last_name));
+            } else {
+                update();
+            }
         }
     }
 
@@ -302,13 +314,63 @@ public class MyViewProfileActivity extends BaseActivity {
         return 0;
     }
 
+    private void getData() {
+        Map<String, String> params = new Hashtable<>();
+        params.put(Constant.USER_ID, userEntity.getUser_id());
+        new HttpTools(mContext).get(String.format(OrganisationConstants.API_GET_ORGANISATION_DETAILS, userEntity.getOrg_id()), params, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {
+                Gson gson = new Gson();
+                OrganisationDetail detail = gson.fromJson(string, OrganisationDetail.class);
+                if (detail != null) {
+                    Profile profile = detail.getProfile();
+                    if (profile != null) {
+                        userEntity.setOrganisation(profile.getName());
+                        App.changeLoginedUser(userEntity);
+                        et_organisation.setText(userEntity.getOrganisation());
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                LogUtil.e(TAG, "onError: ", e);
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
+                LogUtil.d(TAG, "onCancelled: ");
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                LogUtil.d(TAG, "onLoading() called with: " + "count = [" + count + "], current = [" + current + "]");
+            }
+        });
+    }
+
 
     private boolean isProfileChanged() {
+        if (TextUtils.isEmpty(etFirstName.getText()) && TextUtils.isEmpty(etLastName.getText())) {
+//            MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_last_name));
+            return false;
+        }
         if (!TextUtils.isEmpty(etFirstName.getText()) && !etFirstName.getText().toString().trim().equals(userEntity.getUser_given_name())) {
             return true;
         } else {
             if (TextUtils.isEmpty(etFirstName.getText())) {
-                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_name));
+//                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_first_name));
                 return false;
             }
         }
@@ -316,7 +378,7 @@ public class MyViewProfileActivity extends BaseActivity {
             return true;
         } else {
             if (TextUtils.isEmpty(etLastName.getText())) {
-                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_last_name));
+//                MessageUtil.getInstance().showLongToast(getString(R.string.text_insert_last_name));
                 return false;
             }
         }
@@ -359,6 +421,7 @@ public class MyViewProfileActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         userEntity = MainActivity.getUser();
+        getData();
         showOrgPic();
     }
 
@@ -546,7 +609,6 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     private void showOrgPic() {
-        et_organisation.setText(userEntity.getOrganisation());
         if ("0".equals(userEntity.getDemo()) && "0".equals(userEntity.getPending_org())) {
             iv_org_pend.setVisibility(View.INVISIBLE);
         } else if ("1".equals(userEntity.getDemo()) && "1".equals(userEntity.getPending_org())) {

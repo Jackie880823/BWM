@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -64,7 +65,7 @@ import java.util.Map;
 /**
  * Created by quankun on 16/3/8.
  */
-public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdapter.AdminAdapterListener{
+public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdapter.AdminAdapterListener {
     private static final String TAG = "OrgDetailActivity";
     private static final String PENDING_REQUEST_LIST = "Pending request list";
     public static final String ACCEPT_REQUEST_TAG = "accept request";
@@ -98,6 +99,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
     private View serachLinear;
     private TextView tv_org_empty;
     private TextView searchTv;
+    private View refresh_layout;
 
     @Override
     protected void initBottomBar() {
@@ -212,12 +214,12 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
         startActivityForResult(intent, ADD_MEMBER);
     }
 
-    private void awaitingRemove(final String memberId) {
+    private void awaitingRemove(final OrgMemberEntity familyMemberEntity) {
         vProgress.setVisibility(View.VISIBLE);
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = Constant.API_BONDALERT_MEMEBER_REMOVE + MainActivity.getUser().getUser_id();
         Map<String, String> params = new HashMap<>();
-        params.put("member_id", memberId);
+        params.put("member_id", familyMemberEntity.getUser_id());
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         new HttpTools(mContext).put(requestInfo, null, new HttpCallback() {
             @Override
@@ -227,13 +229,23 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
 
             @Override
             public void onFinish() {
-
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
             public void onResult(String string) {
-                vProgress.setVisibility(View.GONE);
-                MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("Success".equals(jsonObject.optString("response_status"))) {
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
+                        memberAdapter.getList().remove(familyMemberEntity);
+                        memberAdapter.notifyDataSetChanged();
+                        getData();
+                    }
+                } catch (JSONException e) {
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -256,65 +268,65 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
     private void showNoFriendDialog(final OrgMemberEntity familyMemberEntity) {
 
         // 没有添加好友，弹出添加好友界面提示框由用户选择是否添加
-        final MyDialog myDialog = new MyDialog(mContext, "", mContext.getString(R.string.alert_ask_add_member));
-        myDialog.setButtonAccept(R.string.ok, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 同意添加好友跳转至添加好友界面
-                onceAdd(familyMemberEntity.getUser_id());
-                myDialog.dismiss();
-            }
-        });
-        myDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 不同意添加，关闭对话框
-                myDialog.dismiss();
-            }
-        });
-        myDialog.show();
-
-//        LayoutInflater factory = LayoutInflater.from(mContext);
-//        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
-//        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
-//        TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
-//        TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
-//        TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
-//        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
-//        profileView.setText(R.string.text_view_profile);
-//        messageView.setText(R.string.text_org_resend_request);
-//        leaveView.setText(R.string.text_org_cancel_request);
-//        profileView.setOnClickListener(new View.OnClickListener() {
+//        final MyDialog myDialog = new MyDialog(mContext, "", mContext.getString(R.string.alert_ask_add_member));
+//        myDialog.setButtonAccept(R.string.ok, new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                showSelectDialog.dismiss();
-//                Intent intent = new Intent(mContext, FamilyViewProfileActivity.class);
-//                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
-//                startActivity(intent);
-//            }
-//        });
-//
-//        messageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showSelectDialog.dismiss();
+//                // 同意添加好友跳转至添加好友界面
 //                onceAdd(familyMemberEntity.getUser_id());
+//                myDialog.dismiss();
 //            }
 //        });
-//        leaveView.setOnClickListener(new View.OnClickListener() {
+//        myDialog.setButtonCancel(R.string.text_dialog_cancel, new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                showSelectDialog.dismiss();
-//                awaitingRemove(familyMemberEntity.getUser_id());
+//                // 不同意添加，关闭对话框
+//                myDialog.dismiss();
 //            }
 //        });
-//        cancelTv.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showSelectDialog.dismiss();
-//            }
-//        });
-//        showSelectDialog.show();
+//        myDialog.show();
+
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
+        final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView profileView = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView messageView = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView leaveView = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        profileView.setText(R.string.text_view_profile);
+        messageView.setText(R.string.text_org_resend_request);
+        leaveView.setText(R.string.text_org_cancel_request);
+        profileView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                Intent intent = new Intent(mContext, FamilyViewProfileActivity.class);
+                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
+                startActivity(intent);
+            }
+        });
+
+        messageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                onceAdd(familyMemberEntity.getUser_id());
+            }
+        });
+        leaveView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                awaitingRemove(familyMemberEntity);
+            }
+        });
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
     }
 
     private void showGroupDialog(final OrgGroupEntity groupEntity) {
@@ -483,7 +495,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             @Override
             public void onClick(View v) {
                 showSelectDialog.dismiss();
-                removeOwnSupplier(memberEntity.getUser_id());
+                removeOwnSupplier(memberEntity);
             }
         });
         messageView.setOnClickListener(new View.OnClickListener() {
@@ -507,31 +519,41 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
         showSelectDialog.show();
     }
 
-    private void removeOwnSupplier(String member_id){
+    private void removeOwnSupplier(final OrgMemberEntity memberEntity) {
         RequestInfo requestInfo = new RequestInfo();
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("member_id", member_id);
+        params.put("member_id", memberEntity.getUser_id());
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_REMOVE_OWN_SUPPLIER, MainActivity.getUser().getUser_id());
         new HttpTools(mContext).put(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
-
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
-
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
             public void onResult(String string) {
-
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("Success".equals(jsonObject.optString("response_status"))) {
+                        memberAdapter.getList().remove(memberEntity);
+                        memberAdapter.notifyDataSetChanged();
+                        getData();
+                    }
+                } catch (JSONException e) {
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onError(Exception e) {
-
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
             }
 
             @Override
@@ -574,6 +596,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
         serachLinear = getViewById(R.id.search_linear);
         tv_org_empty = getViewById(R.id.tv_org_empty);
         searchTv = getViewById(R.id.message_search);
+        refresh_layout = getViewById(R.id.refresh_layout);
         if (Constant.ORG_TRANSMIT_PENDING_REQUEST.equals(transmitData)) {
             pendingRequestList = new ArrayList<>();
             requestAdapter = new PendingRequestAdapter(mContext, pendingRequestList);
@@ -1028,7 +1051,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
         new HttpTools(mContext).get(url, null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
-
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -1183,10 +1206,12 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
 
     private void showEmptyView() {
         emptyView.setVisibility(View.VISIBLE);
+        refresh_layout.setVisibility(View.GONE);
     }
 
     private void hideEmptyView() {
         emptyView.setVisibility(View.GONE);
+        refresh_layout.setVisibility(View.VISIBLE);
     }
 
 
@@ -1209,7 +1234,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             // 管理员删除自己的供应商和客户
             url = String.format(OrganisationConstants.API_PUT_REMOVE_OTHER, currentUser.getUser_id());
             params.put(OrganisationConstants.MEMBER_ID, memberEntity.getUser_id());
-        } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)){
+        } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData)) {
             url = String.format(OrganisationConstants.API_PUT_REMOVE_ORG_MEMBER, currentUser.getOrg_id());
             params.put(OrganisationConstants.USER_ID, currentUser.getUser_id());
             params.put(OrganisationConstants.MEMBER_ID, memberEntity.getUser_id());

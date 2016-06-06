@@ -300,7 +300,7 @@
     <string name="text_d">day </string>
     <string name="text_left">left</string>
 
-    <string name="text_miss_you">says Good Job</string>
+    <string name="text_miss_you">said Good Job</string>
 
     <!--diary-->
     <string name="text_diary_posted_to_diary">posted to WorkSpace</string>
@@ -596,7 +596,7 @@
     <string name="notification_action_diary_add_photo">%1$s added new photos to workspace</string>
     <string name="notification_action_diary_add_video">%1$s uploaded new video to workspace</string>
 
-    <string name="notification_action_miss_missyou">%1$s %2$s sent you %3$s Good Job</string>
+    <string name="notification_action_miss_missyou">%1$s %2$s said Good Job</string>
     <string name="text_audio_release">Release to Send</string>
     <string name="text_audio_loosen_audition">Release to Replay</string>
     <string name="text_audio_cancle_send">Release to Cancel</string>
@@ -837,6 +837,8 @@
     <string name="text_approve_request">Approve Request</string>
     <string name="text_reject_request">Reject Request</string>
     <string name="text_before_jion_org">You must join an organisation first before you add any contact</string>
-    <string name="text_insert_first_name">Please insert First Name</string>
-    <string name="text_insert_last_name">Please insert Last Name</string>
+    <string name="text_insert_first_name">Please provide your First Name.</string>
+    <string name="text_insert_last_name">Please provide your Last Name.</string>
+    <string name="text_insert_first_last_name"><![CDATA[Please provide both your First Name & Last Name.]]></string>
+    <string name="text_org_exit">Your new organisation name is taken. Please change to another one.</string>
 </resources>

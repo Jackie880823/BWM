@@ -270,9 +270,11 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         rl_organisation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CompanyActivity.class);
-                intent.putExtra(Constant.LOGIN_USER, userEntity);
-                startActivity(intent);
+                if (!TextUtils.isEmpty(userEntity.getOrganisation())) {
+                    Intent intent = new Intent(getActivity(), CompanyActivity.class);
+                    intent.putExtra(Constant.LOGIN_USER, userEntity);
+                    startActivity(intent);
+                }
             }
         });
 
