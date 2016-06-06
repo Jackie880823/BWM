@@ -255,7 +255,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT, false)) {
             getParentActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN |
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
-            handler.sendEmptyMessageDelayed(GET_DELAY, 1000);
+            handler.sendEmptyMessageDelayed(GET_DELAY, 200);
         }
     }
 
@@ -275,7 +275,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (App.IS_INTERACTIVE_USE && isVisibleToUser) {
-            handler.sendEmptyMessage(GET_DELAY);
+            handler.sendEmptyMessageDelayed(GET_DELAY,200);
         }
     }
 

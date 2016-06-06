@@ -794,7 +794,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (App.IS_INTERACTIVE_USE &&
                 !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
-            mHandler.sendEmptyMessage(GET_DELAY);
+            mHandler.sendEmptyMessageDelayed(GET_DELAY,200);
         }
     }
 
