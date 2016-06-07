@@ -5,11 +5,13 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -26,6 +28,7 @@ import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.util.MD5Util;
 import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.MyTextUtil;
 import com.material.widget.PaperButton;
 
 import org.json.JSONException;
@@ -33,7 +36,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class ResetPasswordActivity extends BaseActivity implements View.OnClickListener, EditText.OnEditorActionListener{
+public class ResetPasswordActivity extends BaseActivity implements View.OnClickListener, EditText.OnEditorActionListener {
 
     private final static int FAIL_UPDATA = 0;
     private final static int SUCCESS_UPDATA = 1;
@@ -48,13 +51,11 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
     private String strCountryCode;
     private String strPhoneNumber;
 
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case SUCCESS_UPDATA:
                     goSuccessful();
                     break;
@@ -79,8 +80,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.br_next:
                 upDataPassword();
                 break;
@@ -112,7 +112,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
         super.initTitleBar();
         rightButton.setVisibility(View.INVISIBLE);
         changeTitleColor(R.color.btn_bg_color_login_normal);
-        tvTitle.setTextColor(getResources().getColor(R.color.login_text_bg_color));
+        tvTitle.setTextColor(ContextCompat.getColor(ResetPasswordActivity.this, R.color.login_text_bg_color));
         leftButton.setImageResource(R.drawable.co8_back_button);
     }
 
@@ -150,22 +150,39 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (etFirstPassword.getText().toString().length() > 0 && etFirstPassword.getText().toString().length() < 5)
-                {
-                    etFirstPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                }
-                else
-                {
+                if (s.length() > 4) {
                     etFirstPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                    if (etSecondPassword.getText().toString().equals(etFirstPassword.getText().toString()))
-                    {
-                        etSecondPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                    }
-                    else
-                    {
-                        etSecondPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                    }
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(ResetPasswordActivity.this, R.color.default_text_color_light));
+                } else {
+                    etFirstPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(ResetPasswordActivity.this, R.color.stroke_color_red_wrong));
                 }
+            }
+        });
+
+        etFirstPassword.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
+                        tvPasswordPrompt.setTextColor(ContextCompat.getColor(ResetPasswordActivity.this, R.color.default_text_color_light));
+                        break;
+                }
+                return false;
+            }
+        });
+
+        etSecondPassword.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
+                        tvPasswordPrompt.setTextColor(ContextCompat.getColor(ResetPasswordActivity.this, R.color.default_text_color_light));
+                        break;
+                }
+                return false;
             }
         });
 
@@ -182,20 +199,14 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (etSecondPassword.getText().toString().equals(etFirstPassword.getText().toString()))
-                {
-                    if (etSecondPassword.getText().toString().length() > 4)
-                    {
-                        etSecondPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                    }
-                    else
-                    {
-                        etSecondPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                    }
-                }
-                else
-                {
+                if (s.length() > 4 && (s.toString().equals(etFirstPassword.getText().toString()))) {
+                    etSecondPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                    tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(ResetPasswordActivity.this, R.color.default_text_color_light));
+                } else {
                     etSecondPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                    tvPasswordPrompt.setText(R.string.text_pwd_type_wrong);
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(ResetPasswordActivity.this, R.color.stroke_color_red_wrong));
                 }
             }
         });
@@ -206,10 +217,10 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
 
     }
 
-    private void upDataPassword()
-    {
-        if( (etFirstPassword.getText().toString().length() > 4) && (etSecondPassword.getText().toString().equals(etFirstPassword.getText().toString())) )
-        {
+    private void upDataPassword() {
+        String strPassword = etFirstPassword.getText().toString();
+        String confirmPassword = etSecondPassword.getText().toString();
+        if (!MyTextUtil.isHasEmpty(strPassword) && strPassword.length() > 4 && strPassword.equals(confirmPassword)) {
             HashMap<String, String> jsonParams = new HashMap<String, String>();
             jsonParams.put("user_password", MD5Util.string2MD5(etSecondPassword.getText().toString()));
             final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
@@ -232,15 +243,12 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
 
                 @Override
                 public void onResult(String response) {
-                    Log.d("","rrrrrr----" + response);
+                    Log.d("", "rrrrrr----" + response);
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        if (Constant.SUCCESS.equals(jsonObject.getString("response_status")))
-                        {
+                        if (Constant.SUCCESS.equals(jsonObject.getString("response_status"))) {
                             handler.sendEmptyMessage(SUCCESS_UPDATA);
-                        }
-                        else
-                        {
+                        } else {
                             handler.sendEmptyMessage(FAIL_UPDATA);
                         }
 
@@ -263,29 +271,30 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
 
                 }
             });
-        }
-        else
-        {
-            if (TextUtils.isEmpty(etFirstPassword.getText().toString()))
-            {
+        } else {
+            if (TextUtils.isEmpty(strPassword) || strPassword.length() < 5) {
                 etFirstPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                tvPasswordPrompt.setTextColor(ContextCompat.getColor(ResetPasswordActivity.this, R.color.stroke_color_red_wrong));
+            } else {
+                etFirstPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                tvPasswordPrompt.setTextColor(ContextCompat.getColor(ResetPasswordActivity.this, R.color.default_text_color_light));
             }
-
-            if (TextUtils.isEmpty(etSecondPassword.getText().toString()))
-            {
+            if (TextUtils.isEmpty(confirmPassword) || !confirmPassword.equals(strPassword)) {
                 etSecondPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                tvPasswordPrompt.setText(R.string.text_pwd_type_wrong);
+                tvPasswordPrompt.setTextColor(ContextCompat.getColor(ResetPasswordActivity.this, R.color.stroke_color_red_wrong));
+            } else {
+                etSecondPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         }
     }
 
-    private void doHttpChangeUI()
-    {
+    private void doHttpChangeUI() {
         rlProgress.setVisibility(View.VISIBLE);
         brNext.setClickable(false);
     }
 
-    private void finishHttpChangeUI()
-    {
+    private void finishHttpChangeUI() {
         rlProgress.setVisibility(View.GONE);
         brNext.setClickable(true);
     }
@@ -297,8 +306,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE)
-        {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
             upDataPassword();
             return true;
         }
