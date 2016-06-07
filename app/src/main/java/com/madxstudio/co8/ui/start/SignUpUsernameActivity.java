@@ -5,10 +5,12 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -35,7 +37,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class SignUpUsernameActivity extends BaseActivity implements View.OnClickListener, EditText.OnEditorActionListener{
+public class SignUpUsernameActivity extends BaseActivity implements View.OnClickListener, EditText.OnEditorActionListener {
 
     private static final String TAG = SignUpUsernameActivity.class.getSimpleName();
     private final static String CHECK_GET_CODE = TAG + "_CHECK_GET_CODE";
@@ -54,10 +56,10 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     private TextView tvUsernamePrompt;
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
-//    private TextView tvCountryCode;
+    //    private TextView tvCountryCode;
     private EditText tvStartCountryCode;
     private EditText etPhoneNumber;
-//    private TextView tvPhoneNumberPrompt;
+    //    private TextView tvPhoneNumberPrompt;
     private EditText etPassword;
     private TextView tvPasswordPrompt;
     private PaperButton brNext;
@@ -67,14 +69,14 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     private String strCountryCode;
     private String strPhoneNumber;
     private String strPassword;
+    private EditText et_confirm_password;
 
     private boolean blnChooseCountryCode;//通过选择获得的国家区号。如果用户手动修改。把国家名称改回原始状态。这是用来判断的
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case SUCCESS_GET_CODE:
                     //账号可用，获得验证码，跳转界面。
                     goVerification();
@@ -84,7 +86,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
                     //账号不可用，显示提示。
                     etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     tvUsernamePrompt.setText(R.string.text_start_username_exist);
-                    tvUsernamePrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));
+                    tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
                     break;
 
                 case CATCH:
@@ -131,7 +133,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     protected void initTitleBar() {
         super.initTitleBar();
         changeTitleColor(R.color.btn_bg_color_login_normal);
-        tvTitle.setTextColor(getResources().getColor(R.color.login_text_bg_color));
+        tvTitle.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.login_text_bg_color));
         leftButton.setImageResource(R.drawable.co8_back_button);
         rightButton.setVisibility(View.INVISIBLE);
     }
@@ -155,11 +157,12 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
         tvPasswordPrompt = getViewById(R.id.tv_password_prompt);
         brNext = getViewById(R.id.br_next);
         rlProgress = getViewById(R.id.rl_progress);
+        et_confirm_password = getViewById(R.id.et_confirm_password);
 
         brNext.setOnClickListener(this);
         rlCountryCode.setOnClickListener(this);
 
-        etPassword.setOnEditorActionListener(this);
+        et_confirm_password.setOnEditorActionListener(this);
 
 //        tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
         tvStartCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
@@ -203,11 +206,11 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
                 if (etUsername.getText().toString().length() < 5) {
                     etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     tvUsernamePrompt.setText(R.string.text_start_least5_prompt);
-                    tvUsernamePrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));
+                    tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
                 } else {
                     etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                     tvUsernamePrompt.setText(R.string.text_start_least5_prompt);
-                    tvUsernamePrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+                    tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
                 }
             }
         });
@@ -225,12 +228,9 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
-                {
+                if (TextUtils.isEmpty(tvStartCountryCode.getText().toString())) {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                }
-                else
-                {
+                } else {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                 }
             }
@@ -249,15 +249,12 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(TextUtils.isEmpty(etPhoneNumber.getText().toString()))
-                {
+                if (TextUtils.isEmpty(etPhoneNumber.getText().toString())) {
                     etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-//                    tvPhoneNumberPrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));
-                }
-                else
-                {
+//                    tvPhoneNumberPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this,R.color.stroke_color_red_wrong));
+                } else {
                     etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-//                    tvPhoneNumberPrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+//                    tvPhoneNumberPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this,R.color.default_text_color_light));
                 }
             }
         });
@@ -265,7 +262,6 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
         etPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -275,15 +271,62 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (etPassword.getText().toString().length() < 5)
-                {
-                    etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                    tvPasswordPrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));
-                }
-                else
-                {
+                if (s.length() > 4) {
                     etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                    tvPasswordPrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
+                } else {
+                    etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
+                }
+            }
+        });
+
+        et_confirm_password.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
+                        tvPasswordPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
+                        break;
+                }
+                return false;
+            }
+        });
+
+        etPassword.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
+                        tvPasswordPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
+                        break;
+                }
+                return false;
+            }
+        });
+
+        et_confirm_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 4 && (s.toString().equals(etPassword.getText().toString()))) {
+                    et_confirm_password.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                    tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
+                } else {
+                    et_confirm_password.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                    tvPasswordPrompt.setText(R.string.text_pwd_type_wrong);
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
                 }
             }
         });
@@ -303,8 +346,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.rl_country_code:
                 Intent intent = new Intent(this, CountryCodeActivity.class);
                 startActivityForResult(intent, GET_COUNTRY_CODE);
@@ -321,11 +363,9 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode)
-        {
+        switch (requestCode) {
             case GET_COUNTRY_CODE:
-                if (resultCode == RESULT_OK)
-                {
+                if (resultCode == RESULT_OK) {
                     blnChooseCountryCode = true;
                     tvCountry.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
 //                    tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
@@ -342,8 +382,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     /**
      * 功能：网络请求
      */
-    private void doSignUp()
-    {
+    private void doSignUp() {
         if (!NetworkUtil.isNetworkConnected(this)) {
             Toast.makeText(this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             return;
@@ -353,13 +392,14 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
         strCountryCode = tvStartCountryCode.getText().toString().trim();
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
-
-        if( (checkAll())){
+        String confirmPassword = et_confirm_password.getText().toString();
+        if (!MyTextUtil.isHasEmpty(strUsername, strCountryCode, strPhoneNumber, strPassword) && (etUsername.length() > 4)
+                && (strPassword.length() > 4) && strPassword.equals(confirmPassword)) {
             doingSignUpChangeUI();
 
             HashMap<String, String> params = new HashMap<>();
             params.put("user_login_id", strUsername);
-            params.put("user_country_code",strCountryCode);
+            params.put("user_country_code", strCountryCode);
             params.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
 
             new HttpTools(this).get(Constant.API_START_CHECK_LOG_ID, params, CHECK_GET_CODE, new HttpCallback() {
@@ -376,22 +416,19 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
                 @Override
                 public void onResult(String response) {
 
-                    LogUtil.e(SignUpUsernameActivity.class.getName(),"response====="+response);
+                    LogUtil.e(SignUpUsernameActivity.class.getName(), "response=====" + response);
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (Constant.SUCCESS.equals(jsonObject.getString("response_status"))) {
                             //成功获得验证码
                             handler.sendEmptyMessage(SUCCESS_GET_CODE);
                         } else if (Constant.FAIL.equals(jsonObject.getString("response_status"))) {
-                            if (jsonObject.has("response_message"))
-                            {
+                            if (jsonObject.has("response_message")) {
                                 if (RESPONSE_MESSAGE_ID_EXIST.equals(jsonObject.getString("response_message"))) {
                                     //账号被注册
                                     handler.sendEmptyMessage(LOG_IN_EXIST);
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 //手机号不对 无法生成验证码
                                 handler.sendEmptyMessage(PHONE_ERROR);
                             }
@@ -420,59 +457,49 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
                 }
             });
-        }
-        else
-        {
+        } else {
             //log id
-            if (TextUtils.isEmpty(etUsername.getText().toString()) || etUsername.getText().toString().length() < 5)
-            {
+            if (TextUtils.isEmpty(strUsername) || strUsername.length() < 5) {
                 etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                tvUsernamePrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));
-            }
-            else
-            {
+                tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
+            } else {
                 etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                tvUsernamePrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+                tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
             }
 
             //code
-            if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
-            {
+            if (TextUtils.isEmpty(strCountryCode)) {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
 
             //phone
-            if(TextUtils.isEmpty(etPhoneNumber.getText().toString()))
-            {
+            if (TextUtils.isEmpty(strPhoneNumber)) {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-//                tvPhoneNumberPrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));
-            }
-            else
-            {
+//                tvPhoneNumberPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this,R.color.stroke_color_red_wrong));
+            } else {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-//                tvPhoneNumberPrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+//                tvPhoneNumberPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this,R.color.default_text_color_light));
             }
 
             //password
-            if (TextUtils.isEmpty(etPassword.getText().toString()) || etPassword.getText().toString().length() < 5)
-            {
+            if (TextUtils.isEmpty(strPassword) || strPassword.length() < 5) {
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                tvPasswordPrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));
-            }
-            else
-            {
+                tvPasswordPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
+            } else {
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                tvPasswordPrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+                tvPasswordPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
+            }
+
+            if (TextUtils.isEmpty(confirmPassword) || !confirmPassword.equals(strPassword)) {
+                et_confirm_password.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                tvPasswordPrompt.setText(R.string.text_pwd_type_wrong);
+                tvPasswordPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
+            } else {
+                et_confirm_password.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         }
-    }
-
-    private boolean checkAll() {
-        return ( (etUsername.getText().toString().length() > 4) && (!TextUtils.isEmpty(tvStartCountryCode.getText().toString())) && (!TextUtils.isEmpty(etPhoneNumber.getText().toString())) && (etPassword.getText().toString().length() > 4) );
     }
 
     private void doingSignUpChangeUI() {
@@ -480,6 +507,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
         brNext.setClickable(false);
         normalUI();//亲，真的需要吗？
         UIUtil.hideKeyboard(this, etPassword);
+        UIUtil.hideKeyboard(this, et_confirm_password);
     }
 
     private void finishLogInChangeUI() {
@@ -489,8 +517,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE)
-        {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
             doSignUp();
             return true;
         }
@@ -498,23 +525,22 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     }
 
 
-    private void normalUI()
-    {
+    private void normalUI() {
         etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
         tvUsernamePrompt.setText(R.string.text_start_least5_prompt);
-        tvUsernamePrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+        tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
 
         rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
 
         etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
 
         etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+        et_confirm_password.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
         tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
-        tvPasswordPrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+        tvPasswordPrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
     }
 
-    private void goVerification()
-    {
+    private void goVerification() {
         Intent intent = new Intent(SignUpUsernameActivity.this, VerificationActivity.class);
         intent.putExtra(Constant.TYPE, Constant.TYPE_USERNAME);
         intent.putExtra("user_login_id", strUsername);
