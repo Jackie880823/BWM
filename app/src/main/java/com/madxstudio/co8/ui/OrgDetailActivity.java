@@ -795,17 +795,25 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
         final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
-        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
-        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView tv_view_profile = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
-
-        selectIntention.findViewById(R.id.tv_leave_or_delete).setVisibility(View.GONE);
-        selectIntention.findViewById(R.id.leave_line).setVisibility(View.GONE);
-
+        tv_view_profile.setText(R.string.text_view_profile);
         tvApprove.setText(R.string.text_approve);
         tvReject.setText(R.string.text_item_reject);
         tvReject.setTextColor(Color.RED);
 
+        tv_view_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                Intent intent = new Intent(mContext, FamilyViewProfileActivity.class);
+                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, pendingRequest.getAction_user_id());
+                intent.putExtra(Constant.LOOK_USER_PROFILE, true);
+                startActivity(intent);
+            }
+        });
         tvApprove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

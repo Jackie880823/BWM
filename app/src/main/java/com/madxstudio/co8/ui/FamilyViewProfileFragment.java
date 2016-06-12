@@ -313,6 +313,11 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             }
         });
 
+        if (getParentActivity().getIntent().getBooleanExtra(Constant.LOOK_USER_PROFILE, false)) {
+            btAddMember.setVisibility(View.GONE);
+            btMessage.setVisibility(View.GONE);
+        }
+
         if (userEntity != null) {
             VolleyUtil.initNetworkImageView(getParentActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id()), profileBackgroundId, profileBackgroundId);
@@ -467,6 +472,10 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
             layoutParam.setMargins(0, 0, 0, DensityUtil.dip2px(getParentActivity(), 50));
             rlPhone.setLayoutParams(layoutParam);
+        }
+        if (getParentActivity().getIntent().getBooleanExtra(Constant.LOOK_USER_PROFILE, false)) {
+            btAddMember.setVisibility(View.GONE);
+            btMessage.setVisibility(View.GONE);
         }
     }
 

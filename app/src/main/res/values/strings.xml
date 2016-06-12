@@ -845,4 +845,5 @@
     <string name="text_pwd_type_wrong">The password you typed do not match</string>
     <string name="space">" "</string>
     <string name="ask_conf_admin">Set as Admin?</string>
+    <string name="text_company_phone">Phone</string>
 </resources>

@@ -2,6 +2,7 @@ package com.madxstudio.co8.adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.android.volley.ext.tools.BitmapTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.AlertGroupEntity;
+import com.madxstudio.co8.ui.MessageChatActivity;
 import com.madxstudio.co8.util.MyDateUtils;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 
@@ -23,7 +25,7 @@ import java.util.List;
  * 有关 AlertGroup list 的适配器
  * Created by heweidong on 15/5/14.
  */
-public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VHItem>{
+public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VHItem> {
 
     private Context mContext;
     private List<AlertGroupEntity> data;
@@ -37,9 +39,6 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
     private final static int TAG_REJECT = 2;
 
 
-
-
-
     public AlertGroupAdapter(Context context, List<AlertGroupEntity> data) {
         mContext = context;
         this.data = data;
@@ -47,7 +46,7 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
 
     @Override
     public AlertGroupAdapter.VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.alert_group_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.alert_group_item, parent, false);
         return new VHItem(view);
     }
 
@@ -70,41 +69,37 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
                 R.drawable.default_head_icon, R.drawable.default_head_icon);
 
         //设置AlertGroupContent、option
-        switch (tag){
-            case TAG_PENDING:
-            {
+        switch (tag) {
+            case TAG_PENDING: {
                 holder.tvAlertGroupContent.setText(Html.fromHtml(
-                                "<b>"+alertGroupEntity.getAction_username()+"</b>" +  //人名
-                                "<font color='#000000'>"+pendingText+"</font>"+   //requested you to join the group
-                                "<b>\""+alertGroupEntity.getModule_name()+"\"</b>"));     //groupName
+                        "<b>" + alertGroupEntity.getAction_username() + "</b>" +  //人名
+                                "<font color='#000000'>" + pendingText + "</font>" +   //requested you to join the group
+                                "<b>\"" + alertGroupEntity.getModule_name() + "\"</b>"));     //groupName
                 holder.ibOption.setVisibility(View.VISIBLE); //移除option Button
             }
-            break ;
-            case TAG_ADD:
-            {
+            break;
+            case TAG_ADD: {
                 holder.tvAlertGroupContent.setText(Html.fromHtml(
-                                "<b>"+alertGroupEntity.getAction_username()+"</b>" +
-                                "<font color='#000000'>"+addText+"</font><br/>"+
-                                "<b>\""+alertGroupEntity.getModule_name()+"\"</b>"));
+                        "<b>" + alertGroupEntity.getAction_username() + "</b>" +
+                                "<font color='#000000'>" + addText + "</font><br/>" +
+                                "<b>\"" + alertGroupEntity.getModule_name() + "\"</b>"));
                 holder.ibOption.setVisibility(View.GONE); //移除option Button
             }
-            break ;
-            case TAG_REJECT:
-            {
+            break;
+            case TAG_REJECT: {
                 holder.tvAlertGroupContent.setText(Html.fromHtml(
-                        "<b>"+alertGroupEntity.getAction_username()+"</b>" +   //username
-                        "<font color='#000000'>"+rejectTextHas+"<b>"+rejectTextDec+"</b>"+rejectTextInvite+"</font>" + //"has declined (粗体) your invite to"
-                        "<b>\""+alertGroupEntity.getModule_name()+"\"</b>" +   //groupname
-                        "<font color='#000000'>"+rejectTextGroup+"</font>"));  //"group"
+                        "<b>" + alertGroupEntity.getAction_username() + "</b>" +   //username
+                                "<font color='#000000'>" + rejectTextHas + "<b>" + rejectTextDec + "</b>" + rejectTextInvite + "</font>" + //"has declined (粗体) your invite to"
+                                "<b>\"" + alertGroupEntity.getModule_name() + "\"</b>" +   //groupname
+                                "<font color='#000000'>" + rejectTextGroup + "</font>"));  //"group"
                 holder.ibOption.setVisibility(View.GONE);  //移除option Button
 
             }
-            break ;
+            break;
         }
 
         //设置时间
-        holder.tvCreateDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext,alertGroupEntity.getCreation_date()));
-
+        holder.tvCreateDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext, alertGroupEntity.getCreation_date()));
 
 
     }
@@ -129,15 +124,16 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
         return data.size();
     }
 
-    class VHItem extends RecyclerView.ViewHolder{
+    class VHItem extends RecyclerView.ViewHolder {
 
         private CircularNetworkImage ownerHead;
         private TextView tvAlertGroupContent;
         private TextView tvCreateDate;
         private ImageButton ibOption;
+
         public VHItem(View itemView) {
             super(itemView);
-            ownerHead = (CircularNetworkImage)itemView.findViewById(R.id.owner_head);
+            ownerHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
             tvAlertGroupContent = (TextView) itemView.findViewById(R.id.tv_alert_group_content);
             tvCreateDate = (TextView) itemView.findViewById(R.id.tv_create_date);
             ibOption = (ImageButton) itemView.findViewById(R.id.ib_option);
@@ -151,8 +147,25 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
                     }
                 }
             });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position < 0 || position > data.size() - 1) {
+                        return;
+                    }
+                    AlertGroupEntity alertGroupEntity = data.get(position);
+                    Intent intent = new Intent(mContext, MessageChatActivity.class);
+                    intent.putExtra(Constant.MESSAGE_CHART_TYPE, Constant.MESSAGE_CHART_TYPE_GROUP);
+                    intent.putExtra(Constant.MESSAGE_CHART_GROUP_ID, alertGroupEntity.getModule_id());
+                    intent.putExtra(Constant.MESSAGE_CHART_TITLE_NAME, alertGroupEntity.getModule_name());
+                    mContext.startActivity(intent);
+                }
+            });
         }
     }
+
     public ItemClickListener itemClickListener;
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
