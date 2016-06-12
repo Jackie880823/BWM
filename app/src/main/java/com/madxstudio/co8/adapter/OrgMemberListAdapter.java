@@ -152,7 +152,7 @@ public class OrgMemberListAdapter extends BaseAdapter implements Filterable {
 
     private void showDeleteMember(final OrgMemberEntity entity) {
         alertDialog = new MyDialog(mContext, R.string.text_tips_title, R.string.text_ask_delete);
-        alertDialog.setButtonAccept(mContext.getString(R.string.text_dialog_accept), new View.OnClickListener() {
+        alertDialog.setButtonAccept(mContext.getString(R.string.text_yes), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();

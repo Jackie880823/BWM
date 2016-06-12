@@ -140,7 +140,7 @@ public class Constant {
     public static final String RELATION_SHIP = "Relationship";
 
     public static final String CREATE_COUNTRY_NAME = "CountryName";
-
+    public static final String LOOK_USER_PROFILE = "OnlyLook";
     /**
      * 临时文件用户裁剪
      */

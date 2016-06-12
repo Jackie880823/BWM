@@ -21,6 +21,7 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.MemberAdapter;
 import com.madxstudio.co8.entity.MemberEntity;
+import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.widget.MyDialog;
@@ -257,13 +258,11 @@ public class MemberActivity extends BaseActivity {
         LayoutInflater factory = LayoutInflater.from(this);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
         showAddDialog = new MyDialog(this, null, selectIntention);
-        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
-        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView ll_contact_profile = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
-
-        selectIntention.findViewById(R.id.tv_leave_or_delete).setVisibility(View.GONE);
-        selectIntention.findViewById(R.id.leave_line).setVisibility(View.GONE);
-
+        ll_contact_profile.setText(R.string.text_view_profile);
         tvApprove.setText(R.string.text_dialog_accept);
         tvReject.setText(R.string.text_item_reject);
         tvApprove.setOnClickListener(new View.OnClickListener() {
@@ -278,6 +277,17 @@ public class MemberActivity extends BaseActivity {
             public void onClick(View v) {
                 addRemove(member.getAction_user_id());
                 showAddDialog.dismiss();
+            }
+        });
+
+        ll_contact_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddDialog.dismiss();
+                Intent intent = new Intent(MemberActivity.this, FamilyViewProfileActivity.class);
+                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, member.getAction_user_id());
+                intent.putExtra(Constant.LOOK_USER_PROFILE, true);
+                startActivity(intent);
             }
         });
 

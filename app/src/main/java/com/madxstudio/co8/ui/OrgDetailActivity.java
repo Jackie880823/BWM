@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -214,12 +213,12 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
         startActivityForResult(intent, ADD_MEMBER);
     }
 
-    private void awaitingRemove(final String memberId) {
+    private void awaitingRemove(final OrgMemberEntity familyMemberEntity) {
         vProgress.setVisibility(View.VISIBLE);
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = Constant.API_BONDALERT_MEMEBER_REMOVE + MainActivity.getUser().getUser_id();
         Map<String, String> params = new HashMap<>();
-        params.put("member_id", memberId);
+        params.put("member_id", familyMemberEntity.getUser_id());
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         new HttpTools(mContext).put(requestInfo, null, new HttpCallback() {
             @Override
@@ -229,13 +228,23 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
 
             @Override
             public void onFinish() {
-
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
             public void onResult(String string) {
-                vProgress.setVisibility(View.GONE);
-                MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("Success".equals(jsonObject.optString("response_status"))) {
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
+                        memberAdapter.getList().remove(familyMemberEntity);
+                        memberAdapter.notifyDataSetChanged();
+                        getData();
+                    }
+                } catch (JSONException e) {
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -307,7 +316,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
             @Override
             public void onClick(View v) {
                 showSelectDialog.dismiss();
-                awaitingRemove(familyMemberEntity.getUser_id());
+                awaitingRemove(familyMemberEntity);
             }
         });
         cancelTv.setOnClickListener(new View.OnClickListener() {
@@ -663,11 +672,8 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 } else {
                     OrgMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
                     if (Constant.REQUEST_ADD_ADMIN.equals(requestType)) {
-                        // 将点击的Item中的FamilyMemberEntity返回给启动的Activity;
-                        Intent intent = new Intent();
-                        intent.putExtra(OrganisationConstants.NEED_ADD_ADMIN_USER, familyMemberEntity);
-                        setResult(RESULT_OK, intent);
-                        finish();
+                        // 请求设置管理员的启动，要确认是否设置选中用户为管理员
+                        confirmAdmin(familyMemberEntity);
                     } else if (Constant.ORG_TRANSMIT_STAFF.equals(transmitData) && arg2 == 0) {
                         return;
                     } else if ("0".equals(familyMemberEntity.getAdded_flag())) {
@@ -689,6 +695,33 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                     }
 
                 }
+            }
+
+            /**
+             * 确认管理员，弹出提示是否把传入的用户设置为管理员
+             * @param familyMemberEntity
+             */
+            private void confirmAdmin(final OrgMemberEntity familyMemberEntity) {
+                final MyDialog myDialog = new MyDialog(OrgDetailActivity.this, null,
+                        getString(R.string.ask_conf_admin));
+                myDialog.setButtonAccept(R.string.text_yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 将点击的Item中的FamilyMemberEntity返回给启动的Activity;
+                        Intent intent = new Intent();
+                        intent.putExtra(OrganisationConstants.NEED_ADD_ADMIN_USER,
+                                familyMemberEntity);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                });
+                myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                    }
+                });
+                myDialog.show();
             }
         });
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -762,17 +795,25 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_org_detail, null);
         final MyDialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
-        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
-        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView tv_view_profile = (TextView) selectIntention.findViewById(R.id.tv_view_profile);
+        TextView tvApprove = (TextView) selectIntention.findViewById(R.id.tv_to_message);
+        TextView tvReject = (TextView) selectIntention.findViewById(R.id.tv_leave_or_delete);
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
-
-        selectIntention.findViewById(R.id.tv_leave_or_delete).setVisibility(View.GONE);
-        selectIntention.findViewById(R.id.leave_line).setVisibility(View.GONE);
-
+        tv_view_profile.setText(R.string.text_view_profile);
         tvApprove.setText(R.string.text_approve);
         tvReject.setText(R.string.text_item_reject);
         tvReject.setTextColor(Color.RED);
 
+        tv_view_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                Intent intent = new Intent(mContext, FamilyViewProfileActivity.class);
+                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, pendingRequest.getAction_user_id());
+                intent.putExtra(Constant.LOOK_USER_PROFILE, true);
+                startActivity(intent);
+            }
+        });
         tvApprove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

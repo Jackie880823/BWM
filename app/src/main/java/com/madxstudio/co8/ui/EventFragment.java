@@ -192,7 +192,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             if (App.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT, false)) {
-                handler.sendEmptyMessage(GET_DELAY_RIGHT);
+                handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,200);
             }
             EventBus.getDefault().registerSticky(this);
 

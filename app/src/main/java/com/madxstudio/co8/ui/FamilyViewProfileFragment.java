@@ -270,9 +270,11 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         rl_organisation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CompanyActivity.class);
-                intent.putExtra(Constant.LOGIN_USER, userEntity);
-                startActivity(intent);
+                if (!TextUtils.isEmpty(userEntity.getOrganisation())) {
+                    Intent intent = new Intent(getActivity(), CompanyActivity.class);
+                    intent.putExtra(Constant.LOGIN_USER, userEntity);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -310,6 +312,11 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 startActivity(intent);
             }
         });
+
+        if (getParentActivity().getIntent().getBooleanExtra(Constant.LOOK_USER_PROFILE, false)) {
+            btAddMember.setVisibility(View.GONE);
+            btMessage.setVisibility(View.GONE);
+        }
 
         if (userEntity != null) {
             VolleyUtil.initNetworkImageView(getParentActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
@@ -465,6 +472,10 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
             layoutParam.setMargins(0, 0, 0, DensityUtil.dip2px(getParentActivity(), 50));
             rlPhone.setLayoutParams(layoutParam);
+        }
+        if (getParentActivity().getIntent().getBooleanExtra(Constant.LOOK_USER_PROFILE, false)) {
+            btAddMember.setVisibility(View.GONE);
+            btMessage.setVisibility(View.GONE);
         }
     }
 

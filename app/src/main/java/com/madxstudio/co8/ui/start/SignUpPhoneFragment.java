@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -24,6 +26,9 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
@@ -41,9 +46,6 @@ import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.util.NetworkUtil;
 import com.madxstudio.co8.util.UIUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.material.widget.PaperButton;
 
 import org.json.JSONException;
@@ -73,13 +75,13 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
-//    private TextView tvCountryCode;
+    //    private TextView tvCountryCode;
     private EditText tvStartCountryCode;
     private EditText etPhoneNumber;
     private TextView tvPhoneNumberPrompt;
     private EditText etPassword;
     private TextView tvPasswordPrompt;
-//    private TextView tvLogIn;
+    //    private TextView tvLogIn;
     private PaperButton brSignUp;
     private TextView tvTerms;
     private ImageView ivUsername;
@@ -90,6 +92,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
     private String strCountryCode;
     private String strPhoneNumber;
     private String strPassword;
+    private EditText et_confirm_password;
 
     private List<UserEntity> userEntities;
     private UserEntity userEntity;
@@ -97,13 +100,11 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
     private boolean blnChooseCountryCode;//通过选择获得的国家区号。如果用户手动修改。把国家名称改回原始状态。这是用来判断的
 
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case SUCCESS_GET_CODE:
                     //账号可用，获得验证码，跳转界面。
                     goVerification();
@@ -141,7 +142,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_sign_up, container, false);
+        View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
         initView(view);
 
@@ -153,8 +154,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.rl_country_code:
                 Intent intent = new Intent(getActivity(), CountryCodeActivity.class);
                 startActivityForResult(intent, GET_COUNTRY_CODE);
@@ -182,11 +182,9 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
         LoginManager.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode)
-        {
+        switch (requestCode) {
             case GET_COUNTRY_CODE:
-                if (resultCode == getActivity().RESULT_OK)
-                {
+                if (resultCode == getActivity().RESULT_OK) {
                     blnChooseCountryCode = true;
                     tvCountry.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
 //                    tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
@@ -201,30 +199,29 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE)
-        {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
             doSignUp();
             return true;
         }
         return false;
     }
 
-    private void initView(View view)
-    {
-        rlCountryCode = (RelativeLayout)view.findViewById(R.id.rl_country_code);
-        tvCountry = (TextView)view.findViewById(R.id.tv_country);
+    private void initView(View view) {
+        rlCountryCode = (RelativeLayout) view.findViewById(R.id.rl_country_code);
+        tvCountry = (TextView) view.findViewById(R.id.tv_country);
 //        tvCountryCode = (TextView)view.findViewById(R.id.tv_country_code);
-        tvStartCountryCode = (EditText)view.findViewById(R.id.tv_start_country_code);
-        etPhoneNumber = (EditText)view.findViewById(R.id.et_phone_number);
-        tvPhoneNumberPrompt = (TextView)view.findViewById(R.id.tv_phone_number_prompt);
-        etPassword = (EditText)view.findViewById(R.id.et_password);
-        tvPasswordPrompt = (TextView)view.findViewById(R.id.tv_password_prompt);
+        tvStartCountryCode = (EditText) view.findViewById(R.id.tv_start_country_code);
+        etPhoneNumber = (EditText) view.findViewById(R.id.et_phone_number);
+        tvPhoneNumberPrompt = (TextView) view.findViewById(R.id.tv_phone_number_prompt);
+        etPassword = (EditText) view.findViewById(R.id.et_password);
+        tvPasswordPrompt = (TextView) view.findViewById(R.id.tv_password_prompt);
 //        tvLogIn = (TextView)view.findViewById(R.id.tv_btn_log_in);
         brSignUp = (PaperButton) view.findViewById(R.id.br_sign_up);
-        tvTerms = (TextView)view.findViewById(R.id.tv_terms);
-        ivUsername = (ImageView)view.findViewById(R.id.iv_username);
-        ivFacebook = (ImageView)view.findViewById(R.id.iv_facebook);
-        rlProgress = (RelativeLayout)view.findViewById(R.id.rl_progress);
+        tvTerms = (TextView) view.findViewById(R.id.tv_terms);
+        ivUsername = (ImageView) view.findViewById(R.id.iv_username);
+        ivFacebook = (ImageView) view.findViewById(R.id.iv_facebook);
+        rlProgress = (RelativeLayout) view.findViewById(R.id.rl_progress);
+        et_confirm_password = (EditText) view.findViewById(R.id.et_confirm_password);
 
         rlCountryCode.setOnClickListener(this);
 //        tvLogIn.setOnClickListener(this);
@@ -232,7 +229,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         tvTerms.setOnClickListener(this);
         ivUsername.setOnClickListener(this);
 
-        etPassword.setOnEditorActionListener(this);
+        et_confirm_password.setOnEditorActionListener(this);
 
         tvTerms.setText(Html.fromHtml(getResources().getString(R.string.text_start_terms)));
 
@@ -266,7 +263,6 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         etPhoneNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -285,7 +281,8 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         etPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
+                tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(), R.color.default_text_color_light));
             }
 
             @Override
@@ -296,15 +293,62 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
             @Override
             public void afterTextChanged(Editable s) {
                 //用户输入密码长度不足时，提示。
-                if (etPassword.getText().toString().length() < 5 && etPassword.getText().toString().length() > 0)
-                {
-                    etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                    tvPasswordPrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));
-                }
-                else
-                {
+                if (s.length() > 4) {
                     etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                    tvPasswordPrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(), R.color.default_text_color_light));
+                } else {
+                    etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(), R.color.stroke_color_red_wrong));
+                }
+            }
+        });
+
+        et_confirm_password.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
+                        tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(), R.color.default_text_color_light));
+                        break;
+                }
+                return false;
+            }
+        });
+
+        etPassword.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
+                        tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(), R.color.default_text_color_light));
+                        break;
+                }
+                return false;
+            }
+        });
+
+        et_confirm_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+             }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 4 && (s.toString().equals(etPassword.getText().toString()))) {
+                    et_confirm_password.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                    tvPasswordPrompt.setText(R.string.text_start_least5_prompt);
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(), R.color.default_text_color_light));
+                } else {
+                    et_confirm_password.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                    tvPasswordPrompt.setText(R.string.text_pwd_type_wrong);
+                    tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(),R.color.stroke_color_red_wrong));
                 }
             }
         });
@@ -322,12 +366,9 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
-                {
+                if (TextUtils.isEmpty(tvStartCountryCode.getText().toString())) {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                }
-                else
-                {
+                } else {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                 }
             }
@@ -338,8 +379,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
     /**
      * 功能：网络请求
      */
-    public void doSignUp()
-    {
+    public void doSignUp() {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
             Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             return;
@@ -348,13 +388,13 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         strCountryCode = tvStartCountryCode.getText().toString().trim();
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
+        String confirmPassword = et_confirm_password.getText().toString();
+        if (!MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber, strPassword) && (strPassword.length() > 4) && strPassword.equals(confirmPassword)) {//检查输入，提取出来。
 
-        if( (!MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber, strPassword)) && (strPassword.length() > 4) )//检查输入，提取出来。
-        {
             HashMap<String, String> params = new HashMap<>();
-            params.put("user_login_id",strCountryCode + MyTextUtil.NoZero(strPhoneNumber));
-            params.put("user_country_code",strCountryCode);
-            params.put("user_phone",MyTextUtil.NoZero(strPhoneNumber));
+            params.put("user_login_id", strCountryCode + MyTextUtil.NoZero(strPhoneNumber));
+            params.put("user_country_code", strCountryCode);
+            params.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
 
             new HttpTools(getActivity()).get(Constant.API_START_CHECK_LOG_ID, params, CHECK_GET_CODE, new HttpCallback() {
                 @Override
@@ -371,7 +411,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
                 public void onResult(String response) {
 
                     try {
-                        Log.d("","signup-----" + response);
+                        Log.d("", "signup-----" + response);
                         JSONObject jsonObject = new JSONObject(response);
                         if (Constant.SUCCESS.equals(jsonObject.getString("response_status"))) {
                             //成功获得验证码
@@ -406,36 +446,32 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
                 }
             });
-        }
-        else
-        {
-            if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
-            {
+        } else {
+            if (TextUtils.isEmpty(strCountryCode)) {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
 
-            if (TextUtils.isEmpty(etPhoneNumber.getText().toString()))
-            {
+            if (TextUtils.isEmpty(strPhoneNumber)) {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-            }
-            else
-            {
+            } else {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
 
-            if (TextUtils.isEmpty(etPassword.getText().toString()))
-            {
+            if (TextUtils.isEmpty(strPassword) || strPassword.length() < 5) {
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                tvPasswordPrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));
-            }
-            else
-            {
+                tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(), R.color.stroke_color_red_wrong));
+            } else {
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                tvPasswordPrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+                tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(), R.color.default_text_color_light));
+            }
+            if (TextUtils.isEmpty(confirmPassword) || !confirmPassword.equals(strPassword)) {
+                et_confirm_password.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                tvPasswordPrompt.setText(R.string.text_pwd_type_wrong);
+                tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(),R.color.stroke_color_red_wrong));
+            } else {
+                et_confirm_password.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         }
 
@@ -446,24 +482,23 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         brSignUp.setClickable(false);
         normalUI();
         UIUtil.hideKeyboard(getActivity(), etPassword);
+        UIUtil.hideKeyboard(getActivity(), et_confirm_password);
     }
 
-    public void finishLogInChangeUI()
-    {
+    public void finishLogInChangeUI() {
         rlProgress.setVisibility(View.GONE);
         brSignUp.setClickable(true);
     }
 
-    private void normalUI()
-    {
+    private void normalUI() {
         etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
         tvPhoneNumberPrompt.setVisibility(View.GONE);
         etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-        tvPasswordPrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
+        et_confirm_password.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+        tvPasswordPrompt.setTextColor(ContextCompat.getColor(getActivity(), R.color.default_text_color_light));
     }
 
-    private void goVerification()
-    {
+    private void goVerification() {
         Intent intent = new Intent(getActivity(), VerificationActivity.class);
         intent.putExtra(Constant.TYPE, Constant.TYPE_PHONE);
         intent.putExtra("user_login_id", strCountryCode + MyTextUtil.NoZero(strPhoneNumber));
@@ -473,13 +508,12 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         startActivity(intent);
     }
 
-    public void goMainActivity()
-    {
+    public void goMainActivity() {
         App.userLoginSuccessed(getActivity(), userEntity, tokenEntity);
     }
 
     private void goThirdPartyCheckId() {
-        if(getActivity()!=null&&!getActivity().isFinishing()) {
+        if (getActivity() != null && !getActivity().isFinishing()) {
             Intent intent = new Intent(getActivity(), ThirdPartyVerifyPhoneActivity.class);
             intent.putExtra(Constant.TYPE_FACEBOOK, faceBookUserEntity);
             startActivity(intent);
@@ -491,14 +525,11 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
     @Override
     public void OnLoginSuccess(FaceBookUserEntity faceBookUserEntity, String logType) {
         com.facebook.login.LoginManager.getInstance().logOut();//清除Facebook授权缓存
-        if (!MyTextUtil.isHasEmpty(faceBookUserEntity.getUserId(), faceBookUserEntity.getFirstname(), faceBookUserEntity.getLastname(), faceBookUserEntity.getGender()))
-        {
+        if (!MyTextUtil.isHasEmpty(faceBookUserEntity.getUserId(), faceBookUserEntity.getFirstname(), faceBookUserEntity.getLastname(), faceBookUserEntity.getGender())) {
             Log.d("", faceBookUserEntity.toString());
             this.faceBookUserEntity = faceBookUserEntity;
             checkFacebookId();
-        }
-        else
-        {
+        } else {
             //没必要吧？？？
         }
     }
@@ -538,24 +569,20 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
             public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-                Log.d("","---facebook--checkId" + response);
+                Log.d("", "---facebook--checkId" + response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    if ("1".equals(jsonObject.getString("bwm_user")))
-                    {
+                    if ("1".equals(jsonObject.getString("bwm_user"))) {
                         userEntities = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<List<UserEntity>>() {
                         }.getType());
                         tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
-                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
-                        {
+                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id())) {
                             //这样可以当做是bad date
                             return;
                         }
                         userEntity = userEntities.get(0);
                         handler.sendEmptyMessage(GO_MAIN);
-                    }
-                    else if ("0".equals(jsonObject.getString("bwm_user")))
-                    {
+                    } else if ("0".equals(jsonObject.getString("bwm_user"))) {
                         handler.sendEmptyMessage(THIRD_PARTY_SIGN_UP);
                     }
 

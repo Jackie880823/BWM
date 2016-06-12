@@ -20,7 +20,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1   //TODO
-        versionName "1.0.0.2" //TODO
+        versionName "1.0.0.3" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -72,11 +72,14 @@ android {
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
                 def outputFile = output.outputFile
+                def fileName
                 if (outputFile != null && outputFile.name.endsWith('.apk')&&'release'.equals(variant.buildType.name)) {
                     // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
-                    def fileName = "co8_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
-                    output.outputFile = new File(outputFile.parent, fileName)
+                    fileName = "co8_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                } else {
+                    fileName = "co8-${outputFile.name}"
                 }
+                output.outputFile = new File(outputFile.parent, fileName)
             }
         }
 

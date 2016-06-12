@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/default_text_color_while"
     tools:context="com.madxstudio.co8.ui.start.SignUpUsernameActivity">
 
@@ -20,75 +20,80 @@
         android:layout_below="@+id/fragment_main_top"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="vertical">
-            <EditText
-                style="@style/et_start_username"
-                android:id="@+id/et_username"/>
 
-            <TextView
-                style="@style/tv_start_light_small"
-                android:id="@+id/tv_username_prompt"
-                android:text="@string/text_start_least5_prompt"
-                android:layout_marginLeft="@dimen/default_content_padding"
-                android:paddingLeft="@dimen/default_content_padding"/>
+        <EditText
+            android:id="@+id/et_username"
+            style="@style/et_start_username" />
 
-            <include
-                layout="@layout/country_code_layout"
-                android:id="@+id/country_code_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_username_prompt"
+            style="@style/tv_start_light_small"
+            android:layout_marginLeft="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:text="@string/text_start_least5_prompt" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_content_padding"
-                android:orientation="horizontal">
-                    <EditText
-                        style="@style/tv_start_country_code"
-                        android:id="@+id/tv_start_country_code"
-                        android:layout_marginLeft="@dimen/default_content_padding"
-                        />
-                    <EditText
-                        style="@style/et_start_phone"
-                        android:id="@+id/et_phone_number"
-                        android:layout_marginLeft="@dimen/default_view_margin"/>
-            </LinearLayout>
+        <include
+            android:id="@+id/country_code_layout"
+            layout="@layout/country_code_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-            <TextView
-                style="@style/tv_start_light_small"
-                android:id="@+id/tv_phone_number_prompt"
-                android:text="@string/text_start_phone_number_required"
-                android:layout_marginLeft="@dimen/default_content_padding"
-                android:paddingLeft="@dimen/default_content_padding" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_content_padding"
+            android:orientation="horizontal">
 
             <EditText
-                style="@style/et_start_password"
-                android:id="@+id/et_password"
-                android:layout_marginTop="@dimen/default_content_padding"
-                android:imeOptions="actionDone"/>
+                android:id="@+id/tv_start_country_code"
+                style="@style/tv_start_country_code"
+                android:layout_marginLeft="@dimen/default_content_padding" />
 
-            <TextView
-                style="@style/tv_start_light_small"
-                android:id="@+id/tv_password_prompt"
-                android:text="@string/text_start_least5_prompt"
-                android:layout_marginLeft="@dimen/default_content_padding"
-                android:paddingLeft="@dimen/default_content_padding"
-                />
+            <EditText
+                android:id="@+id/et_phone_number"
+                style="@style/et_start_phone"
+                android:layout_marginLeft="@dimen/default_view_margin" />
+        </LinearLayout>
 
+        <TextView
+            android:id="@+id/tv_phone_number_prompt"
+            style="@style/tv_start_light_small"
+            android:layout_marginLeft="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:text="@string/text_start_phone_number_required" />
+
+        <EditText
+            android:id="@+id/et_password"
+            style="@style/et_start_password"
+            android:layout_marginTop="@dimen/default_content_padding" />
+
+        <TextView
+            android:id="@+id/tv_password_prompt"
+            style="@style/tv_start_light_small"
+            android:layout_marginLeft="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:text="@string/text_start_least5_prompt" />
+
+        <EditText
+            android:id="@+id/et_confirm_password"
+            style="@style/et_start_password"
+            android:layout_marginTop="@dimen/default_content_padding"
+            android:hint="@string/text_confirm_password"
+            android:imeOptions="actionDone" />
     </LinearLayout>
 
     <com.material.widget.PaperButton
         android:id="@+id/br_next"
-        android:layout_width="match_parent"
         style="@style/paper_button_style"
-        app:paper_text="@string/text_start_next"
-        app:paper_color="@color/btn_bg_color_login_normal"
-        app:paper_text_color="@color/login_text_bg_color"
+        android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/default_content_padding"
         android:layout_marginLeft="@dimen/default_view_margin"
         android:layout_marginRight="@dimen/default_view_margin"
-        />
+        app:paper_color="@color/btn_bg_color_login_normal"
+        app:paper_text="@string/text_start_next"
+        app:paper_text_color="@color/login_text_bg_color" />
 
-    <include layout="@layout/progress_layout"/>
+    <include layout="@layout/progress_layout" />
 
 </RelativeLayout>
