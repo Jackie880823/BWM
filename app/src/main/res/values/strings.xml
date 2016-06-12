@@ -514,14 +514,14 @@
     <string name="miss_already_you">You have already sent a good job.!</string>
     <string name="text_archive_data">No archive found</string>
 
-    <string name="text_no_date_diary">No workspace alert</string>
-    <string name="text_no_date_event">No meeting alert</string>
-    <string name="text_no_date_bigday">No big day alert</string>
-    <string name="text_no_date_miss">No good job alert</string>
-    <string name="text_no_date_news">No news alert</string>
-    <string name="text_no_date_members">No contact alert</string>
-    <string name="text_no_date_recommended">No recommended contacts</string>
-    <string name="text_no_date_group">No group alert</string>
+    <string name="text_no_date_diary">No Workspace Alert</string>
+    <string name="text_no_date_event">No Meeting Alert</string>
+    <string name="text_no_date_bigday">No Big Day Alert</string>
+    <string name="text_no_date_miss">No Good Job Alert</string>
+    <string name="text_no_date_news">No News Alert</string>
+    <string name="text_no_date_members">No Contacts Alert</string>
+    <string name="text_no_date_recommended">No Recommended Contacts</string>
+    <string name="text_no_date_group">No Group Alert</string>
     <string name="text_hold_and_speak">Hold to Talk</string>
 
     <string name="loves_count">%d</string>
