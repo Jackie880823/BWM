@@ -34,6 +34,7 @@ import com.madxstudio.co8.ui.OrgDetailActivity;
 import com.madxstudio.co8.ui.PickAndCropPictureActivity;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
+import com.madxstudio.co8.util.MyTextUtil;
 import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.madxstudio.co8.widget.MyDialog;
@@ -44,6 +45,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -376,8 +378,35 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             LogUtil.w(TAG, "parseDetail: get Organisation Detail fail");
         } else {
             adapter.setData(detail);
+            List<UserEntity> list = detail.getAdmin();
+            if (list != null && list.size() > 0) {
+                for (UserEntity userEntity : list) {
+                    UserEntity userEntity1 = MainActivity.getUser();
+                    if (userEntity.getUser_id().equals(userEntity1.getUser_id())) {
+                        Profile profile = detail.getProfile();
+                        if (profile != null && isHasEmpty(profile.getAddress(), profile.getDescription(), profile.getEmail(), profile.getPhone())) {
+                            userEntity1.setOrg_detail("1");
+                        } else {
+                            userEntity1.setOrg_detail("0");
+                        }
+                        App.changeLoginedUser(userEntity1);
+                        break;
+                    }
+                }
+            }
             LogUtil.d(TAG, "get Organisation not null");
         }
+    }
+
+    public boolean isHasEmpty(String... str) {
+        if (str != null) {
+            for (int i = 0; i < str.length; i++) {
+                if (!TextUtils.isEmpty(str[i])) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -648,11 +677,11 @@ public class CompanyActivity extends BaseActivity implements View.OnClickListene
             public void onResult(String string) {
                 LogUtil.d(TAG, "onResult() called with: " + "string = [" + string + "]");
                 try {
-                    JSONObject jsonObject=new JSONObject(string);
-                    if("Fail".equals(jsonObject.optString("response_status"))){
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("Fail".equals(jsonObject.optString("response_status"))) {
                         MessageUtil.getInstance().showLongToast(getString(R.string.text_org_exit));
                         adapter.setData(detail);
-                    }else{
+                    } else {
                         parseDetail(string);
                     }
                 } catch (JSONException e) {
