@@ -83,6 +83,15 @@ public class UserEntity implements Serializable {
     private String org_id;
     private String status;
     private String int_phone_ext_flag;
+    private String org_detail;
+
+    public String getOrg_detail() {
+        return org_detail;
+    }
+
+    public void setOrg_detail(String org_detail) {
+        this.org_detail = org_detail;
+    }
 
     public String getInt_phone_ext_flag() {
         return int_phone_ext_flag;

@@ -591,7 +591,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         //检查显示小红点
         checkAndShowRedPoit();
-        boolean isCreateOrg = PreferencesUtil.getValue(this, Constant.IS_FIRST_CREATE_ORG + getUser().getUser_id(), false);
+        boolean isCreateOrg = "0".equals(getUser().getOrg_detail());
         if (isCreateOrg) {
             final LayoutInflater factory = LayoutInflater.from(this);
             View selectIntention = factory.inflate(R.layout.dialog_group_nofriend, null);
