@@ -201,3 +201,4 @@
 
 #小红点
 -keep class me.leolin.shortcutbadger.** {*;}
+-keep public class pl.droidsonroids.gif.GifIOException{<init>(int);}
