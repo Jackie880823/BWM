@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -294,20 +293,16 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String countString = jsonObject.getString("total");
-                    int countOfTotal = Integer.valueOf(countString);
+//                    int countOfTotal = Integer.valueOf(countString);
                     int countBondAlert = Integer.valueOf(jsonObject.getString("bondAlert"));
-                    int countOfNews = Integer.valueOf(jsonObject.getString("news"));
-                    int countOfMember = Integer.valueOf(jsonObject.getString("member"));
-                    int countOfRecommended = Integer.valueOf(jsonObject.optString("recommended", "0"));
-                    int countOfRewards = Integer.valueOf(jsonObject.getString("reward"));
+//                    int countOfNews = Integer.valueOf(jsonObject.getString("news"));
+//                    int countOfMember = Integer.valueOf(jsonObject.getString("member"));
+//                    int countOfRecommended = Integer.valueOf(jsonObject.optString("recommended", "0"));
+//                    int countOfRewards = Integer.valueOf(jsonObject.getString("reward"));
                     int countOfAdmin = Integer.valueOf(jsonObject.getString("admin"));
-                    LogUtil.d(TAG, "countOfNews======" + countOfNews + "countOfRewards=========" + countOfRewards);
-                    int count = countOfTotal - countBondAlert - countOfNews - countOfRecommended - countOfAdmin;
-                    if (count > 0) {
-                        Log.d("", "mmmmmmmmm" + "mmmmmmm>0");
+                    if (countBondAlert > 0) {
                         tv_num.setVisibility(View.VISIBLE);
                     } else {
-                        Log.d("", "mmmmmmmmm" + "mmmmmmm<0");
                         tv_num.setVisibility(View.GONE);
                     }
 
@@ -316,8 +311,6 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                     } else {
                         tvAdminNum.setVisibility(View.GONE);
                     }
-
-                    Log.d("", "mmmmmmmmm" + count + "=====" + jsonObject.toString());
 
                 } catch (JSONException e) {
                     tv_num.setVisibility(View.GONE);
