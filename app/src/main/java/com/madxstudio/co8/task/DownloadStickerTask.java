@@ -12,7 +12,9 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.ui.MainActivity;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.SDKUtil;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.material.widget.CircularProgress;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,114 +44,139 @@ public class DownloadStickerTask {
                 stickerName, stickerGroupPath, Constant.Sticker_Gif);
 //        final String downloadPath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + "B" +
 //                File.separator + stickerName + ".gif";
-        final String downloadPath = FileUtil.getBigStickerPath(App.getContextInstance(), stickerGroupPath, stickerName, Constant.Sticker_Gif);
-        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
-            @Override
-            protected byte[] doInBackground(Object... params) {
-                return getImageByte(urlPath, downloadPath);
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                if (null != progressBar) {
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            protected void onPostExecute(byte[] resultByte) {
-                super.onPostExecute(resultByte);
-                if (null != progressBar) {
-                    progressBar.setVisibility(View.GONE);
-                }
-                try {
-                    if (null != resultByte) {
-                        GifDrawable gifDrawable = new GifDrawable(resultByte);
-                        if (gifDrawable != null && gifImageView != null) {
-                            gifImageView.setImageDrawable(gifDrawable);
-                        } else {
-                            if (defaultResource > 0) {
-                                gifImageView.setImageResource(defaultResource);
-                            }
-                        }
-                    } else {
-                        if (defaultResource > 0) {
-                            gifImageView.setImageResource(defaultResource);
-                        }
-                    }
-                } catch (Exception e) {
-                    if (defaultResource > 0) {
-                        gifImageView.setImageResource(defaultResource);
-                    }
-                    e.printStackTrace();
-                }
-            }
-
-        };
-        if (SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            task.execute();
+        if (null != progressBar) {
+            progressBar.setVisibility(View.GONE);
         }
+        final String downloadPath = FileUtil.getBigStickerPath(App.getContextInstance(), stickerGroupPath, stickerName, Constant.Sticker_Gif);
+        ImageLoader.getInstance().displayImage(urlPath, gifImageView, UniversalImageLoaderUtil.options);
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                getImageByte(urlPath, downloadPath);
+            }
+        }.start();
+//        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
+//            @Override
+//            protected byte[] doInBackground(Object... params) {
+//                return getImageByte(urlPath, downloadPath);
+//            }
+//
+//            @Override
+//            protected void onPreExecute() {
+//                super.onPreExecute();
+//                if (null != progressBar) {
+//                    progressBar.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            protected void onPostExecute(byte[] resultByte) {
+//                super.onPostExecute(resultByte);
+//                if (null != progressBar) {
+//                    progressBar.setVisibility(View.GONE);
+//                }
+//                try {
+//                    if (null != resultByte) {
+//                        GifDrawable gifDrawable = new GifDrawable(resultByte);
+//                        if (gifDrawable != null && gifImageView != null) {
+//                            gifImageView.setImageDrawable(gifDrawable);
+//                        } else {
+//                            if (defaultResource > 0) {
+//                                gifImageView.setImageResource(defaultResource);
+//                            }
+//                        }
+//                    } else {
+//                        if (defaultResource > 0) {
+//                            gifImageView.setImageResource(defaultResource);
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    if (defaultResource > 0) {
+//                        gifImageView.setImageResource(defaultResource);
+//                    }
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        };
+//        if (SDKUtil.IS_HONEYCOMB) {
+//            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        } else {
+//            task.execute();
+//        }
     }
 
     public void downloadPngSticker(final CircularProgress progressBar, String stickerGroupPath, String stickerName,
                                    final int defaultResource, final ImageView imageView) {
         final String urlPath = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
                 stickerName, stickerGroupPath, Constant.Sticker_Png);
+        if (null != progressBar) {
+            progressBar.setVisibility(View.GONE);
+        }
+        ImageLoader.getInstance().displayImage(urlPath, imageView, UniversalImageLoaderUtil.options);
+        final String downloadPath = FileUtil.getBigStickerPath(App.getContextInstance(), stickerGroupPath, stickerName, Constant.Sticker_Png);
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                getImageByte(urlPath, downloadPath);
+            }
+        }.start();
+
+
 //        final String downloadPath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + "B" + File.separator
 //                + stickerName + ".png";
-        final String downloadPath = FileUtil.getBigStickerPath(App.getContextInstance(), stickerGroupPath, stickerName, Constant.Sticker_Png);
-        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
-            @Override
-            protected byte[] doInBackground(Object... params) {
-                return getImageByte(urlPath, downloadPath);
-            }
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                if (null != progressBar) {
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            protected void onPostExecute(byte[] resultByte) {
-                super.onPostExecute(resultByte);
-                if (null != progressBar) {
-                    progressBar.setVisibility(View.GONE);
-                }
-                try {
-                    if (null != resultByte) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(resultByte, 0, resultByte.length);
-                        if (bitmap != null && imageView != null) {
-                            imageView.setImageBitmap(bitmap);
-                        } else {
-                            if (defaultResource > 0) {
-                                imageView.setImageResource(defaultResource);
-                            }
-                        }
-                    } else {
-                        if (defaultResource > 0) {
-                            imageView.setImageResource(defaultResource);
-                        }
-                    }
-                } catch (Exception e) {
-                    if (defaultResource > 0) {
-                        imageView.setImageResource(defaultResource);
-                    }
-                    e.printStackTrace();
-                }
-            }
-
-        };
-        if (SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            task.execute();
-        }
+//        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
+//            @Override
+//            protected byte[] doInBackground(Object... params) {
+//                return getImageByte(urlPath, downloadPath);
+//            }
+//
+//            @Override
+//            protected void onPreExecute() {
+//                super.onPreExecute();
+//                if (null != progressBar) {
+//                    progressBar.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            protected void onPostExecute(byte[] resultByte) {
+//                super.onPostExecute(resultByte);
+//                if (null != progressBar) {
+//                    progressBar.setVisibility(View.GONE);
+//                }
+//                try {
+//                    if (null != resultByte) {
+//                        Bitmap bitmap = BitmapFactory.decodeByteArray(resultByte, 0, resultByte.length);
+//                        if (bitmap != null && imageView != null) {
+//                            imageView.setImageBitmap(bitmap);
+//                        } else {
+//                            if (defaultResource > 0) {
+//                                imageView.setImageResource(defaultResource);
+//                            }
+//                        }
+//                    } else {
+//                        if (defaultResource > 0) {
+//                            imageView.setImageResource(defaultResource);
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    if (defaultResource > 0) {
+//                        imageView.setImageResource(defaultResource);
+//                    }
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        };
+//        if (SDKUtil.IS_HONEYCOMB) {
+//            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        } else {
+//            task.execute();
+//        }
     }
 
     /**
