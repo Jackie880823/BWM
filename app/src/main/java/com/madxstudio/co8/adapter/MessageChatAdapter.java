@@ -369,7 +369,11 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             try {
                 //GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
                 Log.i("stickerPath", gifFilePath);
-                GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
+                File file = new File(gifFilePath);
+                GifDrawable gifDrawable = null;
+                if (file != null && file.exists()) {
+                    gifDrawable = new GifDrawable(file);
+                }
                 if (gifDrawable != null) {
                     holder.gifImageView.setImageDrawable(gifDrawable);
                 } else {
@@ -401,7 +405,11 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     //拼接大图路径
                     //InputStream is = context.getAssets().open(pngFileName);//得到数据流
                     Log.i("stickerPath", pngFileName);
-                    InputStream is = new FileInputStream(new File(pngFileName));//得到数据流
+                    File file = new File(pngFileName);
+                    InputStream is = null;
+                    if (file != null && file.exists()) {
+                        is = new FileInputStream(file);//得到数据流
+                    }
                     if (is != null) {//如果有图片直接显示，否则网络下载
                         Bitmap bitmap = BitmapFactory.decodeStream(is);//将流转化成Bitmap对象
                         holder.pngImageView.setImageBitmap(bitmap);//显示图片

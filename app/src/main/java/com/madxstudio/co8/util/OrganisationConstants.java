@@ -1,6 +1,7 @@
 package com.madxstudio.co8.util;
 
 import com.madxstudio.co8.App;
+import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 
 /**
@@ -10,7 +11,7 @@ import com.madxstudio.co8.R;
  * @version 1.0
  */
 public class OrganisationConstants {
-    public static final String CO8_API_SERVER = App.getContextInstance().getString(R.string.api_server) + "/co8/index.php/api/";
+    public static final String CO8_API_SERVER = Constant.API_SERVER + "/co8/index.php/api/";
 
     /**
      * 测试所用的{@code org_id}正式版时要删除
