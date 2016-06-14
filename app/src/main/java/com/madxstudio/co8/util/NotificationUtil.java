@@ -264,6 +264,7 @@ public class NotificationUtil {
                         ||"accept".equals(action)
                         ||"updateRel".equals(action)
                         ||"rejectedJoinOrg".equals(action)
+                        ||"reject".equals(action)
                         ){
                     intent = new Intent(context, MemberActivity.class);
                 }

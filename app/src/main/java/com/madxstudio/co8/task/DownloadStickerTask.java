@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.ui.MainActivity;
@@ -47,8 +49,9 @@ public class DownloadStickerTask {
         if (null != progressBar) {
             progressBar.setVisibility(View.GONE);
         }
+        Glide.with(App.getContextInstance()).load(urlPath).asGif().error(defaultResource).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(gifImageView);
         final String downloadPath = FileUtil.getBigStickerPath(App.getContextInstance(), stickerGroupPath, stickerName, Constant.Sticker_Gif);
-        ImageLoader.getInstance().displayImage(urlPath, gifImageView, UniversalImageLoaderUtil.options);
+//        ImageLoader.getInstance().displayImage(urlPath, gifImageView, UniversalImageLoaderUtil.options);
         new Thread() {
             @Override
             public void run() {

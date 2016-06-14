@@ -52,8 +52,13 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
      */
     private final static int TAG_REJECT_JOIN_ORGANIZATION = 9;
 
+    /**
+     * Contact reject your request 拒绝加你为成员
+     */
+    private final static int TAG_REJECT_YOUR_REQUEST = 10;
+
     //add，awaiting，auto-accept，added(同意)，updated(修改关系)。
-    private String[] action ;
+    private String[] action;
     private String moduleAction;
     private String memberId;
 
@@ -100,10 +105,8 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
 //            holder.add.setVisibility(View.GONE);
 //        }
 
-        switch (tag)
-        {
-            case TAG_ADD:
-            {
+        switch (tag) {
+            case TAG_ADD: {
                 holder.add.setVisibility(View.VISIBLE);
 
                 holder.awaiting.setVisibility(View.GONE);
@@ -114,8 +117,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             }
             break;
 
-            case TAG_AWAITING:
-            {
+            case TAG_AWAITING: {
                 holder.awaiting.setVisibility(View.VISIBLE);
 
                 holder.add.setVisibility(View.GONE);
@@ -126,8 +128,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             }
             break;
 
-            case TAG_AUTO_ACCEPT:
-            {
+            case TAG_AUTO_ACCEPT: {
                 holder.added.setVisibility(View.VISIBLE);
 
                 holder.add.setVisibility(View.GONE);
@@ -138,8 +139,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             }
             break;
 
-            case TAG_ADDED:
-            {
+            case TAG_ADDED: {
                 holder.added.setVisibility(View.VISIBLE);
 
                 holder.add.setVisibility(View.GONE);
@@ -150,8 +150,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             }
             break;
 
-            case TAG_UPDATED:
-            {
+            case TAG_UPDATED: {
                 holder.updated.setVisibility(View.VISIBLE);
 
                 holder.add.setVisibility(View.GONE);
@@ -199,6 +198,13 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                     }
                 });
                 break;
+            case TAG_REJECT_YOUR_REQUEST:
+                holder.updated.setVisibility(View.GONE);
+                holder.add.setVisibility(View.GONE);
+                holder.awaiting.setVisibility(View.GONE);
+                holder.added.setVisibility(View.GONE);
+                holder.owner_content.setText(action[TAG_REJECT_YOUR_REQUEST]);
+                break;
 
             default:
                 break;
@@ -222,7 +228,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         });
     }
 
-    public int tag(String moduleAction){
+    public int tag(String moduleAction) {
         switch (moduleAction) {
             case "add":
                 tag = TAG_ADD;
@@ -255,6 +261,8 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             case "rejectedJoinOrg":
                 tag = TAG_REJECT_JOIN_ORGANIZATION;
                 break;
+            case "reject":
+                tag=TAG_REJECT_YOUR_REQUEST;
         }
         return tag;
     }
@@ -279,14 +287,14 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         public VHItem(View itemView) {
             // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
             super(itemView);
-            owner_head= (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
-            owner_name= (TextView) itemView.findViewById(R.id.owner_name);
-            owner_content = (TextView)itemView.findViewById(R.id.owner_content);
+            owner_head = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
+            owner_name = (TextView) itemView.findViewById(R.id.owner_name);
+            owner_content = (TextView) itemView.findViewById(R.id.owner_content);
 
-            add = (TextView)itemView.findViewById(R.id.add);
-            awaiting = (TextView)itemView.findViewById(R.id.awaiting);
-            added = (TextView)itemView.findViewById(R.id.added);
-            updated = (TextView)itemView.findViewById(R.id.updated);
+            add = (TextView) itemView.findViewById(R.id.add);
+            awaiting = (TextView) itemView.findViewById(R.id.awaiting);
+            added = (TextView) itemView.findViewById(R.id.added);
+            updated = (TextView) itemView.findViewById(R.id.updated);
 
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -299,7 +307,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
 
             awaiting.setOnClickListener(new View.OnClickListener() {
                 @Override
-                    public void onClick(View v) {
+                public void onClick(View v) {
                     if (itemClickListener != null && data != null) {
                         itemClickListener.aWaittingClick(data.get(getAdapterPosition()), getAdapterPosition());
                     }
@@ -307,6 +315,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             });
         }
     }
+
     public ItemClickListener itemClickListener;
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
@@ -315,6 +324,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
 
     public interface ItemClickListener {
         void aWaittingClick(MemberEntity memberId, int position);
+
         void addClick(MemberEntity memberId, int position);
 
     }
