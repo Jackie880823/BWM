@@ -108,6 +108,8 @@ public class NotificationMessageGenerateUtil {
             msg = context.getString(R.string.notification_action_member_removeContact, action_owner, item_name);
         }else if ("rejectedJoinOrg".equals(action)) {
             msg = context.getString(R.string.notification_action_member_rejectedJoinOrg, action_owner, item_name);
+        }else if ("reject".equals(action)) {
+            msg = context.getString(R.string.notification_action_member_rejectedRequest, action_owner, item_name);
         }
         return msg;
     }

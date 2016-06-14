@@ -828,6 +828,7 @@
     <string name="notification_action_member_removeAdmin">%1$s has removed you as the admin of %2$s</string>
     <string name="notification_action_member_removeContact">%1$s has removed %2$s from your contact</string>
     <string name="notification_action_member_rejectedJoinOrg">%1$s has rejected you to join %2$s</string>
+    <string name="notification_action_member_rejectedRequest">%1$s has rejected your add request %2$s</string>
     <string name="notification_action_organisation_join">%1$s wants to join %2$s</string>
     <string name="co8_id">co8 ID:</string>
     <string name="text_erro_email">Incorrect email format.</string>
