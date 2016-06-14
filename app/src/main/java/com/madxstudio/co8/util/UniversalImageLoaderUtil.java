@@ -10,6 +10,7 @@ import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.exception.StickerTypeException;
+import com.madxstudio.co8.task.DownloadStickerTask;
 import com.madxstudio.co8.ui.MainActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -81,6 +82,11 @@ public class UniversalImageLoaderUtil {
         ImageLoader.getInstance().clearDiskCache();
     }
 
+    public static DisplayImageOptions.Builder cloneFrom(DisplayImageOptions options) {
+        DisplayImageOptions.Builder result = new DisplayImageOptions.Builder().cloneFrom(options);
+        return result;
+    }
+
     /**
      * <br>解码表情的方法，传入显示表情的控件和表情相关的参数即可正确加载表情图片.
      * <br>如果传入的表情格式不是{@linkplain Constant#Sticker_Gif} 或 {@linkplain Constant#Sticker_Png}
@@ -114,17 +120,24 @@ public class UniversalImageLoaderUtil {
         if (Constant.Sticker_Gif.equals(type)) {
             // gif格式的表情图片
 //            filePath += "_B.gif";
-            stickerFile = new File(filePath);
-            if (stickerFile.exists()) {
-                // 图片存在直接读取显示
-                try {
+            try {
+                stickerFile = new File(filePath);
+                if (stickerFile.exists()) {
+                    // 图片存在直接读取显示
                     GifDrawable gifDrawable = new GifDrawable(stickerFile);
                     imageView.setImageDrawable(gifDrawable);
-                    return;
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } else {
+                    DownloadStickerTask.getInstance().downloadGifSticker(null,
+                            stickerGroupPath, stickerName, R.drawable
+                                    .network_image_default, imageView);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+                DownloadStickerTask.getInstance().downloadGifSticker(null,
+                        stickerGroupPath, stickerName, R.drawable
+                                .network_image_default, imageView);
             }
+            return;
         } else if (Constant.Sticker_Png.equals(type)) {
             // png格式的表情图片
 //            filePath += "_B.png";
