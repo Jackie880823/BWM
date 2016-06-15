@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
@@ -22,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
+import com.madxstudio.co8.entity.MemberEntity;
 import com.madxstudio.co8.entity.PhotoEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
@@ -47,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -104,6 +107,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private String stMale;
 
     private static final int GET_USER_ENTITY = 0X11;
+    private final static int ADD_MEMBER = 0X12;
+    private boolean isFromMember = false;
 
 
     UserEntity userEntity = new UserEntity();
@@ -249,6 +254,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         stFemale = getResources().getString(R.string.text_female);
         stMale = getResources().getString(R.string.text_male);
 
+        isFromMember = getParentActivity().getIntent().getBooleanExtra(Constant.LOOK_USER_PROFILE, false);
+
         rl_position.setVisibility(View.VISIBLE);
         rl_department.setVisibility(View.VISIBLE);
 //        if (profileBackgroundId == 6) {
@@ -261,9 +268,13 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         btAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getParentActivity(), RelationshipActivity.class);
-                intent.putExtra("member_id", userEntity.getUser_id());
-                startActivityForResult(intent, CHOOSE_RELATION_CODE);
+                if (isFromMember) {
+                    doAdd();
+                } else {
+                    Intent intent = new Intent(getParentActivity(), RelationshipActivity.class);
+                    intent.putExtra("member_id", userEntity.getUser_id());
+                    startActivityForResult(intent, CHOOSE_RELATION_CODE);
+                }
             }
         });
 
@@ -281,14 +292,18 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         btMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
+                if (isFromMember) {
+                    addRemove();
+                } else {
+                    Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
 //                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                if (userEntity != null) {
-                    intent2.putExtra("type", 0);
-                    //如果上个页面没有groupId或者groupName
-                    intent2.putExtra("groupId", userEntity.getGroup_id());
-                    intent2.putExtra("titleName", userEntity.getUser_given_name());
-                    startActivity(intent2);
+                    if (userEntity != null) {
+                        intent2.putExtra("type", 0);
+                        //如果上个页面没有groupId或者groupName
+                        intent2.putExtra("groupId", userEntity.getGroup_id());
+                        intent2.putExtra("titleName", userEntity.getUser_given_name());
+                        startActivity(intent2);
+                    }
                 }
             }
         });
@@ -313,9 +328,11 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             }
         });
 
-        if (getParentActivity().getIntent().getBooleanExtra(Constant.LOOK_USER_PROFILE, false)) {
-            btAddMember.setVisibility(View.GONE);
-            btMessage.setVisibility(View.GONE);
+        if (isFromMember) {
+            btAddMember.setVisibility(View.VISIBLE);
+            btAddMember.setText(getString(R.string.text_dialog_accept));
+            btMessage.setText(getString(R.string.text_item_reject));
+            btMessage.setVisibility(View.VISIBLE);
         }
 
         if (userEntity != null) {
@@ -389,6 +406,70 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         } else {
             networkImageView.setDefaultImageResId(profileBackgroundId);
         }
+    }
+
+    private void addRemove() {
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.url = String.format(Constant.API_REJECT_PENDING_MEMBER, MainActivity.getUser().getUser_id());
+        Map<String, String> params = new HashMap<>();
+        if (TextUtils.isEmpty(memberId) && userEntity != null) {
+            memberId = userEntity.getUser_id();
+        }
+        params.put("requestor_id", memberId);
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+        new HttpTools(getActivity()).put(requestInfo, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {//{"response_status_code":"200","response_status":"Success","message":"Successfully reject member."}
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    String response_status = jsonObject.optString("response_status");
+                    if ("Success".equals(response_status)) {
+                        getActivity().setResult(getActivity().RESULT_OK);
+                        getActivity().finish();
+                    } else {
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
+    private void doAdd() {
+        vProgress.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(getActivity(), AddMemberWorkFlow.class);
+        intent.putExtra(AddMemberWorkFlow.FLAG_FROM, MainActivity.getUser().getUser_id());
+        if (TextUtils.isEmpty(memberId) && userEntity != null) {
+            memberId = userEntity.getUser_id();
+        }
+        intent.putExtra(AddMemberWorkFlow.FLAG_TO, memberId);
+        startActivityForResult(intent, ADD_MEMBER);
     }
 
     private void setTvBirthday(String strDOB) {
@@ -473,9 +554,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             layoutParam.setMargins(0, 0, 0, DensityUtil.dip2px(getParentActivity(), 50));
             rlPhone.setLayoutParams(layoutParam);
         }
-        if (getParentActivity().getIntent().getBooleanExtra(Constant.LOOK_USER_PROFILE, false)) {
-            btAddMember.setVisibility(View.GONE);
-            btMessage.setVisibility(View.GONE);
+        if (isFromMember) {
+            btAddMember.setVisibility(View.VISIBLE);
+            btMessage.setVisibility(View.VISIBLE);
         }
     }
 
@@ -541,6 +622,14 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 case CHOOSE_RELATION_CODE:
                     userEntity.setTree_type_name(data.getStringExtra("relationship"));
                     addUser(userEntity.getTree_type_name());
+                case ADD_MEMBER:
+                    if (resultCode == getActivity().RESULT_OK) {
+                        getActivity().setResult(getActivity().RESULT_OK);
+                        getActivity().finish();
+                    } else {
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_canceled);
+                    }
+                    vProgress.setVisibility(View.GONE);
                 default:
                     break;
             }

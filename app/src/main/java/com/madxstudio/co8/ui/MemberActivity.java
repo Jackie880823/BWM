@@ -86,7 +86,7 @@ public class MemberActivity extends BaseActivity {
     public void initView() {
 
         mProgressDialog = getViewById(R.id.rl_progress);
-        mProgressDialog.setVisibility(View.VISIBLE);
+//        mProgressDialog.setVisibility(View.VISIBLE);
         tvNoDate = getViewById(R.id.tv_no_data_display);
         llNoData = getViewById(R.id.ll_no_data_display);
 
@@ -142,7 +142,7 @@ public class MemberActivity extends BaseActivity {
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
-        mProgressDialog.setVisibility(View.INVISIBLE);
+        mProgressDialog.setVisibility(View.GONE);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class MemberActivity extends BaseActivity {
         new HttpTools(this).get(String.format(Constant.API_BONDALERT_MEMEBER, MainActivity.getUser().getUser_id()), null, TAG, new HttpCallback() {
             @Override
             public void onStart() {
-
+                mProgressDialog.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -223,6 +223,7 @@ public class MemberActivity extends BaseActivity {
     }
 
     private final static int ADD_MEMBER = 10;
+    private final static int TO_PROFILE = 11;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -237,6 +238,11 @@ public class MemberActivity extends BaseActivity {
                     MessageUtil.getInstance().showShortToast(R.string.msg_action_canceled);
                 }
                 mProgressDialog.setVisibility(View.GONE);
+                break;
+            case TO_PROFILE:
+                if (resultCode == RESULT_OK) {
+                    requestData();
+                }
                 break;
         }
     }
@@ -287,7 +293,7 @@ public class MemberActivity extends BaseActivity {
                 Intent intent = new Intent(MemberActivity.this, FamilyViewProfileActivity.class);
                 intent.putExtra(UserEntity.EXTRA_MEMBER_ID, member.getAction_user_id());
                 intent.putExtra(Constant.LOOK_USER_PROFILE, true);
-                startActivity(intent);
+                startActivityForResult(intent, TO_PROFILE);
             }
         });
 

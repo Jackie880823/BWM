@@ -1,7 +1,6 @@
 package com.madxstudio.co8.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +11,14 @@ import com.android.volley.ext.tools.BitmapTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.MemberEntity;
-import com.madxstudio.co8.ui.OrgDetailActivity;
-import com.madxstudio.co8.ui.OrganisationActivity;
-import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 
 import java.util.List;
 
 public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
-
     private Context mContext;
     private List<MemberEntity> data;
     private int tag;
-
     //可以做为字符数组的下标
     private final static int TAG_ADD = 0;
     private final static int TAG_AWAITING = 1;
@@ -75,7 +69,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         return new VHItem(view);
     }
 
-
     public void add(List<MemberEntity> newData) {
         data.addAll(newData);
         notifyDataSetChanged();
@@ -106,63 +99,45 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
 //        }
 
         switch (tag) {
-            case TAG_ADD: {
+            case TAG_ADD:
                 holder.add.setVisibility(View.VISIBLE);
-
                 holder.awaiting.setVisibility(View.GONE);
                 holder.added.setVisibility(View.GONE);
                 holder.updated.setVisibility(View.GONE);
-
                 holder.owner_content.setText(action[TAG_ADD] + memberEntity.getRelationship());
-            }
-            break;
-
-            case TAG_AWAITING: {
+                break;
+            case TAG_AWAITING:
                 holder.awaiting.setVisibility(View.VISIBLE);
-
                 holder.add.setVisibility(View.GONE);
                 holder.added.setVisibility(View.GONE);
                 holder.updated.setVisibility(View.GONE);
-
                 holder.owner_content.setText(action[TAG_AWAITING]);
-            }
-            break;
-
-            case TAG_AUTO_ACCEPT: {
+                break;
+            case TAG_AUTO_ACCEPT:
                 holder.added.setVisibility(View.VISIBLE);
-
                 holder.add.setVisibility(View.GONE);
                 holder.awaiting.setVisibility(View.GONE);
                 holder.updated.setVisibility(View.GONE);
-
                 holder.owner_content.setText(action[TAG_AUTO_ACCEPT]);
-            }
-            break;
-
-            case TAG_ADDED: {
+                break;
+            case TAG_ADDED:
                 holder.added.setVisibility(View.VISIBLE);
-
                 holder.add.setVisibility(View.GONE);
                 holder.awaiting.setVisibility(View.GONE);
                 holder.updated.setVisibility(View.GONE);
-
                 holder.owner_content.setText(action[TAG_ADDED]);
-            }
-            break;
-
-            case TAG_UPDATED: {
+                break;
+            case TAG_UPDATED:
                 holder.updated.setVisibility(View.VISIBLE);
-
                 holder.add.setVisibility(View.GONE);
                 holder.awaiting.setVisibility(View.GONE);
                 holder.added.setVisibility(View.GONE);
-
                 holder.owner_content.setText(action[TAG_UPDATED] + memberEntity.getRelationship());
-            }
-            break;
-
+                break;
             case TAG_JOIN_ORG:
+                break;
             case TAG_SET_ADMIN:
+                break;
             case TAG_REMOVE_ADMIN:
                 setOrgAlert(holder, memberEntity, tag);
                 break;
@@ -171,16 +146,15 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                 holder.add.setVisibility(View.GONE);
                 holder.awaiting.setVisibility(View.GONE);
                 holder.added.setVisibility(View.GONE);
-
                 holder.owner_content.setText(action[TAG_REMOVE_CONTACT] + memberEntity.getRelationship());
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent othersIntent = new Intent(mContext, OrgDetailActivity.class);
-                        othersIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
-                        mContext.startActivity(othersIntent);
-                    }
-                });
+//                holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent othersIntent = new Intent(mContext, OrgDetailActivity.class);
+//                        othersIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
+//                        mContext.startActivity(othersIntent);
+//                    }
+//                });
                 break;
 
             case TAG_REJECT_JOIN_ORGANIZATION:
@@ -188,15 +162,14 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                 holder.add.setVisibility(View.GONE);
                 holder.awaiting.setVisibility(View.GONE);
                 holder.added.setVisibility(View.GONE);
-
                 holder.owner_content.setText(action[TAG_REJECT_JOIN_ORGANIZATION] + memberEntity.getRelationship());
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent othersIntent = new Intent(mContext, OrganisationActivity.class);
-                        mContext.startActivity(othersIntent);
-                    }
-                });
+//                holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent othersIntent = new Intent(mContext, OrganisationActivity.class);
+//                        mContext.startActivity(othersIntent);
+//                    }
+//                });
                 break;
             case TAG_REJECT_YOUR_REQUEST:
                 holder.updated.setVisibility(View.GONE);
@@ -205,11 +178,9 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                 holder.added.setVisibility(View.GONE);
                 holder.owner_content.setText(action[TAG_REJECT_YOUR_REQUEST]);
                 break;
-
             default:
                 break;
         }
-
     }
 
     private void setOrgAlert(VHItem holder, MemberEntity memberEntity, int alertTag) {
@@ -217,15 +188,14 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         holder.add.setVisibility(View.GONE);
         holder.awaiting.setVisibility(View.GONE);
         holder.added.setVisibility(View.GONE);
-
         holder.owner_content.setText(action[alertTag] + memberEntity.getRelationship());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent companyIntent = new Intent(mContext, CompanyActivity.class);
-                mContext.startActivity(companyIntent);
-            }
-        });
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent companyIntent = new Intent(mContext, CompanyActivity.class);
+//                mContext.startActivity(companyIntent);
+//            }
+//        });
     }
 
     public int tag(String moduleAction) {
@@ -245,7 +215,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             case "updateRel":
                 tag = TAG_UPDATED;
                 break;
-
             case "approvedJoinOrg":
                 tag = TAG_JOIN_ORG;
                 break;
@@ -262,7 +231,11 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                 tag = TAG_REJECT_JOIN_ORGANIZATION;
                 break;
             case "reject":
-                tag=TAG_REJECT_YOUR_REQUEST;
+                tag = TAG_REJECT_YOUR_REQUEST;
+                break;
+            default:
+                tag = -1;
+                break;
         }
         return tag;
     }
@@ -290,7 +263,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             owner_head = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
             owner_name = (TextView) itemView.findViewById(R.id.owner_name);
             owner_content = (TextView) itemView.findViewById(R.id.owner_content);
-
             add = (TextView) itemView.findViewById(R.id.add);
             awaiting = (TextView) itemView.findViewById(R.id.awaiting);
             added = (TextView) itemView.findViewById(R.id.added);
@@ -326,7 +298,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         void aWaittingClick(MemberEntity memberId, int position);
 
         void addClick(MemberEntity memberId, int position);
-
     }
 
 }
