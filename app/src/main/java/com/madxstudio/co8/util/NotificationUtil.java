@@ -268,9 +268,9 @@ public class NotificationUtil {
                         ) {
                     intent = new Intent(context, MemberActivity.class);
                 } else if ("approvedJoinOrg".equals(action)) {
-                    Intent pendingRequestsIntent = new Intent(context, OrgDetailActivity.class);
-                    pendingRequestsIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_PENDING_REQUEST);
-                    pendingRequestsIntent.putExtra(Constant.REQUEST_TYPE, Constant.ADMIN_REQUEST);
+                    intent = new Intent(context, OrgDetailActivity.class);
+                    intent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_PENDING_REQUEST);
+                    intent.putExtra(Constant.REQUEST_TYPE, Constant.ADMIN_REQUEST);
                 } else if ("setAdmin".equals(action)
                         || "removeAdmin".equals(action)
                         ) {
