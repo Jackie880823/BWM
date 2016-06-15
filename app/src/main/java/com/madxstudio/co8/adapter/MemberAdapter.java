@@ -135,8 +135,18 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                 holder.owner_content.setText(action[TAG_UPDATED] + memberEntity.getRelationship());
                 break;
             case TAG_JOIN_ORG:
+                holder.updated.setVisibility(View.GONE);
+                holder.add.setVisibility(View.GONE);
+                holder.awaiting.setVisibility(View.GONE);
+                holder.added.setVisibility(View.GONE);
+                holder.owner_content.setText(action[TAG_JOIN_ORG]);
                 break;
             case TAG_SET_ADMIN:
+                holder.updated.setVisibility(View.GONE);
+                holder.add.setVisibility(View.GONE);
+                holder.awaiting.setVisibility(View.GONE);
+                holder.added.setVisibility(View.GONE);
+                holder.owner_content.setText(action[TAG_SET_ADMIN]);
                 break;
             case TAG_REMOVE_ADMIN:
                 setOrgAlert(holder, memberEntity, tag);
