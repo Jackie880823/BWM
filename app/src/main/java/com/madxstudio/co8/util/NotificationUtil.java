@@ -59,8 +59,7 @@ public class NotificationUtil {
         BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("goodjob"), BONDALERT_OTHER("other"),
         BONDALERT_MEMBER("member"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group"), BONDALERT_INACTIVE("inactive"),
         LOCAL_PRIVACY_SETTINGS("privacy_settings"), LOCAL_NEW_DIARY("new_diary"), LOCAL_STICKIES_STORE("stickies_store"),
-        LOCAL_FAMILY_PAGE("family_page"),ORGANISATION("organisation")
-        ;
+        LOCAL_FAMILY_PAGE("family_page"), ORGANISATION("organisation");
 
         private String typeName;
 
@@ -118,6 +117,7 @@ public class NotificationUtil {
         getNotivficationManager(context).notify(GCM_MESSAGE, mBuilder.build());
 
     }
+
     public static void sendLocalNotification(Context context, MessageType messageType) throws JSONException {
         Notification notification = getLocalNotification(context, messageType);
         if (notification != null) {
@@ -259,22 +259,23 @@ public class NotificationUtil {
 //                    //TODO
 //                    intent = new Intent(context, MemberActivity.class);
 //                }
-                if("add".equals(action)
-                        ||"autoAcp".equals(action)
-                        ||"accept".equals(action)
-                        ||"updateRel".equals(action)
-                        ||"rejectedJoinOrg".equals(action)
-                        ||"reject".equals(action)
-                        ){
+                if ("add".equals(action)
+                        || "autoAcp".equals(action)
+                        || "accept".equals(action)
+                        || "updateRel".equals(action)
+                        || "rejectedJoinOrg".equals(action)
+                        || "reject".equals(action)
+                        ) {
                     intent = new Intent(context, MemberActivity.class);
-                }
-                else if("approvedJoinOrg".equals(action)
-                        ||"setAdmin".equals(action)
-                        ||"removeAdmin".equals(action)
-                        ){
+                } else if ("approvedJoinOrg".equals(action)) {
+                    Intent pendingRequestsIntent = new Intent(context, OrgDetailActivity.class);
+                    pendingRequestsIntent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_PENDING_REQUEST);
+                    pendingRequestsIntent.putExtra(Constant.REQUEST_TYPE, Constant.ADMIN_REQUEST);
+                } else if ("setAdmin".equals(action)
+                        || "removeAdmin".equals(action)
+                        ) {
                     intent = new Intent(context, CompanyActivity.class);
-                }
-                else if("removeContact".equals(action)){
+                } else if ("removeContact".equals(action)) {
                     intent = new Intent(context, OrgDetailActivity.class);
                     intent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_OTHER);
                 }
@@ -392,7 +393,7 @@ public class NotificationUtil {
                 intent = new Intent(context, OrgDetailActivity.class);
                 intent.putExtra(Constant.ORG_TRANSMIT_DATA, Constant.ORG_TRANSMIT_PENDING_REQUEST);
                 intent.putExtra(Constant.REQUEST_TYPE, Constant.ADMIN_REQUEST);
-                newMsg = NotificationMessageGenerateUtil.getOrganisationMessage(context, action, action_owner,item_name);
+                newMsg = NotificationMessageGenerateUtil.getOrganisationMessage(context, action, action_owner, item_name);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
 
@@ -428,7 +429,7 @@ public class NotificationUtil {
 
     private static Notification getLocalNotification(Context context, MessageType messageType) throws JSONException {
         Notification notification = null;
-        notification = getSingleNotification(context, getLocalFowwordIntent(context,messageType), context.getString(R.string.app_name), newMsg, 1);
+        notification = getSingleNotification(context, getLocalFowwordIntent(context, messageType), context.getString(R.string.app_name), newMsg, 1);
         return notification;
     }
 
@@ -455,7 +456,7 @@ public class NotificationUtil {
             case LOCAL_FAMILY_PAGE:
                 smallIcon = R.drawable.bondalert_member_icon;
                 intent = new Intent(context, MainActivity.class);
-                intent.putExtra(MainActivity.JUMP_INDEX,0);
+                intent.putExtra(MainActivity.JUMP_INDEX, 0);
                 newMsg = context.getString(R.string.local_notification_text_for_5_day);
                 break;
         }
@@ -691,8 +692,7 @@ public class NotificationUtil {
 
     public static final String NOTIFICATION_DELETED_ACTION = "notification_deleted_action";
 
-    public static void clearBadge(Context context)
-    {
+    public static void clearBadge(Context context) {
         ShortcutBadger.with(context).remove();
         allCount = 0;
     }
