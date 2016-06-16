@@ -16,20 +16,18 @@
             style="@style/text_title_default"
             android:layout_centerVertical="true"
             android:textColor="@color/tab_color_press4"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/news_content"
             style="@style/text_dark_default"
-             />
+            android:layout_marginTop="@dimen/_4dp" />
 
 
         <TextView
             android:id="@+id/news_date"
             style="@style/text_light_default"
-            android:layout_marginTop="@dimen/default_view_margin"
-             />
+            android:layout_marginTop="@dimen/_4dp" />
 
     </LinearLayout>
 

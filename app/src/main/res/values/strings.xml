@@ -386,7 +386,7 @@
     <string name="text_cancelled_event">%s cancelled meeting.</string>
     <string name="text_love_comment_event">%s likes your comment in meeting.</string>
     <string name="text_love_event">%s likes your meeting.</string>
-    <string name="text_upcoming_event">Upcoming meeting: %s </string>
+    <string name="text_upcoming_event">Upcoming Meeting: %s </string>
     <string name="text_dialog_save_draft">Save as Draft?</string>
     <string name="text_empty_add_member">You\'re not alone. Tap on + to start collaborating!</string>
     <string name="text_empty_add_group">Tap on + to create new group</string>

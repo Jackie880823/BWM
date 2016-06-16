@@ -20,44 +20,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/_10dp"
-            android:layout_toRightOf="@+id/owner_head"
             android:layout_toLeftOf="@+id/ib_option"
+            android:layout_toRightOf="@+id/owner_head"
             android:orientation="vertical"
+            android:paddingLeft="@dimen/_10dp"
 
             >
 
             <TextView
                 android:id="@+id/tv_alert_group_content"
                 style="@style/text_title_default"
-                android:layout_weight="2"
                 android:layout_centerVertical="true"
-                android:textColor="@color/tab_color_press4"
+                android:layout_weight="2"
                 android:lines="2"
-
-                />
+                android:textColor="@color/tab_color_press4" />
 
             <TextView
                 android:id="@+id/tv_create_date"
                 style="@style/text_dark_default"
+                android:layout_marginTop="@dimen/_4dp"
                 android:layout_weight="1"
-                android:layout_marginTop="@dimen/default_view_margin"
-
-                android:textColor="#D3D3D3"/>
+                android:textColor="#D3D3D3" />
 
         </LinearLayout>
-
 
 
         <ImageButton
             android:id="@+id/ib_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:background="#00000000"
-            android:src="@drawable/ib_alert_group_option"
-            />
+            android:src="@drawable/ib_alert_group_option" />
     </RelativeLayout>
 
     <View style="@style/split_line_default" />

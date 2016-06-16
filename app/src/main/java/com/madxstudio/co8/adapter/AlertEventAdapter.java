@@ -42,8 +42,13 @@ public class AlertEventAdapter extends RecyclerView.Adapter<AlertEventAdapter.VH
     @Override
     public void onBindViewHolder(VHItem holder, int position) {
         AlertEventEntity alertEventEntity = data.get(position);
-        holder.news_title.setText(alertEventEntity.getModule_name());
-        holder.news_content.setText(selectEvent(alertEventEntity.getModule_action(), alertEventEntity.getAction_username(), alertEventEntity.getPostowner_username()));
+        if ("reminder".equalsIgnoreCase(alertEventEntity.getModule_action())) {
+            holder.news_title.setText(String.format(mContext.getString(R.string.text_upcoming_event), ""));
+            holder.news_content.setText(alertEventEntity.getModule_name());
+        } else {
+            holder.news_title.setText(alertEventEntity.getModule_name());
+            holder.news_content.setText(selectEvent(alertEventEntity.getModule_action(), alertEventEntity.getAction_username(), alertEventEntity.getPostowner_username()));
+        }
         holder.news_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, alertEventEntity.getCreation_date()));
     }
 
@@ -75,9 +80,9 @@ public class AlertEventAdapter extends RecyclerView.Adapter<AlertEventAdapter.VH
             case "love":
                 whatEvent = String.format(mContext.getString(R.string.text_love_event), moduleName);
                 break;
-            case "reminder":
-                whatEvent = String.format(mContext.getString(R.string.text_upcoming_event), moduleName);
-                break;
+//            case "reminder":
+//                whatEvent = String.format(mContext.getString(R.string.text_upcoming_event), moduleName);
+//                break;
             case "cancel":
                 whatEvent = String.format(mContext.getString(R.string.text_cancelled_event), moduleName);
                 break;
