@@ -26,13 +26,9 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 /**
  * Created by wing on 15/3/23.
  */
-public class ViewPicFragment extends BaseLazyLoadFragment {
-
-    private String pic_url;
+public class ViewPicFragment extends BaseFragment {
+    private static final String TAG = ViewPicFragment.class.getSimpleName();
     private ImageView iv_pic;
-    PhotoViewAttacher mAttacher;
-//    private PhotoView iv_pic;
-    private RelativeLayout btn_save_2_local;
     private final static int IMAGE_LOADED_SUCCESSED = 10;
     private final static int HIDE_WAITTING = 11;
     private final static int SHOW_WAITTING = 12;
@@ -40,7 +36,6 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 
     public ViewPicFragment() {
         super();
-        useLazyLoad = true;
     }
 
     @Override
@@ -59,7 +54,8 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
             switch (msg.what) {
                 case IMAGE_LOADED_SUCCESSED:
                     if (ViewPicFragment.this.isAdded()) {
-                        iv_pic.setImageDrawable(new BitmapDrawable(getResources(), (Bitmap) msg.obj));
+                        iv_pic.setImageDrawable(new BitmapDrawable(getResources(), (Bitmap) msg
+                                .obj));
                     }
                     mHandler.sendEmptyMessage(HIDE_WAITTING);
                     break;
@@ -89,7 +85,6 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
         if (vProgress != null) {
             vProgress.setVisibility(View.GONE);
         }
-        clearCache();
         super.onDestroy();
     }
 
@@ -98,112 +93,38 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
     @Override
     public void initView() {
         mBitmapTools = BitmapTools.getInstance(getActivity());
-//        iv_pic = (PhotoView) getViewById(R.id.iv_pic);
-//        btn_save_2_local = (RelativeLayout) getViewById(R.id.btn_save_2_local);
-//        btn_save_2_local.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (bitmapCache != null && !bitmapCache.isRecycled()) {
-//                    try {
-//                        PicturesCacheUtil.saveImageToGallery(getActivity(), bitmapCache, "wall");
-//                        MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
-//                    } catch (Exception e) {
-//                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
-//                    }
-//                }
-//            }
-//        });
-//        if (!TextUtils.isEmpty(pic_url)) {
-//
-//            new HttpTools(getActivity()).download(pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
-//                @Override
-//                public void onStart() {
-//                    iv_pic.setImageResource(R.drawable.network_image_default);
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    mHandler.sendEmptyMessage(HIDE_WAITTING);
-//                }
-//
-//                @Override
-//                public void onResult(String string) {
-//
-//                    if (iv_pic != null) {
-//                        bitmapCache = LocalImageLoader.loadBitmapFromFile(getActivity(), string, iv_pic.getWidth(), iv_pic.getHeight());
-//                        iv_pic.setImageBitmap(bitmapCache);
-//
-////                    iv_pic.setImageBitmap(getImageFromFile(string, iv_pic.getWidth(), iv_pic.getHeight()));
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onError(Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//                @Override
-//                public void onCancelled() {
-//
-//                }
-//
-//                @Override
-//                public void onLoading(long count, long current) {
-//
-//                }
-//            });
-//        }
-    }
-
-
-    @Override
-    public boolean getUserVisibleHint() {
-
-        return super.getUserVisibleHint();
     }
 
     @Override
     public void requestData() {
-//        if (TextUtils.isEmpty(pic_url)) {
-//            getActivity().finish();
-//            return;
-
-
-//        }
-
     }
 
-
-    private void clearCache() {
-//        if (bitmapCache != null) {
-//            bitmapCache.recycle();
-//        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadPic();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        clearCache();
     }
 
     BitmapTools mBitmapTools;
 
     DownloadRequest downloadRequest;
 
-    @Override
-    protected void lazyLoad() {
-
-        pic_url = getArguments().getString("pic_url");
+    protected void loadPic() {
+        String pic_url = getArguments().getString("pic_url");
         iv_pic = (ImageView) getViewById(R.id.iv_pic);
-        btn_save_2_local = (RelativeLayout) getViewById(R.id.btn_save_2_local);
+        RelativeLayout btn_save_2_local = (RelativeLayout) getViewById(R.id.btn_save_2_local);
         btn_save_2_local.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (bitmapCache != null && !bitmapCache.isRecycled()) {
                     try {
-                        String path = PicturesCacheUtil.saveImageToGallery(getActivity(), new File(cacheFilePath), "wall");
-                        MessageUtil.getInstance().showShortToast(getActivity().getString(R.string.saved_to_path) + path);
+                        PicturesCacheUtil.saveImageToGallery(getActivity(), new File
+                                (cacheFilePath), "wall");
                     } catch (Exception e) {
                         MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
                     }
@@ -217,51 +138,11 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
             if (downloadRequest != null) {
                 downloadRequest.cancel();
             }
-            mHandler.sendEmptyMessage(SHOW_WAITTING);
-
             iv_pic.setImageResource(R.drawable.network_image_default);
-//            VolleyUtil.loadImage(getActivity(), pic_url, new ImageLoader.ImageListener() {
-//                @Override
-//                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-//                    PicturesCacheUtil.saveToCachePic(getActivity(),response.getBitmap());
-//                    bitmapCache = response.getBitmap();
-//                    iv_pic.setImageBitmap(bitmapCache);
-//                    mHandler.sendEmptyMessage(HIDE_WAITTING);
-//                }
-//
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//                    mHandler.sendEmptyMessage(HIDE_WAITTING);
-//                }
-//            });
 
-//                    iv_pic.setImageResource(R.drawable.network_image_default);
-//            mHandler.sendEmptyMessage(SHOW_WAITTING);
-//            ImageCacheManger.loadImage(pic_url, new ImageLoader.ImageListener() {
-//                @Override
-//                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-//                    if (iv_pic != null) {
-//                        if (response.getBitmap() != null) {
-//                            bitmapCache = response.getBitmap();
-//                            iv_pic.setImageBitmap(bitmapCache);
-//
-//                        } else {
-//                            iv_pic.setImageResource(R.drawable.network_image_default);
-//                        }
-//                    }
-//                    mHandler.sendEmptyMessage(HIDE_WAITTING);
-//                }
-//
-//
-//
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//                    iv_pic.setImageResource(R.drawable.network_image_default);
-//                    mHandler.sendEmptyMessage(HIDE_WAITTING);
-//                }
-//            });
-
-            downloadRequest = new HttpTools(getContext()).download(App.getContextInstance(),pic_url, PicturesCacheUtil.getCachePicPath(getActivity(),false), true, new HttpCallback() {
+            downloadRequest = new HttpTools(getContext()).download(App.getContextInstance(),
+                    pic_url, PicturesCacheUtil.getCachePicPath(getActivity(), false), true, new
+                            HttpCallback() {
                 @Override
                 public void onStart() {
                     if (iv_pic != null) {
@@ -280,12 +161,11 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 
                     if (iv_pic != null) {
                         cacheFilePath = string;
-                        bitmapCache = LocalImageLoader.loadBitmapFromFile(getActivity(), string, iv_pic.getWidth(), iv_pic.getHeight());
+                        bitmapCache = LocalImageLoader.loadBitmapFromFile(getActivity(), string,
+                                iv_pic.getWidth(), iv_pic.getHeight());
                         iv_pic.setImageBitmap(bitmapCache);
-                        mAttacher = new PhotoViewAttacher(iv_pic);
-                        mAttacher.update();
-
-//                    iv_pic.setImageBitmap(getImageFromFile(string, iv_pic.getWidth(), iv_pic.getHeight()));
+                        PhotoViewAttacher attacher = new PhotoViewAttacher(iv_pic);
+                        attacher.update();
                     }
 
                 }

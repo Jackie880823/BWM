@@ -82,6 +82,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
     /**
      * 只用于数据实体传入
      * 单张图片的时候
+     *
      * @param inDatas
      * @return
      */
@@ -92,7 +93,8 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -120,9 +122,11 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                 data.clear();
         }
         view_paper = (ViewPagerFixed) getViewById(R.id.view_paper);
-        viewPaperAdapter = new MyFragmentPagerAdapter(getFragmentManager(), getActivity(), view_paper, fragments);
+        viewPaperAdapter = new MyFragmentPagerAdapter(getFragmentManager(), getActivity(),
+                view_paper, fragments);
 
-        viewPaperAdapter.setOnMyPageChangeListenner(new MyFragmentPagerAdapter.OnPageChangeListenner() {
+        viewPaperAdapter.setOnMyPageChangeListenner(new MyFragmentPagerAdapter
+                .OnPageChangeListenner() {
             @Override
             public void onPageChange(int position) {
                 String text;
@@ -147,29 +151,12 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
             }
         });
         view_paper.setOffscreenPageLimit(0);
-//        view_paper.setOffscreenPageLimit(1);
     }
-
-    //    private void setViewPaperItems(int mainIndex) {
-    //        if (mainIndex >= 0) {
-    //            currentIndex = mainIndex;
-    //            if (mainIndex > 0) {
-    //                leftIndex = mainIndex - 1;
-    //            } else {
-    //                leftIndex = -1;
-    //            }
-    //            if (mainIndex < (data.size() - 1)) {
-    //                rightIndex = mainIndex + 1;
-    //            } else {
-    //                rightIndex = -1;
-    //            }
-    //        }
-    //    }
 
     @Override
     public void requestData() {
         //传入数据或者
-        if (got_data_in ) {
+        if (got_data_in) {
             //默认第一张
             initAdapter();
             initViewPaper(currentId);
@@ -200,12 +187,13 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                         //gsonb.registerTypeAdapter(Date.class, ds);
                         Gson gson = gsonb.create();
 //                        if (response.startsWith("{\"data\":")) {
-                            JSONObject jsonObject = new JSONObject(response);
-                            String dataString = jsonObject.optString("data");
-                            data = gson.fromJson(dataString, new TypeToken<ArrayList<PhotoEntity>>() {
-                            }.getType());
+                        JSONObject jsonObject = new JSONObject(response);
+                        String dataString = jsonObject.optString("data");
+                        data = gson.fromJson(dataString, new TypeToken<ArrayList<PhotoEntity>>() {
+                        }.getType());
 //                        } else {
-//                            data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
+//                            data = gson.fromJson(response, new
+// TypeToken<ArrayList<PhotoEntity>>() {
 //                            }.getType());
 //                        }
                         //默认第一张
@@ -269,7 +257,8 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
         if (TextUtils.isEmpty(userId)) {
             userId = memberId;
         }
-        String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, userId, photoEntity.getFile_id());
+        String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, userId,
+                photoEntity.getFile_id());
         ViewPicFragment viewPic = new ViewPicFragment();
         Bundle bundle = new Bundle();
         bundle.putString("pic_url", picUrl);
@@ -281,50 +270,13 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
         if (data != null && !data.isEmpty()) {
             adapter = new ViewPicAdapter(getActivity(), data, memberId);
             rvList.setAdapter(adapter);
-            //                big_url = String.format(Constant.API_GET_PIC, Constant.Module_preview_m, data.get(0).getUser_id(), data.get(0).getFile_id());
-            //                if (!TextUtils.isEmpty(big_url)) {
-            //                    watting_progressBar.setVisibility(View.VISIBLE);
-            //                    VolleyUtil.loadImage(ViewOriginalPicesActivity.this, big_url, new ImageLoader.ImageListener() {
-            //                        @Override
-            //                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-            //                            imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(), response.getBitmap()));
-            //                            watting_progressBar.setVisibility(View.GONE);
-            //                        }
-            //
-            //                        @Override
-            //                        public void onErrorResponse(VolleyError error) {
-            //                            watting_progressBar.setVisibility(View.GONE);
-            //                        }
-            //                    });
-            //                }
             adapter.setItemClickListenner(new ViewPicAdapter.ItemClickListenner() {
 
                 @Override
                 public void onItemClick(Drawable smallPic, PhotoEntity photoEntity, int position) {
-                    //set the small pic first
-                    //                        imageSwitcher.setImageDrawable(drawable);
-                    //                        watting_progressBar.setVisibility(View.VISIBLE);
-                    //                        big_url = String.format(Constant.API_GET_PIC, Constant.Module_preview_xl, photoEntity.getUser_id(), photoEntity.getFile_id());
-                    //                        VolleyUtil.loadImage(ViewOriginalPicesActivity.this, big_url, new ImageLoader.ImageListener() {
-                    //                            @Override
-                    //                            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    //                                //change to big pic
-                    //                                imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(), response.getBitmap()));
-                    //                                watting_progressBar.setVisibility(View.GONE);
-                    //                            }
-                    //
-                    //                            @Override
-                    //                            public void onErrorResponse(VolleyError error) {
-                    //                                watting_progressBar.setVisibility(View.GONE);
-                    //                            }
-                    //                        });
                     if (currentId != position) {
                         view_paper.setCurrentItem(position);
-//                        currentId = position;
                     }
-
-
-                    //                        initViewPaper(position);
                 }
             });
             adapter.notifyDataSetChanged();
