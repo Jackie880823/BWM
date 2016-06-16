@@ -33,14 +33,14 @@
             <TextView
                 android:id="@+id/content_action"
                 style="@style/text_dark_default"
-                android:layout_marginTop="@dimen/_5dp"
+                android:layout_marginTop="@dimen/_4dp"
                 android:ellipsize="end"
                 android:maxLines="2"/>
 
             <TextView
                 android:id="@+id/push_date"
                 style="@style/text_light_default"
-                android:layout_marginTop="@dimen/_5dp"
+                android:layout_marginTop="@dimen/_4dp"
                 android:textColor="@color/default_text_color_dark" />
 
         </LinearLayout>
