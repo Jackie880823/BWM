@@ -137,6 +137,14 @@ public class OrgSearchActivity extends BaseActivity {
             }
         });
 
+        getViewById(R.id.iv_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String etImport = etSearch.getText().toString();
+                getData(etImport);
+            }
+        });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,

@@ -12,21 +12,36 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <EditText
-            android:id="@+id/et_search"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_content_padding"
-            android:background="@drawable/et_oval_white"
-            android:drawablePadding="@dimen/default_view_margin"
-            android:drawableRight="@drawable/search"
-            android:hint="@string/family_search"
-            android:paddingBottom="@dimen/_5dp"
-            android:paddingLeft="@dimen/_8dp"
-            android:paddingRight="@dimen/_8dp"
-            android:paddingTop="@dimen/_5dp"
-            android:singleLine="true"
-            android:textColorHint="#ccc" />
+            android:layout_marginBottom="@dimen/_5dp"
+            android:layout_marginLeft="@dimen/_8dp"
+            android:layout_marginRight="@dimen/_8dp"
+            android:layout_marginTop="@dimen/_5dp"
+            android:background="@drawable/et_oval_white">
+
+            <ImageView
+                android:id="@+id/iv_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/_5dp"
+                android:src="@drawable/search" />
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/iv_search"
+                android:background="@drawable/et_oval_white"
+                android:hint="@string/family_search"
+                android:padding="@dimen/default_content_padding"
+                android:singleLine="true"
+                android:textColorHint="#ccc" />
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"

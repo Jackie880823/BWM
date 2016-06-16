@@ -297,6 +297,19 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                 getData(0, searchData);
             }
         });
+
+        getViewById(R.id.iv_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(et_search.getText())) {
+                    searchData = "";
+                } else {
+                    searchData = et_search.getText().toString();
+                }
+                startIndex = 1;
+                getData(0, searchData);
+            }
+        });
     }
 
     private void setSearchData(String searchData) {
