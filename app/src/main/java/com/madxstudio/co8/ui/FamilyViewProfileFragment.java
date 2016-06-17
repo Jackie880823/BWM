@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,14 +22,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.entity.MemberEntity;
 import com.madxstudio.co8.entity.PhotoEntity;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.http.VolleyUtil;
 import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.util.DensityUtil;
-import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyDateUtils;
 import com.madxstudio.co8.widget.CircularNetworkImage;
@@ -60,7 +57,6 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private String useId;//本人Id，这个将来是全局变量
     private String memberId;//本人的memberId
     private String bwmId;//本人的bwmId
-    private String memberFlag;
 
     public static final int CHOOSE_RELATION_CODE = 1;
 
@@ -101,6 +97,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private NoScrollListView et_internal_phone;
     private PaperButton btAddMember;
     private PaperButton btMessage;
+    private ImageView iv_org_pend;
     private int[] array;
     private int profileBackgroundId;
     private String stFemale;
@@ -141,60 +138,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 case GET_USER_ENTITY:
                     userEntity = (UserEntity) message.obj;
                     if (userEntity != null) {
-                        getParentActivity().tvTitle.setText(userEntity.getUser_given_name() + " " + userEntity.getUser_surname());
-                        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
-                        VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id()), 0, 0);
-                        rlFirstName.setVisibility(View.VISIBLE);
-                        rlListName.setVisibility(View.VISIBLE);
-                        setDatePrivacy(userEntity.getDob_date_flag(), rlBirthday);
-                        setDatePrivacy(userEntity.getDob_year_flag(), rlYearBirthday);
-                        setDatePrivacy(userEntity.getGender_flag(), rlGender);
-                        setDatePrivacy(userEntity.getEmail_flag(), rlEmail);
-                        setDatePrivacy(userEntity.getLocation_flag(), rlRegion);
-                        setDatePrivacy(userEntity.getMember_flag(), rlPhone);
-                        setDatePrivacy(userEntity.getInt_phone_ext_flag(), rl_et_internal_phone);
-                        showMessageButton();
-                        tvOrganisationName.setText(userEntity.getOrganisation());
-                        tvFirstName.setText(userEntity.getUser_given_name());
-                        tvLastName.setText(userEntity.getUser_surname());
-//                    if (userEntity.getUser_phone_number().size() > 0) {
-//                        tvPhone.setText("+" + userEntity.getUser_phone_number().get(0));
-//                    }
-                        et_position.setText(userEntity.getPosition());
-                        et_department.setText(userEntity.getDepartment());
-                        if (userEntity.getInt_phone_ext() != null && userEntity.getInt_phone_ext().size() > 0) {
-                            ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, userEntity.getInt_phone_ext());
-                            et_internal_phone.setAdapter(adapter);
-                        }
-                        if (userEntity.getUser_phone_number() != null && userEntity.getUser_phone_number().size() > 0) {
-                            ArrayAdapter adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, userEntity.getUser_phone_number());
-                            tvPhone.setAdapter(adapter);
-                        }
-
-                        String strDOB = userEntity.getUser_dob();
-                        LogUtil.d("TAG", "strDOB===" + strDOB);
-                        setTvBirthday(strDOB);
-                        if ("F".equals(userEntity.getUser_gender())) {
-                            tvGender.setText(stFemale);
-                        } else if ("M".equals(userEntity.getUser_gender())) {
-                            tvGender.setText(stMale);
-                        }
-                        tvEmail.setText(userEntity.getUser_email());
-                        tvRegion.setText(userEntity.getUser_location_name());
-                        String dofeel_code = userEntity.getDofeel_code();
-                        if (!TextUtils.isEmpty(dofeel_code)) {
-                            try {
-                                String filePath = "";
-                                if (dofeel_code.indexOf("_") != -1) {
-                                    filePath = dofeel_code.replaceAll("_", File.separator);
-                                }
-                                InputStream is = getParentActivity().getAssets().open(filePath);
-                                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                                ivBottomLeft.setImageBitmap(bitmap);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        setData();
                     }
                     break;
             }
@@ -202,6 +146,79 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             return false;
         }
     });
+
+    private void setData() {
+        VolleyUtil.initNetworkImageView(getParentActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+        VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id()), profileBackgroundId, profileBackgroundId);
+
+        showMessageButton();
+        rlFirstName.setVisibility(View.VISIBLE);
+        rlListName.setVisibility(View.VISIBLE);
+        setDatePrivacy(userEntity.getDob_date_flag(), rlBirthday);
+        setDatePrivacy(userEntity.getDob_year_flag(), rlYearBirthday);
+        setDatePrivacy(userEntity.getGender_flag(), rlGender);
+        setDatePrivacy(userEntity.getEmail_flag(), rlEmail);
+        setDatePrivacy(userEntity.getLocation_flag(), rlRegion);
+        setDatePrivacy(userEntity.getMember_flag(), rlPhone);
+        setDatePrivacy(userEntity.getInt_phone_ext_flag(), rl_et_internal_phone);
+        tvOrganisationName.setText(userEntity.getOrganisation());
+        et_position.setText(userEntity.getPosition());
+        et_department.setText(userEntity.getDepartment());
+        if (userEntity.getInt_phone_ext() != null && userEntity.getInt_phone_ext().size() > 0) {
+            for (int i = 0; i < userEntity.getInt_phone_ext().size(); i++) {
+                if (!TextUtils.isEmpty(userEntity.getInt_phone_ext().get(i))) {
+                    userEntity.getInt_phone_ext().set(i, "+" + userEntity.getInt_phone_ext().get(i));
+                }
+            }
+            ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.array_list_item, R.id.tv_phone, userEntity.getInt_phone_ext());
+            et_internal_phone.setAdapter(adapter);
+        }
+        tvName1.setText(userEntity.getUser_given_name());
+        tvId1.setText(getResources().getString(R.string.co8_id) + userEntity.getDis_bondwithme_id());
+        if (userEntity.getUser_phone_number() != null && userEntity.getUser_phone_number().size() > 0) {
+            for (int i = 0; i < userEntity.getUser_phone_number().size(); i++) {
+                userEntity.getUser_phone_number().set(i, "+" + userEntity.getUser_phone_number().get(i));
+            }
+            ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.array_list_item, R.id.tv_phone, userEntity.getUser_phone_number());
+            tvPhone.setAdapter(adapter);
+        }
+        tvFirstName.setText(userEntity.getUser_given_name());
+        tvLastName.setText(userEntity.getUser_surname());
+        String strDOB = userEntity.getUser_dob();
+        setTvBirthday(strDOB);
+        if ("F".equals(userEntity.getUser_gender())) {
+            tvGender.setText(stFemale);
+        } else if ("M".equals(userEntity.getUser_gender())) {
+            tvGender.setText(stMale);
+        }
+        tvEmail.setText(userEntity.getUser_email());
+        tvRegion.setText(userEntity.getUser_location_name());
+
+        if ("0".equals(userEntity.getDemo()) && "0".equals(userEntity.getPending_org())) {
+            iv_org_pend.setVisibility(View.INVISIBLE);
+        } else if ("1".equals(userEntity.getDemo()) && "1".equals(userEntity.getPending_org())) {
+            iv_org_pend.setImageResource(R.drawable.time);
+            iv_org_pend.setVisibility(View.VISIBLE);
+        } else {
+            iv_org_pend.setImageResource(R.drawable.org_is_pend);
+            iv_org_pend.setVisibility(View.VISIBLE);
+        }
+
+        String dofeel_code = userEntity.getDofeel_code();
+        if (!TextUtils.isEmpty(dofeel_code)) {
+            try {
+                String filePath = "";
+                if (dofeel_code.indexOf("_") != -1) {
+                    filePath = dofeel_code.replaceAll("_", File.separator);
+                }
+                InputStream is = getParentActivity().getAssets().open(filePath);
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                ivBottomLeft.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public void initView() {
@@ -250,6 +267,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         et_department = getViewById(R.id.et_department);
         et_internal_phone = getViewById(R.id.et_internal_phone);
         rl_organisation = getViewById(R.id.rl_organisation);
+        iv_org_pend = getViewById(R.id.iv_org_pend);
 
         stFemale = getResources().getString(R.string.text_female);
         stMale = getResources().getString(R.string.text_male);
@@ -281,7 +299,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         rl_organisation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(userEntity.getOrganisation())) {
+                if ("0".equals(userEntity.getDemo()) && "0".equals(userEntity.getPending_org())) {
                     Intent intent = new Intent(getActivity(), CompanyActivity.class);
                     intent.putExtra(Constant.LOGIN_USER, userEntity);
                     startActivity(intent);
@@ -320,10 +338,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 peData.setPhoto_caption(Constant.Module_profile);
                 peData.setPhoto_multipe("false");
                 datas.add(peData);
-
                 intent.putExtra("is_data", true);
                 intent.putExtra("datas", datas);
-
                 startActivity(intent);
             }
         });
@@ -336,73 +352,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         }
 
         if (userEntity != null) {
-            VolleyUtil.initNetworkImageView(getParentActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
-            VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, userEntity.getUser_id()), profileBackgroundId, profileBackgroundId);
-            memberFlag = userEntity.getMember_flag();
-
-            showMessageButton();
-            rlFirstName.setVisibility(View.VISIBLE);
-            rlListName.setVisibility(View.VISIBLE);
-            setDatePrivacy(userEntity.getDob_date_flag(), rlBirthday);
-            setDatePrivacy(userEntity.getDob_year_flag(), rlYearBirthday);
-            setDatePrivacy(userEntity.getGender_flag(), rlGender);
-            setDatePrivacy(userEntity.getEmail_flag(), rlEmail);
-            setDatePrivacy(userEntity.getLocation_flag(), rlRegion);
-            setDatePrivacy(userEntity.getMember_flag(), rlPhone);
-            setDatePrivacy(userEntity.getInt_phone_ext_flag(), rl_et_internal_phone);
-            tvOrganisationName.setText(userEntity.getOrganisation());
-            et_position.setText(userEntity.getPosition());
-            et_department.setText(userEntity.getDepartment());
-            if (userEntity.getInt_phone_ext() != null && userEntity.getInt_phone_ext().size() > 0) {
-                for (int i = 0; i < userEntity.getInt_phone_ext().size(); i++) {
-                    if (!TextUtils.isEmpty(userEntity.getInt_phone_ext().get(i))) {
-                        userEntity.getInt_phone_ext().set(i, "+" + userEntity.getInt_phone_ext().get(i));
-                    }
-                }
-                ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.array_list_item, R.id.tv_phone, userEntity.getInt_phone_ext());
-                et_internal_phone.setAdapter(adapter);
-            }
-            tvName1.setText(userEntity.getUser_given_name());
-            tvId1.setText(getResources().getString(R.string.co8_id) + userEntity.getDis_bondwithme_id());
-//            if (userEntity.getUser_phone_number().size() > 0) {
-//     tvPhone.setText("+" + userEntity.getUser_phone_number().get(0));
-//            }
-            if (userEntity.getUser_phone_number() != null && userEntity.getUser_phone_number().size() > 0) {
-                for (int i = 0; i < userEntity.getUser_phone_number().size(); i++) {
-                    userEntity.getUser_phone_number().set(i, "+" + userEntity.getUser_phone_number().get(i));
-                }
-                ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.array_list_item, R.id.tv_phone, userEntity.getUser_phone_number());
-                tvPhone.setAdapter(adapter);
-            }
-            tvFirstName.setText(userEntity.getUser_given_name());
-            tvLastName.setText(userEntity.getUser_surname());
-//        tvAge.setText(userEntity.getUser_dob());
-            String strDOB = userEntity.getUser_dob();
-            LogUtil.d("TAG", "strDOB===" + strDOB);
-            setTvBirthday(strDOB);
-
-            if ("F".equals(userEntity.getUser_gender())) {
-                tvGender.setText(stFemale);
-            } else if ("M".equals(userEntity.getUser_gender())) {
-                tvGender.setText(stMale);
-            }
-
-            tvEmail.setText(userEntity.getUser_email());
-            tvRegion.setText(userEntity.getUser_location_name());
-            String dofeel_code = userEntity.getDofeel_code();
-//            if (!TextUtils.isEmpty(dofeel_code)) {
-//                try {
-//                    String filePath = "";
-//                    if (dofeel_code.indexOf("_") != -1) {
-//                        filePath = dofeel_code.replaceAll("_", File.separator);
-//                    }
-//                    InputStream is = getParentActivity().getAssets().open(filePath);
-//                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-//                    ivBottomLeft.setImageBitmap(bitmap);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
+            setData();
         } else {
             networkImageView.setDefaultImageResId(profileBackgroundId);
         }
@@ -509,34 +459,6 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 view.setVisibility(View.GONE);
                 break;
         }
-
-//        if(memberFlag.equals("-0")){
-//            //不是好友
-//            switch (dateFlag){
-//                case "0":
-//                    view.setVisibility(View.GONE);
-//                    break;
-//                case "1":
-//                    view.setVisibility(View.GONE);
-//                    break;
-//                case "2":
-//                    view.setVisibility(View.VISIBLE);
-//                    break;
-//            }
-//        }else {
-//            //是好友
-//            switch (dateFlag){
-//                case "0":
-//                    view.setVisibility(View.GONE);
-//                    break;
-//                case "1":
-//                    view.setVisibility(View.VISIBLE);
-//                    break;
-//                case "2":
-//                    view.setVisibility(View.VISIBLE);
-//                    break;
-//            }
-//        }
     }
 
 
