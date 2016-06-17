@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +27,10 @@ import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.App;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.entity.OrganisationDetail;
-import com.madxstudio.co8.entity.Profile;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.http.UrlUtil;
 import com.madxstudio.co8.ui.company.CompanyActivity;
@@ -41,11 +39,9 @@ import com.madxstudio.co8.util.LocalImageLoader;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyDateUtils;
-import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 import com.madxstudio.co8.widget.DatePicker;
 import com.madxstudio.co8.widget.MyDialog;
-import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +56,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -315,9 +310,61 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     private void getData() {
-        Map<String, String> params = new Hashtable<>();
-        params.put(Constant.USER_ID, userEntity.getUser_id());
-        new HttpTools(mContext).get(String.format(OrganisationConstants.API_GET_ORGANISATION_DETAILS, userEntity.getOrg_id()), params, TAG, new HttpCallback() {
+//        if (TextUtils.isEmpty(userEntity.getOrganisation())) {
+//            return;
+//        }
+//        Map<String, String> params = new Hashtable<>();
+//        params.put(Constant.USER_ID, userEntity.getUser_id());
+//        new HttpTools(mContext).get(String.format(OrganisationConstants.API_GET_ORGANISATION_DETAILS, userEntity.getOrg_id()), params, TAG, new HttpCallback() {
+//            @Override
+//            public void onStart() {
+//                vProgress.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                vProgress.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onResult(String string) {
+//                Gson gson = new Gson();
+//                OrganisationDetail detail = gson.fromJson(string, OrganisationDetail.class);
+//                if (detail != null) {
+//                    Profile profile = detail.getProfile();
+//                    if (profile != null) {
+//                        userEntity.setOrganisation(profile.getName());
+//                        App.changeLoginedUser(userEntity);
+//                        et_organisation.setText(userEntity.getOrganisation());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//                LogUtil.e(TAG, "onError: ", e);
+//                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+//            }
+//
+//            @Override
+//            public void onCancelled() {
+//                LogUtil.d(TAG, "onCancelled: ");
+//            }
+//
+//            @Override
+//            public void onLoading(long count, long current) {
+//                LogUtil.d(TAG, "onLoading() called with: " + "count = [" + count + "], current = [" + current + "]");
+//            }
+//        });
+
+        HashMap<String, String> jsonParams = new HashMap<>();
+        jsonParams.put("user_id", userEntity.getUser_id());
+        jsonParams.put("member_id", userEntity.getUser_id());
+        String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("condition", jsonParamsString);
+        String url = UrlUtil.generateUrl(Constant.API_MEMBER_PROFILE_DETAIL, params);
+        new HttpTools(this).get(url, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
                 vProgress.setVisibility(View.VISIBLE);
@@ -329,33 +376,30 @@ public class MyViewProfileActivity extends BaseActivity {
             }
 
             @Override
-            public void onResult(String string) {
-                Gson gson = new Gson();
-                OrganisationDetail detail = gson.fromJson(string, OrganisationDetail.class);
-                if (detail != null) {
-                    Profile profile = detail.getProfile();
-                    if (profile != null) {
-                        userEntity.setOrganisation(profile.getName());
-                        App.changeLoginedUser(userEntity);
-                        et_organisation.setText(userEntity.getOrganisation());
-                    }
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                List<UserEntity> data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                }.getType());
+                if ((data != null) && (data.size() > 0)) {
+                    userEntity = data.get(0);
+                    App.changeLoginedUser(userEntity);
+                    showOrgPic();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                LogUtil.e(TAG, "onError: ", e);
-                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancelled() {
-                LogUtil.d(TAG, "onCancelled: ");
             }
 
             @Override
             public void onLoading(long count, long current) {
-                LogUtil.d(TAG, "onLoading() called with: " + "count = [" + count + "], current = [" + current + "]");
+
             }
         });
     }
@@ -507,7 +551,6 @@ public class MyViewProfileActivity extends BaseActivity {
 //        tvAge.setText(userEntity.getUser_dob());//需要做处理，年转为岁数
         //1990-09-10   1990年
         strDOB = userEntity.getUser_dob();
-        LogUtil.d(TAG, "strDOB===" + strDOB);
         setTvBirthday(strDOB);
 
         if ("F".equals(userEntity.getUser_gender())) {
@@ -519,11 +562,11 @@ public class MyViewProfileActivity extends BaseActivity {
         }
 
         etEmail.setText(userEntity.getUser_email());
-        if (userEntity.getUser_phone().length() > 0) {
+        if (null != userEntity.getUser_phone() && userEntity.getUser_phone().length() > 0) {
             etPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone());
         }
         String[] countryArray = getResources().getStringArray(R.array.country_code);
-        String userCountryCode = userEntity.getUser_country_code().trim();
+        String userCountryCode = userEntity.getUser_country_code();
         if (countryArray != null) {
             for (String string : countryArray) {
                 if (string.indexOf(" ") != -1) {
@@ -536,28 +579,12 @@ public class MyViewProfileActivity extends BaseActivity {
             }
         }
         etRegion.setText(userEntity.getUser_location_name());
-//        etRegion.setKeyListener(null);
         et_position.setText(userEntity.getPosition());
         et_department.setText(userEntity.getDepartment());
         List<String> phoneExtList = userEntity.getInt_phone_ext();
         if (phoneExtList != null && phoneExtList.size() > 0) {
             et_internal_phone.setText(phoneExtList.get(0));
         }
-        String dofeel_code = userEntity.getDofeel_code();
-//        if (!TextUtils.isEmpty(dofeel_code)) {
-//            try {
-//                String filePath = "";
-//                if (dofeel_code.indexOf("_") != -1) {
-//                    filePath = dofeel_code.replaceAll("_", File.separator);
-//                }
-//                InputStream is = MyViewProfileActivity.this.getAssets().open(filePath);
-//                Bitmap bitmap = BitmapFactory.decodeStream(is);
-//                ivBottomLeft.setImageBitmap(bitmap);
-//
-//            } catch (IOException e) {
-//            }
-//        }
-
 
         rlGender.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -609,6 +636,7 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     private void showOrgPic() {
+        et_organisation.setText(userEntity.getOrganisation());
         if ("0".equals(userEntity.getDemo()) && "0".equals(userEntity.getPending_org())) {
             iv_org_pend.setVisibility(View.INVISIBLE);
         } else if ("1".equals(userEntity.getDemo()) && "1".equals(userEntity.getPending_org())) {

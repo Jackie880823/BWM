@@ -527,7 +527,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                     Gson gson = gsonb.create();
 
                     userEntity = gson.fromJson(response, UserEntity.class);
-                    if (!TextUtils.isEmpty(userEntity.getUser_id())) {
+                    if (null != userEntity) {
                         handler.sendEmptyMessage(HANDLER_COMPLETE_PROFILE_SUCCESS);
                     }
                 }

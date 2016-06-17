@@ -138,6 +138,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 case GET_USER_ENTITY:
                     userEntity = (UserEntity) message.obj;
                     if (userEntity != null) {
+                        getParentActivity().tvTitle.setText(userEntity.getUser_given_name() + " " + userEntity.getUser_surname());
                         setData();
                     }
                     break;
