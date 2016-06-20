@@ -30,6 +30,7 @@ import com.madxstudio.co8.ui.company.CompanyActivity;
 import com.madxstudio.co8.util.DensityUtil;
 import com.madxstudio.co8.util.MessageUtil;
 import com.madxstudio.co8.util.MyDateUtils;
+import com.madxstudio.co8.util.OrganisationConstants;
 import com.madxstudio.co8.widget.CircularNetworkImage;
 import com.madxstudio.co8.widget.NoScrollListView;
 import com.material.widget.PaperButton;
@@ -106,6 +107,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private static final int GET_USER_ENTITY = 0X11;
     private final static int ADD_MEMBER = 0X12;
     private boolean isFromMember = false;
+    private boolean isFromPending = false;
 
 
     UserEntity userEntity = new UserEntity();
@@ -274,7 +276,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         stMale = getResources().getString(R.string.text_male);
 
         isFromMember = getParentActivity().getIntent().getBooleanExtra(Constant.LOOK_USER_PROFILE, false);
-
+        isFromPending = getParentActivity().getIntent().getBooleanExtra(Constant.FROM_PENDING_REQUEST, false);
         rl_position.setVisibility(View.VISIBLE);
         rl_department.setVisibility(View.VISIBLE);
 //        if (profileBackgroundId == 6) {
@@ -288,7 +290,12 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             @Override
             public void onClick(View v) {
                 if (isFromMember) {
-                    doAdd();
+                    if (isFromPending) {
+                        String url = String.format(OrganisationConstants.API_PUT_ACCEPT_JOIN_ORG_REQ, MainActivity.getUser().getOrg_id());
+                        dealRequest(url);
+                    } else {
+                        doAdd();
+                    }
                 } else {
                     Intent intent = new Intent(getParentActivity(), RelationshipActivity.class);
                     intent.putExtra("member_id", userEntity.getUser_id());
@@ -312,7 +319,12 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             @Override
             public void onClick(View v) {
                 if (isFromMember) {
-                    addRemove();
+                    if (isFromPending) {
+                        String url = String.format(OrganisationConstants.API_PUT_REJECT_JOIN_ORG_REQ, MainActivity.getUser().getOrg_id());
+                        dealRequest(url);
+                    } else {
+                        addRemove();
+                    }
                 } else {
                     Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
 //                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -347,9 +359,14 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
         if (isFromMember) {
             btAddMember.setVisibility(View.VISIBLE);
-            btAddMember.setText(getString(R.string.text_dialog_accept));
-            btMessage.setText(getString(R.string.text_item_reject));
             btMessage.setVisibility(View.VISIBLE);
+            if (isFromPending) {
+                btAddMember.setText(getString(R.string.text_approve));
+                btMessage.setText(getString(R.string.text_item_reject));
+            } else {
+                btAddMember.setText(getString(R.string.text_dialog_accept));
+                btMessage.setText(getString(R.string.text_item_reject));
+            }
         }
 
         if (userEntity != null) {
@@ -357,6 +374,56 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         } else {
             networkImageView.setDefaultImageResId(profileBackgroundId);
         }
+    }
+
+    private void dealRequest(String url) {
+        Map<String, String> params = new HashMap<>();
+        params.put(OrganisationConstants.USER_ID, MainActivity.getUser().getUser_id());
+        params.put(OrganisationConstants.MEMBER_ID, userEntity.getUser_id());
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+        requestInfo.url = url;
+        new HttpTools(getActivity()).put(requestInfo, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String string) {
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("200".equals(jsonObject.optString("response_status_code", ""))) {
+                        getActivity().setResult(getActivity().RESULT_OK);
+                        getActivity().finish();
+                    } else {
+                        MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                    }
+                } catch (JSONException e) {
+                    MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.getInstance().showShortToast(R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+            }
+        });
     }
 
     private void addRemove() {
