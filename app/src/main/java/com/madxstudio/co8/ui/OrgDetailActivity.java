@@ -85,6 +85,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
     private final static int ADD_MEMBER = 0x12;
     private final static int CREATE_GROUP = 0x13;
     private static final int GET_PENDING_REQUEST = 0x14;
+    private static final int TO_FAMILY_PROFILE = 0x15;
     private PendingRequestAdapter requestAdapter;
     private OrgMemberListAdapter memberAdapter;
     private OrgGroupListAdapter groupAdapter;
@@ -199,6 +200,11 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                     MessageUtil.getInstance().showShortToast(R.string.msg_action_successed);
                 } else {
                     MessageUtil.getInstance().showShortToast(R.string.msg_action_canceled);
+                }
+                break;
+            case TO_FAMILY_PROFILE:
+                if (resultCode == RESULT_OK) {
+                    getData();
                 }
                 break;
         }
@@ -811,7 +817,8 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 Intent intent = new Intent(mContext, FamilyViewProfileActivity.class);
                 intent.putExtra(UserEntity.EXTRA_MEMBER_ID, pendingRequest.getAction_user_id());
                 intent.putExtra(Constant.LOOK_USER_PROFILE, true);
-                startActivity(intent);
+                intent.putExtra(Constant.FROM_PENDING_REQUEST, true);
+                startActivityForResult(intent, TO_FAMILY_PROFILE);
             }
         });
         tvApprove.setOnClickListener(new View.OnClickListener() {
