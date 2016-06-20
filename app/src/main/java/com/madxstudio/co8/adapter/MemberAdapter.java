@@ -139,14 +139,14 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                 holder.add.setVisibility(View.GONE);
                 holder.awaiting.setVisibility(View.GONE);
                 holder.added.setVisibility(View.GONE);
-                holder.owner_content.setText(action[TAG_JOIN_ORG]);
+                holder.owner_content.setText(action[TAG_JOIN_ORG] + memberEntity.getModule_name());
                 break;
             case TAG_SET_ADMIN:
                 holder.updated.setVisibility(View.GONE);
                 holder.add.setVisibility(View.GONE);
                 holder.awaiting.setVisibility(View.GONE);
                 holder.added.setVisibility(View.GONE);
-                holder.owner_content.setText(action[TAG_SET_ADMIN]);
+                holder.owner_content.setText(action[TAG_SET_ADMIN] + memberEntity.getModule_name());
                 break;
             case TAG_REMOVE_ADMIN:
                 setOrgAlert(holder, memberEntity, tag);
@@ -172,7 +172,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                 holder.add.setVisibility(View.GONE);
                 holder.awaiting.setVisibility(View.GONE);
                 holder.added.setVisibility(View.GONE);
-                holder.owner_content.setText(action[TAG_REJECT_JOIN_ORGANIZATION] + memberEntity.getRelationship());
+                holder.owner_content.setText(action[TAG_REJECT_JOIN_ORGANIZATION] + memberEntity.getModule_name());
 //                holder.itemView.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
@@ -198,7 +198,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         holder.add.setVisibility(View.GONE);
         holder.awaiting.setVisibility(View.GONE);
         holder.added.setVisibility(View.GONE);
-        holder.owner_content.setText(action[alertTag] + memberEntity.getRelationship());
+        holder.owner_content.setText(action[alertTag] + memberEntity.getModule_name());
 //        holder.itemView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
