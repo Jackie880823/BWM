@@ -142,6 +142,10 @@ public class Constant {
     public static final String CREATE_COUNTRY_NAME = "CountryName";
     public static final String LOOK_USER_PROFILE = "OnlyLook";
     public static final String FROM_PENDING_REQUEST = "pendingRequest";
+
+    public static final  int SHOW_PROFILE_ONE_BUT = 0;
+    public static final  int SHOW_PROFILE_TWO_BUT = 1;
+    public static final  int SHOW_PROFILE_NO_BUT = 2;
     /**
      * 临时文件用户裁剪
      */

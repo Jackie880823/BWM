@@ -816,7 +816,7 @@ public class OrgDetailActivity extends BaseActivity implements OrgMemberListAdap
                 showSelectDialog.dismiss();
                 Intent intent = new Intent(mContext, FamilyViewProfileActivity.class);
                 intent.putExtra(UserEntity.EXTRA_MEMBER_ID, pendingRequest.getAction_user_id());
-                intent.putExtra(Constant.LOOK_USER_PROFILE, true);
+                intent.putExtra(Constant.LOOK_USER_PROFILE, Constant.SHOW_PROFILE_TWO_BUT);
                 intent.putExtra(Constant.FROM_PENDING_REQUEST, true);
                 startActivityForResult(intent, TO_FAMILY_PROFILE);
             }

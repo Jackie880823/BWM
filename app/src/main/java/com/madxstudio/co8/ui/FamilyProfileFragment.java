@@ -220,6 +220,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                     Intent intent1 = new Intent(getActivity(), FamilyViewProfileActivity.class);
                     intent1.putExtra("userEntity", userEntity);
                     intent1.putExtra("profile_image_id", profileBackgroundId);
+                    intent1.putExtra(Constant.LOOK_USER_PROFILE, Constant.SHOW_PROFILE_NO_BUT);
 //                    intent1.putExtra("bwm_id","8000105652");
                     startActivity(intent1);
                 }

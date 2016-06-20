@@ -106,7 +106,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
     private static final int GET_USER_ENTITY = 0X11;
     private final static int ADD_MEMBER = 0X12;
-    private boolean isFromMember = false;
+    private int isFromMember;
     private boolean isFromPending = false;
 
 
@@ -275,7 +275,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         stFemale = getResources().getString(R.string.text_female);
         stMale = getResources().getString(R.string.text_male);
 
-        isFromMember = getParentActivity().getIntent().getBooleanExtra(Constant.LOOK_USER_PROFILE, false);
+        isFromMember = getParentActivity().getIntent().getIntExtra(Constant.LOOK_USER_PROFILE,Constant.SHOW_PROFILE_ONE_BUT);
         isFromPending = getParentActivity().getIntent().getBooleanExtra(Constant.FROM_PENDING_REQUEST, false);
         rl_position.setVisibility(View.VISIBLE);
         rl_department.setVisibility(View.VISIBLE);
@@ -289,7 +289,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         btAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isFromMember) {
+                if (isFromMember==Constant.SHOW_PROFILE_TWO_BUT) {
                     if (isFromPending) {
                         String url = String.format(OrganisationConstants.API_PUT_ACCEPT_JOIN_ORG_REQ, MainActivity.getUser().getOrg_id());
                         dealRequest(url);
@@ -318,7 +318,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         btMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isFromMember) {
+                if (isFromMember==Constant.SHOW_PROFILE_TWO_BUT) {
                     if (isFromPending) {
                         String url = String.format(OrganisationConstants.API_PUT_REJECT_JOIN_ORG_REQ, MainActivity.getUser().getOrg_id());
                         dealRequest(url);
@@ -357,7 +357,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             }
         });
 
-        if (isFromMember) {
+        if (isFromMember==Constant.SHOW_PROFILE_TWO_BUT) {
             btAddMember.setVisibility(View.VISIBLE);
             btMessage.setVisibility(View.VISIBLE);
             if (isFromPending) {
@@ -544,9 +544,12 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             layoutParam.setMargins(0, 0, 0, DensityUtil.dip2px(getParentActivity(), 50));
             rlPhone.setLayoutParams(layoutParam);
         }
-        if (isFromMember) {
+        if (isFromMember==Constant.SHOW_PROFILE_TWO_BUT) {
             btAddMember.setVisibility(View.VISIBLE);
             btMessage.setVisibility(View.VISIBLE);
+        }else if(isFromMember==Constant.SHOW_PROFILE_NO_BUT){
+            btAddMember.setVisibility(View.GONE);
+            btMessage.setVisibility(View.GONE);
         }
     }
 

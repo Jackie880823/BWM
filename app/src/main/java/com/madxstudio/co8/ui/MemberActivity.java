@@ -292,7 +292,7 @@ public class MemberActivity extends BaseActivity {
                 showAddDialog.dismiss();
                 Intent intent = new Intent(MemberActivity.this, FamilyViewProfileActivity.class);
                 intent.putExtra(UserEntity.EXTRA_MEMBER_ID, member.getAction_user_id());
-                intent.putExtra(Constant.LOOK_USER_PROFILE, true);
+                intent.putExtra(Constant.LOOK_USER_PROFILE, Constant.SHOW_PROFILE_TWO_BUT);
                 startActivityForResult(intent, TO_PROFILE);
             }
         });
