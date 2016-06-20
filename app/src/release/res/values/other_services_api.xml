@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="api_server" translatable="false">http://devb2be.bondwith.me</string>
+    <string name="api_server" translatable="false">http://mb2be.bondwith.me</string>
     <string name="tracker_site_id" translatable="false">5</string>
     <string name="baidu_maps_key"  templateMergeStrategy="preserve" translatable="false">WZjbKazu9s809IUasAFpzGMG</string>
 </resources>
