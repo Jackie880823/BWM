@@ -203,15 +203,25 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 if (etUsername.getText().toString().contains(" ")) {
                     etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     tvUsernamePrompt.setText(R.string.text_no_space_in_username);
                     tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
-                } else {
+                }
+                else if(etUsername.getText().toString().length() < 5)
+                {
+                    etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                    tvUsernamePrompt.setText(R.string.text_start_least5_prompt);
+                    tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
+                }
+                else
+                {
                     etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                     tvUsernamePrompt.setText(R.string.text_no_space_in_username);
                     tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
                 }
+
             }
         });
 
