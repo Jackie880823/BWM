@@ -203,13 +203,13 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (etUsername.getText().toString().length() < 5) {
+                if (etUsername.getText().toString().contains(" ")) {
                     etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
-                    tvUsernamePrompt.setText(R.string.text_start_least5_prompt);
+                    tvUsernamePrompt.setText(R.string.text_no_space_in_username);
                     tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
                 } else {
                     etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-                    tvUsernamePrompt.setText(R.string.text_start_least5_prompt);
+                    tvUsernamePrompt.setText(R.string.text_no_space_in_username);
                     tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
                 }
             }
@@ -388,13 +388,13 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
             return;
         }
 
-        strUsername = etUsername.getText().toString();
+        strUsername = etUsername.getText().toString().trim();
         strCountryCode = tvStartCountryCode.getText().toString().trim();
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
         String confirmPassword = et_confirm_password.getText().toString();
-        if (!MyTextUtil.isHasEmpty(strUsername, strCountryCode, strPhoneNumber, strPassword) && (etUsername.length() > 4)
-                && (strPassword.length() > 4) && strPassword.equals(confirmPassword)) {
+        if (!MyTextUtil.isHasEmpty(strUsername, strCountryCode, strPhoneNumber, strPassword)
+                && (strPassword.length() > 4) && strPassword.equals(confirmPassword) && !strUsername.contains(" ")) {
             doingSignUpChangeUI();
 
             HashMap<String, String> params = new HashMap<>();
@@ -459,11 +459,13 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
             });
         } else {
             //log id
-            if (TextUtils.isEmpty(strUsername) || strUsername.length() < 5) {
+            if (TextUtils.isEmpty(strUsername) || strUsername.contains(" ")) {
                 etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                tvUsernamePrompt.setText(R.string.text_no_space_in_username);
                 tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.stroke_color_red_wrong));
             } else {
                 etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                tvUsernamePrompt.setText(R.string.text_no_space_in_username);
                 tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
             }
 
@@ -527,7 +529,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
     private void normalUI() {
         etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
-        tvUsernamePrompt.setText(R.string.text_start_least5_prompt);
+        tvUsernamePrompt.setText(R.string.text_no_space_in_username);
         tvUsernamePrompt.setTextColor(ContextCompat.getColor(SignUpUsernameActivity.this, R.color.default_text_color_light));
 
         rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);

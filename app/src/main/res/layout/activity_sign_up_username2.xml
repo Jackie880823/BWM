@@ -30,7 +30,7 @@
             style="@style/tv_start_light_small"
             android:layout_marginLeft="@dimen/default_content_padding"
             android:paddingLeft="@dimen/default_content_padding"
-            android:text="@string/text_start_least5_prompt" />
+            android:text="@string/text_no_space_in_username" />
 
         <include
             android:id="@+id/country_code_layout"
