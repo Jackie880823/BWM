@@ -13,9 +13,6 @@
     <!--res/values-xlarge-xhdpi/dimens.xml (2560x1600 - Nexus 10")-->
     <!--res/values-large-xhdpi/dimens.xml  (1200x1920 - Nexus 7"(latest))-->
 
-
-
-
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -180,4 +177,5 @@
 
     <!-- New Diary bottom navigation distance between icon and text  -->
     <dimen name="new_diary_bottom_icon_and_text">-10dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

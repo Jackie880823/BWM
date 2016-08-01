@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.madxstudio.co8.widget.MySwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_layout"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/workspace_list"
+        android:name="com.madxstudio.co8.ui.workspace.WorkSpaceFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.madxstudio.co8.ui.workspace.WorkSpFragment"
+        tools:listitem="@layout/fragment_workspace_item"/>
+</com.madxstudio.co8.widget.MySwipeRefreshLayout>

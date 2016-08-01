@@ -1,13 +1,13 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/com.madxstudio.co8">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="numberPickerUpButtonStyle">@style/AiWidget.ImageButton.NumberPickerUpButton
         </item>
-        <item name="numberPickerDownButtonStyle">
-            @style/AiWidget.ImageButton.NumberPickerDownButton
+        <item name="numberPickerDownButtonStyle">@style/AiWidget.ImageButton.NumberPickerDownButton
         </item>
         <item name="numberPickerInputTextStyle">@style/AiWidget.EditText.NumberPickerInputText
         </item>
@@ -32,6 +32,9 @@
 
     <style name="text_dark_default" parent="text_default">
         <item name="android:textColor">@color/default_text_color_dark</item>
+    </style>
+    <style name="text_color_hint_default" parent="text_default">
+        <item name="android:textColor">?android:textColorHint</item>
     </style>
 
     <style name="text_user_name" parent="text_dark_default">
@@ -114,35 +117,35 @@
 
     <!--Data time picker -->
     <!-- Don't touch this -->
-    <attr name="numberPickerStyle" format="reference" />
-    <attr name="numberPickerUpButtonStyle" format="reference" />
-    <attr name="numberPickerDownButtonStyle" format="reference" />
-    <attr name="numberPickerInputTextStyle" format="reference" />
+    <attr name="numberPickerStyle" format="reference"/>
+    <attr name="numberPickerUpButtonStyle" format="reference"/>
+    <attr name="numberPickerDownButtonStyle" format="reference"/>
+    <attr name="numberPickerInputTextStyle" format="reference"/>
 
     <declare-styleable name="NumberPicker">
 
         <!-- @hide Color for the solid color background if such for optimized rendering. -->
-        <attr name="solidColor" format="color|reference" />
+        <attr name="solidColor" format="color|reference"/>
         <!-- @hide Whether the number picker supports fligning. -->
-        <attr name="flingable" format="boolean" />
+        <attr name="flingable" format="boolean"/>
         <!-- @hide The divider for making the selection area. -->
-        <attr name="selectionDivider" format="reference" />
+        <attr name="selectionDivider" format="reference"/>
         <!-- @hide The height of the selection divider. -->
-        <attr name="selectionDividerHeight" format="dimension" />
+        <attr name="selectionDividerHeight" format="dimension"/>
         <!-- @hide The distance of the selection divider -->
-        <attr name="selectionDividersDistance" format="dimension" />
+        <attr name="selectionDividersDistance" format="dimension"/>
         <!-- @hide The min height of the NumberPicker. -->
-        <attr name="android:minHeight" />
+        <attr name="android:minHeight"/>
         <!-- @hide The max height of the NumberPicker. -->
-        <attr name="android:maxHeight" />
+        <attr name="android:maxHeight"/>
         <!-- @hide The min width of the NumberPicker. -->
-        <attr name="android:minWidth" />
+        <attr name="android:minWidth"/>
         <!-- @hide The max width of the NumberPicker. -->
-        <attr name="android:maxWidth" />
+        <attr name="android:maxWidth"/>
 
         <!-- We need some extra attributes -->
-        <attr name="android:orientation" />
-        <attr name="android:fadingEdgeLength" />
+        <attr name="android:orientation"/>
+        <attr name="android:fadingEdgeLength"/>
     </declare-styleable>
 
     <style name="AiWidget">
@@ -474,9 +477,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
     <style name="text_dialog_item" parent="text_dialog_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -484,6 +488,7 @@
         <item name="android:padding">@dimen/default_content_padding</item>
         <item name="android:textColor">@color/default_text_color_blue</item>
     </style>
+
     <style name="ActionButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/_40dp</item>
