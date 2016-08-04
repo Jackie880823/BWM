@@ -1,73 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.madxstudio.co8">
-    <!--android:installLocation="preferExternal"-->
+          package="com.madxstudio.co8">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <!-- android:installLocation="preferExternal" -->
 
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
 
     <!--
  The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but are recommended.
     -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true" />
+        android:required="true"/>
 
     <!-- baidu map -->
     <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- SD卡读取权限，用户写入离线定位数据 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <!-- 允许应用读取低级别的系统日志文件 -->
-    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.READ_LOGS"/>
 
     <!-- <uses-permission android:name="android.permission.CALL_PHONE" /> -->
-    <!--<uses-permission android:name="android.permission.CAMERA" />-->
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
 
-    <!--<uses-feature android:name="android.hardware.camera" />-->
-    <!--<uses-feature android:name="android.hardware.camera.autofocus" />-->
+
+    <!-- <uses-feature android:name="android.hardware.camera" /> -->
+    <!-- <uses-feature android:name="android.hardware.camera.autofocus" /> -->
     <!-- GCM -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
     <permission
         android:name="com.madxstudio.co8.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature"/>
 
-    <uses-permission android:name="com.madxstudio.co8.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.madxstudio.co8.permission.C2D_MESSAGE"/>
     <!-- if we wants to keep the device from sleeping. -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <!-- christopher -->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 
     <!-- jiguang push -->
     <permission
         android:name="com.madxstudio.co8.permission.JPUSH_MESSAGE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature"/>
 
-    <uses-permission android:name="com.madxstudio.co8.permission.JPUSH_MESSAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="com.madxstudio.co8.permission.JPUSH_MESSAGE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <!-- <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" /> -->
     <!-- <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/> -->
 
@@ -77,7 +79,7 @@
         android:requiresSmallestWidthDp="480"
         android:resizeable="true"
         android:smallScreens="false"
-        android:xlargeScreens="true" />
+        android:xlargeScreens="true"/>
 
     <!-- android:largestWidthLimitDp="integer" -->
     <!-- <compatible-screens> -->
@@ -93,7 +95,7 @@
     <!-- &lt;!&ndash;<screen android:screenSize="xlarge" android:screenDensity="mdpi"/>&ndash;&gt; -->
     <!-- </compatible-screens> -->
     <application
-        android:name="com.madxstudio.co8.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -103,10 +105,10 @@
         <!-- 友盟统计 -->
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="${UMENG_CHANNEL_VALUE}" />
+            android:value="${UMENG_CHANNEL_VALUE}"/>
         <meta-data
             android:name="CHANNEL"
-            android:value="mobile360" />
+            android:value="mobile360"/>
 
         <!-- gaode map -->
         <!-- <meta-data -->
@@ -115,128 +117,127 @@
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="@string/baidu_maps_key" />
+            android:value="@string/baidu_maps_key"/>
         <!-- android:value="@string/baidu_maps_key_debug" /> -->
         <!-- android:value="@string/jackie_baidu_maps_key_debug" /> -->
 
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" />
+            android:process=":remote"/>
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
         <!-- <meta-data -->
         <!-- android:name="com.google.android.maps.v2.API_KEY" -->
         <!-- android:value="@string/google_maps_key" /> -->
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/google_maps_key"/>
 
         <!-- gcm receiver -->
         <receiver
-            android:name="com.madxstudio.co8.receiver_service.GcmBroadcastReceiver"
+            android:name=".receiver_service.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
 
-                <category android:name="com.madxstudio.co8" />
+                <category android:name="com.madxstudio.co8"/>
             </intent-filter>
         </receiver>
 
         <service
-            android:name="com.madxstudio.co8.receiver_service.GcmIntentService"
+            android:name=".receiver_service.GcmIntentService"
             android:enabled="true">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
 
         <activity
-            android:name="com.madxstudio.co8.ui.start.TransitionActivity"
+            android:name=".ui.start.TransitionActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
-            >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="com.madxstudio.co8.ui.introduction.IntroductionActivity"
-            android:configChanges="keyboardHidden" />
+            android:name=".ui.introduction.IntroductionActivity"
+            android:configChanges="keyboardHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.StartActivity"
+            android:name=".ui.start.StartActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
 
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
         <!-- android:launchMode="singleInstance"  此Activity的单例模式慎，会与其它Activity完全独立使用不同的上下文资源，有导致资源、数据无法传递的危险 -->
         <activity
-            android:name="com.madxstudio.co8.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
         <activity
-            android:name="com.madxstudio.co8.ui.EventDetailActivity"
+            android:name=".ui.EventDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.EventNewActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.EventNewActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.wall.DiaryInformationActivity"
+            android:name=".ui.wall.DiaryInformationActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.wall.DiaryCommentActivity"
+            android:name=".ui.wall.DiaryCommentActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.wall.EditCommentActivity"
+            android:name=".ui.wall.EditCommentActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateVisible" />
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
         <activity
-            android:name="com.madxstudio.co8.ui.wall.FeelingActivity"
+            android:name=".ui.wall.FeelingActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.wall.NewDiaryActivity"
+            android:name=".ui.wall.NewDiaryActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateVisible" />
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
         <activity
-            android:name="com.madxstudio.co8.ui.wall.WallMembersOrGroupsActivity"
+            android:name=".ui.wall.WallMembersOrGroupsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name="com.madxstudio.co8.ui.share.SelectPhotosActivity"
+            android:name=".ui.share.SelectPhotosActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.PICK" />
+                <action android:name="android.intent.action.PICK"/>
 
-                <data android:mimeType="image/*" />
+                <data android:mimeType="image/*"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="com.madxstudio.co8.ui.Map4GoogleActivity"
+            android:name=".ui.Map4GoogleActivity"
             android:noHistory="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.Map4BaiduActivity"
+            android:name=".ui.Map4BaiduActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"/>
         <!-- <activity -->
         <!-- android:name=".ui.Map4GaoDeActivity" -->
         <!-- android:noHistory="true" -->
@@ -244,244 +245,243 @@
         <!-- android:windowSoftInputMode="adjustResize" -->
         <!-- /> -->
         <activity
-            android:name="com.madxstudio.co8.ui.InvitedStatusActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.InvitedStatusActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.EventEditActivity"
+            android:name=".ui.EventEditActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.InvitedEditActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.InvitedEditActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.ViewOriginalPicesActivity"
+            android:name=".ui.ViewOriginalPicesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:noHistory="true"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/FullscreenTheme"/>
         <activity
-            android:name="com.madxstudio.co8.ui.BondAlertActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.BondAlertActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.ContactUsActivity"
+            android:name=".ui.ContactUsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.AboutActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.AboutActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.AboutUsActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.AboutUsActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.SettingActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.SettingActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.RewardsActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.RewardsActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.ViewLargePicActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
+            android:name=".ui.more.ViewLargePicActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
         <!-- More StickerStore相关的Activity -->
 
         <activity
-            android:name="com.madxstudio.co8.ui.more.sticker.StickerStoreActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.sticker.StickerStoreActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.sticker.MyStickerActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.sticker.MyStickerActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.sticker.StickerDetailActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.sticker.StickerDetailActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.sticker.StickerSortActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.sticker.StickerSortActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.TellAFriendsActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.TellAFriendsActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.MissListActivity"
+            android:name=".ui.MissListActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.NewsActivity"
+            android:name=".ui.NewsActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.RecommendActivity"
+            android:name=".ui.RecommendActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.AlertEventActivity"
+            android:name=".ui.AlertEventActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.AlertWallActivity"
+            android:name=".ui.AlertWallActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.NewsInfoActivity"
+            android:name=".ui.NewsInfoActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.AddMemberWorkFlow"
+            android:name=".ui.AddMemberWorkFlow"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent" />
+            android:theme="@android:style/Theme.Translucent"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.BondAlert.BigDayActivity"
+            android:name=".ui.more.BondAlert.BigDayActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.MemberActivity"
+            android:name=".ui.MemberActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.AlertGroupActivity"
+            android:name=".ui.AlertGroupActivity"
             android:exported="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
 
         <!-- christopher -->
 
         <activity
-            android:name="com.madxstudio.co8.ui.CreateGroupActivity"
+            android:name=".ui.CreateGroupActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.CreateGroupDialogActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.CreateGroupDialogActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.GroupSettingActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.GroupSettingActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.GroupNameSettingActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.GroupNameSettingActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.CountryCodeActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.CountryCodeActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.PersonalPictureActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.FamilyProfileActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.FamilyProfileActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.MyViewProfileActivity"
+            android:name=".ui.MyViewProfileActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.MeActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.MeActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.FamilyViewProfileActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.FamilyViewProfileActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.AddNewMembersActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.AddNewMembersActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.ViaContactMainActivity"
+            android:name=".ui.ViaContactMainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="com.madxstudio.co8.ui.ViaIdNameActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.ViaIdNameActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.ProfileResetPasswordActivity"
+            android:name=".ui.ProfileResetPasswordActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
-            android:name="com.madxstudio.co8.ui.RelationshipActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.RelationshipActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.TermsActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.TermsActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.AlbumGalleryActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.AlbumGalleryActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.PathRelationshipActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.PathRelationshipActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.MessageChatActivity"
+            android:name=".ui.MessageChatActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.family.FamilyActivity"
+            android:name=".ui.family.FamilyActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.WriteNewsActivity"
+            android:name=".ui.WriteNewsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.ArchiveActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.ArchiveActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.Archive.GroupListActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.Archive.GroupListActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.Archive.PrivateListActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.Archive.PrivateListActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.Archive.ArchiveGroupChatActivity"
+            android:name=".ui.more.Archive.ArchiveGroupChatActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.Archive.ArchivePrivateChatActivity"
+            android:name=".ui.more.Archive.ArchivePrivateChatActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.Archive.ArchiveGroupCommentActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.Archive.ArchiveGroupCommentActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.Archive.ArchivePrivateCommentActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name="com.madxstudio.co8.ui.more.MoreSettingActivity" />
+            android:name=".ui.more.Archive.ArchivePrivateCommentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.more.MoreSettingActivity"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.AutoAcceptActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.AutoAcceptActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.BirthdayAlertActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.BirthdayAlertActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.GroupPrivacyActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.more.GroupPrivacyActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.InviteMemberActivity"
+            android:name=".ui.InviteMemberActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.AlbumActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.AlbumActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.AlbumDetailActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.AlbumDetailActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.ViewPDFActivity"
+            android:name=".ui.ViewPDFActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.OrgDetailActivity"
+            android:name=".ui.OrgDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.NewChatActivity"
+            android:name=".ui.NewChatActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.SelectMemberActivity"
+            android:name=".ui.SelectMemberActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.OrganisationActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.OrganisationActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
@@ -490,17 +490,17 @@
             android:configChanges="orientation|keyboardHidden"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
-                <action android:name="cn.jpush.android.ui.PushActivity" />
+                <action android:name="cn.jpush.android.ui.PushActivity"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="com.madxstudio.co8" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="com.madxstudio.co8"/>
             </intent-filter>
         </activity>
         <!-- Required  SDK核心功能 -->
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"/>
 
         <!-- Required SDK 核心功能 -->
         <service
@@ -508,10 +508,10 @@
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTER" />
-                <action android:name="cn.jpush.android.intent.REPORT" />
-                <action android:name="cn.jpush.android.intent.PushService" />
-                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+                <action android:name="cn.jpush.android.intent.REGISTER"/>
+                <action android:name="cn.jpush.android.intent.REPORT"/>
+                <action android:name="cn.jpush.android.intent.PushService"/>
+                <action android:name="cn.jpush.android.intent.PUSH_TIME"/>
             </intent-filter>
         </service>
 
@@ -520,44 +520,44 @@
             android:name="cn.jpush.android.service.PushReceiver"
             android:enabled="true">
             <intent-filter android:priority="1000">
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>
                 <!-- Required  显示通知栏 -->
-                <category android:name="com.madxstudio.co8" />
+                <category android:name="com.madxstudio.co8"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
             <!-- Optional -->
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
 
-                <data android:scheme="package" />
+                <data android:scheme="package"/>
             </intent-filter>
         </receiver>
 
         <!-- Required SDK核心功能 -->
-        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+        <receiver android:name="cn.jpush.android.service.AlarmReceiver"/>
         <!-- 极光自定义的广播接收器 -->
         <receiver
-            android:name="com.madxstudio.co8.receiver_service.JiGuangBroadcastReceiver"
+            android:name=".receiver_service.JiGuangBroadcastReceiver"
             android:enabled="true">
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTRATION" />
+                <action android:name="cn.jpush.android.intent.REGISTRATION"/>
                 <!-- Required  用户注册SDK的intent -->
-                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
-                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+                <action android:name="cn.jpush.android.intent.UNREGISTRATION"/>
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>
                 <!-- Required  用户接收SDK消息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/>
                 <!-- Required  用户接收SDK通知栏信息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/>
                 <!-- Required  用户打开自定义通知栏的intent -->
-                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" />
+                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK"/>
                 <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
-                <action android:name="cn.jpush.android.intent.CONNECTION" />
+                <action android:name="cn.jpush.android.intent.CONNECTION"/>
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="com.madxstudio.co8" />
+                <category android:name="com.madxstudio.co8"/>
             </intent-filter>
         </receiver>
 
@@ -565,107 +565,107 @@
 
         <meta-data
             android:name="JPUSH_CHANNEL"
-            android:value="developer-default" />
+            android:value="developer-default"/>
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="@string/jiguang_api_key" />
+            android:value="@string/jiguang_api_key"/>
         <!-- </>值来自开发者平台取得的AppKey -->
 
 
         <!-- 全局网络状态监听广播接收器 -->
-        <receiver android:name="com.madxstudio.co8.receiver_service.NetWorkStateReceiver">
+        <receiver android:name=".receiver_service.NetWorkStateReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
                 <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED"> -->
             </intent-filter>
         </receiver>
 
         <activity
-            android:name="com.madxstudio.co8.ui.start.LogInUsernameActivity"
+            android:name=".ui.start.LogInUsernameActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.VerificationActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.start.VerificationActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.DetailsActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.start.DetailsActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.CreateNewOrgActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.start.CreateNewOrgActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.WelcomeActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.WelcomeActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.OrgSearchActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.OrgSearchActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.SignUpUsernameActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.start.SignUpUsernameActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.ForgotPasswordActivity"
+            android:name=".ui.start.ForgotPasswordActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.SignUpSuccessfulActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.start.SignUpSuccessfulActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.SelectAccountActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.start.SelectAccountActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.ResetPasswordActivity"
+            android:name=".ui.start.ResetPasswordActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.ResetPasswordSuccessfulActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.start.ResetPasswordSuccessfulActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"/>
 
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <activity
-            android:name="com.madxstudio.co8.ui.start.ThirdPartyVerifyPhoneActivity"
+            android:name=".ui.start.ThirdPartyVerifyPhoneActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.PickAndCropPictureActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.PickAndCropPictureActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.CrashActivity"
+            android:name=".ui.CrashActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
-            android:noHistory="true" />
+            android:noHistory="true"/>
         <activity
-            android:name="com.madxstudio.co8.ui.share.PreviewVideoActivity"
+            android:name=".ui.share.PreviewVideoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
-                <action android:name="com.madxstudio.co8.ui.PreviewVideoActivity" />
+                <action android:name="com.madxstudio.co8.ui.PreviewVideoActivity"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="com.madxstudio.co8.ui.family.FamilyTreeActivity"
-            android:screenOrientation="portrait" />
+            android:name=".ui.family.FamilyTreeActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.ui.share.RecorderVideoActivity"
+            android:name=".ui.share.RecorderVideoActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.madxstudio.co8.RECORDER_VIDEO" />
+                <action android:name="com.madxstudio.co8.RECORDER_VIDEO"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
-        <service android:name="com.madxstudio.co8.receiver_service.ReportIntentService">
+        <service android:name=".receiver_service.ReportIntentService">
             <intent-filter>
-                <action android:name="com.service.reportService" />
+                <action android:name="com.service.reportService"/>
             </intent-filter>
         </service>
 
@@ -677,75 +677,73 @@
             android:name="com.appsflyer.MultipleInstallBroadcastReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
             </intent-filter>
         </receiver>
         <receiver
             android:name="com.track.conversion.TrackingReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
             </intent-filter>
         </receiver>
         <receiver android:name="com.appsflyer.AppsFlyerLib">
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
 
-                <data android:scheme="package" />
+                <data android:scheme="package"/>
             </intent-filter>
         </receiver>
 
         <activity
-            android:name="com.madxstudio.co8.ui.wall.WallViewPicActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
+            android:name=".ui.wall.WallViewPicActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity
-            android:name="com.madxstudio.co8.ui.wall.WallEditCaptionActivity"
+            android:name=".ui.wall.WallEditCaptionActivity"
             android:theme="@android:style/Theme.Translucent"
-            android:windowSoftInputMode="stateVisible" />
+            android:windowSoftInputMode="stateVisible"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.ViewUrlPicActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
+            android:name=".ui.more.ViewUrlPicActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity
-            android:name="com.madxstudio.co8.ui.add.AddMembersActivity"
+            android:name=".ui.add.AddMembersActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.add.AddContactMembersActivity"
+            android:name=".ui.add.AddContactMembersActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.add.AddInviteMembersActivity"
+            android:name=".ui.add.AddInviteMembersActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-
+            android:windowSoftInputMode="stateHidden"/>
         <activity
-            android:name="com.madxstudio.co8.ui.more.ViewQRCodeActivity"
+            android:name=".ui.more.ViewQRCodeActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.madxstudio.co8.zxing.activity.CaptureActivity"
+            android:name=".zxing.activity.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name="com.madxstudio.co8.qr_code.zxing.co8.CaptureActivity"
+            android:name=".qr_code.zxing.co8.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
 
-        <receiver android:name="com.madxstudio.co8.receiver_service.AlarmReceiver">
+        <receiver android:name=".receiver_service.AlarmReceiver">
             <intent-filter>
-                <action android:name="com.madxstudio.co8.android.five_minute_action" />
-                <action android:name="com.madxstudio.co8.android.two_day_action" />
-                <action android:name="com.madxstudio.co8.android.three_day_action" />
-                <action android:name="com.madxstudio.co8.android.five_day_action" />
+                <action android:name="com.madxstudio.co8.android.five_minute_action"/>
+                <action android:name="com.madxstudio.co8.android.two_day_action"/>
+                <action android:name="com.madxstudio.co8.android.three_day_action"/>
+                <action android:name="com.madxstudio.co8.android.five_day_action"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </receiver>
 
@@ -758,6 +756,11 @@
             android:name=".ui.admin.AdminSettingActivity"
             android:parentActivityName=".ui.OrganisationActivity"
             android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ui.workspace.PostDetailActivity"
+            android:label="@string/title_activity_post_detail"
+            android:theme="@style/AppTheme">
         </activity>
     </application>
 

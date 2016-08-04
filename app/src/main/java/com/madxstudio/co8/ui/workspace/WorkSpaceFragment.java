@@ -1,5 +1,6 @@
 package com.madxstudio.co8.ui.workspace;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -12,10 +13,8 @@ import com.madxstudio.co8.ui.workspace.dummy.DummyContent.Workspace;
 
 /**
  * @author Jackie
- *
  */
 public class WorkSpaceFragment extends BaseFragment<MainActivity> {
-
 
 
     public static BaseFragment newInstance(String... params) {
@@ -50,11 +49,11 @@ public class WorkSpaceFragment extends BaseFragment<MainActivity> {
         recyclerView.setAdapter(new MyWorkSpaceRecyclerViewAdapter(DummyContent.ITEMS, new
                 OnListFragmentInteractionListener() {
 
-            @Override
-            public void onListFragmentInteraction(Workspace item) {
-
-            }
-        }));
+                    @Override
+                    public void onListFragmentInteraction(Workspace item) {
+                        startActivity(new Intent(getActivity(), PostDetailActivity.class));
+                    }
+                }));
     }
 
     @Override
