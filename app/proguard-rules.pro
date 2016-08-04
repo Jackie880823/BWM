@@ -113,6 +113,18 @@
 -keep class android.support.v7.app.** { *; }
 -keep interface android.support.v7.app.** { *; }
 
+# Matter Design支持库
+-keep android.support.design**
+-keep class android.support.design.internal.**{*;}
+-keep interface android.support.design.internal.**{*;}
+-keep class android.support.design.widget.**{*;}
+-keep interface android.support.design.widget.**{*;}
+
+# 图片加载库
+-dontwarn com.nostra13.universalimageloader.core.**
+-keep class com.nostra13.universalimageloader.core.**
+-keepclassmembers class com.nostra13.universalimageloader.core.** { *; }
+
 
 #pinyin4j
 -dontwarn net.soureceforge.pinyin4j.**
@@ -165,10 +177,6 @@
 -dontwarn com.artifex.mupdfdemo.**
 -keep class com.artifex.mupdfdemo.**
 -keepclassmembers class com.artifex.mupdfdemo.** { *; }
-
--dontwarn com.nostra13.universalimageloader.core.**
--keep class com.nostra13.universalimageloader.core.**
--keepclassmembers class com.nostra13.universalimageloader.core.** { *; }
 
 #java mail
    -dontwarn javax.activation.**
