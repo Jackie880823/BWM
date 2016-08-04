@@ -105,7 +105,7 @@
 
     <declare-styleable name="CustomAttributes">
         <!-- Color of ripple animation -->
-        <attr name="rippleColor" format="color|reference" />
+        <!--<attr name="rippleColor" format="color|reference" />-->
         <!-- Speed of ripple animation -->
         <attr name="rippleSpeed" format="float" />
         <!-- if true, delays calls to OnClickListeners until ripple effect ends -->
