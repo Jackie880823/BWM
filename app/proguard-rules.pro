@@ -15,6 +15,10 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# 保持源文件和行号的信息,用于混淆后定位错误位置
+-keepattributes SourceFile,LineNumberTable
+
 -optimizationpasses 5
 
 #包明不混合大小写
