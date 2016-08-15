@@ -26,13 +26,27 @@
             android:orientation="vertical"
             android:paddingLeft="@dimen/_16dp">
 
-            <TextView
-                android:id="@+id/txt_workspace_title"
-                style="@style/text_dark_default"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="sjflsdj"
-                android:textStyle="bold"/>
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txt_workspace_title"
+                    style="@style/text_dark_default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="sjflsdj"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_num"
+                    style="@style/RedPoint"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="visible"/>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/txt_workspace_description"

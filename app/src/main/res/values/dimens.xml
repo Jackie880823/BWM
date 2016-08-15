@@ -14,18 +14,18 @@
     <!--res/values-large-xhdpi/dimens.xml  (1200x1920 - Nexus 7"(latest))-->
 
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">@dimen/_16dp</dimen>
+    <dimen name="activity_vertical_margin">@dimen/_16dp</dimen>
 
-    <dimen name="default_view_margin">8dp</dimen>
-    <dimen name="default_content_padding">8dp</dimen>
+    <dimen name="default_view_margin">@dimen/_8dp</dimen>
+    <dimen name="default_content_padding">@dimen/_8dp</dimen>
 
-    <dimen name="default_text_padding">5dp</dimen>
-    <dimen name="default_button_width_height">48dp</dimen>
-    <dimen name="default_small_button_width_height">32dp</dimen>
-    <dimen name="default_icon_width_height">25dp</dimen>
-    <dimen name="default_user_head_width_height">60dp</dimen>
-    <dimen name="default_button_radius">5dp</dimen>
+    <dimen name="default_text_padding">@dimen/_5dp</dimen>
+    <dimen name="default_button_width_height">@dimen/_48dp</dimen>
+    <dimen name="default_small_button_width_height">@dimen/_32dp</dimen>
+    <dimen name="default_icon_width_height">@dimen/_25dp</dimen>
+    <dimen name="default_user_head_width_height">@dimen/_60dp</dimen>
+    <dimen name="default_button_radius">@dimen/_5dp</dimen>
     <dimen name="default_line_height">0.8dp</dimen>
 
     <dimen name="default_border_width">1dp</dimen>
@@ -171,11 +171,11 @@
     <dimen name="_400dp">400dp</dimen>
 
     <!-- SpringIndicator -->
-    <dimen name="si_default_text_size">8dp</dimen>
-    <dimen name="si_default_radius_max">8dp</dimen>
-    <dimen name="si_default_radius_min">2dp</dimen>
+    <dimen name="si_default_text_size">@dimen/_8dp</dimen>
+    <dimen name="si_default_radius_max">@dimen/_8dp</dimen>
+    <dimen name="si_default_radius_min">@dimen/_2dp</dimen>
 
     <!-- New Diary bottom navigation distance between icon and text  -->
     <dimen name="new_diary_bottom_icon_and_text">-10dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
+    <dimen name="text_margin">@dimen/_16dp</dimen>
 </resources>
