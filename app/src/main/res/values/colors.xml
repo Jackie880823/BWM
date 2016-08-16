@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_primary">#24518A</color>
-    <color name="color_primary_dark">#24518A</color>
+    <color name="color_primary_dark">#0077AE</color>
     <color name="app_theme_color">#bf360c</color>
     <color name="transparent_color">#00000000</color>
     <color name="translucence_color">#22000000</color>

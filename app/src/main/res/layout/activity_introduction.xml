@@ -25,7 +25,7 @@
         app:siIndicatorColor="@color/btn_gray_normal"
         app:siIndicatorColors="@array/indicator_colors"
         app:siSelectedTextColor="@android:color/white"
-        app:siTextColor="@color/color_primary_dark"
+        app:siTextColor="@color/color_primary"
         app:siTextSize="@dimen/si_default_text_size" />
     <!--</FrameLayout>-->
 
