@@ -16,8 +16,11 @@
 #   public *;
 #}
 
+-keepattributes *Annotation*
+-keepattributes Signature
 # 保持源文件和行号的信息,用于混淆后定位错误位置
 -keepattributes SourceFile,LineNumberTable
+-keepattributes EnclosingMethod
 
 -optimizationpasses 5
 
@@ -116,9 +119,9 @@
 -keep interface android.support.v4.app.** { *; }
 -keep class android.support.v7.app.** { *; }
 -keep interface android.support.v7.app.** { *; }
+-keep class android.support.v7.widget.**{*;}
 
 # Matter Design支持库
--keep android.support.design**
 -keep class android.support.design.internal.**{*;}
 -keep interface android.support.design.internal.**{*;}
 -keep class android.support.design.widget.**{*;}
