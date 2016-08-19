@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
 
 import com.appsflyer.AppsFlyerLib;
 import com.madxstudio.co8.AppControler;
@@ -36,11 +35,6 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
     protected AppBarLayout mAppBar;
     protected Toolbar mToolbar;
     protected View msgBar;
-
-    /**
-     * 下拉展开标题时的显示的图片控件
-     */
-    protected ImageView imgTitle;
 
     /**
      * {@link AppBarLayout}是否显示的标识位
@@ -70,7 +64,6 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
     protected void initView() {
         mAppBar = findView(R.id.app_bar);
         mToolbar = findView(R.id.toolbar);
-        imgTitle = findView(R.id.img_title);
         msgBar = findView(R.id.msg_bar);
 
         msgBar.setOnClickListener(this);
