@@ -22,7 +22,7 @@ public class PostIconsAdapter extends RecyclerView.Adapter<PostIconsAdapter.Hold
     /**
      * 适配器封装的{@link View}是否是以{@link android.support.v7.widget.GridLayoutManager}形式加载
      */
-    private boolean isGrid = false;
+    private boolean isGrid = true;
 
     public PostIconsAdapter(Context context) {
         this.context = context;
@@ -53,9 +53,15 @@ public class PostIconsAdapter extends RecyclerView.Adapter<PostIconsAdapter.Hold
         isGrid = grid;
     }
 
+    int count = 4;
+
     @Override
     public int getItemCount() {
-        return 4;
+        return count;
+    }
+
+    public void setItemCount(int count) {
+        this.count = count;
     }
 
     static class Holder extends RecyclerView.ViewHolder{
