@@ -29,7 +29,8 @@
         android:paddingBottom="@dimen/default_content_padding"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/default_content_padding">
+        android:paddingTop="@dimen/default_content_padding"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/msg"
