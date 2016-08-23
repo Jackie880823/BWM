@@ -8,7 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.ui.BaseToolbarActivity;
@@ -22,6 +23,7 @@ public class PostDetailActivity extends BaseToolbarActivity {
     private RecyclerView recIcons;
     private RecyclerView recDiscussions;
     private PostIconsAdapter iconsAdapter;
+    private ImageView imgTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,8 @@ public class PostDetailActivity extends BaseToolbarActivity {
     @Override
     protected void initView() {
         super.initView();
+
+        imgTitle = findView(R.id.img_title);
         txtDate = findView(R.id.txt_workspace_date);
         recIcons = findView(R.id.rec_icons);
         recDiscussions = (RecyclerView) findViewById(R.id.rec_discussions);
@@ -64,7 +68,7 @@ public class PostDetailActivity extends BaseToolbarActivity {
         recDiscussions.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager
                 .VERTICAL, false));
         PostIconsAdapter adapter = new PostIconsAdapter(this);
-        adapter.setItemCount(20);
+        adapter.setItemCount(100);
         adapter.setGrid(false);
         recDiscussions.setAdapter(adapter);
     }
@@ -84,8 +88,7 @@ public class PostDetailActivity extends BaseToolbarActivity {
         } else {
             isGridLayout = true;
             manager = new GridLayoutManager(this, 4);
-            recIcons.setLayoutParams(new GridLayoutManager.LayoutParams(ViewGroup.LayoutParams
-                    .MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            imgTitle.setVisibility(View.VISIBLE);
         }
         // 高度自适应。必须是在这23.2.1版本之后才能调用
         manager.setAutoMeasureEnabled(true);

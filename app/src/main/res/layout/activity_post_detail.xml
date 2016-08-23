@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,6 +16,7 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         app:elevation="@dimen/_4dp"
+        app:expanded="true"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -23,15 +25,77 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
 
-            <ImageView
-                android:id="@+id/img_title"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:src="@drawable/network_image_default"
-                app:layout_collapseMode="parallax"/>
+                android:background="@android:color/white"
+                android:orientation="vertical"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <ImageView
+                    android:id="@+id/img_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/network_image_default"
+                    app:layout_collapseMode="parallax"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/txt_workspace_title"
+                    style="@style/text_dark_default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:text="Headline Title is Here"
+                    android:textSize="@dimen/text_large_size"
+                    android:textStyle="bold"
+                    android:visibility="visible"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/txt_workspace_date"
+                    style="@style/text_dark_default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:text="by Jarvis Chan: 26 Feb 2016"/>
+
+                <View style="@style/split_line_default"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rec_icons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:overScrollMode="always"
+                    tools:listitem="@layout/item_post_icons">
+                </android.support.v7.widget.RecyclerView>
+
+                <View style="@style/split_line_default"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/txt_workspace_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/text_dark_default"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:text="Mobile App Development in UAE is a scene of prolific activity. The Middle East region is one of the regions where mobile apps tend to display stunning features that functionalities that rest of the world is yet to catch up with.
+In case you have been scouring all over the Internet for successful mobile app development tips, we got you covered. Here are some of the lessons that I have learnt from a Top Mobile App Development Company in Dubai."/>
+            </LinearLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -53,7 +117,9 @@
             android:paddingBottom="@dimen/default_content_padding"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/default_content_padding">
+            android:paddingTop="@dimen/default_content_padding"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/msg"
@@ -71,6 +137,37 @@
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_post_detail"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/txt_tip_discussions"
+            style="@style/text_dark_default"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/translucence_color"
+            android:padding="@dimen/default_content_padding"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:text="@string/txt_discussions"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rec_discussions"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_gravity="bottom"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:overScrollMode="always"
+            tools:listitem="@layout/item_post_icons">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
