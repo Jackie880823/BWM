@@ -1,3 +1,32 @@
+/*
+ *
+ *             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ *             $                                                   $
+ *             $                       _oo0oo_                     $
+ *             $                      o8888888o                    $
+ *             $                      88" . "88                    $
+ *             $                      (| -_- |)                    $
+ *             $                      0\  =  /0                    $
+ *             $                    ___/`-_-'\___                  $
+ *             $                  .' \\|     |$ '.                 $
+ *             $                 / \\|||  :  |||$ \                $
+ *             $                / _||||| -:- |||||- \              $
+ *             $               |   | \\\  -  $/ |   |              $
+ *             $               | \_|  ''\- -/''  |_/ |             $
+ *             $               \  .-\__  '-'  ___/-. /             $
+ *             $             ___'. .'  /-_._-\  `. .'___           $
+ *             $          ."" '<  `.___\_<|>_/___.' >' "".         $
+ *             $         | | :  `- \`.;`\ _ /`;.`/ - ` : | |       $
+ *             $         \  \ `_.   \_ __\ /__ _/   .-` /  /       $
+ *             $     =====`-.____`.___ \_____/___.-`___.-'=====    $
+ *             $                       `=-_-='                     $
+ *             $     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   $
+ *             $                                                   $
+ *             $          Buddha Bless         Never Bug           $
+ *             $                                                   $
+ *             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ */
+
 package com.madxstudio.co8.ui;
 
 import android.content.Intent;
@@ -21,6 +50,8 @@ import com.madxstudio.co8.AppControler;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.interfaces.NetChangeObserver;
 import com.madxstudio.co8.receiver_service.NetWorkStateReceiver;
+import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.NetworkUtil;
 
 /**
  * Created 16/8/1.
@@ -44,13 +75,13 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(getLayoutId());
+        initView();
 
         AppControler.getAppControler().addActivity(this);
         //注册网络观察者
         NetWorkStateReceiver.registerNetStateObserver(this);
 
-        setContentView(getLayoutId());
-        initView();
     }
 
     @LayoutRes
@@ -72,6 +103,13 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(canBack());
+        }
+
+        // 检测网络的连通性
+        if (NetworkUtil.isNetworkConnected(this)) {
+            msgBar.setVisibility(View.GONE);
+        } else {
+            msgBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -130,7 +168,8 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
      */
     @Override
     public void OnConnect(int netType) {
-
+        LogUtil.d(TAG, "OnConnect: ");
+        msgBar.setVisibility(View.GONE);
     }
 
     /**
@@ -138,7 +177,8 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
      */
     @Override
     public void OnDisConnect() {
-
+        LogUtil.d(TAG, "OnDisConnect: ");
+        msgBar.setVisibility(View.VISIBLE);
     }
 
     /**
