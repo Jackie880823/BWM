@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
@@ -26,7 +27,6 @@ import com.madxstudio.co8.R;
 import com.madxstudio.co8.entity.MediaData;
 import com.madxstudio.co8.http.PicturesCacheUtil;
 import com.madxstudio.co8.interfaces.StickerViewClickListener;
-import com.madxstudio.co8.ui.BaseActivity;
 import com.madxstudio.co8.ui.BaseFragment;
 import com.madxstudio.co8.ui.StickerMainFragment;
 import com.madxstudio.co8.ui.StickerMainNewFragment;
@@ -53,22 +53,23 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
     private LinearLayout llSticker;
     private ImageView ivPhoto;
     private CardView cvLayout;
-    private BaseActivity mActivity;
+    private FragmentActivity mActivity;
     private BaseFragment fragment;
     private InputMethodManager imm;
-    Handler handler = new Handler() {
+    private Handler handler = new IncomingHandler();
+    static class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
         }
-    };
+    }
 
-    public void initViewPager(BaseActivity activity, BaseFragment fragment) {
+    public void initViewPager(FragmentActivity activity, BaseFragment fragment) {
         mActivity = activity;
         this.fragment = fragment;
-        if (mActivity.isFinishing()) {
-            return;
-        }
+//        if (mActivity.isFinishing()) {
+//            return;
+//        }
     }
 
     public void commitAllowingStateLoss() {
@@ -213,7 +214,11 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     // 图片质量为高
                     intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                     intent2.putExtra("return-data", true);
-                    fragment.startActivityForResult(intent2, Constant.INTENT_REQUEST_HEAD_CAMERA);
+                    if (fragment != null) {
+                        fragment.startActivityForResult(intent2, Constant.INTENT_REQUEST_HEAD_CAMERA);
+                    } else {
+                        mActivity.startActivityForResult(intent2, Constant.INTENT_REQUEST_HEAD_CAMERA);
+                    }
                 }
                 break;
             case R.id.album_tv://打开本地相册
@@ -223,7 +228,11 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     //                Intent intent = new Intent(Intent.ACTION_PICK, null);
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                     intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
-                    fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_PHOTO);
+                    if (fragment != null) {
+                        fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_PHOTO);
+                    } else {
+                        mActivity.startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_PHOTO);
+                    }
                 }
                 break;
             case R.id.location_tv://打开地图
@@ -329,8 +338,6 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                             commentListener.onReceiveBitmapUri(uri);
                             hideAllViewState();
                         }
-                    } else {
-
                     }
                     break;
                 // 如果是调用相机拍照时
