@@ -1,173 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<!--
+  ~
+  ~             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  ~             $                                                   $
+  ~             $                       _oo0oo_                     $
+  ~             $                      o8888888o                    $
+  ~             $                      88" . "88                    $
+  ~             $                      (| -_- |)                    $
+  ~             $                      0\  =  /0                    $
+  ~             $                    ___/`-_-'\___                  $
+  ~             $                  .' \\|     |$ '.                 $
+  ~             $                 / \\|||  :  |||$ \                $
+  ~             $                / _||||| -:- |||||- \              $
+  ~             $               |   | \\\  -  $/ |   |              $
+  ~             $               | \_|  ''\- -/''  |_/ |             $
+  ~             $               \  .-\__  '-'  ___/-. /             $
+  ~             $             ___'. .'  /-_._-\  `. .'___           $
+  ~             $          ."" '<  `.___\_<|>_/___.' >' "".         $
+  ~             $         | | :  `- \`.;`\ _ /`;.`/ - ` : | |       $
+  ~             $         \  \ `_.   \_ __\ /__ _/   .-` /  /       $
+  ~             $     =====`-.____`.___ \_____/___.-`___.-'=====    $
+  ~             $                       `=-_-='                     $
+  ~             $     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   $
+  ~             $                                                   $
+  ~             $          Buddha bless         Never BUG           $
+  ~             $                                                   $
+  ~             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  -->
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="com.madxstudio.co8.ui.workspace.PostDetailActivity">
 
-    <android.support.design.widget.AppBarLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:elevation="@dimen/_4dp"
-        app:expanded="true"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <include
+        layout="@layout/layout_toolbar"/>
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:titleEnabled="false">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                app:layout_scrollFlags="scroll|enterAlways">
-
-                <ImageView
-                    android:id="@+id/img_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/network_image_default"
-                    app:layout_collapseMode="parallax"/>
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/txt_workspace_title"
-                    style="@style/text_dark_default"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:text="Headline Title is Here"
-                    android:textSize="@dimen/text_large_size"
-                    android:textStyle="bold"
-                    android:visibility="visible"/>
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/txt_workspace_date"
-                    style="@style/text_dark_default"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:text="by Jarvis Chan: 26 Feb 2016"/>
-
-                <View style="@style/split_line_default"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rec_icons"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:overScrollMode="always"
-                    tools:listitem="@layout/item_post_icons">
-                </android.support.v7.widget.RecyclerView>
-
-                <View style="@style/split_line_default"/>
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/txt_workspace_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/text_dark_default"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:text="Mobile App Development in UAE is a scene of prolific activity. The Middle East region is one of the regions where mobile apps tend to display stunning features that functionalities that rest of the world is yet to catch up with.
-In case you have been scouring all over the Internet for successful mobile app development tips, we got you covered. Here are some of the lessons that I have learnt from a Top Mobile App Development Company in Dubai."/>
-            </LinearLayout>
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-        <RelativeLayout
-            android:id="@+id/msg_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/btn_bg_color_gray_press"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/default_content_padding"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/default_content_padding"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/msg"
-                style="@style/text_default"
-                android:layout_centerVertical="true"
-                android:text="@string/msg_no_internet"
-                android:textColor="@color/default_text_color_while"/>
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/item_next_arrow"/>
-        </RelativeLayout>
-    </android.support.design.widget.AppBarLayout>
-
-    <LinearLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/txt_tip_discussions"
-            style="@style/text_dark_default"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/translucence_color"
-            android:padding="@dimen/default_content_padding"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:text="@string/txt_discussions"
-            android:textStyle="bold"/>
+        android:layout_above="@+id/send_comment"
+        android:layout_below="@+id/app_bar">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rec_discussions"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_gravity="bottom"
+            android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:overScrollMode="always"
+            tools:listheader="@layout/head_workspace_detail"
             tools:listitem="@layout/item_post_icons">
         </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    <com.madxstudio.co8.widget.SendComment
+        android:id="@+id/send_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

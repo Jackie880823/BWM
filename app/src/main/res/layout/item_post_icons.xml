@@ -1,43 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="@dimen/default_content_padding"
-                android:paddingEnd="@dimen/activity_horizontal_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingStart="@dimen/activity_horizontal_margin">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/img_icon"
-        android:layout_width="@dimen/default_small_button_width_height"
-        android:layout_height="@dimen/default_small_button_width_height"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_attachment_visible"/>
-
-    <TextView
-        android:id="@+id/txt_desc"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/img_icon"
-        android:layout_toRightOf="@+id/img_icon"
-        android:gravity="center_vertical"
-        android:paddingEnd="@dimen/default_content_padding"
-        android:paddingLeft="@dimen/default_content_padding"
-        android:paddingRight="@dimen/default_content_padding"
-        android:paddingStart="@dimen/default_content_padding"
-        android:text="Attachments"/>
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/default_content_padding"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/default_content_padding">
 
-    <TextView
-        android:id="@+id/txt_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:text="12"/>
+        <ImageView
+            android:id="@+id/img_icon"
+            android:layout_width="@dimen/default_small_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_attachment_visible"/>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/txt_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/img_icon"
+            android:layout_toRightOf="@+id/img_icon"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:paddingRight="@dimen/default_content_padding"
+            android:paddingStart="@dimen/default_content_padding"
+            android:text="Attachments"/>
+
+        <TextView
+            android:id="@+id/txt_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="12"/>
+
+    </RelativeLayout>
+
+    <View
+        style="@style/split_line_default"/>
+
+
+</LinearLayout>

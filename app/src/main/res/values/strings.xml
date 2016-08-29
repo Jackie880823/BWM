@@ -940,4 +940,7 @@
     </string>
     <string name="action_settings">Settings</string>
     <string name="txt_discussions">Discussions</string>
+    <string name="txt_attachments">Attachments</string>
+    <string name="txt_to_do_list">To-Do List</string>
+    <string name="txt_me_only">Me Only</string>
 </resources>

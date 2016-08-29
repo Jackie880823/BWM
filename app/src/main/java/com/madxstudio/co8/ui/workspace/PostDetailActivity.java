@@ -1,34 +1,53 @@
+/*
+ *
+ *             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ *             $                                                   $
+ *             $                       _oo0oo_                     $
+ *             $                      o8888888o                    $
+ *             $                      88" . "88                    $
+ *             $                      (| -_- |)                    $
+ *             $                      0\  =  /0                    $
+ *             $                    ___/`-_-'\___                  $
+ *             $                  .' \\|     |$ '.                 $
+ *             $                 / \\|||  :  |||$ \                $
+ *             $                / _||||| -:- |||||- \              $
+ *             $               |   | \\\  -  $/ |   |              $
+ *             $               | \_|  ''\- -/''  |_/ |             $
+ *             $               \  .-\__  '-'  ___/-. /             $
+ *             $             ___'. .'  /-_._-\  `. .'___           $
+ *             $          ."" '<  `.___\_<|>_/___.' >' "".         $
+ *             $         | | :  `- \`.;`\ _ /`;.`/ - ` : | |       $
+ *             $         \  \ `_.   \_ __\ /__ _/   .-` /  /       $
+ *             $     =====`-.____`.___ \_____/___.-`___.-'=====    $
+ *             $                       `=-_-='                     $
+ *             $     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   $
+ *             $                                                   $
+ *             $          Buddha Bless         Never Bug           $
+ *             $                                                   $
+ *             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ */
+
 package com.madxstudio.co8.ui.workspace;
 
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.ui.BaseToolbarActivity;
-
-import java.util.Date;
+import com.madxstudio.co8.widget.SendComment;
 
 public class PostDetailActivity extends BaseToolbarActivity {
     private static final String TAG = "PostDetailActivity";
 
-    private AppCompatTextView txtDate;
-    private RecyclerView recIcons;
-    private RecyclerView recDiscussions;
-    private PostIconsAdapter iconsAdapter;
-    private ImageView imgTitle;
+    private SendComment sendComment;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        txtDate.setText(new Date().toString());
     }
 
     @Override
@@ -41,7 +60,6 @@ public class PostDetailActivity extends BaseToolbarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_right:
-                switchLayoutManager();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -53,55 +71,37 @@ public class PostDetailActivity extends BaseToolbarActivity {
     }
 
     @Override
-    protected void initView() {
+    public void initView() {
         super.initView();
+        if (actionBar != null) {
+            actionBar.setTitle("Headline Here");
+        }
 
-        imgTitle = findView(R.id.img_title);
-        txtDate = findView(R.id.txt_workspace_date);
-        recIcons = findView(R.id.rec_icons);
-        recDiscussions = (RecyclerView) findViewById(R.id.rec_discussions);
+        sendComment = getViewById(R.id.send_comment);
+        recyclerView = getViewById(R.id.recycler_view);
+        sendComment.initViewPager(this, null);
 
-        iconsAdapter = new PostIconsAdapter(this);
-        switchLayoutManager();
-        recIcons.setAdapter(iconsAdapter);
-
-        recDiscussions.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager
-                .VERTICAL, false));
         PostIconsAdapter adapter = new PostIconsAdapter(this);
-        adapter.setItemCount(100);
-        adapter.setGrid(false);
-        recDiscussions.setAdapter(adapter);
+        adapter.setItemCount(20);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
-    /**
-     * 切换Image
-     */
-    private void switchLayoutManager() {
-        Log.d(TAG, "switchLayoutManager() called with: " + "");
+    @Override
+    public void requestData() {
 
-        RecyclerView.LayoutManager manager;
-        boolean isGridLayout;
-
-        if (iconsAdapter == null || iconsAdapter.isGrid()) {
-            isGridLayout = false;
-            manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        } else {
-            isGridLayout = true;
-            manager = new GridLayoutManager(this, 4);
-            imgTitle.setVisibility(View.VISIBLE);
-        }
-        // 高度自适应。必须是在这23.2.1版本之后才能调用
-        manager.setAutoMeasureEnabled(true);
-        recIcons.setLayoutManager(manager);
-
-        if (iconsAdapter != null) {
-            iconsAdapter.setGrid(isGridLayout);
-            iconsAdapter.notifyDataSetChanged();
-        }
     }
 
     @Override
     protected boolean canBack() {
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sendComment != null) {
+            sendComment.commitAllowingStateLoss();
+        }
     }
 }
