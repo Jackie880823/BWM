@@ -29,29 +29,29 @@
 
 package com.madxstudio.co8.ui;
 
-import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.animation.DecelerateInterpolator;
 
 import com.appsflyer.AppsFlyerLib;
+import com.madxstudio.co8.App;
 import com.madxstudio.co8.AppControler;
 import com.madxstudio.co8.R;
+import com.madxstudio.co8.interfaces.IViewCommon;
 import com.madxstudio.co8.interfaces.NetChangeObserver;
 import com.madxstudio.co8.receiver_service.NetWorkStateReceiver;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.NetworkUtil;
+import com.madxstudio.co8.util.NotificationUtil;
 
 /**
  * Created 16/8/1.
@@ -59,9 +59,14 @@ import com.madxstudio.co8.util.NetworkUtil;
  * @author Jackie
  * @version 1.0
  */
-public abstract class BaseToolbarActivity extends AppCompatActivity implements NetChangeObserver,
-        OnClickListener {
+public abstract class BaseToolbarActivity extends SuperActivity implements IViewCommon,
+        NetChangeObserver {
     private static final String TAG = "BaseToolbarActivity";
+
+    /**
+     * 是否为外部启动
+     */
+    public static final String IS_OUTSIDE_INTENT = "is_outside_intent";
 
     protected AppBarLayout mAppBar;
     protected Toolbar mToolbar;
@@ -71,8 +76,13 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
      * {@link AppBarLayout}是否显示的标识位
      */
     private boolean mBarIsShow = true;
+    protected ActionBar actionBar;
+
+    @LayoutRes
+    protected abstract int getLayoutId();
 
     @Override
+    @CallSuper
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
@@ -84,23 +94,49 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
 
     }
 
-    @LayoutRes
-    protected abstract int getLayoutId();
+    @Override
+    @CallSuper
+    protected void onResume() {
+        super.onResume();
+        AppsFlyerLib.onActivityResume(this);
+        mToolbar.collapseActionView();
+        AppsFlyerLib.onActivityResume(this);
+        NotificationUtil.clearBadge(this);//重置应用图标上的数量
+        /**是否是程序外进入(点击通知)*/
+        if (getIntent().getBooleanExtra(IS_OUTSIDE_INTENT, false)) {
+            /**重置通知数量*/
+            App.clearAllNotificationMsgs();
+        }
+    }
 
-    protected <V extends View> V findView(@IdRes int resId) {
+    @Override
+    @CallSuper
+    protected void onPause() {
+        super.onPause();
+        AppsFlyerLib.onActivityPause(this);
+    }
+
+    @Override
+    @CallSuper
+    protected void onDestroy() {
+        super.onDestroy();
+        NetWorkStateReceiver.unRegisterNetStateObserver(this);
+    }
+
+    public <V extends View> V getViewById(@IdRes int resId) {
         return (V) findViewById(resId);
     }
 
     @CallSuper
-    protected void initView() {
-        mAppBar = findView(R.id.app_bar);
-        mToolbar = findView(R.id.toolbar);
-        msgBar = findView(R.id.msg_bar);
+    public void initView() {
+        mAppBar = getViewById(R.id.app_bar);
+        mToolbar = getViewById(R.id.toolbar);
+        msgBar = getViewById(R.id.msg_bar);
 
         msgBar.setOnClickListener(this);
 
         setSupportActionBar(mToolbar);
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(canBack());
         }
@@ -116,26 +152,6 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
     protected abstract boolean canBack();
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        AppsFlyerLib.onActivityResume(this);
-        mToolbar.collapseActionView();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        AppsFlyerLib.onActivityPause(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        NetWorkStateReceiver.unRegisterNetStateObserver(this);
-        AppControler.getAppControler().finishActivity(this);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -144,6 +160,11 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     /**
@@ -194,15 +215,5 @@ public abstract class BaseToolbarActivity extends AppCompatActivity implements N
                 goNetworkSetting();
                 break;
         }
-    }
-
-    /**
-     * 跳转至网络设置
-     */
-    private void goNetworkSetting() {
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_SETTINGS);
-//        intent.setAction(Settings.ACTION_WIRELESS_SETTINGS);
-        startActivity(intent);
     }
 }

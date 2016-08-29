@@ -1,28 +1,19 @@
 package com.madxstudio.co8.ui;
 
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.support.annotation.CallSuper;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.appsflyer.AppsFlyerLib;
-import com.madxstudio.co8.App;
-import com.madxstudio.co8.AppControler;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.interfaces.IViewCommon;
 import com.madxstudio.co8.interfaces.NetChangeObserver;
 import com.madxstudio.co8.receiver_service.NetWorkStateReceiver;
 import com.madxstudio.co8.util.NetworkUtil;
-import com.madxstudio.co8.util.NotificationUtil;
-import com.madxstudio.co8.util.UIUtil;
 
 /**
  * activity基类
@@ -32,10 +23,6 @@ import com.madxstudio.co8.util.UIUtil;
 public abstract class BaseActivity extends BaseFragmentActivity implements IViewCommon, NetChangeObserver {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
-    /**
-     * 是否为外部启动
-     */
-    public static final String IS_OUTSIDE_INTENT = "is_outside_intent";
 
     protected ImageButton leftButton;            //头部栏的左边的按钮
     protected TextView tvTitle;                          //头部栏的标题
@@ -50,28 +37,14 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected TextView tvMsg;
     protected Bundle mSavedInstanceState;
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        // 这里会影响子类返回键的监听事件，请谨慎处理
-        //        Log.i(TAG, "dispatchKeyEvent& keyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
-        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            doFinish();
-            return true;
-        }
-        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
-            return true;
-        }
-        return super.dispatchKeyEvent(event); // 按下其他按钮，调用父类进行默认处理
-    }
-
     protected Fragment getFragmentInstance() {
         return getSupportFragmentManager().findFragmentById(R.id.container);
     }
 
     @Override
+    @CallSuper
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppControler.getAppControler().addActivity(this);
         mSavedInstanceState = savedInstanceState;
         // 打开Activity隐藏软键盘；
         //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -106,6 +79,13 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     }
 
+    @Override
+    @CallSuper
+    protected void onDestroy() {
+        super.onDestroy();
+        NetWorkStateReceiver.unRegisterNetStateObserver(this);
+    }
+
     public int getLayout() {
         return R.layout.activity_base;
     }
@@ -125,32 +105,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
      */
     protected void titleLeftEvent() {
         doFinish();
-    }
-
-    private void doFinish() {
-        if (getIntent().getBooleanExtra(IS_OUTSIDE_INTENT, false)) {
-            Intent intent = new Intent(this, MainActivity.class);
-//            ComponentName cn = intent.getComponent();
-//            Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-//            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(mainIntent);
-            startActivity(intent);
-        } else {
-            if (!isFinishing()) {
-                UIUtil.hideKeyboard(this, getCurrentFocus());
-            }
-        }
-        finish();
-    }
-
-    @Override
-    protected void onStop() {
-//        /**重置通知数量*/
-//        if(getIntent().getBooleanExtra(IS_OUTSIDE_INTENT,false)) {
-//            App.clearAllNotificationMsgs();
-////            App.getContextInstance().clearNotificationMsgsByType((NotificationUtil.MessageType) getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
-//        }
-        super.onStop();
     }
 
     /**
@@ -219,17 +173,9 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     protected abstract Fragment getFragment();
 
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        //		FragmentManager fragmentManager = getSupportFragmentManager();
-        //		Logger.i("test", fragmentManager.getBackStackEntryCount() + "");
-        //		fragmentManager.popBackStack();
-        super.onPause();
-        AppsFlyerLib.onActivityPause(this);
-    }
 
     @Override
+    @CallSuper
     public void onClick(View v) {
         switch (v.getId()) {
             // 进行弹出窗口//
@@ -258,14 +204,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         }
     }
 
-    private void goNetworkSetting() {
-        Intent intent = new Intent();
-
-        //        intent.setAction(Settings.ACTION_WIRELESS_SETTINGS);
-        intent.setAction(Settings.ACTION_SETTINGS);
-        startActivity(intent);
-    }
-
     @Override
     public void OnConnect(int netType) {
         msgBarChangeByStatus(View.GONE);
@@ -280,47 +218,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     @Override
     public void OnDisConnect() {
         msgBarChangeByStatus(View.VISIBLE);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        NetWorkStateReceiver.unRegisterNetStateObserver(this);
-        AppControler.getAppControler().finishActivity(this);
-    }
-
-    @Override
-    protected void onResume() {
-//        if (isNeedRefersh&&!(this instanceof MainActivity)) {
-//            Intent intent = getIntent();
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//            finish();
-//            startActivity(intent);
-//
-////            isNeedRefersh = false;
-////            Intent reintent = getIntent();
-////            finish();
-////            startActivity(reintent);
-//            return;
-//        }
-        super.onResume();
-        AppsFlyerLib.onActivityResume(this);
-        NotificationUtil.clearBadge(this);//重置应用图标上的数量
-        /**是否是程序外进入(点击通知)*/
-        if (getIntent().getBooleanExtra(IS_OUTSIDE_INTENT, false)) {
-            /**重置通知数量*/
-            App.clearAllNotificationMsgs();
-//            App.getContextInstance().clearNotificationMsgsByType((NotificationUtil.MessageType) getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
-        }
-    }
-
-    @Override
-    public Resources getResources() {
-        Resources res = super.getResources();
-        Configuration config = new Configuration();
-        config.setToDefaults();
-        res.updateConfiguration(config, res.getDisplayMetrics());
-        return res;
     }
 
 }

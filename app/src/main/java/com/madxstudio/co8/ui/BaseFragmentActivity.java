@@ -2,7 +2,6 @@ package com.madxstudio.co8.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -15,7 +14,8 @@ import com.madxstudio.co8.R;
  * fragmentActivity 基类
  * @author wing
  */
-public abstract class BaseFragmentActivity extends FragmentActivity implements OnClickListener, BaseFragment.OnFragmentInteractionListener{
+public abstract class BaseFragmentActivity extends SuperActivity implements OnClickListener, BaseFragment
+        .OnFragmentInteractionListener{
 
 
     private FragmentManager fm;
