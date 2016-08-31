@@ -81,7 +81,7 @@ public class PostDetailActivity extends BaseToolbarActivity {
         recyclerView = getViewById(R.id.recycler_view);
         sendComment.initViewPager(this, null);
 
-        PostIconsAdapter adapter = new PostIconsAdapter(this);
+        WorkspaceDetailAdapter adapter = new WorkspaceDetailAdapter(this);
         adapter.setItemCount(20);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);

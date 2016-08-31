@@ -17,8 +17,8 @@ import com.madxstudio.co8.R;
  * @author Jackie
  * @version 1.0
  */
-public class PostIconsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = "PostIconsAdapter";
+public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "WorkspaceDetailAdapter";
 
     public static final int VIEW_TYPE_HEAD = 100;
     public static final int VIEW_TYPE_NORMAL = 101;
@@ -28,7 +28,7 @@ public class PostIconsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private int count;
 
-    public PostIconsAdapter(Context context) {
+    public WorkspaceDetailAdapter(Context context) {
         this.context = context;
         count = 4;
     }
@@ -44,8 +44,8 @@ public class PostIconsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 holder = new HeadHolder(itemView);
                 break;
             default:
-                itemView = inflater.inflate(R.layout.item_post_icons, parent, false);
-                holder = new Holder(itemView);
+                itemView = inflater.inflate(R.layout.item_post_discussion, parent, false);
+                holder = new DiscussionViewHolder(itemView);
                 break;
         }
         return holder;
@@ -84,20 +84,19 @@ public class PostIconsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.count = count;
     }
 
-    static class Holder extends RecyclerView.ViewHolder {
-        public ImageView imageIcon;
-        public TextView txtDesc;
-        public TextView txtNumber;
+    /**
+     * 评论内容视图
+     */
+    static class DiscussionViewHolder extends RecyclerView.ViewHolder {
 
-        public Holder(View itemView) {
+        public DiscussionViewHolder(View itemView) {
             super(itemView);
-
-            imageIcon = (ImageView) itemView.findViewById(R.id.img_icon);
-            txtDesc = (TextView) itemView.findViewById(R.id.txt_desc);
-            txtNumber = (TextView) itemView.findViewById(R.id.txt_number);
         }
     }
 
+    /**
+     * 头部的内容，主要有Workspace除评论以外的所有内容
+     */
     static class HeadHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         /**

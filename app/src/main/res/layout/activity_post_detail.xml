@@ -56,7 +56,7 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:overScrollMode="always"
             tools:listheader="@layout/head_workspace_detail"
-            tools:listitem="@layout/item_post_icons">
+            tools:listitem="@layout/item_post_discussion">
         </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>

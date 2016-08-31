@@ -13,12 +13,12 @@
         android:padding="@dimen/_16dp">
 
         <!--<ImageView-->
-        <com.madxstudio.co8.widget.CircularImageView
+        <com.madxstudio.co8.widget.CircularNetworkImage
             android:id="@+id/img_title"
             android:layout_width="@dimen/default_user_head_width_height"
             android:layout_height="@dimen/default_user_head_width_height"
             android:scaleType="centerInside"
-            android:src="@drawable/icon_default_workspace"/>
+            android:src="@drawable/default_head_icon"/>
 
         <LinearLayout
             android:layout_width="match_parent"
