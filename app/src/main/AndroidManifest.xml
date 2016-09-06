@@ -759,9 +759,9 @@
         </activity>
         <activity
             android:name=".ui.workspace.PostDetailActivity"
-            android:label="@string/title_activity_post_detail"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:label="@string/title_activity_post_detail"/>
+        <activity android:name=".ui.workspace.ToDoListActivity"
+                  android:label="@string/txt_to_do_list"/>
     </application>
 
 </manifest>

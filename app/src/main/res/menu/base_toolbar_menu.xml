@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_done_or_add"
+        android:id="@+id/action_right_todo"
         android:title="@string/text_add"
         android:icon="@drawable/add_normal"
         app:showAsAction="always"/>

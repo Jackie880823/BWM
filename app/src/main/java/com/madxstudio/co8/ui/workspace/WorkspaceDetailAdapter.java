@@ -1,6 +1,7 @@
 package com.madxstudio.co8.ui.workspace;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -87,10 +88,17 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     /**
      * 评论内容视图
      */
-    static class DiscussionViewHolder extends RecyclerView.ViewHolder {
+    static class DiscussionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public DiscussionViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            itemView.getContext().startActivity(new Intent(itemView.getContext(),
+                    ToDoListActivity.class));
         }
     }
 
