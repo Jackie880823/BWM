@@ -1,4 +1,33 @@
-package com.madxstudio.co8.ui.workspace;
+/*
+ *
+ *             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ *             $                                                   $
+ *             $                       _oo0oo_                     $
+ *             $                      o8888888o                    $
+ *             $                      88" . "88                    $
+ *             $                      (| -_- |)                    $
+ *             $                      0\  =  /0                    $
+ *             $                    ___/`-_-'\___                  $
+ *             $                  .' \\|     |$ '.                 $
+ *             $                 / \\|||  :  |||$ \                $
+ *             $                / _||||| -:- |||||- \              $
+ *             $               |   | \\\  -  $/ |   |              $
+ *             $               | \_|  ''\- -/''  |_/ |             $
+ *             $               \  .-\__  '-'  ___/-. /             $
+ *             $             ___'. .'  /-_._-\  `. .'___           $
+ *             $          ."" '<  `.___\_<|>_/___.' >' "".         $
+ *             $         | | :  `- \`.;`\ _ /`;.`/ - ` : | |       $
+ *             $         \  \ `_.   \_ __\ /__ _/   .-` /  /       $
+ *             $     =====`-.____`.___ \_____/___.-`___.-'=====    $
+ *             $                       `=-_-='                     $
+ *             $     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   $
+ *             $                                                   $
+ *             $          Buddha Bless         Never Bug           $
+ *             $                                                   $
+ *             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+ */
+
+package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.madxstudio.co8.R;
+import com.madxstudio.co8.ui.workspace.ToDoListActivity;
 
 /**
  * Created 16/8/4.

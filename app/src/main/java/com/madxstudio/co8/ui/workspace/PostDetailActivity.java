@@ -36,6 +36,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.madxstudio.co8.R;
+import com.madxstudio.co8.adapter.WorkspaceDetailAdapter;
 import com.madxstudio.co8.ui.BaseToolbarActivity;
 import com.madxstudio.co8.widget.SendComment;
 
