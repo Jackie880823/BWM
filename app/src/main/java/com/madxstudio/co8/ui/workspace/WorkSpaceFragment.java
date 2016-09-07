@@ -46,9 +46,10 @@ public class WorkSpaceFragment extends BaseFragment<MainActivity> implements Wor
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            // 列表数据有更改刷新数据
             case Constant.INTENT_REQUEST_CREATE_WALL:
-                presenter.onStart();
-                swipeRefreshLayout.setRefreshing(true);
+            case Constant.ENTITY_REQUEST_CODE:
+                onRefresh();
                 break;
         }
     }
@@ -74,12 +75,13 @@ public class WorkSpaceFragment extends BaseFragment<MainActivity> implements Wor
 
         RecyclerView recyclerView = getViewById(R.id.workspace_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MyWorkSpaceRecyclerViewAdapter(
+        adapter = new MyWorkSpaceRecyclerViewAdapter(getParentActivity(),
                 new OnListFragmentInteractionListener() {
                     @Override
                     public void onListFragmentInteraction(WorkspaceEntity item) {
-
-                        startActivity(new Intent(getActivity(), PostDetailActivity.class));
+                        Intent intent = new Intent(getActivity(), PostDetailActivity.class);
+                        intent.putExtra("Entity", item);
+                        startActivityForResult(intent, Constant.ENTITY_REQUEST_CODE);
                     }
                 });
         recyclerView.setAdapter(adapter);
@@ -91,7 +93,7 @@ public class WorkSpaceFragment extends BaseFragment<MainActivity> implements Wor
         }
         parameter.user_id = MainActivity.getUser().getUser_id();
         parameter.start = String.valueOf(0);
-        parameter.limit = String.valueOf(0);
+        parameter.limit = String.valueOf(10);
         new WorkSpacePresenter(this, parameter);
     }
 

@@ -33,8 +33,8 @@ import com.madxstudio.co8.dao.LocalStickerInfoDao;
 import com.madxstudio.co8.entity.UserEntity;
 import com.madxstudio.co8.receiver_service.ReportIntentService;
 import com.madxstudio.co8.ui.company.CompanyActivity;
-import com.madxstudio.co8.ui.wall.NewDiaryActivity;
-import com.madxstudio.co8.ui.workspace.WorkspaceFragment;
+import com.madxstudio.co8.ui.workspace.CreateWorkSpaceActivity;
+import com.madxstudio.co8.ui.workspace.WorkSpaceFragment;
 import com.madxstudio.co8.util.FileUtil;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.MessageUtil;
@@ -310,7 +310,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 case RIGHT_CLICK_EVENT:
                     switch (currentTabEnum) {
                         case wall:
-                            fragment.startActivityForResult(new Intent(getApplicationContext(), NewDiaryActivity.class), Constant.INTENT_REQUEST_CREATE_WALL);
+                            fragment.startActivityForResult(new Intent(getApplicationContext(),
+                                    CreateWorkSpaceActivity.class), Constant
+                                    .INTENT_REQUEST_CREATE_WALL);
                             break;
                         case event:
                             fragment.startActivityForResult(new Intent(getApplicationContext(), EventNewActivity.class), Constant.ACTION_EVENT_CREATE);
@@ -539,7 +541,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
-        fragments.add(WorkspaceFragment.newInstance());
+        fragments.add(WorkSpaceFragment.newInstance());
         fragments.add(EventFragment.newInstance());
         fragments.add(NewsFragment.newInstance());
         fragments.add(MessageFragment.newInstance());

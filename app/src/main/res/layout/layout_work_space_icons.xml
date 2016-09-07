@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~
+  ~             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  ~             $                                                   $
+  ~             $                       _oo0oo_                     $
+  ~             $                      o8888888o                    $
+  ~             $                      88" . "88                    $
+  ~             $                      (| -_- |)                    $
+  ~             $                      0\  =  /0                    $
+  ~             $                    ___/`-_-'\___                  $
+  ~             $                  .' \\|     |$ '.                 $
+  ~             $                 / \\|||  :  |||$ \                $
+  ~             $                / _||||| -:- |||||- \              $
+  ~             $               |   | \\\  -  $/ |   |              $
+  ~             $               | \_|  ''\- -/''  |_/ |             $
+  ~             $               \  .-\__  '-'  ___/-. /             $
+  ~             $             ___'. .'  /-_._-\  `. .'___           $
+  ~             $          ."" '<  `.___\_<|>_/___.' >' "".         $
+  ~             $         | | :  `- \`.;`\ _ /`;.`/ - ` : | |       $
+  ~             $         \  \ `_.   \_ __\ /__ _/   .-` /  /       $
+  ~             $     =====`-.____`.___ \_____/___.-`___.-'=====    $
+  ~             $                       `=-_-='                     $
+  ~             $     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   $
+  ~             $                                                   $
+  ~             $          Buddha Bless         Never Bug           $
+  ~             $                                                   $
+  ~             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_horizontal_icons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <ImageView
+            android:id="@+id/img_attachments"
+            android:layout_width="@dimen/default_small_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_attachment_visible"/>
+
+        <ImageView
+            android:id="@+id/img_members"
+            android:layout_width="@dimen/default_small_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_members"/>
+
+        <ImageView
+            android:id="@+id/img_todo_list"
+            android:layout_width="@dimen/default_small_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_todo_list_visible"/>
+
+        <ImageView
+            android:id="@+id/img_privilege"
+            android:layout_width="@dimen/default_small_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:src="@drawable/ic_privilege_only_me"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_vertical_icons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        tools:visibility="visible">
+
+        <RelativeLayout
+            android:id="@+id/layout_attachments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/default_content_padding">
+
+            <ImageView
+                android:id="@+id/img_attachments_icon"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_attachment_visible"/>
+
+            <TextView
+                android:id="@+id/txt_attachments_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/img_attachments_icon"
+                android:layout_toRightOf="@+id/img_attachments_icon"
+                android:gravity="center_vertical"
+                android:paddingEnd="@dimen/default_content_padding"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:paddingRight="@dimen/default_content_padding"
+                android:paddingStart="@dimen/default_content_padding"
+                android:text="@string/txt_attachments"/>
+
+            <TextView
+                android:id="@+id/txt_attachments_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="12"/>
+        </RelativeLayout>
+
+        <View
+            style="@style/split_line_default"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_members"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/default_content_padding">
+
+            <ImageView
+                android:id="@+id/img_members_icon"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_members"/>
+
+            <TextView
+                android:id="@+id/txt_members_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/img_members_icon"
+                android:layout_toRightOf="@+id/img_members_icon"
+                android:gravity="center_vertical"
+                android:paddingEnd="@dimen/default_content_padding"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:paddingRight="@dimen/default_content_padding"
+                android:paddingStart="@dimen/default_content_padding"
+                android:text="@string/text_members"/>
+
+            <TextView
+                android:id="@+id/txt_members_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="12"/>
+        </RelativeLayout>
+
+        <View
+            style="@style/split_line_default"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_todo_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/default_content_padding">
+
+            <ImageView
+                android:id="@+id/img_todo_list_icon"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_todo_list_visible"/>
+
+            <TextView
+                android:id="@+id/txt_todo_list_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/img_todo_list_icon"
+                android:layout_toRightOf="@+id/img_todo_list_icon"
+                android:gravity="center_vertical"
+                android:paddingEnd="@dimen/default_content_padding"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:paddingRight="@dimen/default_content_padding"
+                android:paddingStart="@dimen/default_content_padding"
+                android:text="@string/txt_to_do_list"/>
+
+            <TextView
+                android:id="@+id/txt_todo_list_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="12"/>
+        </RelativeLayout>
+
+        <View
+            style="@style/split_line_default"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_privilege"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/default_content_padding">
+
+            <ImageView
+                android:id="@+id/img_privilege_icon"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_privilege_only_me"/>
+
+            <TextView
+                android:id="@+id/txt_privilege_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/img_privilege_icon"
+                android:layout_toRightOf="@+id/img_privilege_icon"
+                android:gravity="center_vertical"
+                android:paddingEnd="@dimen/default_content_padding"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:paddingRight="@dimen/default_content_padding"
+                android:paddingStart="@dimen/default_content_padding"
+                android:text="@string/txt_me_only"/>
+
+            <TextView
+                android:id="@+id/txt_privilege_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="12"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <View
+            style="@style/split_line_default"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:id="@+id/img_collapse_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_relapse"/>
+    </RelativeLayout>
+</LinearLayout>

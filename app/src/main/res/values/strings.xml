@@ -943,4 +943,8 @@
     <string name="txt_attachments">Attachments</string>
     <string name="txt_to_do_list">To-Do List</string>
     <string name="txt_me_only">Me Only</string>
+    <string name="title_create_new_workspace">Create New</string>
+    <string name="txt_count_limit">%1$s/%2$s</string>
+    <string name="hint_descriptions">Descriptions...</string>
+    <string name="hint_workspace_title">Type your headline title here...</string>
 </resources>

@@ -57,6 +57,11 @@ public class Constant {
     public static final int ACTION_COMMENT_MEMBERS = 13;
     public static final int ACTION_COMMENT_GROUPS = 14;
 
+    /**
+     * WorkSpace跳入详情请求
+     */
+    public static final int ENTITY_REQUEST_CODE = 100;
+
     public static final String WALL_ENTITY = "wall_entity";
     public static final String IS_DELETE = "is_delete";
     /**
