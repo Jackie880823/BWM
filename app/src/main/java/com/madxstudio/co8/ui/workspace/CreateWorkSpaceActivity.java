@@ -35,7 +35,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -162,13 +161,5 @@ public class CreateWorkSpaceActivity extends BaseToolbarActivity {
                         UniversalImageLoaderUtil.options);
                 break;
         }
-    }
-
-    @Override
-    public boolean onCreatePanelMenu(int featureId, Menu menu) {
-        getMenuInflater().inflate(R.menu.base_toolbar_menu, menu);
-        rightTodo = menu.findItem(R.id.action_right_todo);
-        rightTodo.setIcon(R.drawable.send_icon);
-        return true;
     }
 }

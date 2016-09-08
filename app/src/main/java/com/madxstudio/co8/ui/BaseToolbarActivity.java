@@ -38,6 +38,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -71,6 +72,8 @@ public abstract class BaseToolbarActivity extends SuperActivity implements IView
     protected AppBarLayout mAppBar;
     protected Toolbar mToolbar;
     protected View msgBar;
+    protected MenuItem rightMenu;
+    protected MenuItem homeMenu;
 
     /**
      * {@link AppBarLayout}是否显示的标识位
@@ -153,14 +156,24 @@ public abstract class BaseToolbarActivity extends SuperActivity implements IView
     protected abstract boolean canBack();
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.base_toolbar_menu, menu);
+        rightMenu = menu.findItem(R.id.action_right_todo);
+        homeMenu = menu.findItem(android.R.id.home);
+        return true;
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            case R.id.action_right_todo:
+                break;
         }
+                return super.onOptionsItemSelected(item);
     }
 
     @Override

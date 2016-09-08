@@ -32,8 +32,6 @@ package com.madxstudio.co8.ui.workspace;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.adapter.ToDoListAdapter;
@@ -48,20 +46,7 @@ import com.madxstudio.co8.ui.BaseToolbarActivity;
 public class ToDoListActivity extends BaseToolbarActivity {
     private static final String TAG = "ToDoListActivity";
 
-    private MenuItem addAction;
     private RecyclerView recToDoList;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.base_toolbar_menu, menu);
-        addAction = menu.findItem(R.id.action_right_todo);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected int getLayoutId() {
