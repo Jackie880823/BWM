@@ -66,6 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/img_title"
+            android:layout_alignParentBottom="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:text="By Jarvis Chan: 26 Feb 2016"/>
@@ -77,6 +78,7 @@
 
 
     <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/txt_workspace_description"
         style="@style/text_dark_default"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

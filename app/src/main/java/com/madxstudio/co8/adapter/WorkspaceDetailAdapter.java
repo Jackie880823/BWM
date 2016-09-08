@@ -33,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ import android.widget.TextView;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.base.BaseAdapter;
 import com.madxstudio.co8.entity.WorkspaceDetail;
+import com.madxstudio.co8.entity.WorkspaceEntity;
 import com.madxstudio.co8.ui.workspace.ToDoListActivity;
 
 /**
@@ -98,6 +100,8 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     private void bindHeadHolder(HeadHolder holder, int position) {
+        WorkspaceEntity entity = detail.getEntity();
+        holder.setEntity(entity);
     }
 
     @Override
@@ -150,6 +154,12 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
      * 头部的内容，主要有Workspace除评论以外的所有内容
      */
     static class HeadHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private WorkspaceEntity entity;
+
+        private TextView txtWorkspaceDate;
+        private ImageView imgTitle;
+        private TextView txtWorkspaceTitle;
+        private TextView txtWorkspaceDesc;
 
         /**
          * 适配器封装的{@link View}是否是以{@link android.support.v7.widget.GridLayoutManager}形式加载
@@ -193,6 +203,11 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
 
         private void initView() {
+            imgTitle = getViewById(R.id.img_title);
+            txtWorkspaceTitle = getViewById(R.id.txt_workspace_title);
+            txtWorkspaceDate = getViewById(R.id.txt_workspace_date);
+            txtWorkspaceDesc = getViewById(R.id.txt_attachments_desc);
+
             layoutHorizontal = getViewById(R.id.layout_horizontal_icons);
             layoutVertical = getViewById(R.id.layout_vertical_icons);
 
@@ -218,6 +233,8 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             txtNumberToDoList = getViewById(R.id.txt_todo_list_number);
             txtNumberPrivilege = getViewById(R.id.txt_privilege_number);
 
+            imgTitle.setOnClickListener(this);
+
             imgCollapseIcon.setOnClickListener(this);
 
             imgAttachment.setOnClickListener(this);
@@ -231,8 +248,40 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             layoutPrivilege.setOnClickListener(this);
         }
 
+        public void setEntity(WorkspaceEntity entity) {
+            this.entity = entity;
+
+
+            String date = String.format(itemView.getContext().getString(R.string.txt_by_name_date), entity
+                    .getUser_given_name(), entity
+                    .getContent_creation_date());
+            txtWorkspaceDate.setText(date);
+            txtWorkspaceTitle.setText(entity.getContent_title());
+            txtWorkspaceDesc.setText(entity.getText_description());
+
+
+            String attachmentCount = entity.getAttachment_count();
+            String toDoCount = entity.getTo_do_count();
+            String groupPublic = entity.getContent_group_public();
+            imgAttachment.setEnabled(hasNumber(attachmentCount));
+            imgToDoList.setEnabled(hasNumber(toDoCount));
+            // 0- Me Only, 1- Everyone , 2-All Staff
+            if ("1".equals(groupPublic)) {
+                imgPrivilege.setImageResource(R.drawable.ic_privilege_public);
+            } else if ("2".equals(groupPublic)) {
+                imgPrivilege.setImageResource(R.drawable.ic_privilege_all);
+            } else {
+                imgPrivilege.setImageResource(R.drawable.ic_privilege_only_me);
+            }
+
+        }
+
         private <V extends View> V getViewById(@IdRes int resId) {
             return (V) itemView.findViewById(resId);
+        }
+
+        public boolean hasNumber(String count) {
+            return !TextUtils.isEmpty(count) && Integer.valueOf(count) > 0;
         }
 
         /**

@@ -80,7 +80,7 @@
                     android:layout_toLeftOf="@+id/img_todo_list"
                     android:enabled="false"
                     android:scaleType="centerInside"
-                    android:src="@drawable/selector_privilege"/>
+                    android:src="@drawable/ic_privilege_public"/>
 
                 <ImageView
                     android:id="@+id/img_todo_list"

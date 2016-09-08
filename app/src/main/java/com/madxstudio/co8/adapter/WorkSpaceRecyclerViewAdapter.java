@@ -82,7 +82,7 @@ public class WorkSpaceRecyclerViewAdapter extends RecyclerView
         LogUtil.d(TAG, "onBindViewHolder() called with: " + "holder = [" + entity.toString() + "]");
 
         holder.mItem = mValues.get(position);
-        String date = String.format("By: %1s, %2$s", entity.getUser_given_name(), entity
+        String date = String.format(context.getString(R.string.txt_by_name_date), entity.getUser_given_name(), entity
                 .getContent_creation_date());
 
         holder.txtDate.setText(date);
@@ -99,11 +99,13 @@ public class WorkSpaceRecyclerViewAdapter extends RecyclerView
         holder.imgAttachment.setEnabled(hasNumber(attachmentCount));
         holder.imgTodoList.setEnabled(hasNumber(toDoCount));
 
-        // 0- Me Only, 1- Everyone , 2-All Staff， Everyone和All Staff时锁开
-        if ("1".equals(groupPublic) || "2".equals(groupPublic)) {
-            holder.imgPrivilege.setEnabled(true);
+        // 0- Me Only, 1- Everyone , 2-All Staff
+        if ("1".equals(groupPublic)) {
+            holder.imgPrivilege.setImageResource(R.drawable.ic_privilege_public);
+        } else if ("2".equals(groupPublic)) {
+            holder.imgPrivilege.setImageResource(R.drawable.ic_privilege_all);
         } else {
-            holder.imgPrivilege.setEnabled(false);
+            holder.imgPrivilege.setImageResource(R.drawable.ic_privilege_only_me);
         }
     }
 

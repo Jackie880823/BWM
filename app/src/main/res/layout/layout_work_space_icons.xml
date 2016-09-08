@@ -97,7 +97,7 @@
                 android:layout_width="@dimen/default_small_button_width_height"
                 android:layout_height="@dimen/default_small_button_width_height"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_attachment_visible"/>
+                android:src="@drawable/selector_attachment"/>
 
             <TextView
                 android:id="@+id/txt_attachments_desc"
@@ -185,7 +185,7 @@
                 android:layout_width="@dimen/default_small_button_width_height"
                 android:layout_height="@dimen/default_small_button_width_height"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_todo_list_visible"/>
+                android:src="@drawable/selector_todo_list"/>
 
             <TextView
                 android:id="@+id/txt_todo_list_desc"
@@ -229,7 +229,7 @@
                 android:layout_width="@dimen/default_small_button_width_height"
                 android:layout_height="@dimen/default_small_button_width_height"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_privilege_only_me"/>
+                android:src="@drawable/ic_privilege_public"/>
 
             <TextView
                 android:id="@+id/txt_privilege_desc"
