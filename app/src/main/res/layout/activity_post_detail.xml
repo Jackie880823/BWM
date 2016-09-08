@@ -35,7 +35,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.madxstudio.co8.ui.workspace.PostDetailActivity">
+    tools:context=".ui.workspace.detail.PostDetailActivity">
 
     <include
         layout="@layout/layout_toolbar"/>

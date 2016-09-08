@@ -43,7 +43,7 @@ import java.util.ArrayList;
  * @author Jackie
  * @version 1.0
  */
-public class WorkspaceContracts {
+public interface WorkspaceContracts {
     interface View extends BaseView<Presenter> {
         Context getContext();
 

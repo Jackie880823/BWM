@@ -84,6 +84,7 @@ public class WorkspaceEntity implements Serializable {
     private String to_do_count;
     private String is_invited;
     private String content_cover;
+    private String is_author;
 
     public String getGroup_id() {
         return group_id;
@@ -253,6 +254,14 @@ public class WorkspaceEntity implements Serializable {
         this.content_cover = content_cover;
     }
 
+    public String getIs_author() {
+        return is_author;
+    }
+
+    public void setIs_author(String is_author) {
+        this.is_author = is_author;
+    }
+
     @Override
     public String toString() {
         return "WorkspaceEntity{" +
@@ -277,6 +286,7 @@ public class WorkspaceEntity implements Serializable {
                 ", to_do_count='" + to_do_count + '\'' +
                 ", is_invited='" + is_invited + '\'' +
                 ", content_cover='" + content_cover + '\'' +
+                ", is_author='" + is_author + '\'' +
                 '}';
     }
 }

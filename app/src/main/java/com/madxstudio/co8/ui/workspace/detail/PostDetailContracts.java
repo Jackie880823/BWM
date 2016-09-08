@@ -42,13 +42,14 @@ import com.madxstudio.co8.entity.WorkspaceDetail;
  * @version 1.0
  */
 public interface PostDetailContracts {
-    interface View extends BaseView<Presenter> {
+    interface ViewLayer extends BaseView<Presenter> {
         Context getContext();
+
+        void bindWorkspaceEntity(WorkspaceDetail data);
 
         void loadComplete(WorkspaceDetail data);
     }
 
     interface Presenter extends BasePresenter {
-
     }
 }

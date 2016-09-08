@@ -45,6 +45,7 @@ import com.madxstudio.co8.base.BaseAdapter;
 import com.madxstudio.co8.entity.WorkspaceDetail;
 import com.madxstudio.co8.entity.WorkspaceEntity;
 import com.madxstudio.co8.ui.workspace.ToDoListActivity;
+import com.madxstudio.co8.util.LogUtil;
 
 /**
  * Created 16/8/4.
@@ -64,11 +65,8 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private WorkspaceDetail detail;
 
-    private int count;
-
     public WorkspaceDetailAdapter(Context context) {
         this.context = context;
-        count = 4;
     }
 
     @Override
@@ -100,15 +98,18 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     private void bindHeadHolder(HeadHolder holder, int position) {
+        LogUtil.d(TAG, "bindHeadHolder() called with: " + "holder = [" + holder + "], position = " +
+                "[" + position + "]");
         WorkspaceEntity entity = detail.getEntity();
         holder.setEntity(entity);
     }
 
     @Override
     public int getItemViewType(int position) {
+        LogUtil.d(TAG, "getItemViewType() called with: " + "position = [" + position + "]");
         if (position == 0) {
             return VIEW_TYPE_HEAD;
-        } else if (position == count - 1) {
+        } else if (position == getItemCount() - 1) {
             return VIEW_TYPE_FOOTER;
         } else {
             return VIEW_TYPE_NORMAL;
@@ -122,12 +123,14 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void setData(WorkspaceDetail data) {
+        LogUtil.d(TAG, "setData: ");
         detail = data;
         notifyDataSetChanged();
     }
 
     @Override
     public void addData(WorkspaceDetail data) {
+        LogUtil.d(TAG, "addData: ");
         int itemCount = getItemCount();
         detail.getCommentList().addAll(data.getCommentList());
         notifyItemRangeInserted(itemCount, data.getCommentList().size());
@@ -154,6 +157,7 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
      * 头部的内容，主要有Workspace除评论以外的所有内容
      */
     static class HeadHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private static final String TAG = "HeadHolder";
         private WorkspaceEntity entity;
 
         private TextView txtWorkspaceDate;
@@ -177,23 +181,21 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         protected ImageView imgToDoList;
         protected ImageView imgPrivilege;
 
+        protected ImageView imgAttachmentIcon;
+        protected ImageView imgMembersIcon;
+        protected ImageView imgToDoListIcon;
+        protected ImageView imgPrivilegeIcon;
+
         // 竖向时四个功能行
         protected View layoutAttachment;
         protected View layoutMembers;
         protected View layoutToDoList;
         protected View layoutPrivilege;
 
-        // 竖向时四个功能名称
-        protected TextView txtAttachment;
-        protected TextView txtMembers;
-        protected TextView txtToDoList;
-        protected TextView txtPrivilege;
-
         // 竖向时四个功能了项数量
         protected TextView txtNumberAttachment;
         protected TextView txtNumberMembers;
         protected TextView txtNumberToDoList;
-        protected TextView txtNumberPrivilege;
 
         public HeadHolder(View itemView) {
             super(itemView);
@@ -206,7 +208,7 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             imgTitle = getViewById(R.id.img_title);
             txtWorkspaceTitle = getViewById(R.id.txt_workspace_title);
             txtWorkspaceDate = getViewById(R.id.txt_workspace_date);
-            txtWorkspaceDesc = getViewById(R.id.txt_attachments_desc);
+            txtWorkspaceDesc = getViewById(R.id.txt_workspace_description);
 
             layoutHorizontal = getViewById(R.id.layout_horizontal_icons);
             layoutVertical = getViewById(R.id.layout_vertical_icons);
@@ -218,29 +220,28 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             imgToDoList = getViewById(R.id.img_todo_list);
             imgPrivilege = getViewById(R.id.img_privilege);
 
+            imgAttachmentIcon = getViewById(R.id.img_attachments_icon);
+            imgMembersIcon = getViewById(R.id.img_members_icon);
+            imgToDoListIcon = getViewById(R.id.img_todo_list_icon);
+            imgPrivilegeIcon = getViewById(R.id.img_privilege_icon);
+
             layoutAttachment = getViewById(R.id.layout_attachments);
             layoutMembers = getViewById(R.id.layout_members);
             layoutToDoList = getViewById(R.id.layout_todo_list);
             layoutPrivilege = getViewById(R.id.layout_privilege);
 
-            txtAttachment = getViewById(R.id.txt_attachments_desc);
-            txtMembers = getViewById(R.id.txt_members_desc);
-            txtToDoList = getViewById(R.id.txt_todo_list_desc);
-            txtPrivilege = getViewById(R.id.txt_privilege_desc);
-
             txtNumberAttachment = getViewById(R.id.txt_attachments_number);
             txtNumberMembers = getViewById(R.id.txt_members_number);
             txtNumberToDoList = getViewById(R.id.txt_todo_list_number);
-            txtNumberPrivilege = getViewById(R.id.txt_privilege_number);
 
             imgTitle.setOnClickListener(this);
 
             imgCollapseIcon.setOnClickListener(this);
 
-            imgAttachment.setOnClickListener(this);
-            imgMembers.setOnClickListener(this);
-            imgToDoList.setOnClickListener(this);
-            imgPrivilege.setOnClickListener(this);
+            imgAttachmentIcon.setOnClickListener(this);
+            imgMembersIcon.setOnClickListener(this);
+            imgToDoListIcon.setOnClickListener(this);
+            imgPrivilegeIcon.setOnClickListener(this);
 
             layoutAttachment.setOnClickListener(this);
             layoutMembers.setOnClickListener(this);
@@ -249,6 +250,7 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
 
         public void setEntity(WorkspaceEntity entity) {
+            LogUtil.d(TAG, "setEntity() called with: " + "entity = [" + entity + "]");
             this.entity = entity;
 
 
@@ -261,18 +263,30 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
             String attachmentCount = entity.getAttachment_count();
+            String memberCount = entity.getContent_member_count();
             String toDoCount = entity.getTo_do_count();
             String groupPublic = entity.getContent_group_public();
+
+            txtNumberMembers.setText(attachmentCount);
+            txtNumberMembers.setText(memberCount);
+            txtNumberToDoList.setText(toDoCount);
+
             imgAttachment.setEnabled(hasNumber(attachmentCount));
+            imgAttachmentIcon.setEnabled(hasNumber(attachmentCount));
             imgToDoList.setEnabled(hasNumber(toDoCount));
+            imgToDoListIcon.setEnabled(hasNumber(toDoCount));
             // 0- Me Only, 1- Everyone , 2-All Staff
             if ("1".equals(groupPublic)) {
                 imgPrivilege.setImageResource(R.drawable.ic_privilege_public);
+                imgPrivilegeIcon.setImageResource(R.drawable.ic_privilege_public);
             } else if ("2".equals(groupPublic)) {
                 imgPrivilege.setImageResource(R.drawable.ic_privilege_all);
+                imgPrivilegeIcon.setImageResource(R.drawable.ic_privilege_all);
             } else {
                 imgPrivilege.setImageResource(R.drawable.ic_privilege_only_me);
+                imgPrivilegeIcon.setImageResource(R.drawable.ic_privilege_only_me);
             }
+
 
         }
 

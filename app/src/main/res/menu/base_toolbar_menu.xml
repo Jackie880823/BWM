@@ -4,6 +4,5 @@
     <item
         android:id="@+id/action_right_todo"
         android:title="@string/text_add"
-        android:icon="@drawable/add_normal"
-        app:showAsAction="always"/>
+        app:showAsAction="always|withText"/>
 </menu>

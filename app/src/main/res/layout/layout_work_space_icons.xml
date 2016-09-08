@@ -49,7 +49,7 @@
             android:layout_height="@dimen/default_small_button_width_height"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:src="@drawable/ic_attachment_visible"/>
+            android:src="@drawable/selector_attachment"/>
 
         <ImageView
             android:id="@+id/img_members"
@@ -65,7 +65,7 @@
             android:layout_height="@dimen/default_small_button_width_height"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:src="@drawable/ic_todo_list_visible"/>
+            android:src="@drawable/selector_todo_list"/>
 
         <ImageView
             android:id="@+id/img_privilege"
@@ -100,7 +100,7 @@
                 android:src="@drawable/selector_attachment"/>
 
             <TextView
-                android:id="@+id/txt_attachments_desc"
+                android:id="@+id/txt_attachments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -244,15 +244,6 @@
                 android:paddingRight="@dimen/default_content_padding"
                 android:paddingStart="@dimen/default_content_padding"
                 android:text="@string/txt_me_only"/>
-
-            <TextView
-                android:id="@+id/txt_privilege_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="12"/>
         </RelativeLayout>
     </LinearLayout>
 
