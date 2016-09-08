@@ -40,12 +40,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
+import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.base.BaseAdapter;
+import com.madxstudio.co8.base.BaseHolderViewInterface;
+import com.madxstudio.co8.entity.WorkspaceCommentEntity;
 import com.madxstudio.co8.entity.WorkspaceDetail;
 import com.madxstudio.co8.entity.WorkspaceEntity;
 import com.madxstudio.co8.ui.workspace.ToDoListActivity;
 import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.UniversalImageLoaderUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * Created 16/8/4.
@@ -54,7 +60,7 @@ import com.madxstudio.co8.util.LogUtil;
  * @version 1.0
  */
 public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-        implements BaseAdapter<WorkspaceDetail>{
+        implements BaseAdapter<WorkspaceDetail> {
     private static final String TAG = "WorkspaceDetailAdapter";
 
     public static final int VIEW_TYPE_HEAD = 100;
@@ -94,7 +100,17 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             case VIEW_TYPE_HEAD:
                 bindHeadHolder((HeadHolder) holder, position);
                 break;
+            default:
+                bindDiscussionHolder((DiscussionViewHolder) holder, position);
+                break;
         }
+    }
+
+    private void bindDiscussionHolder(DiscussionViewHolder holder, int position) {
+        LogUtil.d(TAG, "bindDiscussionHolder() called with: " + "holder = [" + holder + "], " +
+                "position = [" + position + "]");
+
+        holder.setEntity(detail.getCommentList().get(position - 1));
     }
 
     private void bindHeadHolder(HeadHolder holder, int position) {
@@ -139,24 +155,55 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     /**
      * 评论内容视图
      */
-    static class DiscussionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class DiscussionViewHolder extends RecyclerView.ViewHolder implements
+            BaseHolderViewInterface {
+        private WorkspaceCommentEntity entity;
+
+        private ImageView ownerHead;
+        private TextView ownerName;
+        private TextView pushDate;
+        private TextView tvWallContent;
+        private TextView switchTextShow;
 
         public DiscussionViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+
+            ownerHead = getViewById(R.id.owner_head);
+            ownerName = getViewById(R.id.owner_name);
+            pushDate = getViewById(R.id.push_date);
+            tvWallContent = getViewById(R.id.tv_wall_content);
+            switchTextShow = getViewById(R.id.switch_text_show);
         }
 
         @Override
         public void onClick(View v) {
-            itemView.getContext().startActivity(new Intent(itemView.getContext(),
-                    ToDoListActivity.class));
+        }
+
+        @Override
+        public <V extends View> V getViewById(@IdRes int resId) {
+            return (V) itemView.findViewById(resId);
+        }
+
+        public void setEntity(WorkspaceCommentEntity entity) {
+            LogUtil.d(TAG, "setEntity() called with: " + "entity = [" + entity + "]");
+            this.entity = entity;
+
+            String url = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity
+                    .getUser_id());
+            BitmapTools.getInstance(itemView.getContext()).display(ownerHead, url, R.drawable
+                    .default_head_icon, R.drawable.default_head_icon);
+
+            ownerName.setText(entity.getUser_given_name());
+            pushDate.setText(entity.getComment_creation_date());
+            tvWallContent.setText(entity.getComment_content());
         }
     }
 
     /**
      * 头部的内容，主要有Workspace除评论以外的所有内容
      */
-    static class HeadHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class HeadHolder extends RecyclerView.ViewHolder implements BaseHolderViewInterface {
         private static final String TAG = "HeadHolder";
         private WorkspaceEntity entity;
 
@@ -253,28 +300,59 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             LogUtil.d(TAG, "setEntity() called with: " + "entity = [" + entity + "]");
             this.entity = entity;
 
+            if (!TextUtils.isEmpty(entity.getContent_cover())) {
+                imgTitle.setVisibility(View.VISIBLE);
 
-            String date = String.format(itemView.getContext().getString(R.string.txt_by_name_date), entity
+                String url = String.format(Constant.API_GET_WORKSPACE_BACKGROUND_PHOTO, entity
+                        .getContent_id(), entity.getContent_cover());
+                LogUtil.d(TAG, "setEntity: photo's url : " + url);
+                ImageLoader.getInstance().displayImage(url, imgTitle, UniversalImageLoaderUtil
+                        .options);
+            } else {
+                imgTitle.setVisibility(View.GONE);
+            }
+
+            String date = String.format(itemView.getContext().getString(R.string
+                    .txt_by_name_date), entity
                     .getUser_given_name(), entity
                     .getContent_creation_date());
-            txtWorkspaceDate.setText(date);
             txtWorkspaceTitle.setText(entity.getContent_title());
             txtWorkspaceDesc.setText(entity.getText_description());
+            txtWorkspaceDate.setText(date);
 
-
+            // 文件总数
             String attachmentCount = entity.getAttachment_count();
+            // 参数人员总数
             String memberCount = entity.getContent_member_count();
+            // to Do 的总数
             String toDoCount = entity.getTo_do_count();
+            // 这个Workspace的权限
             String groupPublic = entity.getContent_group_public();
 
-            txtNumberMembers.setText(attachmentCount);
+            txtNumberAttachment.setText(attachmentCount);
             txtNumberMembers.setText(memberCount);
             txtNumberToDoList.setText(toDoCount);
 
-            imgAttachment.setEnabled(hasNumber(attachmentCount));
-            imgAttachmentIcon.setEnabled(hasNumber(attachmentCount));
-            imgToDoList.setEnabled(hasNumber(toDoCount));
-            imgToDoListIcon.setEnabled(hasNumber(toDoCount));
+            // 判断对应项是否可用
+            boolean hasAttachment = hasNumber(attachmentCount);
+            boolean hasMembers = hasNumber(memberCount);
+            boolean hasToDoList = hasNumber(toDoCount);
+
+            // 有文件，文件功能才能点击
+            imgAttachment.setEnabled(hasAttachment);
+            layoutAttachment.setEnabled(hasAttachment);
+            imgAttachmentIcon.setEnabled(hasAttachment);
+
+            // 有成员，成员功能才能点击
+            imgMembers.setEnabled(hasMembers);
+            layoutMembers.setEnabled(hasMembers);
+            imgMembersIcon.setEnabled(hasMembers);
+
+            // 有工作，工作功能才能点击
+            imgToDoList.setEnabled(hasToDoList);
+            layoutToDoList.setEnabled(hasToDoList);
+            imgToDoListIcon.setEnabled(hasToDoList);
+
             // 0- Me Only, 1- Everyone , 2-All Staff
             if ("1".equals(groupPublic)) {
                 imgPrivilege.setImageResource(R.drawable.ic_privilege_public);
@@ -290,7 +368,7 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         }
 
-        private <V extends View> V getViewById(@IdRes int resId) {
+        public <V extends View> V getViewById(@IdRes int resId) {
             return (V) itemView.findViewById(resId);
         }
 
@@ -308,6 +386,12 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             switch (v.getId()) {
                 case R.id.img_collapse_icon:
                     setHorizontal(!isHorizontal);
+                    break;
+                case R.id.layout_todo_list:
+                case R.id.img_todo_list:
+                case R.id.img_todo_list_icon:
+                    itemView.getContext().startActivity(new Intent(itemView.getContext(),
+                            ToDoListActivity.class));
                     break;
             }
         }

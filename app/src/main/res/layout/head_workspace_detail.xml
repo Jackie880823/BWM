@@ -34,17 +34,18 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="226dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/img_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="226dp"
             android:scaleType="centerCrop"
             android:src="@drawable/network_image_default"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:visibility="visible"/>
 
         <android.support.v7.widget.AppCompatTextView
@@ -52,9 +53,7 @@
             style="@style/text_dark_default"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/txt_workspace_date"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_margin="@dimen/activity_horizontal_margin"
             android:textSize="@dimen/text_large_size"
             android:textStyle="bold"
             tools:text="HeadLine Here"/>
@@ -70,7 +69,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:text="By Jarvis Chan: 26 Feb 2016"/>
-    </RelativeLayout>
+    </LinearLayout>
 
     <View style="@style/split_line_default"/>
 

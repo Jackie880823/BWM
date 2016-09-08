@@ -212,6 +212,8 @@ public class Constant {
     public static final String API_GET_PIC = API_SERVER + "/co8/index.php/api/%s/%s/fid/%s" + "/" + System.currentTimeMillis();
     public static final String API_GET_COMMENT_PIC = API_SERVER + "/co8/index.php/api/%s/%s/fid/%s";
     public static final String API_GET_PHOTO = API_SERVER + "/co8/index.php/api/%s/%s/fid/profile";
+    public static final String API_GET_WORKSPACE_BACKGROUND_PHOTO = API_SERVER +
+            "/co8/index.php/api/photo_profile/%s/fid/content?%s";
 
     /**
      * 获取视频的链接，两个参数：1.content_creator_id; 2.视频文件名称`
@@ -223,10 +225,12 @@ public class Constant {
      */
     public static final String API_GET_VIDEO_THUMBNAIL = API_SERVER + "/co8/index.php/api/video_thumbnail/%s/fid/%s";
 
+
     /**
      * for pic
      */
     public static final String Module_Original = "photo_original";//original uploaded size
+    public static final String MODULE_CONTENT_COVER = "content_cover";//original uploaded size
     public static final String Module_preview_xl = "post_preview_xl";//800*800
     public static final String Module_preview = "post_preview";//400*400
     public static final String Module_preview_m = "post_preview_m";//200*200

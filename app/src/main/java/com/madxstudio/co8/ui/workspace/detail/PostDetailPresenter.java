@@ -132,13 +132,17 @@ public class PostDetailPresenter implements PostDetailContracts.Presenter {
 
             @Override
             public void onResult(String string) {
+                LogUtil.d(TAG, "onResult: ");
                 LogUtil.d(TAG, "get comment list onResult() called with: " + "string = [" + string + "]");
 
                 Gson gson = new GsonBuilder().create();
                 ArrayList<WorkspaceCommentEntity> commentList = gson.fromJson(string, new
-                        TypeToken<ArrayList<WorkspaceEntity>>() {
+                        TypeToken<ArrayList<WorkspaceCommentEntity>>() {
                         }.getType());
                 detail.setCommentList(commentList);
+
+                LogUtil.d(TAG, "onResult: get datas length is " + commentList.size());
+
                 viewLayer.loadComplete(detail);
             }
 

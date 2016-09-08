@@ -119,8 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="12"/>
+                android:layout_centerVertical="true"/>
         </RelativeLayout>
 
         <View
@@ -163,8 +162,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="12"/>
+                android:layout_centerVertical="true"/>
         </RelativeLayout>
 
         <View
@@ -207,8 +205,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:text="12"/>
+                android:layout_centerVertical="true"/>
         </RelativeLayout>
 
         <View

@@ -32,6 +32,7 @@ package com.madxstudio.co8.ui.workspace.detail;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -52,6 +53,7 @@ public class PostDetailActivity extends BaseToolbarActivity implements PostDetai
 
     private SendComment sendComment;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private WorkspaceDetailAdapter detailAdapter;
     private PostDetailContracts.Presenter presenter;
     private WorkspaceEntity entity;
@@ -95,11 +97,9 @@ public class PostDetailActivity extends BaseToolbarActivity implements PostDetai
     @Override
     public void initView() {
         super.initView();
-        if (actionBar != null) {
-            actionBar.setTitle("Headline Here");
-        }
 
         sendComment = getViewById(R.id.send_comment);
+        swipeRefreshLayout = getViewById(R.id.refresh_layout);
         recyclerView = getViewById(R.id.recycler_view);
         sendComment.initViewPager(this, null);
 
@@ -110,12 +110,17 @@ public class PostDetailActivity extends BaseToolbarActivity implements PostDetai
         entity = checkExtras(Constant.EXTRA_ENTITY);
 
         new PostDetailPresenter(this, entity);
+
+        if (actionBar != null) {
+            actionBar.setTitle(entity.getContent_title());
+        }
     }
 
     @Override
     public void requestData() {
         LogUtil.d(TAG, "requestData: ");
         presenter.onStart();
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
@@ -156,6 +161,7 @@ public class PostDetailActivity extends BaseToolbarActivity implements PostDetai
     public void loadComplete(WorkspaceDetail data) {
         LogUtil.d(TAG, "loadComplete: ");
         detailAdapter.setData(data);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
