@@ -3,8 +3,8 @@
 
     <string name="app_name">co8</string>
     <string name="title_tab_diary">WorkSpace</string>
-    <string name="title_tab_chat">Message</string>
-    <string name="title_tab_event">Meeting</string>
+    <string name="title_tab_chat">Messages</string>
+    <string name="title_tab_event">Meetings</string>
     <string name="title_tab_more">More</string>
 
     <!--<string name="msg_google_service_not_found">No valid Google Play Services APK found</string>-->
@@ -753,7 +753,7 @@
     <string name="text_org_company_profile">Organisation Profile</string>
     <string name="text_company_profile">Organisation \nProfile</string>
     <string name="text_my_org_chart">My Org Chart</string>
-    <string name="text_org_my_group">My Group</string>
+    <string name="text_org_my_group">My Groups</string>
     <string name="text_org_all_staff">All Staff</string>
     <string name="text_org_others">Others</string>
     <string name="text_org_list_empty">You have no member here</string>
