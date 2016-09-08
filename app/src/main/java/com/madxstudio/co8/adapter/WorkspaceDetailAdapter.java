@@ -40,6 +40,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.madxstudio.co8.R;
+import com.madxstudio.co8.base.BaseAdapter;
+import com.madxstudio.co8.entity.WorkspaceDetail;
 import com.madxstudio.co8.ui.workspace.ToDoListActivity;
 
 /**
@@ -48,7 +50,8 @@ import com.madxstudio.co8.ui.workspace.ToDoListActivity;
  * @author Jackie
  * @version 1.0
  */
-public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements BaseAdapter<WorkspaceDetail>{
     private static final String TAG = "WorkspaceDetailAdapter";
 
     public static final int VIEW_TYPE_HEAD = 100;
@@ -56,6 +59,8 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public static final int VIEW_TYPE_FOOTER = 102;
 
     private Context context;
+
+    private WorkspaceDetail detail;
 
     private int count;
 
@@ -108,11 +113,20 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return count;
+        return detail.getCommentList().size() + 1;
     }
 
-    public void setItemCount(int count) {
-        this.count = count;
+    @Override
+    public void setData(WorkspaceDetail data) {
+        detail = data;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void addData(WorkspaceDetail data) {
+        int itemCount = getItemCount();
+        detail.getCommentList().addAll(data.getCommentList());
+        notifyItemRangeInserted(itemCount, data.getCommentList().size());
     }
 
     /**

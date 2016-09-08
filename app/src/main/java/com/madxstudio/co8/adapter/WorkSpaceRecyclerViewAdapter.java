@@ -44,6 +44,7 @@ import com.madxstudio.co8.R;
 import com.madxstudio.co8.base.BaseAdapter;
 import com.madxstudio.co8.entity.WorkspaceEntity;
 import com.madxstudio.co8.ui.workspace.WorkSpaceFragment.OnListFragmentInteractionListener;
+import com.madxstudio.co8.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,15 +54,16 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyWorkSpaceRecyclerViewAdapter extends RecyclerView
-        .Adapter<MyWorkSpaceRecyclerViewAdapter.ViewHolder> implements
-        BaseAdapter<ArrayList<WorkspaceEntity>> {
+public class WorkSpaceRecyclerViewAdapter extends RecyclerView
+        .Adapter<WorkSpaceRecyclerViewAdapter.ViewHolder> implements
+        BaseAdapter<List<WorkspaceEntity>> {
+    private static final String TAG = "WorkSpaceRecyclerViewAdapter";
 
     private final OnListFragmentInteractionListener mListener;
     private List<WorkspaceEntity> mValues = new ArrayList<>();
     private Context context;
 
-    public MyWorkSpaceRecyclerViewAdapter(Context context, OnListFragmentInteractionListener
+    public WorkSpaceRecyclerViewAdapter(Context context, OnListFragmentInteractionListener
             listener) {
         mListener = listener;
         this.context = context;
@@ -77,6 +79,7 @@ public class MyWorkSpaceRecyclerViewAdapter extends RecyclerView
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         WorkspaceEntity entity = mValues.get(position);
+        LogUtil.d(TAG, "onBindViewHolder() called with: " + "holder = [" + entity.toString() + "]");
 
         holder.mItem = mValues.get(position);
         String date = String.format("By: %1s, %2$s", entity.getUser_given_name(), entity
@@ -92,12 +95,20 @@ public class MyWorkSpaceRecyclerViewAdapter extends RecyclerView
                 .default_head_icon, R.drawable.default_head_icon);
         String attachmentCount = entity.getAttachment_count();
         String toDoCount = entity.getTo_do_count();
+        String groupPublic = entity.getContent_group_public();
         holder.imgAttachment.setEnabled(hasNumber(attachmentCount));
         holder.imgTodoList.setEnabled(hasNumber(toDoCount));
+
+        // 0- Me Only, 1- Everyone , 2-All Staff， Everyone和All Staff时锁开
+        if ("1".equals(groupPublic) || "2".equals(groupPublic)) {
+            holder.imgPrivilege.setEnabled(true);
+        } else {
+            holder.imgPrivilege.setEnabled(false);
+        }
     }
 
     private boolean hasNumber(String count) {
-        return TextUtils.isEmpty(count) && Integer.valueOf(count) > 0;
+        return !TextUtils.isEmpty(count) && Integer.valueOf(count) > 0;
     }
 
     @Override
@@ -106,9 +117,16 @@ public class MyWorkSpaceRecyclerViewAdapter extends RecyclerView
     }
 
     @Override
-    public void setData(ArrayList<WorkspaceEntity> data) {
+    public void setData(List<WorkspaceEntity> data) {
         mValues = data;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void addData(List<WorkspaceEntity> data) {
+        int size = getItemCount();
+        mValues.addAll(data);
+        notifyItemRangeInserted(size, data.size());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

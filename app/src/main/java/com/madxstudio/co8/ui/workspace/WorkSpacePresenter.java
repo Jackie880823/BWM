@@ -70,11 +70,11 @@ public class WorkSpacePresenter implements WorkspaceContracts.Presenter {
     public void onStart() {
 
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("user_id", MainActivity.getUser().getUser_id());
-        params.put("limit", parameter.limit + "");
-        params.put("start", parameter.start + "");
+        params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
+        params.put(Constant.LIMIT, parameter.limit + "");
+        params.put(Constant.START, parameter.start + "");
         if (!TextUtils.isEmpty(parameter.member_id)) {
-            params.put("member_id", parameter.member_id + "");
+            params.put(Constant.MEMBER_ID, parameter.member_id + "");
         }
 
         LogUtil.i(TAG, "requestData& startIndex: " + parameter.start);

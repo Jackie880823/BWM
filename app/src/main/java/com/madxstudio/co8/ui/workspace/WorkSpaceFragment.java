@@ -9,10 +9,11 @@ import android.support.v7.widget.RecyclerView;
 
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
-import com.madxstudio.co8.adapter.MyWorkSpaceRecyclerViewAdapter;
+import com.madxstudio.co8.adapter.WorkSpaceRecyclerViewAdapter;
 import com.madxstudio.co8.entity.WorkspaceEntity;
 import com.madxstudio.co8.ui.BaseFragment;
 import com.madxstudio.co8.ui.MainActivity;
+import com.madxstudio.co8.ui.workspace.detail.PostDetailActivity;
 import com.madxstudio.co8.util.LogUtil;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class WorkSpaceFragment extends BaseFragment<MainActivity> implements Wor
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private MyWorkSpaceRecyclerViewAdapter adapter;
+    private WorkSpaceRecyclerViewAdapter adapter;
 
     public static BaseFragment newInstance(String... params) {
 
@@ -75,12 +76,12 @@ public class WorkSpaceFragment extends BaseFragment<MainActivity> implements Wor
 
         RecyclerView recyclerView = getViewById(R.id.workspace_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MyWorkSpaceRecyclerViewAdapter(getParentActivity(),
+        adapter = new WorkSpaceRecyclerViewAdapter(getParentActivity(),
                 new OnListFragmentInteractionListener() {
                     @Override
                     public void onListFragmentInteraction(WorkspaceEntity item) {
                         Intent intent = new Intent(getActivity(), PostDetailActivity.class);
-                        intent.putExtra("Entity", item);
+                        intent.putExtra(Constant.EXTRA_ENTITY, item);
                         startActivityForResult(intent, Constant.ENTITY_REQUEST_CODE);
                     }
                 });

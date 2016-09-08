@@ -252,4 +252,31 @@ public class WorkspaceEntity implements Serializable {
     public void setContent_cover(String content_cover) {
         this.content_cover = content_cover;
     }
+
+    @Override
+    public String toString() {
+        return "WorkspaceEntity{" +
+                "group_id='" + group_id + '\'' +
+                ", group_owner_id='" + group_owner_id + '\'' +
+                ", content_id='" + content_id + '\'' +
+                ", content_type='" + content_type + '\'' +
+                ", content_group_id='" + content_group_id + '\'' +
+                ", content_group_public='" + content_group_public + '\'' +
+                ", content_creator_id='" + content_creator_id + '\'' +
+                ", content_creation_date='" + content_creation_date + '\'' +
+                ", content_creation_timestamp='" + content_creation_timestamp + '\'' +
+                ", content_title='" + content_title + '\'' +
+                ", text_description='" + text_description + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", user_given_name='" + user_given_name + '\'' +
+                ", love_id=" + love_id +
+                ", comment_count='" + comment_count + '\'' +
+                ", love_count='" + love_count + '\'' +
+                ", attachment_count='" + attachment_count + '\'' +
+                ", content_member_count='" + content_member_count + '\'' +
+                ", to_do_count='" + to_do_count + '\'' +
+                ", is_invited='" + is_invited + '\'' +
+                ", content_cover='" + content_cover + '\'' +
+                '}';
+    }
 }

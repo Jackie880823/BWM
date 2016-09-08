@@ -394,6 +394,11 @@ public class Constant {
      */
     public static final String EXTRA_LONGITUDE = "longitude";
 
+    /**
+     * Intent传的实体键
+     */
+    public static final String EXTRA_ENTITY = "Extra_Entity";
+
     // 用于网络连拉的参数
     public static final String PARAM_USER_ID = "user_id";
     public static final String PARAM_CONTENT_CREATOR_ID = "content_creator_id";
@@ -439,6 +444,11 @@ public class Constant {
     public static final String CONDITION = "condition";
     public static final String POSITION = "position";
     public static final String PHOTO_POSITION = "photo_position";
+
+
+    public static final String LIMIT = "limit";
+    public static final String START = "start";
+    public static final String MEMBER_ID = "member_id";
 
     public static final String COMMENT_OWNER_ID = "comment_owner_id";
     public static final String CONTENT_TYPE = "content_type";
@@ -539,5 +549,4 @@ public class Constant {
     public static final String API_REMOVE_OWN_SUPPLIER = API_SERVER + "/co8/index.php/api/removeOther/%s";//删除自己的客户或供应商
     public static final String API_GET_USER_ORG = API_SERVER + "/co8/index.php/api/userOrgStatus/%s";//获取自己是否加入公司
     public static final String API_SET_MEETING_REMINDER = API_SERVER + "/co8/index.php/api/setReminder/%s";//设置会议reminder
-
 }
