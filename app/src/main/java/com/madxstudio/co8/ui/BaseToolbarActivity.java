@@ -89,9 +89,10 @@ public abstract class BaseToolbarActivity extends SuperActivity implements IView
         initView();
 
         AppControler.getAppControler().addActivity(this);
-        //注册网络观察者
+        // 注册网络观察者
         NetWorkStateReceiver.registerNetStateObserver(this);
 
+        requestData();
     }
 
     @Override

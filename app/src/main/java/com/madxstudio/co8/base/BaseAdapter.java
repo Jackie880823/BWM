@@ -36,5 +36,15 @@ package com.madxstudio.co8.base;
  * @version 1.0
  */
 public interface BaseAdapter<O extends Object> {
+    /**
+     * 设置Adapter的数据这里不一定是列表数据
+     * @param data
+     */
     void setData(O data);
+
+    /**
+     * 添加数据
+     * @param data
+     */
+    void addData(O data);
 }
