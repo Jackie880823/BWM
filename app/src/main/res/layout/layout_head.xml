@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!--
+  ~
+  ~             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  ~             $                                                   $
+  ~             $                       _oo0oo_                     $
+  ~             $                      o8888888o                    $
+  ~             $                      88" . "88                    $
+  ~             $                      (| -_- |)                    $
+  ~             $                      0\  =  /0                    $
+  ~             $                    ___/`-_-'\___                  $
+  ~             $                  .' \\|     |$ '.                 $
+  ~             $                 / \\|||  :  |||$ \                $
+  ~             $                / _||||| -:- |||||- \              $
+  ~             $               |   | \\\  -  $/ |   |              $
+  ~             $               | \_|  ''\- -/''  |_/ |             $
+  ~             $               \  .-\__  '-'  ___/-. /             $
+  ~             $             ___'. .'  /-_._-\  `. .'___           $
+  ~             $          ."" '<  `.___\_<|>_/___.' >' "".         $
+  ~             $         | | :  `- \`.;`\ _ /`;.`/ - ` : | |       $
+  ~             $         \  \ `_.   \_ __\ /__ _/   .-` /  /       $
+  ~             $     =====`-.____`.___ \_____/___.-`___.-'=====    $
+  ~             $                       `=-_-='                     $
+  ~             $     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   $
+  ~             $                                                   $
+  ~             $          Buddha Bless         Never Bug           $
+  ~             $                                                   $
+  ~             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_event_head"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/item_post_picture_discussion">
+
+    <com.madxstudio.co8.widget.CircularNetworkImage
+        android:id="@+id/owner_head"
+        android:layout_width="@dimen/default_user_head_width_height"
+        android:layout_height="@dimen/default_user_head_width_height"
+        android:src="@drawable/default_head_icon"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/btn_option"
+        android:layout_toRightOf="@+id/owner_head"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/default_content_padding">
+
+        <TextView
+            android:id="@+id/owner_name"
+            style="@style/text_user_name"
+            android:textColor="@color/default_text_color_dark"
+            android:textSize="@dimen/text_medium_size"
+            tools:text="Samantha"/>
+
+        <TextView
+            android:id="@+id/push_date"
+            style="@style/text_light_default"
+            tools:text="8:28 PM, 8 Feb 2016"/>
+    </LinearLayout>
+</RelativeLayout>
+
+        

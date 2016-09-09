@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class WorkspaceDetail {
     private WorkspaceEntity entity;
-    private List<WorkspaceCommentEntity> commentList = new ArrayList<>();
+    private List<WorkspaceDiscussion> discussions = new ArrayList<>();
 
     public WorkspaceEntity getEntity() {
         return entity;
@@ -50,11 +50,11 @@ public class WorkspaceDetail {
         this.entity = entity;
     }
 
-    public List<WorkspaceCommentEntity> getCommentList() {
-        return commentList;
+    public List<WorkspaceDiscussion> getCommentList() {
+        return discussions;
     }
 
-    public void setCommentList(List<WorkspaceCommentEntity> commentList) {
-        this.commentList = commentList;
+    public void setDiscussionList(List<WorkspaceDiscussion> discussions) {
+        this.discussions = discussions;
     }
 }

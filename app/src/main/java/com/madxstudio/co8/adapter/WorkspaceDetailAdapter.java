@@ -31,8 +31,10 @@ package com.madxstudio.co8.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.CallSuper;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +47,7 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.base.BaseAdapter;
 import com.madxstudio.co8.base.BaseHolderViewInterface;
-import com.madxstudio.co8.entity.WorkspaceCommentEntity;
+import com.madxstudio.co8.entity.WorkspaceDiscussion;
 import com.madxstudio.co8.entity.WorkspaceDetail;
 import com.madxstudio.co8.entity.WorkspaceEntity;
 import com.madxstudio.co8.ui.workspace.ToDoListActivity;
@@ -54,21 +56,34 @@ import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
+ * WorkspaceDetail详情的适配器类，数据数据以列表呈现
  * Created 16/8/4.
  *
  * @author Jackie
  * @version 1.0
  */
-public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class WorkspaceDetailAdapter extends RecyclerView.Adapter<ViewHolder>
         implements BaseAdapter<WorkspaceDetail> {
     private static final String TAG = "WorkspaceDetailAdapter";
 
+    /**
+     * 头部的Workspace内容信息
+     */
     public static final int VIEW_TYPE_HEAD = 100;
-    public static final int VIEW_TYPE_NORMAL = 101;
-    public static final int VIEW_TYPE_FOOTER = 102;
+    /**
+     * 文字评论
+     */
+    public static final int VIEW_TYPE_DISCUSSION_TXT = 101;
+    /**
+     * 图片评论
+     */
+    public static final int VIEW_TYPE_DISCUSSION_PICTURE = 102;
 
     private Context context;
 
+    /**
+     * 详情封装函数，包括Workspace的内容和评论
+     */
     private WorkspaceDetail detail;
 
     public WorkspaceDetailAdapter(Context context) {
@@ -76,8 +91,8 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder holder;
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        ViewHolder holder;
         View itemView;
         LayoutInflater inflater = LayoutInflater.from(context);
         switch (viewType) {
@@ -85,50 +100,75 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 itemView = inflater.inflate(R.layout.head_workspace_detail, parent, false);
                 holder = new HeadHolder(itemView);
                 break;
+
+            case VIEW_TYPE_DISCUSSION_PICTURE:
+                itemView = inflater.inflate(R.layout.item_post_picture_discussion, parent, false);
+                holder = new PictureDiscussionViewHolder(itemView);
+                break;
+
             default:
-                itemView = inflater.inflate(R.layout.item_post_discussion, parent, false);
-                holder = new DiscussionViewHolder(itemView);
+                itemView = inflater.inflate(R.layout.item_post_txt_discussion, parent, false);
+                holder = new TxtDiscussionViewHolder(itemView);
                 break;
         }
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         int viewType = holder.getItemViewType();
         switch (viewType) {
             case VIEW_TYPE_HEAD:
                 bindHeadHolder((HeadHolder) holder, position);
                 break;
             default:
-                bindDiscussionHolder((DiscussionViewHolder) holder, position);
+                bindDiscussionHolder((BaseDiscussionViewHolder) holder, position);
                 break;
         }
     }
 
-    private void bindDiscussionHolder(DiscussionViewHolder holder, int position) {
+    /**
+     * 评论的数据与View绑定
+     * @param holder 评论View
+     * @param position 在整个列表中的位置
+     */
+    private void bindDiscussionHolder(BaseDiscussionViewHolder holder, int position) {
         LogUtil.d(TAG, "bindDiscussionHolder() called with: " + "holder = [" + holder + "], " +
                 "position = [" + position + "]");
 
-        holder.setEntity(detail.getCommentList().get(position - 1));
+        // 有个头数据，所以位置下标，评论列表对应的评论数据在其下标-1
+        holder.bindEntity(detail.getCommentList().get(position - 1));
     }
 
+    /**
+     * Workspace的详情内容
+     * @param holder Workspace View
+     * @param position 在整个列表中的位置
+     */
     private void bindHeadHolder(HeadHolder holder, int position) {
         LogUtil.d(TAG, "bindHeadHolder() called with: " + "holder = [" + holder + "], position = " +
                 "[" + position + "]");
         WorkspaceEntity entity = detail.getEntity();
-        holder.setEntity(entity);
+        holder.bindEntity(entity);
     }
 
     @Override
     public int getItemViewType(int position) {
         LogUtil.d(TAG, "getItemViewType() called with: " + "position = [" + position + "]");
         if (position == 0) {
+            // 首项与其余项不同
             return VIEW_TYPE_HEAD;
-        } else if (position == getItemCount() - 1) {
-            return VIEW_TYPE_FOOTER;
+        }
+
+        WorkspaceDiscussion discussion = detail.getCommentList().get(position - 1);
+
+        if (TextUtils.isEmpty(discussion.getPhoto_url_ori()) && TextUtils.isEmpty(discussion
+                .getStickers_url()) && TextUtils.isEmpty(discussion.getSticker_code())) {
+            // 表情，图片都为空则返回显示文字评论的类型
+            return VIEW_TYPE_DISCUSSION_TXT;
         } else {
-            return VIEW_TYPE_NORMAL;
+            // 带图片或者表情的评论
+            return VIEW_TYPE_DISCUSSION_PICTURE;
         }
     }
 
@@ -137,6 +177,9 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return detail.getCommentList().size() + 1;
     }
 
+    /**
+     * @param data 数据整个替换
+     */
     @Override
     public void setData(WorkspaceDetail data) {
         LogUtil.d(TAG, "setData: ");
@@ -144,6 +187,10 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         notifyDataSetChanged();
     }
 
+    /**
+     * 添加数据，实质是添加封装类中主评论列表
+     * @param data
+     */
     @Override
     public void addData(WorkspaceDetail data) {
         LogUtil.d(TAG, "addData: ");
@@ -153,30 +200,75 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     /**
-     * 评论内容视图
+     * 评论内容是的文字的{@link BaseDiscussionViewHolder}
      */
-    static class DiscussionViewHolder extends RecyclerView.ViewHolder implements
-            BaseHolderViewInterface {
-        private WorkspaceCommentEntity entity;
+    static class TxtDiscussionViewHolder extends BaseDiscussionViewHolder {
+        private static final String TAG = "TxtDiscussionViewHolder";
 
-        private ImageView ownerHead;
-        private TextView ownerName;
-        private TextView pushDate;
-        private TextView tvWallContent;
+        private TextView txtDiscussion;
         private TextView switchTextShow;
 
-        public DiscussionViewHolder(View itemView) {
+        public TxtDiscussionViewHolder(View itemView) {
+            super(itemView);
+
+            txtDiscussion = getViewById(R.id.txt_discussion);
+            switchTextShow = getViewById(R.id.switch_text_show);
+
+            switchTextShow.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            super.onClick(v);
+        }
+
+        @Override
+        @CallSuper
+        public void bindEntity(WorkspaceDiscussion entity) {
+            super.bindEntity(entity);
+
+            txtDiscussion.setText(entity.getComment_content());
+        }
+    }
+
+    /**
+     * 带图片的{@link BaseDiscussionViewHolder}
+     */
+    static class PictureDiscussionViewHolder extends BaseDiscussionViewHolder {
+        private static final String TAG = "PictureDiscussionViewHolder";
+
+        private ImageView imgDiscussion;
+
+        public PictureDiscussionViewHolder(View itemView) {
+            super(itemView);
+            imgDiscussion = getViewById(R.id.img_discussion);
+        }
+    }
+
+    /**
+     * 基于的评论的{@link ViewHolder}
+     */
+    static abstract class BaseDiscussionViewHolder extends RecyclerView.ViewHolder implements
+            BaseHolderViewInterface<WorkspaceDiscussion> {
+        private static final String TAG = "BaseDiscussionViewHolder";
+
+        protected WorkspaceDiscussion entity;
+
+        protected ImageView ownerHead;
+        protected TextView ownerName;
+        protected TextView pushDate;
+
+        public BaseDiscussionViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
             ownerHead = getViewById(R.id.owner_head);
             ownerName = getViewById(R.id.owner_name);
             pushDate = getViewById(R.id.push_date);
-            tvWallContent = getViewById(R.id.tv_wall_content);
-            switchTextShow = getViewById(R.id.switch_text_show);
         }
 
         @Override
+        @CallSuper
         public void onClick(View v) {
         }
 
@@ -185,8 +277,13 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return (V) itemView.findViewById(resId);
         }
 
-        public void setEntity(WorkspaceCommentEntity entity) {
-            LogUtil.d(TAG, "setEntity() called with: " + "entity = [" + entity + "]");
+        /**
+         * 设置数据实体，
+         * @param entity
+         */
+        @CallSuper
+        public void bindEntity(WorkspaceDiscussion entity) {
+            LogUtil.d(TAG, "bindEntity() called with: " + "entity = [" + entity + "]");
             this.entity = entity;
 
             String url = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity
@@ -196,14 +293,13 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             ownerName.setText(entity.getUser_given_name());
             pushDate.setText(entity.getComment_creation_date());
-            tvWallContent.setText(entity.getComment_content());
         }
     }
 
     /**
      * 头部的内容，主要有Workspace除评论以外的所有内容
      */
-    static class HeadHolder extends RecyclerView.ViewHolder implements BaseHolderViewInterface {
+    static class HeadHolder extends RecyclerView.ViewHolder implements BaseHolderViewInterface<WorkspaceEntity> {
         private static final String TAG = "HeadHolder";
         private WorkspaceEntity entity;
 
@@ -296,8 +392,8 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             layoutPrivilege.setOnClickListener(this);
         }
 
-        public void setEntity(WorkspaceEntity entity) {
-            LogUtil.d(TAG, "setEntity() called with: " + "entity = [" + entity + "]");
+        public void bindEntity(WorkspaceEntity entity) {
+            LogUtil.d(TAG, "bindEntity() called with: " + "entity = [" + entity + "]");
             this.entity = entity;
 
             if (!TextUtils.isEmpty(entity.getContent_cover())) {
@@ -305,7 +401,7 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                 String url = String.format(Constant.API_GET_WORKSPACE_BACKGROUND_PHOTO, entity
                         .getContent_id(), entity.getContent_cover());
-                LogUtil.d(TAG, "setEntity: photo's url : " + url);
+                LogUtil.d(TAG, "bindEntity: photo's url : " + url);
                 ImageLoader.getInstance().displayImage(url, imgTitle, UniversalImageLoaderUtil
                         .options);
             } else {

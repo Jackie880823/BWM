@@ -64,7 +64,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madxstudio.co8.Constant;
-import com.madxstudio.co8.entity.WorkspaceCommentEntity;
+import com.madxstudio.co8.entity.WorkspaceDiscussion;
 import com.madxstudio.co8.entity.WorkspaceDetail;
 import com.madxstudio.co8.entity.WorkspaceEntity;
 import com.madxstudio.co8.http.UrlUtil;
@@ -136,10 +136,10 @@ public class PostDetailPresenter implements PostDetailContracts.Presenter {
                 LogUtil.d(TAG, "get comment list onResult() called with: " + "string = [" + string + "]");
 
                 Gson gson = new GsonBuilder().create();
-                ArrayList<WorkspaceCommentEntity> commentList = gson.fromJson(string, new
-                        TypeToken<ArrayList<WorkspaceCommentEntity>>() {
+                ArrayList<WorkspaceDiscussion> commentList = gson.fromJson(string, new
+                        TypeToken<ArrayList<WorkspaceDiscussion>>() {
                         }.getType());
-                detail.setCommentList(commentList);
+                detail.setDiscussionList(commentList);
 
                 LogUtil.d(TAG, "onResult: get datas length is " + commentList.size());
 

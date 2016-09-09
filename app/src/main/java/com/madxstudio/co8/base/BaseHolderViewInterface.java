@@ -33,12 +33,25 @@ import android.support.annotation.IdRes;
 import android.view.View;
 
 /**
+ * 适配器的Holder辅助接口
  * Created 16/9/8.
  *
  * @author Jackie
  * @version 1.0
  */
-public interface BaseHolderViewInterface extends View.OnClickListener {
+public interface BaseHolderViewInterface<E extends Object> extends View.OnClickListener {
 
+    /**
+     * 从holder中获取控件
+     * @param resId 控件ID
+     * @param <V> 控件类型
+     * @return 返回 {@link V}类型的控件
+     */
     <V extends View> V getViewById(@IdRes int resId);
+
+    /**
+     * 实体数据与Holder绑定
+     * @param entity 被绑定的数据
+     */
+    void bindEntity(E entity);
 }

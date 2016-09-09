@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~
+  ~             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  ~             $                                                   $
+  ~             $                       _oo0oo_                     $
+  ~             $                      o8888888o                    $
+  ~             $                      88" . "88                    $
+  ~             $                      (| -_- |)                    $
+  ~             $                      0\  =  /0                    $
+  ~             $                    ___/`-_-'\___                  $
+  ~             $                  .' \\|     |$ '.                 $
+  ~             $                 / \\|||  :  |||$ \                $
+  ~             $                / _||||| -:- |||||- \              $
+  ~             $               |   | \\\  -  $/ |   |              $
+  ~             $               | \_|  ''\- -/''  |_/ |             $
+  ~             $               \  .-\__  '-'  ___/-. /             $
+  ~             $             ___'. .'  /-_._-\  `. .'___           $
+  ~             $          ."" '<  `.___\_<|>_/___.' >' "".         $
+  ~             $         | | :  `- \`.;`\ _ /`;.`/ - ` : | |       $
+  ~             $         \  \ `_.   \_ __\ /__ _/   .-` /  /       $
+  ~             $     =====`-.____`.___ \_____/___.-`___.-'=====    $
+  ~             $                       `=-_-='                     $
+  ~             $     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   $
+  ~             $                                                   $
+  ~             $          Buddha Bless         Never Bug           $
+  ~             $                                                   $
+  ~             $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/default_content_padding"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/default_content_padding">
+
+        <include layout="@layout/layout_head"/>
+
+        <ImageView
+            android:id="@+id/img_discussion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"/>
+    </LinearLayout>
+
+    <View
+        style="@style/split_line_default"/>
+
+
+</LinearLayout>

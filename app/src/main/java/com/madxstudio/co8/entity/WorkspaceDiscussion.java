@@ -32,12 +32,13 @@ package com.madxstudio.co8.entity;
 import java.io.Serializable;
 
 /**
+ * Workspace 的评论封装类
  * Created 16/9/7.
  *
  * @author Jackie
  * @version 1.0
  */
-public class WorkspaceCommentEntity implements Serializable {
+public class WorkspaceDiscussion implements Serializable {
     /**
      * "comment_id": "966", // Comment ID
      * "content_group_id": "1410", // Post content group ID
@@ -237,7 +238,7 @@ public class WorkspaceCommentEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "WorkspaceCommentEntity{" +
+        return "WorkspaceDiscussion{" +
                 "comment_id='" + comment_id + '\'' +
                 ", content_group_id='" + content_group_id + '\'' +
                 ", comment_owner_id='" + comment_owner_id + '\'' +

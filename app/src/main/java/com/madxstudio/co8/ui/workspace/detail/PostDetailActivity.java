@@ -114,6 +114,13 @@ public class PostDetailActivity extends BaseToolbarActivity implements PostDetai
         if (actionBar != null) {
             actionBar.setTitle(entity.getContent_title());
         }
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestData();
+            }
+        });
     }
 
     @Override
