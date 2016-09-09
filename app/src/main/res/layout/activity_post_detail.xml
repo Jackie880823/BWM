@@ -40,7 +40,7 @@
     <include
         layout="@layout/layout_toolbar"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.madxstudio.co8.widget.MySwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -57,10 +57,10 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:overScrollMode="always"
             tools:listheader="@layout/head_workspace_detail"
-            tools:listitem="@layout/item_post_discussion">
+            tools:listitem="@layout/item_post_txt_discussion">
         </android.support.v7.widget.RecyclerView>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.madxstudio.co8.widget.MySwipeRefreshLayout>
 
 
     <com.madxstudio.co8.widget.SendComment
