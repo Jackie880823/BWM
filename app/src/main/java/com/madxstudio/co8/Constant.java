@@ -8,6 +8,32 @@ import com.madxstudio.co8.util.FileUtil;
 public class Constant {
 
     /**
+     * JPEG格式的常量，保存扩展名为jpeg的图片时使用这个常量来拼接文件
+     */
+    public static final String EXTENSION_JPEG = ".jpeg";
+
+    /**
+     * JPEG格式的常量，保存扩展名为jpeg的图片时使用这个常量来拼接文件
+     */
+    public static final String EXTENSION_JPG = ".jpg";
+
+    /**
+     * PNG格式的常量，保存扩展名为png的图片时使用这个常量来拼接文件
+     */
+    public static final String EXTENSION_PNG = ".png";
+
+    /**
+     * GIF格式的常量，保存扩展名为gif的图片时使用这个常量来拼接文件
+     */
+    public static final String EXTENSION_GIF = ".gif";
+
+    /**
+     * http协议头，在{@link android.net.Uri}中可以用这个来判断是不是从网络来的路径
+     */
+    public static final String SCHEME_HTTP = "http";
+    public static final String SCHEME_HTTPS = "https";
+
+    /**
      * 网络请求返回代码信息
      */
     public static final String RESPONSE_STATUS_CODE = "response_status_code";
