@@ -30,6 +30,7 @@
 package com.madxstudio.co8.adapter;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -42,9 +43,12 @@ import com.android.volley.ext.tools.BitmapTools;
 import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.base.BaseAdapter;
+import com.madxstudio.co8.base.BaseHolderViewInterface;
 import com.madxstudio.co8.entity.WorkspaceEntity;
 import com.madxstudio.co8.ui.workspace.WorkSpaceFragment.OnListFragmentInteractionListener;
 import com.madxstudio.co8.util.LogUtil;
+import com.madxstudio.co8.util.image.Configuration;
+import com.madxstudio.co8.util.image.ImageLoadUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,37 +84,7 @@ public class WorkSpaceRecyclerViewAdapter extends RecyclerView
     public void onBindViewHolder(final ViewHolder holder, int position) {
         WorkspaceEntity entity = mValues.get(position);
         LogUtil.d(TAG, "onBindViewHolder() called with: " + "holder = [" + entity.toString() + "]");
-
-        holder.mItem = mValues.get(position);
-        String date = String.format(context.getString(R.string.txt_by_name_date), entity.getUser_given_name(), entity
-                .getContent_creation_date());
-
-        holder.txtDate.setText(date);
-        holder.txtTitle.setText(entity.getContent_title());
-        holder.txtDescription.setText(entity.getText_description());
-
-        String url = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity
-                .getUser_id());
-        BitmapTools.getInstance(context).display(holder.imgTitle, url, R.drawable
-                .default_head_icon, R.drawable.default_head_icon);
-        String attachmentCount = entity.getAttachment_count();
-        String toDoCount = entity.getTo_do_count();
-        String groupPublic = entity.getContent_group_public();
-        holder.imgAttachment.setEnabled(hasNumber(attachmentCount));
-        holder.imgTodoList.setEnabled(hasNumber(toDoCount));
-
-        // 0- Me Only, 1- Everyone , 2-All Staff
-        if ("1".equals(groupPublic)) {
-            holder.imgPrivilege.setImageResource(R.drawable.ic_privilege_public);
-        } else if ("2".equals(groupPublic)) {
-            holder.imgPrivilege.setImageResource(R.drawable.ic_privilege_all);
-        } else {
-            holder.imgPrivilege.setImageResource(R.drawable.ic_privilege_only_me);
-        }
-    }
-
-    private boolean hasNumber(String count) {
-        return !TextUtils.isEmpty(count) && Integer.valueOf(count) > 0;
+        holder.bindEntity(entity);
     }
 
     @Override
@@ -131,14 +105,16 @@ public class WorkSpaceRecyclerViewAdapter extends RecyclerView
         notifyItemRangeInserted(size, data.size());
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements
+            BaseHolderViewInterface<WorkspaceEntity> {
+        private WorkspaceEntity entity;
+
         OnListFragmentInteractionListener mListener;
         public View mView;
         public ImageView imgTitle;
         public TextView txtTitle;
         public TextView txtDescription;
         public TextView txtDate;
-        public WorkspaceEntity mItem;
 
         public TextView tvNum;
         public ImageView imgPrivilege;
@@ -150,15 +126,15 @@ public class WorkSpaceRecyclerViewAdapter extends RecyclerView
             super(view);
             mView = view;
             mListener = listener;
-            imgTitle = (ImageView) view.findViewById(R.id.img_title);
-            txtTitle = (TextView) view.findViewById(R.id.txt_workspace_title);
-            txtDescription = (TextView) view.findViewById(R.id.txt_workspace_description);
-            txtDate = (TextView) view.findViewById(R.id.txt_workspace_date);
+            imgTitle = getViewById(R.id.img_title);
+            txtTitle = getViewById(R.id.txt_workspace_title);
+            txtDescription = getViewById(R.id.txt_workspace_description);
+            txtDate = getViewById(R.id.txt_workspace_date);
 
-            tvNum = (TextView) view.findViewById(R.id.tv_num);
-            imgPrivilege = (ImageView) view.findViewById(R.id.img_privilege);
-            imgTodoList = (ImageView) view.findViewById(R.id.img_todo_list);
-            imgAttachment = (ImageView) view.findViewById(R.id.img_attachment);
+            tvNum = getViewById(R.id.tv_num);
+            imgPrivilege = getViewById(R.id.img_privilege);
+            imgTodoList = getViewById(R.id.img_todo_list);
+            imgAttachment = getViewById(R.id.img_attachment);
 
             tvNum.setVisibility(View.INVISIBLE);
 
@@ -173,8 +149,57 @@ public class WorkSpaceRecyclerViewAdapter extends RecyclerView
         @Override
         public void onClick(View v) {
             if (null != mListener) {
-                mListener.onListFragmentInteraction(mItem);
+                mListener.onListFragmentInteraction(entity);
             }
+        }
+
+        @Override
+        public <V extends View> V getViewById(@IdRes int resId) {
+            return (V) itemView.findViewById(resId);
+        }
+
+        @Override
+        public void bindEntity(WorkspaceEntity entity) {
+            this.entity = entity;
+
+
+            String date = String.format(itemView.getResources().getString(R.string
+                    .txt_by_name_date), entity
+                    .getUser_given_name(), entity
+                    .getContent_creation_date());
+
+            txtDate.setText(date);
+            txtTitle.setText(entity.getContent_title());
+            txtDescription.setText(entity.getText_description());
+
+            String url = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity
+                    .getUser_id());
+            Configuration configuration = new Configuration();
+            configuration.url = url;
+            configuration.errorDrawableId = R.drawable.default_head_icon;
+            configuration.placeholderId = R.drawable.default_head_icon;
+            ImageLoadUtil.display(itemView.getContext(), imgTitle, configuration);
+            BitmapTools.getInstance(itemView.getContext()).display(imgTitle, url, R.drawable
+                    .default_head_icon, R.drawable.default_head_icon);
+
+            String attachmentCount = entity.getAttachment_count();
+            String toDoCount = entity.getTo_do_count();
+            String groupPublic = entity.getContent_group_public();
+            imgAttachment.setEnabled(hasNumber(attachmentCount));
+            imgTodoList.setEnabled(hasNumber(toDoCount));
+
+            // 0- Me Only, 1- Everyone , 2-All Staff
+            if ("1".equals(groupPublic)) {
+                imgPrivilege.setImageResource(R.drawable.ic_privilege_public);
+            } else if ("2".equals(groupPublic)) {
+                imgPrivilege.setImageResource(R.drawable.ic_privilege_all);
+            } else {
+                imgPrivilege.setImageResource(R.drawable.ic_privilege_only_me);
+            }
+        }
+
+        private boolean hasNumber(String count) {
+            return !TextUtils.isEmpty(count) && Integer.valueOf(count) > 0;
         }
     }
 }

@@ -15,12 +15,12 @@
         android:padding="@dimen/_16dp">
 
         <!--<ImageView-->
-        <com.madxstudio.co8.widget.CircularNetworkImage
+        <!--CircleImageView 千万不要设置scaleType,会出inflateException异常-->
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_title"
             android:layout_width="@dimen/default_user_head_width_height"
             android:layout_height="@dimen/default_user_head_width_height"
-            android:scaleType="centerInside"
-            android:src="@drawable/default_head_icon"/>
+            tools:src="@drawable/default_head_icon"/>
 
         <LinearLayout
             android:layout_width="match_parent"
