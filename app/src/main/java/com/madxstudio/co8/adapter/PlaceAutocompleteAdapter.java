@@ -212,7 +212,7 @@ public class PlaceAutocompleteAdapter
     }
 
     /**
-     * DiscussionViewHolder for Places Geo Data Autocomplete API results.
+     * Holder for Places Geo Data Autocomplete API results.
      */
     public class PlaceAutocomplete {
 
