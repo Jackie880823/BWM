@@ -948,4 +948,6 @@
     <string name="hint_descriptions">Descriptions...</string>
     <string name="hint_workspace_title">Type your headline title here...</string>
     <string name="txt_by_name_date">By: %1$s, %2$s</string>
+    <string name="title_member_list">Member List</string>
+    <string name="txt_author">Author</string>
 </resources>

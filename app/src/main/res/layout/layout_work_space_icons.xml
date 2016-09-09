@@ -49,6 +49,7 @@
             android:layout_height="@dimen/default_small_button_width_height"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/selector_attachment"/>
 
         <ImageView
@@ -57,6 +58,7 @@
             android:layout_height="@dimen/default_small_button_width_height"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_members"/>
 
         <ImageView
@@ -65,12 +67,14 @@
             android:layout_height="@dimen/default_small_button_width_height"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/selector_todo_list"/>
 
         <ImageView
             android:id="@+id/img_privilege"
             android:layout_width="@dimen/default_small_button_width_height"
             android:layout_height="@dimen/default_small_button_width_height"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_privilege_only_me"/>
     </LinearLayout>
 

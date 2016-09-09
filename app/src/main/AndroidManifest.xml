@@ -766,6 +766,9 @@
         <activity
             android:name=".ui.workspace.CreateWorkSpaceActivity"
             android:label="@string/title_create_new_workspace"/>
+
+        <activity android:name=".ui.workspace.WorkspaceMemberListActivity"
+            android:label="@string/title_member_list"/>
     </application>
 
 </manifest>

@@ -47,10 +47,11 @@ import com.madxstudio.co8.Constant;
 import com.madxstudio.co8.R;
 import com.madxstudio.co8.base.BaseAdapter;
 import com.madxstudio.co8.base.BaseHolderViewInterface;
-import com.madxstudio.co8.entity.WorkspaceDiscussion;
 import com.madxstudio.co8.entity.WorkspaceDetail;
+import com.madxstudio.co8.entity.WorkspaceDiscussion;
 import com.madxstudio.co8.entity.WorkspaceEntity;
 import com.madxstudio.co8.ui.workspace.ToDoListActivity;
+import com.madxstudio.co8.ui.workspace.WorkspaceMemberListActivity;
 import com.madxstudio.co8.util.LogUtil;
 import com.madxstudio.co8.util.UniversalImageLoaderUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -381,10 +382,10 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<ViewHolder>
 
             imgCollapseIcon.setOnClickListener(this);
 
-            imgAttachmentIcon.setOnClickListener(this);
-            imgMembersIcon.setOnClickListener(this);
-            imgToDoListIcon.setOnClickListener(this);
-            imgPrivilegeIcon.setOnClickListener(this);
+            imgAttachment.setOnClickListener(this);
+            imgMembers.setOnClickListener(this);
+            imgToDoList.setOnClickListener(this);
+            imgPrivilege.setOnClickListener(this);
 
             layoutAttachment.setOnClickListener(this);
             layoutMembers.setOnClickListener(this);
@@ -483,11 +484,18 @@ public class WorkspaceDetailAdapter extends RecyclerView.Adapter<ViewHolder>
                 case R.id.img_collapse_icon:
                     setHorizontal(!isHorizontal);
                     break;
+
                 case R.id.layout_todo_list:
                 case R.id.img_todo_list:
                 case R.id.img_todo_list_icon:
                     itemView.getContext().startActivity(new Intent(itemView.getContext(),
                             ToDoListActivity.class));
+                    break;
+
+                case R.id.layout_members:
+                case R.id.img_members:
+                    itemView.getContext().startActivity(new Intent(itemView.getContext(),
+                            WorkspaceMemberListActivity.class));
                     break;
             }
         }
